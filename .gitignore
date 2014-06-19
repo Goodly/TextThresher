@@ -1,0 +1,6 @@
+# emacs artifacts
+*~
+
+# intellij artifacts
+.idea/
+*.iml
