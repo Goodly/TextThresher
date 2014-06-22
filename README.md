@@ -1,4 +1,4 @@
-deciding-force-crowd
-====================
+Text Thresher
+=============
 
-Crowd interface and instrumentation for the Deciding Force Project (http://www.decidingforce.org/)
+A tool for decomposing and annotating articles using the crowd. Under development for the Deciding Force Project (http://www.decidingforce.org/)
