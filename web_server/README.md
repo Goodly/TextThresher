@@ -1,5 +1,5 @@
 ### Webserver
-I threw a quick python webserver up on heroku and checked it into the repo in the web_server directory. It is currently running at text-thresher.herokuapp.com, and its API looks like:
+I threw a quick python webserver up on heroku and checked it into the repo in the web_server directory. It is currently running at [text-thresher.herokuapp.com](text-thresher.herokuapp.com), and its API looks like:
 
 * GET /tasks : returns the sample data as a JSON blob (see below for format). You'll get a new random unique tid (TUA-id) in the data each time this is called.
 
