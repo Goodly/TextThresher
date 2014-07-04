@@ -42,7 +42,7 @@ class submittedtask:
         if tid:
             tasks = db.select('task', {'tid':i.tid}, where="tid = $tid")
             if tasks:
-                return task[0].data
+                return tasks[0].data
             return {}
         else:
             tasks = db.select('task')
