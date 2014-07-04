@@ -1,11 +1,18 @@
+import json
 import os
 import urlparse
+import uuid
 import web
 
 urls = (
     '/tasks', 'sampletask',
+    '/tasks/submitted', 'submittedtask',
+    '/tasks/reset', 'resettask',
 )
 
+SAMPLE_JSON_PATH = os.path.join(os.path.dirname(__file__), 'sample_data.json')
+with open(SAMPLE_JSON_PATH, 'rb') as sample_json_file:
+    SAMPLE_JSON = sample_json_file.read()
 
 db_url = os.environ.get("DATABASE_URL")
 if db_url:
@@ -18,18 +25,33 @@ else:
 
 class sampletask:
     def GET(self):
-        # TODO, add sample json document.
-        tests = db.select('test')
-        return 'somejson: ' + ';'.join(["a=%d,b=%d" % (test.a, test.b)
-                                        for test in tests])
+        tid = uuid.uuid4()
+        parsed_json = json.loads(SAMPLE_JSON)
+        parsed_json['tua']['id'] = str(tid)
+        return json.dumps(parsed_json)
 
     def POST(self):
-        # TODO, store stuff in the DB
-        i = web.input()
-        db.insert('test', a=i.a, b=i.b)
+        i = web.input(tid=None)
+        if i.tid:
+            db.insert('task', tid=i.tid, data=i.data)
 
-    def reset_db(self):
-        db.delete('test')
+class submittedtask:
+    def GET(self):
+        i = web.input(tid=None)
+        tid = i.tid
+        if tid:
+            tasks = db.select('task', {'tid':i.tid}, where="tid = $tid")
+            if tasks:
+                return task[0].data
+            return {}
+        else:
+            tasks = db.select('task')
+            return json.dumps([json.loads(task.data) for task in tasks])
+
+class resettask:
+    def POST(self):
+        db.delete('task', where="true")
+        return "DELETED!"
 
 if __name__ == '__main__':
     app = web.application(urls, globals())
