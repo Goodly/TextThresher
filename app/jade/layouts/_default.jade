@@ -1,0 +1,28 @@
+doctype html
+html(lang="en")
+  head
+    title text thresher
+    meta(charset='UTF-8')
+    meta(content='', name='description')
+    meta(content='', name='author')
+    meta(content='3 days', name='revisit-after')
+
+    // build:css /styles/main.css
+    link(href='/bower_components/foundation/css/foundation.css', rel='stylesheet')
+    link(href='/styles/main.css', rel='stylesheet')
+    // endbuild
+
+  body(class=page)
+    header
+      h1 Text Thresher
+    block content
+
+    footer
+
+    // build:js /scripts/main.js
+    script(src='/bower_components/jquery/dist/jquery.js')
+    script(src='/bower_components/foundation/js/foundation.min.js')
+    script(src='/bower_components/foundation/js/vendor/modernizr.js')
+
+    script(src='/scripts/main.js')
+    // endbuild
