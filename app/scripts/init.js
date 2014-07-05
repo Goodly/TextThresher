@@ -4,10 +4,10 @@
   getArticleText: function() {
     var that = this;
     $.get(this.url)
-      .success(function (data) {
+      .success(function(data) {
         that.insertArticleText(JSON.parse(data));
       })
-      .fail(function (e) {
+      .fail(function(e) {
         console.log(e)
       });
   },
@@ -22,6 +22,7 @@
 
   init: function() {
     this.getArticleText();
+    $('.article-text').annotator();
   }
 
 }).init();
