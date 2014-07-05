@@ -255,8 +255,7 @@ var sampleData = {
         "strike": "a definition goes here",
         "voluntary dissolution of a camp": "a definition goes here"
     }
-};// sampleData = {};
-// sampleData.text = 'alskd';
+};
 
 ({
   // url: 'http://text-thresher.herokuapp.com/',
@@ -268,22 +267,18 @@ var sampleData = {
   //     });
   // },
 
-  insertArticleText: function(text) {
-    var offsets = sampleData.tua.offsets[0],
-        offsetDiff = offsets.stop - offsets.start;
+  insertArticleText: function(data) {
+    var offsets = data.tua.offsets[0],
+        tua = '<strong>';
 
-    var tua = '<strong>'
-
-    tua += sampleData.text.split('').splice(offsets.start, offsetDiff).join('');
+    tua += data.text.substring(offsets.start, offsets.stop);
     tua += '</strong>'
-    // var wrapped = $(this.tua).wrap('<strong></strong>');
-    console.log(tua);
 
     $('.article-text').append(tua)
   },
 
   init: function() {
     // this.getArticleText();
-    this.insertArticleText();
+    this.insertArticleText(sampleData);
   }
 }).init();
