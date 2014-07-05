@@ -22,7 +22,6 @@
 
   init: function() {
     this.getArticleText();
-    $('.article-text').annotator();
-  }
+  },
 
 }).init();
