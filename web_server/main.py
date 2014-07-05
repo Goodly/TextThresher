@@ -23,20 +23,27 @@ if db_url:
 else:
     db = web.database(dbn='postgres', user='dhaas', pw='', db='thresher')
 
+def allow_cors():
+    web.header('Access-Control-Allow-Origin', '*')
+    web.header('Access-Control-Allow-Credentials', 'true')
+
 class sampletask:
     def GET(self):
+        allow_cors()
         tid = uuid.uuid4()
         parsed_json = json.loads(SAMPLE_JSON)
         parsed_json['tua']['id'] = str(tid)
         return json.dumps(parsed_json)
 
     def POST(self):
+        allow_cors()
         i = web.input(tid=None)
         if i.tid:
             db.insert('task', tid=i.tid, data=i.data)
 
 class submittedtask:
     def GET(self):
+        allow_cors()
         i = web.input(tid=None)
         tid = i.tid
         if tid:
@@ -50,6 +57,7 @@ class submittedtask:
 
 class resettask:
     def POST(self):
+        allow_cors()
         db.delete('task', where="true")
         return "DELETED!"
 
