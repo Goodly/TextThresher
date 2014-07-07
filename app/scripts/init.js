@@ -40,7 +40,9 @@
   },
 
   setupTopicsBar: function(data) {
-    console.log(data)
+    data.topics.forEach(function(topic) {
+      $('<th>').html(topic.name).appendTo('.topic-names');
+    })
   },
 
   init: function() {
