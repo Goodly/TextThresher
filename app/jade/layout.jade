@@ -15,14 +15,14 @@ html(lang="en")
 
   body(class=page)
     header
-      h4 Text Thresher
+      //- h4 Text Thresher
     block content
     footer
 
     // build:js /scripts/main.js
     script(src='/bower_components/jquery/dist/jquery.js')
-    script(src='/bower_components/foundation/js/foundation.min.js')
     script(src='/bower_components/foundation/js/vendor/modernizr.js')
+    script(src='/bower_components/foundation/js/foundation.js')
     script(src='/bower_components/annotator/annotator-full.min.js')
     script(src='/bower_components/tinymce/tinymce.min.js')
 
@@ -31,3 +31,5 @@ html(lang="en")
     script(src='/scripts/init.js')
     script(src='/scripts/main.js')
     // endbuild
+    script
+      $(document).foundation();

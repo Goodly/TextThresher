@@ -1,5 +1,41 @@
 extends layout
 
 block content
+  hr
+
   .row
     .small-12.columns.article-text
+
+  hr
+
+  .row
+    .small-12.columns
+      dl.accordion(data-accordion='data-accordion')
+        dd.accordion-navigation
+            a(href='#panel1') Topics and Questions
+            #panel1.content
+              table
+                thead
+                  tr
+                    th(width='200') Table Header
+                    th Table Header
+                    th(width='150') Table Header
+                    th(width='150') Table Header
+                  tbody
+                    tr
+                      td Content Goes Here
+                      td This is longer content Donec id elit non mi porta gravida at eget metus.
+                      td Content Goes Here
+                      td Content Goes Here
+                    tr
+                      td Content Goes Here
+                      td
+                        | This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.
+                      td Content Goes Here
+                      td Content Goes Here
+                    tr
+                      td Content Goes Here
+                      td
+                        | This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.
+                      td Content Goes Here
+                      td Content Goes Here
