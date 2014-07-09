@@ -11,6 +11,7 @@
       .success(function(data) {
         var annotated = $(document.body).annotator(),
             optionsRichText = {
+            tuaData: data,
             tinymce: {
               selector: "li.annotator-item textarea",
               plugins: "media image insertdatetime link code",

@@ -1,1 +1,1 @@
-// var annotated = $(document.body).annotator();
+var annotated = $(document.body).annotator();
