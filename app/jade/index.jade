@@ -3,7 +3,10 @@ extends layout
 block content
   hr
   .row
-    .small-12.columns.article-text
+    .small-12.columns
+      h3 Text for Analysis:
+  .row
+    .small-12.columns.panel.article-text
 
   hr
 
@@ -12,9 +15,15 @@ block content
       dl.accordion(data-accordion='data-accordion')
         dd.accordion-navigation
             a(href='#panel1') Topics and Questions
-              emph (click to hide)
+              em  (click to hide)
             #panel1.content.active
               table
                 thead
                   tr.topic-names
                   tbody.topic-questions
+
+  #myModal.reveal-modal(data-reveal='data-reveal')
+    h2 Awesome. I have it.
+      p.lead Your couch.  It is mine.
+      p Im a cool paragraph that lives inside of an even cooler modal. Wins
+      a.close-reveal-modal ×
