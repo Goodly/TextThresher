@@ -14,7 +14,28 @@ html(lang="en")
     // endbuild
 
   body(class=page)
-    header
+    //- header
+    nav.top-bar(data-topbar='data-topbar')
+      ul.title-area
+          li.name
+            h1
+              a(href='#') Deciding Force
+          li.toggle-topbar.menu-icon
+            a(href='#')
+              span Instructions
+        section.top-bar-section
+          ul.right
+            li
+              a(href='#') Right Button Active
+            li.has-dropdown
+              a(href='#') Glossary
+              ul.dropdown
+                li
+                  a(href='#') First link in dropdown
+          ul.left
+            li
+              a(href='#') Left Nav Button
+
       //- h4 Text Thresher
     block content
     footer
