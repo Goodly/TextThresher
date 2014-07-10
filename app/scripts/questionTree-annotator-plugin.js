@@ -14,23 +14,10 @@ var _ref,
 Annotator.Plugin.QuestionTree = (function(_super) {
   __extends(QuestionTree, _super);
 
-  //Default tinymce configuration
-  // QuestionTree.prototype.options = {
-  //   tinymce:{
-  //     selector: "li.annotator-item textarea",
-  //     plugins: "media image insertdatetime link code",
-  //     menubar: false,
-  //     toolbar_items_size: 'small',
-  //     extended_valid_elements : "iframe[src|frameborder|style|scrolling|class|width|height|name|align|id]",
-  //       toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media rubric | code ",
-  //   }
-  // };
-
   function QuestionTree(element,options) {
     _ref = QuestionTree.__super__.constructor.apply(this, arguments);
     return _ref;
   };
-
 
   QuestionTree.prototype.pluginInit = function() {
     console.log("QuestionTree-pluginInit");
@@ -42,10 +29,10 @@ Annotator.Plugin.QuestionTree = (function(_super) {
       return;
     }
 
-    //Editor Setup
     annotator.editor.addField({
       type: 'input',
       load: this.updateEditor,
+      options: this.options
     });
 
     //Viewer setup
@@ -53,48 +40,38 @@ Annotator.Plugin.QuestionTree = (function(_super) {
       load: this.updateViewer,
     });
 
-    console.log(editor)
+    // hides default annotation view
+    $(editor.element).find('textarea').remove();
 
-    annotator.subscribe("annotationEditorShown", function(){
-      // console.log($(annotator.editor.element))
-
-      // $(annotator.editor.element).find('.mce-tinymce')[0].style.display='block';
-      // $(annotator.editor.element).find('.mce-container').css('z-index',3000000000);
+    annotator.subscribe("annotationEditorShown", function(editor, annotation){
+      $('.annotator-listing li').click(function(e){
+        $('.annotator-listing').empty()
+      })
       annotator.editor.checkOrientation();
     });
+
     annotator.subscribe("annotationEditorHidden", function(){
-      // $(annotator.editor.element).find('.mce-tinymce')[0].style.display='none';
     });
 
-    //set listener for tinymce;
-    // this.options.tinymce.setup = function(ed) {
-
-    //   ed.on('change', function(e) {
-    //     //set the modification in the textarea of annotator
-    //     $(editor.element).find('textarea')[0].value = tinymce.activeEditor.getContent();
-    //   });
-
-    //   ed.on('Init', function(ed){
-    //     $('.mce-container').css('z-index','3090000000000000000');
-    //   });
-
-    // };
-    // console.log(this.options)
-    // tinymce.init(this.options.tinymce);
   };
 
   QuestionTree.prototype.updateEditor = function(field, annotation) {
     // var text = typeof annotation.text != 'undefined' ? annotation.text : '';
-    // console.log(annotation)
-    // tinymce.activeEditor.setContent(text);
-    $('.annotator-listing').append('<li>Hey</li>');
-    $(field).remove(); //this is the auto create field by annotator and it is not necessary
+    var topics = this.options.tuaData.topics,
+        topicsPane = '<li class="question-pane">Topics</li><hr>';
+
+    topics.forEach(function(item){
+      // topicsPane += '<li><a href="#" data-reveal-id="myModal">' + item.name + '</a></li>'
+      topicsPane += '<li>' + item.name + '</li>'
+    });
+
+    field.innerHTML = topicsPane;
   }
 
   QuestionTree.prototype.updateViewer = function(field, annotation) {
     var textDiv = $(field.parentNode).find('div:first-of-type')[0];
     textDiv.innerHTML = annotation.text;
-    $(textDiv).addClass('richText-annotation');
+    // $(textDiv).addClass('richText-annotation');
     $(field).remove(); //this is the auto create field by annotator and it is not necessary
   }
 
