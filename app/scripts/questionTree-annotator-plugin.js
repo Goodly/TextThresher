@@ -23,7 +23,9 @@ Annotator.Plugin.QuestionTree = (function(_super) {
     console.log("QuestionTree-pluginInit");
 
     var annotator = this.annotator,
-        editor = this.annotator.editor;
+        editor = this.annotator.editor,
+        that = this,
+        topics = this.options.tuaData.topics;
     //Check that annotator is working
     if (!Annotator.supported()) {
       return;
@@ -42,15 +44,34 @@ Annotator.Plugin.QuestionTree = (function(_super) {
 
     // hides default annotation view
     $(editor.element).find('textarea').remove();
-
     annotator.subscribe("annotationEditorShown", function(editor, annotation){
       $('.annotator-listing li').click(function(e){
-        $('.annotator-listing').empty()
-      })
+        var $annotatorContent = $('.annotator-listing'),
+            eventClass = $(e.target).attr('class');
+
+        $annotatorContent.children().hide();
+        $('.annotator-topics-list').remove();
+        topics.forEach(function(topic){
+          if(topic.name === eventClass) {
+            topic.questions.forEach(function(question){
+              if (question.top) {
+                $annotatorContent.append(that.buildQuestionForm(question));
+
+                $('.question').click(function(e){
+                  console.log(e)
+                })
+              }
+            });
+          }
+        });
+      });
+
       annotator.editor.checkOrientation();
     });
 
     annotator.subscribe("annotationEditorHidden", function(){
+      $('.annotator-listing').children().show();
+      $('.remove').detach();
     });
 
   };
@@ -58,11 +79,11 @@ Annotator.Plugin.QuestionTree = (function(_super) {
   QuestionTree.prototype.updateEditor = function(field, annotation) {
     // var text = typeof annotation.text != 'undefined' ? annotation.text : '';
     var topics = this.options.tuaData.topics,
-        topicsPane = '<li class="question-pane">Topics</li><hr>';
+        topicsPane = '<li class="annotator-topics-list">Topics</li><hr>';
 
     topics.forEach(function(item){
-      // topicsPane += '<li><a href="#" data-reveal-id="myModal">' + item.name + '</a></li>'
-      topicsPane += '<li>' + item.name + '</li>'
+      topicsPane += '<li><a href="#" class="' + item.name + '">' + item.name + '</a></li>'
+      // topicsPane += '<li>' + item.name + '</li>'
     });
 
     field.innerHTML = topicsPane;
@@ -73,6 +94,19 @@ Annotator.Plugin.QuestionTree = (function(_super) {
     textDiv.innerHTML = annotation.text;
     // $(textDiv).addClass('richText-annotation');
     $(field).remove(); //this is the auto create field by annotator and it is not necessary
+  }
+
+  QuestionTree.prototype.buildQuestionForm = function(question) {
+    var form = '<ul class="remove"><form class="remove"><label>' + question.text + '</label>';
+    switch (question.type) {
+      case 'multiplechoice':
+        question.answers.forEach(function(answer){
+          form += '<li><input id="" type="radio" value=' + answer.id + '>' + answer.text + '</label></li>';
+        })
+      break;
+    }
+    form += '</form><a href="#" class="question button tiny">Next Question</a></ul>';
+    return form;
   }
 
   return QuestionTree;
