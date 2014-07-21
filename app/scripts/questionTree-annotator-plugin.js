@@ -22,10 +22,11 @@ Annotator.Plugin.QuestionTree = (function(_super) {
   QuestionTree.prototype.pluginInit = function() {
     console.log("QuestionTree-pluginInit");
 
-    var annotator = this.annotator,
+    var me = this,
+        annotator = this.annotator,
         editor = this.annotator.editor,
-        that = this,
         topics = this.options.tuaData.topics,
+        $widget = $('.annotator-widget'),
         // state is determined by whether or not we are showing topics
         // - or -
         // one or more questions e.g. ['1.1', '1.7']
@@ -33,30 +34,34 @@ Annotator.Plugin.QuestionTree = (function(_super) {
           // topics: true,
           questions: [],
           done: false,
-          answers: []
-        };
+          results: []
+        }
 
     //Check that annotator is working
     if (!Annotator.supported()) return;
 
-
-    annotator.editor.addField({
-      type: 'input',
-      load: this.updateEditor,
-      options: this.options
-    });
-
     //Viewer setup
-    annotator.viewer.addField({
-      load: this.updateViewer,
-    });
+    // annotator.viewer.addField({
+    //   load: this.updateViewer,
+    // });
 
     // hides default annotation view
-    $(editor.element).find('textarea').remove();
-
+    // $(editor.element).find('textarea').remove();
+    var counter = 0;
     annotator.subscribe("annotationEditorShown", function(editor, annotation){
-      editor.fields[1].element.innerHTML = that.editorState(state, topics);
+      $widget.children().hide();
+      var topicsHTML = me.editorState(state, topics)
+      $widget.append(topicsHTML);
+
       annotator.editor.checkOrientation();
+      console.log(annotation)
+      state.results.push({
+        annotation: {
+          text: annotation.quote,
+          startOffset: annotation.ranges[0].startOffset,
+          endOffset: annotation.ranges[0].endOffset,
+        }
+      });
     });
 
     annotator.subscribe("annotationEditorHidden", function(){
@@ -64,34 +69,40 @@ Annotator.Plugin.QuestionTree = (function(_super) {
       // $('.remove').detach();
     });
 
+    $widget.on('click', 'li', function(e){
+      var classes = $(e.target).attr('class').split(" ");
+      if (classes.indexOf('thresher-answer') > -1) {
+        // get most-recently interacted with topic response object
+        var selectedTopic = state.results[state.results.length - 1];
+        state.results[0]['topicName'] = classes[1];
+        console.log(selectedTopic)
+        $widget.children().hide();
+        updatedHTML = 'lol'
+        me.editorState(state, topics)
+        $widget.append(updatedHTML)
+      } else {
+        console.log(e)
+      }
+
+    })
+
   };
 
   QuestionTree.prototype.editorState = function(state, topics) {
-    // console.log(element)
     // do we need to mark the form with an ID based on state?
-    var editorHTML = '<ul class=""><form id="text-thresher-form" class=""><label>hey</label>';
-    if (!state.answers.length) {
+    var editorHTML = '<ul class=""><form id="text-thresher-form" class=""><label>Please choose a topic: </label>';
+    if (!state.results.length) {
       topics.forEach(function(topic){
-        // each one of these is a link that needs to trigger a state change
-        editorHTML += '<li><a href="#" class="' + topic.name + '">' + topic.name + '</a></li>';
+        // each link triggers a state change
+        editorHTML += '<li><a href="#" class="thresher-answer ' + slugify(topic.name) + '">' + topic.name + '</a></li>';
       })
-      editorHTML += '<a href="#" class="button tiny" id="next-question">Next Question</a></form></ul>';
-
+      editorHTML += '</form></ul>';
+      // console.log(state)
+    } else {
+      console.log('in a question view')
     }
     return editorHTML;
 
-  }
-
-  QuestionTree.prototype.populateTopics = function(data) {
-    // console.log(data)
-    topicsPane = '<li class="annotator-topics-list">Topics</li><hr>';
-
-    data.forEach(function(item){
-      topicsPane += '<li><a href="#" class="' + item.name + '">' + item.name + '</a></li>'
-      // topicsPane += '<li>' + item.name + '</li>'
-    });
-
-    return topicsPane;
   }
 
   // a function that looks at the state, tells editorState what to make
@@ -101,6 +112,14 @@ Annotator.Plugin.QuestionTree = (function(_super) {
   // functions that listens to button clicks in the editor and acts appropriately
 
   QuestionTree.prototype.updateEditor = function(field, annotation) {
+  // editor.fields[1].element.innerHTML = that.editorState(state, topics);
+    // $(field).innerHTML = this.editorState(state, topics);
+
+    // var text = typeof annotation.text!='undefined'?annotation.text:'';
+    // console.log($(field))
+
+    // $(field).remove(); //this is the auto create field by annotator and it is not necessary
+
     // var text = typeof annotation.text != 'undefined' ? annotation.text : '';
     // var topics = this.options.tuaData.topics,
 
