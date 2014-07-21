@@ -72,13 +72,11 @@ Annotator.Plugin.QuestionTree = (function(_super) {
     $widget.on('click', 'li', function(e){
       var classes = $(e.target).attr('class').split(" ");
       if (classes.indexOf('thresher-answer') > -1) {
+        // check if this topic has been interacted with / created -- if not, create one, otherwise add to it
         // get most-recently interacted with topic response object
-        var selectedTopic = state.results[state.results.length - 1];
-        state.results[0]['topicName'] = classes[1];
-        console.log(selectedTopic)
+        state.results[state.results.length - 1]['topicName'] = classes[1];
         $widget.children().hide();
-        updatedHTML = 'lol'
-        me.editorState(state, topics)
+        updatedHTML = me.editorState(state, topics);
         $widget.append(updatedHTML)
       } else {
         console.log(e)
@@ -93,13 +91,20 @@ Annotator.Plugin.QuestionTree = (function(_super) {
     var editorHTML = '<ul class=""><form id="text-thresher-form" class=""><label>Please choose a topic: </label>';
     if (!state.results.length) {
       topics.forEach(function(topic){
-        // each link triggers a state change
         editorHTML += '<li><a href="#" class="thresher-answer ' + slugify(topic.name) + '">' + topic.name + '</a></li>';
       })
       editorHTML += '</form></ul>';
-      // console.log(state)
     } else {
       console.log('in a question view')
+      var topicName = state.results[state.results.length - 1].topicName;
+      topics.forEach(function(topic){
+        if (topicName === slugify(topic.name)) {
+          topic.questions.forEach(function(question) {
+            editorHTML += '<li><a href="#" class="thresher-answer" id=question_"' + question.id + '">' + question.text + '</a></li>';
+          });
+        }
+      })
+      editorHTML += '</form></ul>';
     }
     return editorHTML;
 
@@ -133,18 +138,18 @@ Annotator.Plugin.QuestionTree = (function(_super) {
     $(field).remove(); //this is the auto create field by annotator and it is not necessary
   }
 
-  QuestionTree.prototype.buildQuestionForm = function(question) {
-    var form = '<ul class="remove"><form id="text-thresher" class="remove"><label>' + question.text + '</label>';
-    switch (question.type) {
-      case 'multiplechoice':
-        question.answers.forEach(function(answer){
-          form += '<li><input class="radio" type="radio" value=' + answer.id + '>' + answer.text + '</label></li>';
-        })
-      break;
-    }
-    form += '</form><a href="#" class="button tiny" id="next-question">Next Question</a></ul>';
-    return form;
-  }
+  // QuestionTree.prototype.buildQuestionForm = function(question) {
+  //   var form = '<ul class="remove"><form id="text-thresher" class="remove"><label>' + question.text + '</label>';
+  //   switch (question.type) {
+  //     case 'multiplechoice':
+  //       question.answers.forEach(function(answer){
+  //         form += '<li><input class="radio" type="radio" value=' + answer.id + '>' + answer.text + '</label></li>';
+  //       })
+  //     break;
+  //   }
+  //   form += '</form><a href="#" class="button tiny" id="next-question">Next Question</a></ul>';
+  //   return form;
+  // }
 
   return QuestionTree;
 
