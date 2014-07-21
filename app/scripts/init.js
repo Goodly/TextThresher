@@ -1,6 +1,7 @@
 ({
 
   url: 'http://text-thresher.herokuapp.com/tasks',
+  // url: 'http://localhost:1337/tasks',
 
   getArticleText: function() {
     var that = this;
@@ -10,6 +11,7 @@
         var annotated = $(document.body).annotator(),
             options = {
               tuaData: data,
+              destination: 'url endpoint'
             };
 
         that.insertArticleText(data);
