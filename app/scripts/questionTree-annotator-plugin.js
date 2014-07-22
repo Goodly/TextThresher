@@ -20,7 +20,7 @@ Annotator.Plugin.QuestionTree = (function(_super) {
   };
 
   QuestionTree.prototype.pluginInit = function() {
-    console.log("QuestionTree-pluginInit");
+    // console.log("QuestionTree-pluginInit");
 
     var me = this,
         annotator = this.annotator,
@@ -30,12 +30,29 @@ Annotator.Plugin.QuestionTree = (function(_super) {
         // state is determined by whether or not we are showing topics
         // - or -
         // one or more questions e.g. ['1.1', '1.7']
-        state = {
+        // we determine the state by looking at the questions or results array.
+        // if empty state:
+        //   show topics list.
+        //   user selects topic,
+        //   set _.last(state).questions = topic.questions
+        // if nonempty state, look at _.last(state).questions
+        // display all questions with top: true
+        // if no top questions, look at what is left...
+
+        state = [];
+
+        // state = {
           // topics: true,
-          questions: [],
-          done: false,
-          results: []
-        }
+          // questions: [],
+          // done: false,
+          // results: []
+        // }
+
+        /*
+
+        [ {}, {}, {} ]
+
+        */
 
     //Check that annotator is working
     if (!Annotator.supported()) return;
@@ -47,15 +64,15 @@ Annotator.Plugin.QuestionTree = (function(_super) {
 
     // hides default annotation view
     // $(editor.element).find('textarea').remove();
-    var counter = 0;
     annotator.subscribe("annotationEditorShown", function(editor, annotation){
       $widget.children().hide();
-      var topicsHTML = me.editorState(state, topics)
+      var topicsHTML = me.populateEditor(state, topics)
       $widget.append(topicsHTML);
 
       annotator.editor.checkOrientation();
-      console.log(annotation)
-      state.results.push({
+      // will need this :
+      // console.log(annotation)
+      state.push({
         annotation: {
           text: annotation.quote,
           startOffset: annotation.ranges[0].startOffset,
@@ -69,56 +86,107 @@ Annotator.Plugin.QuestionTree = (function(_super) {
       // $('.remove').detach();
     });
 
-    $widget.on('click', 'li', function(e){
-      var classes = $(e.target).attr('class').split(" ");
+    $widget.on('click', '.thresher-answer', function(e){
+      var currentState = _.last(state),
+          classes = $(e.target).attr('class').split(" ");
       if (classes.indexOf('thresher-answer') > -1) {
         // check if this topic has been interacted with / created -- if not, create one, otherwise add to it
-        // get most-recently interacted with topic response object
-        state.results[state.results.length - 1]['topicName'] = classes[1];
+        // if (!currentState.responses) {
+          topics.forEach(function(topic) {
+            if (slugify(topic.name) === classes[1]) {
+              _.extend(_.last(state), {
+                topicName: classes[1],
+                responses: topic.questions
+              })
+            }
+          })
+        // } else {
+          // currentState.responses.forEach(function(response) {
+
+          // });
+        // }
         $widget.children().hide();
-        updatedHTML = me.editorState(state, topics);
+        updatedHTML = me.populateEditor(state, topics);
         $widget.append(updatedHTML)
+        // when you add a state by answering a question, remove the 'type' field to indicate that it's been answered
+        // console.log("Current state:")
+        // console.log(_.last(state))
       } else {
-        console.log(e)
+        console.log(e.target)
+        // modify state – check if top level question
+        if (_.any(_.last(state).responses, 'top')) {
+
+          console.log('hey')
+        }
+        console.log($(e.target).val())
       }
 
-    })
+    });
+
+
 
   };
 
-  QuestionTree.prototype.editorState = function(state, topics) {
+  QuestionTree.prototype.populateEditor = function(state, topics) {
     // do we need to mark the form with an ID based on state?
-    var editorHTML = '<ul class=""><form id="text-thresher-form" class=""><label>Please choose a topic: </label>';
-    if (!state.results.length) {
+    var editorHTML = '<form role="form" id="text-thresher-form"><ul class="list-unstyled">';
+    if (!state.length) {
+      editorHTML += '<label>Please choose a topic: </label>';
       topics.forEach(function(topic){
-        editorHTML += '<li><a href="#" class="thresher-answer ' + slugify(topic.name) + '">' + topic.name + '</a></li>';
+        // console.log(topic)
+        // editorHTML += '<li class="list-group-item"><a href="#" class="thresher-answer ' + slugify(topic.name) + '">' + topic.name + '</a></li>';
+        // editorHTML += '<option class="thresher-answer ' + slugify(topic.name) + '">' + topic.name + '</a></li>';
+        editorHTML += '<li><button type="button" class="thresher-answer ' + slugify(topic.name) + ' btn btn-default">' + topic.name + '</button></li>';
       })
-      editorHTML += '</form></ul>';
+      editorHTML += '</ul>';
     } else {
-      console.log('in a question view')
-      var topicName = state.results[state.results.length - 1].topicName;
-      topics.forEach(function(topic){
-        if (topicName === slugify(topic.name)) {
-          topic.questions.forEach(function(question) {
-            editorHTML += '<li><a href="#" class="thresher-answer" id=question_"' + question.id + '">' + question.text + '</a></li>';
-          });
-        }
-      })
-      editorHTML += '</form></ul>';
+      var responses = _.last(state).responses;
+      // check if there are any top-level questions
+      if (_.any(responses, 'top')) {
+        _.filter(responses, 'top').forEach(function (response) {
+          editorHTML += '<div class="form-group" id=question_"' + response.id + '"><label>' + response.text + '</label>';
+          switch (response.type) {
+            case 'multiplechoice':
+              response.answers.forEach(function(answer){
+                editorHTML += '<div class="radio thresher-answer"><label><input type="radio" class="thresher-response" name="optionsRadios" value=' + answer.id + '>' + answer.text + '</label></div>';
+              })
+            break;
+          }
+        })
+        editorHTML += '</div>';
+      } else {
+
+      }
+      // search for state where the only responses left are those with no dependencies and have no type field (indicating they've been answered)
+      // must also record the answers given
+      console.log(_.all(_.filter(responses, { 'dependencies': [] } ), { 'dependencies': [] } ) )
+      console.log(_.all(responses, { 'dependencies': [] } ))
+
+      // var topicName = _.last(state).topicName;
+      // topics.forEach(function(topic){
+      //   if (topicName === slugify(topic.name)) {
+      //     topic.responses.forEach(function(question) {
+      //       if (question.top) {
+      //         editorHTML += '<li><a href="#" class="thresher-answer" id=question_"' + question.id + '">' + question.text + '</a></li>';
+      //       }
+      //     });
+      //   }
+      // })
     }
+    editorHTML += '</form>';
     return editorHTML;
 
   }
 
-  // a function that looks at the state, tells editorState what to make
+  // a function that looks at the state, tells populateEditor what to make
   // a function that creates an HTML form with a button to click;
   // a function to store data in JSON
   // a global window listener, looks at state,
   // functions that listens to button clicks in the editor and acts appropriately
 
   QuestionTree.prototype.updateEditor = function(field, annotation) {
-  // editor.fields[1].element.innerHTML = that.editorState(state, topics);
-    // $(field).innerHTML = this.editorState(state, topics);
+  // editor.fields[1].element.innerHTML = that.populateEditor(state, topics);
+    // $(field).innerHTML = this.populateEditor(state, topics);
 
     // var text = typeof annotation.text!='undefined'?annotation.text:'';
     // console.log($(field))

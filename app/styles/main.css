@@ -1,0 +1,25 @@
+.annotator-topics-list {
+  font-size: large;
+}
+
+.annotator-widget {
+}
+
+#next-question  {
+  // background-image: url('');
+}
+
+.annotator-widget {
+  bottom: inherit;
+  margin-top: 11px;
+  // left: 0;
+}
+
+.annotator-widget::after {
+  height: 0;
+}
+
+#text-thresher-form {
+  height: 100%;
+  width: 100%;
+}

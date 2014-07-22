@@ -2,23 +2,24 @@ extends layout
 
 block content
   hr
-  .row
-    .small-12.columns
-      h3 Text for Analysis:
-  .row
-    .small-12.columns.panel.article-text
+  .container
+    .row
+      .col-sm-12
+        h3 Text for Analysis:
+    .row
+      .col-sm-12.panel.article-text
 
   hr
-
-  .row
-    .small-12.columns
-      dl.accordion(data-accordion='data-accordion')
-        dd.accordion-navigation
-            a(href='#panel1') Topics and Questions
-              em  (click to hide)
-            #panel1.content.active
-              table
-                thead
-                  tr.topic-names
-                  tbody.topic-questions
+  .container
+    .row
+      .col-sm-12
+        dl.accordion(data-accordion='data-accordion')
+          dd.accordion-navigation
+              a(href='#panel1') Topics and Questions
+                em  (click to hide)
+              #panel1.content.active
+                table
+                  thead
+                    tr.topic-names
+                    tbody.topic-questions
 
