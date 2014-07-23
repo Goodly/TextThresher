@@ -34,17 +34,13 @@
 
   setupTopicsBar: function(data) {
     data.topics.forEach(function(topic) {
-      // $('<th>').html(topic.name).appendTo('.topic-names').attr('id', slugify(topic.name) + '-header');
+      $('<th>').html(topic.name).appendTo('.topic-names').attr('id', slugify(topic.name) + '-header');
       topic.questions.forEach(function(question) {
         // if (question.top) {
           $('<tr>').html(question.text).appendTo('.topic-questions').attr('id', 'question-id_' + question.id);
         // }
       })
     })
-  },
-
-  buildModals: function(data) {
-
   },
 
   init: function() {
