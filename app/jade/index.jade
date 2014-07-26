@@ -13,13 +13,20 @@ block content
   .container
     .row
       .col-sm-12
-        dl.accordion(data-accordion='data-accordion')
-          dd.accordion-navigation
-              a(href='#panel1') Topics and Questions
-                em  (click to hide)
-              #panel1.content.active
+        .panel-group#accordion
+          .panel.panel-default
+            .panel-heading
+              h4 Topics and Questions
+                a(data-toggle="collapse", data-parent="#accordion" href="#topics-and-questions")
+            #topics-and-questions.panel-collapse.collapse.in
+              .panel-body
                 table
                   thead
                     tr.topic-names
                     tbody.topic-questions
+        //- dl.accordion(data-accordion='data-accordion')
+        //-   dd.accordion-navigation
+        //-       a(href='#panel1') Topics and Questions
+        //-         em  (click to hide)
+        //-       #panel1.content.active
 
