@@ -34,7 +34,7 @@
 
   setupTopicsBar: function(data) {
     data.topics.forEach(function(topic) {
-      $('<th>').html(topic.name).appendTo('.topic-names').attr('id', slugify(topic.name) + '-header');
+      $('<th>').html(topic.name).appendTo('.topic-names').attr('id', slugify(topic.name));
       topic.questions.forEach(function(question) {
         $('<tr>').html('<td>' + question.text + '</td>').appendTo('.topic-questions').attr('id', 'question-id_' + question.id);
       })
