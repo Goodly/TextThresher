@@ -64,7 +64,6 @@ Annotator.Plugin.QuestionTree = (function(_super) {
     });
 
     $widget.on('click', '.thresher-answer', function(e){
-      $('.state-element').remove();
       // either the view state is topic list
       if (!_.last(states).topicId) {
         var topicClass = $(e.target).attr('class').split(" ");
@@ -81,6 +80,7 @@ Annotator.Plugin.QuestionTree = (function(_super) {
                 });
               }
             })
+            $('.state-element').remove();
             updatedHTML = me.populateEditor(states, topics);
             $widget.append(updatedHTML);
           })
@@ -114,14 +114,14 @@ Annotator.Plugin.QuestionTree = (function(_super) {
             });
           }
         })
-        // $('.state-element').remove();
+        $('.state-element').remove();
         updatedHTML = me.populateEditor(states, topics);
         $widget.append(updatedHTML)
       }
       // console.log("All states: ")
       // console.log(states)
-      // console.log("Current state:")
-      // console.log(_.last(states))
+      console.log("Current state:")
+      console.log(_.last(states))
     });
 
     $widget.on('click', '.thresher-submit', function(e){
@@ -135,9 +135,12 @@ Annotator.Plugin.QuestionTree = (function(_super) {
 
     $('.annotator-save').click(function(){
       var payload = _.last(states);
-      console.log(payload)
-      var table = $('th#' + payload.topicName)
-      console.log(table)
+      if (_.last(states).done) {
+        $('th#' + payload.topicName).css('color', 'green');
+        var column = $('th#' + payload.topicName).index() + 1;
+        $('table tr td:nth-child(' + column + ')').css('color', 'green');
+        console.alert("You are finished with topic " + payload.topicName + "!!")
+      }
 
       $.ajax({
         url: destinationURL,
