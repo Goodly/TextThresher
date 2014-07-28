@@ -9,21 +9,37 @@ block content
     .row
       .col-sm-12.panel.article-text
 
-  hr
   .container
     .row
       .col-sm-12
-        .panel-group#accordion
+        #accordion.panel-group
           .panel.panel-default
             .panel-heading
-              h4 Topics and Questions
-                a(data-toggle="collapse", data-parent="#accordion" href="#topics-and-questions")
-            #topics-and-questions.panel-collapse.collapse.in
-              .panel-body
-                table
-                  thead
-                    tr.topic-names
-                    tbody.topic-questions
+                h4.panel-title
+                  a(data-toggle='collapse', data-parent='#accordion', href='#collapseOne')
+                    | Topics and Questions
+              #collapseOne.panel-collapse.collapse.in
+                .panel-body
+                  table.table.table-striped.table-bordered
+                    thead
+                      tr.topic-names
+                      tbody.topic-questions
+
+  //- hr
+  //- .container
+  //-   .row
+  //-     .col-sm-12
+  //-       .panel-group#accordion
+  //-         .panel.panel-default
+  //-           .panel-heading
+  //-             h4 Topics and Questions
+  //-               a(data-toggle="collapse", data-parent="#accordion" href="#topics-and-questions")
+  //-           #topics-and-questions.panel-collapse.collapse.in
+  //-             .panel-body
+  //-               table
+  //-                 thead
+  //-                   tr.topic-names
+  //-                   tbody.topic-questions
         //- dl.accordion(data-accordion='data-accordion')
         //-   dd.accordion-navigation
         //-       a(href='#panel1') Topics and Questions

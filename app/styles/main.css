@@ -2,7 +2,12 @@
   font-size: large;
 }
 
+.text-thresher-form, .state-element {
+  font-size: 16px;
+}
+
 .annotator-widget {
+  min-width: 314px;
 }
 
 #next-question  {

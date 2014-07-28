@@ -3,6 +3,7 @@ $(function(){
   // $('.annotator-listing').on('click', '*', function(e) {
   //   console.log(e)
   // })
+
 })
 
 var slugify = function (text) {
@@ -13,3 +14,4 @@ var slugify = function (text) {
     .replace(/^-+/, '')             // Trim - from start of text
     .replace(/-+$/, '');            // Trim - from end of text
 }
+
