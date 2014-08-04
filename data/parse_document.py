@@ -1,6 +1,7 @@
 import codecs
 import os
 import re
+import sys
 from datetime import date
 
 #SUCCESS_FOLDER = "DecidingForceArticles"
@@ -9,6 +10,7 @@ FILENAME_ERROR_FOLDER = "DecidingForceErrors/filename"
 HEADER_ERROR_FOLDER = "DecidingForceErrors/header"
 TEXT_ERROR_FOLDER = "DecidingForceErrors/text"
 DUPLICATES_ERROR_FOLDER = "DecidingForceErrors/duplicates"
+WARNING_FOLDER = "DecidingForceErrors/warning"
 #ARTICLE_FOLDER = "DecidingForceArticles_Sample/"
 
 # List of known duplicates
@@ -60,6 +62,7 @@ class ArticleParseError(Exception):
     HEADER_ERROR = 1
     TEXT_ERROR = 2
     DUPLICATE_ERROR = 3
+    BRACKET_WARNING = 4
 
     def __init__(self, message, error_type):
         super(ArticleParseError, self).__init__(message)
@@ -104,6 +107,12 @@ def parse_document(path):
         print "Possibly useless:", article_id
         raise ArticleParseError("Only found Useless tuas!",
                                 ArticleParseError.DUPLICATE_ERROR)
+
+    # Warning: brackets left over are usually bad news.
+    if '[' in clean_text or ']' in clean_text:
+        print "Possible Error:", article_id
+#        raise ArticleParseError("Brackets remain in clean text!",
+#                                ArticleParseError.BRACKET_WARNING)
 
     # print out our data.
     # TODO: store this somewhere.
@@ -386,5 +395,14 @@ if __name__ == '__main__':
         ArticleParseError.HEADER_ERROR : HEADER_ERROR_FOLDER,
         ArticleParseError.TEXT_ERROR : TEXT_ERROR_FOLDER,
         ArticleParseError.DUPLICATE_ERROR: DUPLICATES_ERROR_FOLDER,
+        ArticleParseError.BRACKET_WARNING: WARNING_FOLDER
     }
-    parse_documents(ARTICLE_FOLDER, error_dirs)
+
+    if len(sys.argv) > 1:
+        file_path = sys.argv[1]
+        try:
+            parse_document(file_path)
+        except ArticleParseError as e:
+            print e
+    else:
+        parse_documents(ARTICLE_FOLDER, error_dirs)
