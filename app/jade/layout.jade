@@ -1,7 +1,7 @@
 doctype html
 html(lang="en")
   head
-    title text thresher
+    title txt_thrshr
     meta(charset='UTF-8')
     meta(content='', name='description')
     meta(content='', name='author')
@@ -23,82 +23,25 @@ html(lang="en")
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand(href='#') Deciding Force
+          a.navbar-brand(href='#') txt_thrshr
         //
            Collect the nav links, forms, and other content for toggling
         #bs-example-navbar-collapse-1.collapse.navbar-collapse
-          ul.nav.navbar-nav
-            li.active
-              a(href='#') Link
-            li
-              a(href='#') Link
-            li.dropdown
-              a.dropdown-toggle(href='#', data-toggle='dropdown')
-                | Dropdown
-                span.caret
-              ul.dropdown-menu(role='menu')
-                li
-                  a(href='#') Action
-                li
-                  a(href='#') Another action
-                li
-                  a(href='#') Something else here
-                li.divider
-                li
-                  a(href='#') Separated link
-                li.divider
-                li
-                  a(href='#') One more separated link
-          form.navbar-form.navbar-left(role='search')
-            .form-group
-              input.form-control(type='text', placeholder='Search')
-            button.btn.btn-default(type='submit') Submit
           ul.nav.navbar-nav.navbar-right
-            li
-              a(href='#') Link
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown')
-                | Dropdown
+                | Glossary
                 span.caret
-              ul.dropdown-menu(role='menu')
+              ul.dropdown-menu.glossary-menu(role='menu')
                 li
-                  a(href='#') Action
-                li
-                  a(href='#') Another action
-                li
-                  a(href='#') Something else here
-                li.divider
-                li
-                  a(href='#') Separated link
-        //
-           /.navbar-collapse
-      //
-         /.container-fluid
+                  table.table.table-striped
+                    thead
+                        tr
+                          th Word
+                          th Definition
+                    tbody.table-glossary
 
 
-    //- header
-    //- nav.top-bar(data-topbar='data-topbar')
-    //-   ul.title-area
-    //-       li.name
-    //-         h1
-    //-           a(href='#') Deciding Force
-    //-       li.toggle-topbar.menu-icon
-    //-         a(href='#')
-    //-           span Instructions
-    //-     section.top-bar-section
-    //-       ul.right
-    //-         li
-    //-           a(href='#') Right Button Active
-    //-         li.has-dropdown
-    //-           a(href='#') Glossary
-    //-           ul.dropdown
-    //-             li
-    //-               a(href='#') First link in dropdown
-    //-       ul.left
-    //-         li
-    //-           a(href='#') Left Nav Button
-
-      //- h4 Text Thresher
     block content
     footer
 

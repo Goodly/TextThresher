@@ -16,6 +16,7 @@
 
         that.insertArticleText(data);
         that.setupTopicsBar(data);
+        that.setupGlossary(data);
         annotated.annotator('addPlugin','QuestionTree', options);
 
       })
@@ -38,6 +39,12 @@
       topic.questions.forEach(function(question) {
         $('<tr>').html('<td>' + question.text + '</td>').appendTo('.topic-questions').attr('id', 'question-id_' + question.id);
       })
+    })
+  },
+
+  setupGlossary: function(data) {
+    Object.keys(data.glossary).forEach(function(key, i, o) {
+      $('<tr>').html('<td>' + key + '</td><td>' + data.glossary[key] + '</td>').appendTo('.table-glossary');
     })
   },
 

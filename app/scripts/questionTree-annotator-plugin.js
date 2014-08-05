@@ -134,12 +134,13 @@ Annotator.Plugin.QuestionTree = (function(_super) {
     });
 
     $('.annotator-save').click(function(){
+      $('.state-element').remove();
       var payload = _.last(states);
       if (_.last(states).done) {
         $('th#' + payload.topicName).css('color', 'green');
         var column = $('th#' + payload.topicName).index() + 1;
         $('table tr td:nth-child(' + column + ')').css('color', 'green');
-        console.alert("You are finished with topic " + payload.topicName + "!!")
+        console.log("You are finished with topic " + payload.topicName + "!!")
       }
 
       $.ajax({
