@@ -19,7 +19,11 @@ block content
             .panel-heading
                 h4.panel-title
                   a(data-toggle='collapse', data-parent='#accordion', href='#collapseOne')
-                    | Topics and Questions
+                    .row
+                      .col-sm-6
+                        | Topics and Questions
+                      .col-sm-6.show-hide-topics-message
+                        em click to hide/show
               #collapseOne.panel-collapse.collapse.in
                 .panel-body
                   table.table.table-striped.table-bordered.table-topics

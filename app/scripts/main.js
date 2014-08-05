@@ -17,9 +17,14 @@ $(function(){
       $('.article-text').append('<span class="article-prefix">' + text.substring(0, start) + '</span>');
       $('.article-text').append('<strong>' + text.substring(start, stop) + '</strong>');
       $('.article-text').append('<span class="article-suffix">' + text.substring(stop, text.length - 1) + '</span>');
-
     }
-  })
+  });
+
+  setTimeout( function(){
+    $('.show-hide-topics-message').fadeOut(1000);
+  }, 4000)
+
+
 })
 
 var slugify = function (text) {
