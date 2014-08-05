@@ -7,17 +7,17 @@ A tool for decomposing and annotating articles using the crowd. Under developmen
 
 #### Running the app locally
 
-clone the repository
+– clone the repository
 
-`$ npm install`
+– `$ npm install`
 
-`$ grunt server`
+– `$ grunt server`
 
 #### Deployment
 
-`$ divshot login`
+– `$ divshot login`
 
-commit changes to working branch
+– commit changes to working branch
 
-`$ grunt build && divshot push`
+– `$ grunt build && divshot push`
 
