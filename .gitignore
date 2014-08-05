@@ -4,4 +4,4 @@ dist
 .sass-cache
 .DS_Store
 app/bower_components
-.divshot-cache/
+.divshot-cache
