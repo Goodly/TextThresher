@@ -15,9 +15,11 @@
             };
 
         that.insertArticleText(data);
+        that.formatArticle();
         that.setupTopicsBar(data);
         that.setupGlossary(data);
         annotated.annotator('addPlugin','QuestionTree', options);
+
 
       })
       .fail(function(e) {
@@ -27,10 +29,22 @@
 
   insertArticleText: function(data) {
     var offsets = data.tua.offsets[0],
-        tua = '<strong>';
+        tua = '',
+        // prefixString = '<span class="article-prefix">' + data.text.substring(0, offsets.start) + '</span>',
+        suffixString = '<span class="article-suffix">' + data.text.substring(offsets.stop, data.text.length - 1) + '</span>';
 
-    tua += data.text.substring(offsets.start, offsets.stop) + '</strong>';
+    // tua += prefixString;
+    tua += '<strong>' + data.text.substring(offsets.start, offsets.stop) + '</strong>';
+    tua += suffixString;
     $('.article-text').append(tua);
+    $('.all-the-text').append(data.text);
+    $('.start').append(offsets.start);
+    $('.stop').append(offsets.stop)
+  },
+
+  formatArticle: function(){
+    // $('.article-prefix').dotdotdot({height: 50});
+    $('.article-suffix').dotdotdot({height: 50});
   },
 
   setupTopicsBar: function(data) {
