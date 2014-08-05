@@ -1,7 +1,7 @@
 /*
 Question Tree Annotator Plugin
 Copyright (C) 2014 Zachary Zibrat / Deciding Force
-License TODO: https://github.com/palimpsests
+License TODO:
 
 Logic inspired by source code from Rich Text Annotator Plugin v1.0 (https://github.com/danielcebrian/richText-annotator)
 */
