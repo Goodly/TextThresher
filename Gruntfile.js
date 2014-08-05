@@ -25,7 +25,7 @@ module.exports = function(grunt) {
     folders: folders,
     watch: {
       compass: {
-        files: ['<%= folders.app %>/styles/{,*/}*.{scss,sass}'],
+        files: ['<%= folders.app %>/styles/{,*/}*.{scss,sass, css}'],
         tasks: ['compass:server']
       },
       server: {
