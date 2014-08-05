@@ -139,7 +139,7 @@ Annotator.Plugin.QuestionTree = (function(_super) {
       if (_.last(states).done) {
         $('th#' + payload.topicName).css('color', 'green');
         var column = $('th#' + payload.topicName).index() + 1;
-        $('table tr td:nth-child(' + column + ')').css('color', 'green');
+        $('table tr.topic td:nth-child(' + column + ')').css('color', 'green');
         console.log("You are finished with topic " + payload.topicName + "!!")
       }
 
