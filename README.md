@@ -15,6 +15,10 @@ Uses the [AnnotatorJS](http://annotatorjs.org/) plugin.
 
 – `$ grunt server`
 
+visit the app at (http://localhost:9000)
+
+markup is generated using Jade
+
 #### Deployment
 
 – `$ divshot login`
