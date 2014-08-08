@@ -7,6 +7,8 @@ Uses the [AnnotatorJS](http://annotatorjs.org/) plugin.
 
 #### Running the app locally
 
+– requires nodejs and npm
+
 – clone the repository
 
 – `$ npm install`
