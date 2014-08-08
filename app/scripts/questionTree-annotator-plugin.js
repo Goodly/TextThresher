@@ -42,6 +42,7 @@ Annotator.Plugin.QuestionTree = (function(_super) {
     annotator.subscribe("annotationEditorShown", function(editor, annotation){
       console.log(topics[0].questions)
       $('#annotator-field-0').remove();
+      // $('.annotator-controls').hide();
       if ($('.text-thresher-completion-form').length) {
         $('.text-thresher-completion-form').remove();
       }
@@ -119,7 +120,7 @@ Annotator.Plugin.QuestionTree = (function(_super) {
         $widget.append(updatedHTML)
       }
       // console.log("All states: ")
-      // console.log(states)
+      console.log(states)
       console.log("Current state:")
       console.log(_.last(states))
     });
@@ -134,6 +135,7 @@ Annotator.Plugin.QuestionTree = (function(_super) {
     });
 
     $('.annotator-save').click(function(){
+      console.log('aslkdja')
       $('.state-element').remove();
       var payload = _.last(states);
       if (_.last(states).done) {
