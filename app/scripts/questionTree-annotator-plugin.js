@@ -205,11 +205,6 @@ Annotator.Plugin.QuestionTree = (function(_super) {
 
   }
 
-  // a function that looks at the states, tells populateEditor what to make
-  // a function that creates an HTML form with a button to click;
-  // a function to store data in JSON
-  // a global window listener, looks at states,
-  // functions that listens to button clicks in the editor and acts appropriately
   QuestionTree.prototype.populateQuestionHTML = function(question) {
     var htmlString = '<div class="form-group question-container" id=' + question.id + '><label>' + question.text + '</label>';
     switch (question.type) {
