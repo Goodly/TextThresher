@@ -1,4 +1,5 @@
 import codecs
+import json
 import os
 import re
 import sys
@@ -116,17 +117,33 @@ def parse_document(path):
 
     # print out our data.
     # TODO: store this somewhere.
-    print "final clean text:", clean_text
-    import pprint; pprint.pprint(tuas)
-    print "annotators:", annotators
-    print "version:", version
-    print "date published:", date_published
-    print "article ID:", article_id
-    print "city:", city
-    print "state:", state
-    print "periodical:", periodical
-    print "periodical code:", periodical_code
-    print "\n\n\n"
+    metadata = {
+        'annotators': annotators,
+        'version': version,
+        'date_published': date_published,
+        'article_id': article_id,
+        'city': city,
+        'state': state,
+        'periodical': periodical,
+        'periodical_code': periodical_code,
+    }
+    return {
+        'metadata': metadata,
+        'text': clean_text,
+        'tuas': tuas
+    }
+
+#    print "final clean text:", clean_text
+#    import pprint; pprint.pprint(tuas)
+#    print "annotators:", annotators
+#    print "version:", version
+#    print "date published:", date_published
+#    print "article ID:", article_id
+#    print "city:", city
+#    print "state:", state
+#    print "periodical:", periodical
+#    print "periodical code:", periodical_code
+#    print "\n\n\n"
 
 def parse_header(raw_text):
     # expected header format:
@@ -375,6 +392,7 @@ def parse_duplicates():
         return dup_f.readlines()
 
 def parse_documents(directory_path, error_directory_paths):
+    data = []
     for file_path in os.listdir(directory_path):
         full_path = os.path.join(directory_path, file_path)
         if '.gitignore' in file_path or os.path.isdir(full_path):
@@ -382,12 +400,13 @@ def parse_documents(directory_path, error_directory_paths):
         print "PROCCESING FILE:", file_path, "..."
 
         try:
-            parse_document(full_path)
+            data.append(parse_document(full_path))
         except ArticleParseError as e:
             new_path = os.path.join(error_directory_paths[e.error_type],
                                     file_path)
             os.rename(full_path, new_path)
             print "ERROR!"
+    return data
 
 if __name__ == '__main__':
     error_dirs = {
@@ -399,10 +418,17 @@ if __name__ == '__main__':
     }
 
     if len(sys.argv) > 1:
+        data = []
         file_path = sys.argv[1]
         try:
-            parse_document(file_path)
+            data.append(parse_document(file_path))
         except ArticleParseError as e:
             print e
     else:
-        parse_documents(ARTICLE_FOLDER, error_dirs)
+        data = parse_documents(ARTICLE_FOLDER, error_dirs)
+
+    # dump the data to a JSON file
+    def dthandler(obj):
+        if isinstance(obj, date):
+            return obj.isoformat()
+    json.dump(data, open('data.txt', 'w'), default=dthandler)
