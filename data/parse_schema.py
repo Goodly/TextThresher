@@ -1,4 +1,4 @@
-IN_FILE = 'schema1.txt'
+IN_FILE = 'DecidingForceSchema_Sample/schema1.txt'
 
 TITLE_ID = 'title:'
 INSTRUCTIONS_ID = 'instructions:'
@@ -6,9 +6,8 @@ GLOSSARY_ID = 'glossary:'
 DEPENDENCY_ID = 'if'
 DEPENDENCY_TARGET = 'then'
 
-DATA = {}
-
-def parse_schema(schema_file):
+def parse_schema(schema_file=IN_FILE):
+    parsed_schema = {}
     with open(schema_file, 'r') as f:
         for line in f:
             raw_line = line.strip()
@@ -20,50 +19,51 @@ def parse_schema(schema_file):
             # Infer the line type and parse accordingly
             type_id, data = raw_line.split(None, 1)
             if type_id.lower() == TITLE_ID:
-                parse_title(data)
+                parse_title(data, parsed_schema)
             elif type_id.lower() == INSTRUCTIONS_ID:
-                parse_instructions(data)
+                parse_instructions(data, parsed_schema)
             elif type_id.lower() == GLOSSARY_ID:
-                parse_glossary(data)
+                parse_glossary(data, parsed_schema)
             elif type_id.lower() == DEPENDENCY_ID:
-                parse_dependency(data)
+                parse_dependency(data, parsed_schema)
             else:
-                parse_question_entry(type_id, data)
+                parse_question_entry(type_id, data, parsed_schema)
+    return parsed_schema
 
-def parse_title(title):
-    DATA['title'] = title
+def parse_title(title, output):
+    output['title'] = title
 
-def parse_instructions(instructions):
-    DATA['instructions'] = instructions
+def parse_instructions(instructions, output):
+    output['instructions'] = instructions
 
-def parse_glossary(glossary_entry):
-    if 'glossary' not in DATA:
-        DATA['glossary'] = {}
+def parse_glossary(glossary_entry, output):
+    if 'glossary' not in output:
+        output['glossary'] = {}
     term, definition = glossary_entry.split(':', 1)
-    DATA['glossary'][term.strip()] = definition.strip()
+    output['glossary'][term.strip()] = definition.strip()
 
-def parse_dependency(dependency):
-    if 'dependencies' not in DATA:
-        DATA['dependencies'] = []
+def parse_dependency(dependency, output):
+    if 'dependencies' not in output:
+        output['dependencies'] = []
     source, target = dependency.split(DEPENDENCY_TARGET, 1)
-    DATA['dependencies'].append((source.strip().strip(','),
+    output['dependencies'].append((source.strip().strip(','),
                                  target.strip()))
 
-def parse_question_entry(entry_id, data):
+def parse_question_entry(entry_id, data, output):
     type_bits = entry_id.split('.')
     num_bits = len(type_bits)
     if num_bits == 1:
         topic_id = type_bits[0]
-        if 'topics' not in DATA:
-            DATA['topics'] = {}
-        DATA['topics'][topic_id] = {
+        if 'topics' not in output:
+            output['topics'] = {}
+        output['topics'][topic_id] = {
             'name': data.strip(),
             'questions': {},
         }
     elif num_bits == 2:
         topic_id, question_id = type_bits
         question_id = type_bits[1]
-        topic = DATA['topics'][topic_id]
+        topic = output['topics'][topic_id]
         question_type, question_text = data.split(None, 1)
         topic['questions'][question_id] = {
             'text': question_text,
@@ -72,15 +72,15 @@ def parse_question_entry(entry_id, data):
         }
     else:
         topic_id, question_id, answer_id = type_bits
-        question = DATA['topics'][topic_id]['questions'][question_id]
+        question = output['topics'][topic_id]['questions'][question_id]
         question['answers'][answer_id] = {
             'text': data
         }
 
-def print_data():
+def print_data(output):
     print "Here's the current parsed data:"
-    import pprint; pprint.pprint(DATA)
+    import pprint; pprint.pprint(output)
 
 if __name__ == '__main__':
-    parse_schema(IN_FILE)
-    print_data()
+    output = parse_schema(IN_FILE)
+    print_data(output)

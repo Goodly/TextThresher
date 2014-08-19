@@ -4,3 +4,6 @@
 # intellij artifacts
 .idea/
 *.iml
+
+# python artifacts
+*.pyc
