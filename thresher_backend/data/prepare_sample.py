@@ -62,6 +62,6 @@ if __name__ == '__main__':
     sample_doc = parse_document(SAMPLE_DOC)
     samples = data_to_sample_json(sample_schema, sample_doc, SAMPLE_TYPE)
     for i, sample in enumerate(samples):
-        fname = '%s_%d.json' % (os.path.basename(SAMPLE_DOC), i)
+        fname = '%s_%d.json' % (os.path.splitext(os.path.basename(SAMPLE_DOC))[0], i)
         with open(fname, 'w') as outf:
             json.dump(sample, outf)

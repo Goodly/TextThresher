@@ -4,18 +4,21 @@ import os
 import re
 import sys
 from datetime import date
+from django.conf import settings
+
+DATA_FOLDER = os.path.join(settings.BASE_DIR, 'data')
 
 #SUCCESS_FOLDER = "DecidingForceArticles"
-ARTICLE_FOLDER = "DecidingForceArticles"
-FILENAME_ERROR_FOLDER = "DecidingForceErrors/filename"
-HEADER_ERROR_FOLDER = "DecidingForceErrors/header"
-TEXT_ERROR_FOLDER = "DecidingForceErrors/text"
-DUPLICATES_ERROR_FOLDER = "DecidingForceErrors/duplicates"
-WARNING_FOLDER = "DecidingForceErrors/warning"
+ARTICLE_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceArticles")
+FILENAME_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/filename")
+HEADER_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/header")
+TEXT_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/text")
+DUPLICATES_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/duplicates")
+WARNING_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/warning")
 #ARTICLE_FOLDER = "DecidingForceArticles_Sample/"
 
 # List of known duplicates
-DUPLICATES_FILE = "duplicates.txt"
+DUPLICATES_FILE = os.path.join(DATA_FOLDER,"duplicates.txt")
 
 # Format of the article filenames.
 # Example: 1000BethlehemPA-LehighValleyLive-02.txt
