@@ -24,6 +24,7 @@ class AnalysisType(models.Model):
     instructions = models.TextField()
     glossary = models.TextField() # as a JSON map
     topics = models.TextField() # as a big JSON blob.
+    question_dependencies = models.TextField() # as a big JSON blob.
 
 # A Text Unit of Analysis (TUA).
 # TUAs have types and reference text within an article

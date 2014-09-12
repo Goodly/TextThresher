@@ -24,8 +24,9 @@ def load_schema(schema):
         name=schema_name,
         requires_processing=schema_name not in ['Useless', 'Future'],
         instructions=schema['instructions'],
-        glossary=schema['glossary'],
-        topics=schema['topics'], # Probably need to process this more.
+        glossary=json.dumps(schema['glossary']),
+        topics=json.dumps(schema['topics']),
+        question_dependencies=json.dumps(schema['dependencies'])
     )
     try:
         schema_obj.save()
