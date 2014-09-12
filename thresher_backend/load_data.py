@@ -1,16 +1,19 @@
 import argparse
 import json
 import os
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'thresher_backend.settings'
 from django.conf import settings
+
 from django.core.management import call_command
 from django.core.management.color import no_style
 from django.core.management.sql import sql_delete
 from django.db import connections, DEFAULT_DB_ALIAS, models
 from django.db.utils import IntegrityError
-from thresher.models import Article, AnalysisType, TUA
+
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
+from thresher.models import Article, AnalysisType, TUA
 
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
