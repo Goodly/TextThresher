@@ -1,5 +1,6 @@
 # emacs artifacts
 *~
+*#
 
 # intellij artifacts
 .idea/
@@ -8,11 +9,5 @@
 # python artifacts
 *.pyc
 
-# misc
-node_modules
-dist
-.tmp
-.sass-cache
-.DS_Store
-app/bower_components
-.divshot-cache
+# django artifacts
+staticfiles
