@@ -1,3 +1,8 @@
+Django==1.6.6
+Markdown==2.4.1
+django-filter==0.7
+djangorestframework==2.4.2
 psycopg2==2.5.3
+pytz==2014.4
 web.py==0.37
 wsgiref==0.1.2
