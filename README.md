@@ -1,29 +1,43 @@
-Text Thresher
-=============
+Text Thresher Backend
+=====================
 
-A tool for decomposing and annotating articles using the crowd. Under development for the [Deciding Force Project](http://www.decidingforce.org/).
+The backend for Text Thresher, a tool for decomposing and annotating articles
+using the crowd. Under development for the
+[Deciding Force Project](http://www.decidingforce.org/).
 
-Uses the [AnnotatorJS](http://annotatorjs.org/) plugin.
+The latest version of the backend is running
+[on heroku](http://text-thresher.herokuapp.com/api). The API is browsable.
 
 #### Running the app locally
 
-– requires nodejs and npm
+- install heroku toolbelt
+  [(details)](https://devcenter.heroku.com/articles/getting-started-with-python#set-up)
 
-– clone the repository
+- install and run postgres. Create a database according to the settings in
+  `thresher_backend/settings.py`
 
-– `$ npm install`
+- set up a virtualenv
 
-– `$ grunt server`
+- install packages with `pip install -r requirements.txt`
 
-visit the app at (http://localhost:9000)
+- prepare static files with `python manage.py collectstatic --noinput`
 
-markup is generated using Jade
+- run the app with `foreman start`
 
 #### Deployment
 
-– `$ divshot login`
+- push the code to Heroku `git push heroku`
 
-– commit changes to working branch
+- Reset the db with `heroku run reset_db.sh`
 
-– `$ grunt build && divshot push`
+- Load the data with `heroku run python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`
 
+- Visit the application to make sure it worked
+
+#### API
+
+The API is mostly self-documenting in
+[the browsable interface](http://text-thresher.herokuapp.com/api), but there are
+API calls that aren't readily apparent there:
+
+- GET /api/tuas/random : get a random TUA that hasn't yet been processed.

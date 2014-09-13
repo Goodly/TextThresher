@@ -11,3 +11,6 @@
 
 # django artifacts
 staticfiles
+
+# gunicorn artifacts
+*.log
