@@ -22,15 +22,26 @@ The latest version of the backend is running
 
 - prepare static files with `python manage.py collectstatic --noinput`
 
+- prepare the database with `./reset_db.sh`
+
+- Load the data with `python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`
+
 - run the app with `foreman start`
 
 #### Deployment
 
 - push the code to Heroku `git push heroku`
 
-- Reset the db with `heroku run reset_db.sh`
+- Reset the db with `heroku pg:reset postgres --confirm text-thresher`
 
-- Load the data with `heroku run python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`
+- Prepare the database. You have two options.
+
+  - To initialize the database but not load data, run
+    `heroku run python manage.py syncdb`
+
+  - To initialize the database with a copy of your local data, verify that your
+    local postgres database has data and works when you run the app locally,
+    then run `heroku pg:push LOCAL_DB_NAME postgres`
 
 - Visit the application to make sure it worked
 
