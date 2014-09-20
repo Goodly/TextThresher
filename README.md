@@ -19,10 +19,10 @@ The latest version of the backend is running
     - Find the pg_hba.conf file:
     
             $ sudo -u postgres psql
-				    > show hba_file;
-	    		  > \q
+            > show hba_file;
+            > \q
 		
-	  - Edit the pg_hba.conf file, and change the line starting with "local all" to "local" "all" "all" "trust"
+    - Edit the pg_hba.conf file, and change the line starting with "local all" to "local" "all" "all" "trust"
 		
 	- Restart postgres:
 	
