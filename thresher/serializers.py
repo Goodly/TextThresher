@@ -40,13 +40,6 @@ class JSONFieldModelSerializer(serializers.ModelSerializer):
         for field in self.json_fields:
             setattr(self, 'transform_' + field, to_json)
 
-class TUASerializer(JSONFieldModelSerializer):
-    json_fields = ['offsets']
-
-    class Meta:
-        model = TUA
-        fields = ('id', 'tua_id', 'analysis_type', 'article', 'offsets')
-
 class ArticleSerializer(JSONFieldModelSerializer):
     json_fields = ['annotators']
 
@@ -63,3 +56,13 @@ class AnalysisTypeSerializer(JSONFieldModelSerializer):
         model = AnalysisType
         fields = ('id', 'name', 'instructions', 'glossary', 'topics',
                   'question_dependencies')
+
+class TUASerializer(JSONFieldModelSerializer):
+    json_fields = ['offsets']
+    analysis_type = AnalysisTypeSerializer()
+    article = ArticleSerializer()
+
+    class Meta:
+        model = TUA
+        fields = ('id', 'tua_id', 'analysis_type', 'article', 'offsets')
+        #depth = 1
