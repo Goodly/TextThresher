@@ -5,7 +5,7 @@ from models import TUA, Article, AnalysisType
 
 # Serializers define the API representation of the models.
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     password = serializers.WritableField(write_only=True)
 
     def restore_object(self, attrs, instance=None):
@@ -25,9 +25,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'is_staff', 'password')
+        fields = ('id', 'username', 'email', 'is_staff', 'password')
 
-class JSONFieldModelSerializer(serializers.HyperlinkedModelSerializer):
+class JSONFieldModelSerializer(serializers.ModelSerializer):
     json_fields = [] # subclasses should assign these
 
     def __init__(self, *args, **kwargs):
@@ -42,19 +42,17 @@ class JSONFieldModelSerializer(serializers.HyperlinkedModelSerializer):
 
 class TUASerializer(JSONFieldModelSerializer):
     json_fields = ['offsets']
-    tua_type = serializers.HyperlinkedRelatedField(
-        view_name='analysistype-detail', source='analysis_type')
 
     class Meta:
         model = TUA
-        fields = ('id', 'url', 'tua_id', 'tua_type', 'article', 'offsets')
+        fields = ('id', 'tua_id', 'analysis_type', 'article', 'offsets')
 
 class ArticleSerializer(JSONFieldModelSerializer):
     json_fields = ['annotators']
 
     class Meta:
         model = Article
-        fields = ('url', 'text', 'date_published', 'city_published',
+        fields = ('article_id', 'text', 'date_published', 'city_published',
                   'state_published', 'periodical', 'periodical_code',
                   'parse_version', 'annotators')
 
@@ -63,5 +61,5 @@ class AnalysisTypeSerializer(JSONFieldModelSerializer):
 
     class Meta:
         model = AnalysisType
-        fields = ('name', 'instructions', 'glossary', 'topics',
+        fields = ('id', 'name', 'instructions', 'glossary', 'topics',
                   'question_dependencies')
