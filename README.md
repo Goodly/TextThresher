@@ -51,6 +51,8 @@ The latest version of the backend is running
 
 - run the app with `foreman start`
 
+- view the API in the browser at `http://127.0.0.1:5000/api/`
+
 #### Deployment
 
 - push the code to Heroku `git push heroku`
