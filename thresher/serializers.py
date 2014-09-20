@@ -47,7 +47,7 @@ class TUASerializer(JSONFieldModelSerializer):
 
     class Meta:
         model = TUA
-        fields = ('url', 'tua_id', 'tua_type', 'article', 'offsets')
+        fields = ('id', 'url', 'tua_id', 'tua_type', 'article', 'offsets')
 
 class ArticleSerializer(JSONFieldModelSerializer):
     json_fields = ['annotators']
