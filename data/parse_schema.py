@@ -55,27 +55,31 @@ def parse_question_entry(entry_id, data, output):
     if num_bits == 1:
         topic_id = type_bits[0]
         if 'topics' not in output:
-            output['topics'] = {}
-        output['topics'][topic_id] = {
+            output['topics'] = []
+        output['topics'].append({
+            'id': topic_id,
             'name': data.strip(),
-            'questions': {},
-        }
+            'questions': [],
+        })
     elif num_bits == 2:
         topic_id, question_id = type_bits
         question_id = type_bits[1]
-        topic = output['topics'][topic_id]
+        topic = [t for t in output['topics'] if t['id'] == topic_id][0]
         question_type, question_text = data.split(None, 1)
-        topic['questions'][question_id] = {
+        topic['questions'].append({
+            'id': question_id,
             'text': question_text,
             'type': question_type,
-            'answers': {}
-        }
+            'answers': [],
+        })
     else:
         topic_id, question_id, answer_id = type_bits
-        question = output['topics'][topic_id]['questions'][question_id]
-        question['answers'][answer_id] = {
-            'text': data
-        }
+        topic = [t for t in output['topics'] if t['id'] == topic_id][0]
+        question = [q for q in topic['questions'] if q['id'] == question_id][0]
+        question['answers'].append({
+            'id': answer_id,
+            'text': data,
+        })
 
 def print_data(output):
     print "Here's the current parsed data:"
