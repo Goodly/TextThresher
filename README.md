@@ -13,8 +13,31 @@ The latest version of the backend is running
 - install heroku toolbelt
   [(details)](https://devcenter.heroku.com/articles/getting-started-with-python#set-up)
 
-- install and run postgres. Create a database according to the settings in
-  `thresher_backend/settings.py`
+- install and run postgres:
+  - do the install (with apt-get or brew, depending on your OS). 
+  - Set up access control:
+    - Find the pg_hba.conf file:
+    
+            $ sudo -u postgres psql
+				    > show hba_file;
+	    		  > \q
+		
+	  - Edit the pg_hba.conf file, and change the line starting with "local all" to "local" "all" "all" "trust"
+		
+	- Restart postgres:
+	
+            $ sudo /etc/init.d/postgresql restart <-- On Linux
+            $ pg_ctl -D /usr/local/var/postgres/ -l /usr/local/var/postgres/server.log restart <-- on OSX
+
+	- Create the Django DB user (it should match the user in the `settings.py` file):
+
+		    $ sudo -su postgres
+		    $ createuser --superuser USER_NAME
+		    $ exit
+		
+	- Create the database(should match the database in `settings.py`, right now `thresher`):
+
+		    $ createdb -O USER_NAME -U USER_NAME thresher
 
 - set up a virtualenv
 
