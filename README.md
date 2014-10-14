@@ -47,7 +47,10 @@ The latest version of the backend is running
 
 - prepare the database with `./reset_db.sh`
 
-- Load the data with `python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`
+- Load the data with `python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`, where `SCHEMA_DIR` is a directory
+  containing a `.txt` file for each module topology, and `ARTICLE_DIR` is a directory containing a `.txt`
+  file for each raw article. If you do not have access to a complete copy of the data, a sample schema and
+  article directory are available under `text-thresher-backend/data/sample`.
 
 - run the app with `foreman start`
 
