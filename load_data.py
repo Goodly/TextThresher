@@ -68,23 +68,32 @@ def load_article(article):
     article_obj.save()
 
     for tua_type, tuas in article['tuas'].iteritems():
-        if tua_type != 'Protester': continue # TODO: REMOVE ME
         for tua_id, offset_list in tuas.iteritems():
             try:
+                analysis_type = (ANALYSIS_TYPES.get(tua_type) or
+                                 AnalysisType.objects.get(name=tua_type))
+            except AnalysisType.DoesNotExist:
+                # No analysis type loaded--create a dummy type.
+                analysis_type = AnalysisType.objects.create(
+                    name=tua_type,
+                    requires_processing=tua_type not in ['Useless', 'Future'],
+                    instructions='',
+                    glossary='',
+                    topics='',
+                    question_dependencies='',
+                )
+                ANALYSIS_TYPES[tua_type] = analysis_type
+#                raise ValueError("No TUA type '" + tua_type +
+#                                 "' registered. Have you loaded the schemas?")
+            try:
                 tua_obj = TUA(
-                    analysis_type=(ANALYSIS_TYPES.get(tua_type) or
-                                   AnalysisType.objects.get(name=tua_type)),
+                    analysis_type=analysis_type,
                     article=article_obj,
                     offsets=json.dumps(offset_list), # Probably need to process this more.
                     tua_id=tua_id,
                 )
-            except AnalysisType.DoesNotExist:
-                raise ValueError("No TUA type '" + tua_type +
-                                 "' registered. Have you loaded the schemas?")
-            try:
                 tua_obj.save()
             except IntegrityError as e:
-                import pdb;pdb.set_trace()
                 print "error!"
 
     print "loading article..."

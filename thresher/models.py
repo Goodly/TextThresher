@@ -25,7 +25,7 @@ class Article(models.Model):
 # Possible Analysis Types
 class AnalysisType(models.Model):
     name = models.CharField(max_length=40, unique=True)
-    requires_processing = models.BooleanField()
+    requires_processing = models.BooleanField(default=False)
     instructions = models.TextField()
     glossary = models.TextField() # as a JSON map
     topics = models.TextField() # as a big JSON blob.
