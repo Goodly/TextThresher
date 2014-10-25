@@ -48,3 +48,79 @@ class TUA(models.Model):
     # A tua_id is unique per analysis_type per article
     class Meta:
         unique_together = ("tua_id", "analysis_type", "article")
+
+# Possible topics for a given Analysis Type
+class Topic(models.Model):
+    # The analysis type to which this topic belongs
+    analysis_type = models.ForeignKey(AnalysisType)
+
+    # The name of the topic
+    name = models.TextField()
+
+# The question in a given topic
+class Question(models.Model):
+    # The topic this question belongs to
+    topic = models.ForeignKey(Topic)
+    
+    # The type of question (e.g. multiple choice, text box, ...)
+    # A list of all possible question types
+    QUESTION_TYPE_CHOICES = (
+            ('MC', 'Multiple Choice'),
+            ('DT', 'Date Time'),
+            ('TB', 'Textbox'),
+            ('CL', 'Checklist')
+    )
+    question_type = models.CharField(max_length=2,
+                                     choices=QUESTION_TYPE_CHOICES)
+
+    # The question text
+    text = models.TextField()
+    
+# Possible answers for a given question
+# NOTE: This does NOT represent submitted answers, only possible answers
+class Answer(models.Model):
+    # The question to which this answer belongs
+    question = models.ForeignKey(Question)
+    
+    # The text of the amswer
+    text = models.TextField()
+
+# A submitted highlight group
+# A highlight group contains the higlighted words and the answer
+# This is an abstract class to be subclassed for different types of questions
+class HighlightGroup(models.Model):
+    # The tua being analyzed
+    tua = models.ForeignKey(TUA)
+
+    # The question being answered
+    question = models.ForeignKey(Question)
+
+    # The higlighted text (stored as JSON array of offset tuples)
+    highlighted_text = models.TextField()
+
+    class Meta:
+        abstract = True
+
+
+# A submitted highlight group for a Multiple Choice question
+class MCHighlightGroup(HighlightGroup):
+     # The answer chosen
+     answer = models.ForeignKey(Answer)
+
+# A submitted highlight group for a Checklist question
+class CLHighlightGroup(HighlightGroup):
+     # For a checklist, each submission could include multiple answers 
+     # Answers are re-used across submissions
+     # Therefore we need a many to many relationship
+     answer = models.ManyToManyField(Answer)
+
+# A submitted higlight group for a Textbox question
+class TBHighlightGroup(HighlightGroup):
+    # The text of the answer
+    answer = models.TextField()
+
+# A submitted highlight group for a Date Time question
+class DTHighlightGroup(HighlightGroup):
+    # The submitted date time answer
+    answer = models.DateTimeField()
+
