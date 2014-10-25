@@ -17,6 +17,11 @@ class Article(models.Model):
     parse_version = models.CharField(max_length=5, null=True)
     annotators = models.CharField(max_length=1000) # as a JSON list
 
+    def __unicode__(self):
+        return "Article %d: %s, %s (%s)" % (
+            self.article_id, self.city_published, self.state_published,
+            self.periodical)
+
 # Possible Analysis Types
 class AnalysisType(models.Model):
     name = models.CharField(max_length=40, unique=True)
@@ -25,6 +30,9 @@ class AnalysisType(models.Model):
     glossary = models.TextField() # as a JSON map
     topics = models.TextField() # as a big JSON blob.
     question_dependencies = models.TextField() # as a big JSON blob.
+
+    def __unicode__(self):
+        return "Analysis Type %s" % self.name
 
 # A Text Unit of Analysis (TUA).
 # TUAs have types and reference text within an article
@@ -48,3 +56,6 @@ class TUA(models.Model):
     # A tua_id is unique per analysis_type per article
     class Meta:
         unique_together = ("tua_id", "analysis_type", "article")
+
+    def __unicode__(self):
+        return "TUA %d (type %s)" % (self.id, self.analysis_type.name)
