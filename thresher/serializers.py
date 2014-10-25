@@ -35,6 +35,8 @@ class JSONFieldModelSerializer(serializers.ModelSerializer):
 
         # add transformation methods for the relevant fields
         def to_json(obj, value):
+            if not value:
+                return json.loads("{}")
             return json.loads(value)
 
         for field in self.json_fields:
