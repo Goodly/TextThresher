@@ -62,14 +62,26 @@ class TUA(models.Model):
 
 # Possible topics for a given Analysis Type
 class Topic(models.Model):
+    # an id within the given Analysis Type
+    topic_id = models.IntegerField() 
+
     # The analysis type to which this topic belongs
     analysis_type = models.ForeignKey(AnalysisType)
 
     # The name of the topic
     name = models.TextField()
+    
+    class Meta:
+        unique_together = ("topic_id", "analysis_type")
+
+    def __unicode__(self):
+        return "Topic %s in Analysis Type %s" % (self.name, self.analysis_type.name) 
 
 # The question in a given topic
 class Question(models.Model):
+    # an id within the given topic
+    question_id = models.IntegerField()
+
     # The topic this question belongs to
     topic = models.ForeignKey(Topic)
     
@@ -81,20 +93,37 @@ class Question(models.Model):
             ('TB', 'Textbox'),
             ('CL', 'Checklist')
     )
-    question_type = models.CharField(max_length=2,
-                                     choices=QUESTION_TYPE_CHOICES)
+    type = models.CharField(max_length=2,
+                            choices=QUESTION_TYPE_CHOICES)
 
     # The question text
     text = models.TextField()
     
+    class Meta:
+        unique_together = ("question_id", "topic")
+
+    def __unicode__(self):
+        return "Question %d in Topic %s" % (self.question_id, self.topic.name)
+
 # Possible answers for a given question
 # NOTE: This does NOT represent submitted answers, only possible answers
 class Answer(models.Model):
+    # an id within the given question
+    answer_id = models.IntegerField()
+
     # The question to which this answer belongs
     question = models.ForeignKey(Question)
     
     # The text of the amswer
     text = models.TextField()
+
+    class Meta:
+        unique_together = ("answer_id", "question")
+
+    def __unicode__(self):
+        return "Answer %d for Question %d in Topic %s" % (self.answer_id, 
+                                            self.question.question_id,
+                                            self.question.topic.name)
 
 # A submitted highlight group
 # A highlight group contains the higlighted words and the answer
