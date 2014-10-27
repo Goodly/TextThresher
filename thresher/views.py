@@ -19,7 +19,9 @@ class TUAViewSet(viewsets.ModelViewSet):
     @list_route()
     def random(self, request):
         """Retrieve a random unprocessed TUA."""
-        self.object = TUA.objects.filter(is_processed=False).order_by('?')[0]
+        self.object = TUA.objects.filter(
+            is_processed=False,
+            analysis_type__requires_processing=True).order_by('?')[0]
         serializer = self.get_serializer(self.object)
         return Response(serializer.data)
 
