@@ -7,7 +7,7 @@ title: Protester
 5 Community response
 
 
-1.01 dd What type of event is described in the highlighted text?
+1.01 mc What type of event is described in the highlighted text?
 1.01.01 March/Parade
 1.01.02 Rally/Demonstration
 1.01.03 Strike
@@ -62,7 +62,7 @@ If 1.01.11, then 1.06
 2.04.02 An estimate or approximate number
 2.04.03 Information not given
 2.05 tb Exactly how many protesters were in attendance?
-2.06 dd Approximately how many protesters were in attendance?
+2.06 mc Approximately how many protesters were in attendance?
 2.06.01 A "few," "handful," "small group," 2-5
 2.06.02 "Several," a "group", 6-11
 2.06.03 "A dozen (or so)" 12-19
@@ -78,7 +78,7 @@ If 1.01.11, then 1.06
 2.06.13 "Well over ten thousand" 1201-17000
 2.06.14 Tens of thousands 17001-30,000
 2.06.15 More than 30,000
-2.07 Who estimated the number of protesters in attendance?
+2.07 cl Who estimated the number of protesters in attendance?
 2.07.01 Media
 2.07.02 Police
 2.07.03 City official
@@ -91,7 +91,7 @@ If 1.01.11, then 1.06
 2.08.02 An estimate or approximate number
 2.08.03 Information not given	
 2.09 tb Exactly how many police were in attendance?
-2.10 dd Approximately how many police were in attendance?
+2.10 mc Approximately how many police were in attendance?
 2.10.01 A "few," "handful," "small group," 2-5
 2.10.02 "Several," a "group", 6-11
 2.10.03 "A dozen (or so)" 12-19
@@ -174,7 +174,7 @@ If 1.01.11, then 1.06
 2.17.04 An approximate end time
 2.17.05 The duration (the length of time the event lasted after it began)
 2.17.06 Information not given
-2.18 tm When exactly did the event begin?
+2.18 tb When exactly did the event begin?
 2.19 mc Approximately when did the event begin? 
 2.19.01 Early morning (4am-9am)
 2.19.02 Late morning (9am-12pm)
@@ -182,7 +182,7 @@ If 1.01.11, then 1.06
 2.19.04 Evening (5pm-8pm)
 2.19.05 Night (8pm-11pm)
 2.19.06 Late night (11pm-4am)
-2.20 tm When exactly did the event end?
+2.20 tb When exactly did the event end?
 2.21 mc Approximately when did the event end?
 2.21.01 Early morning (4am-9am)
 2.21.02 Late morning (9am-12pm)
@@ -229,7 +229,7 @@ If 2.17.05, then 2.22
 3.05.01 The exact time
 3.05.02 An approximate time
 3.05.03 Information not given
-3.06 tm Exactly when did the arrests occur?
+3.06 tb Exactly when did the arrests occur?
 3.07 tb If no specific time is given, please highlight any words giving clues about what time the arrests occurred (e.g. "hours after police warned protesters to leave the area")
 3.08 mc Which of the following information does the text give about the number of protesters injured during the event?
 3.08.01 The exact number
@@ -246,7 +246,7 @@ If 2.17.05, then 2.22
 3.11.01 The exact time
 3.11.02 An approximate time
 3.11.03 Information not given
-3.12 tm Exactly when were the protesters injured? 
+3.12 tb Exactly when were the protesters injured? 
 3.13 tb If no specific time is given, please highlight any words giving clues about what time the arrests occurred (e.g. "hours after police warned protesters to leave the area")
 3.14 mc Which of the following information does the text give about the number of police injured during the event?
 3.14.01 The exact number
@@ -263,7 +263,7 @@ If 2.17.05, then 2.22
 3.17.01 The exact time
 3.17.02 An approximate time
 3.17.03 Information not given
-3.18 tm Exactly when were the police injured? 
+3.18 tb Exactly when were the police injured? 
 3.19 tb If no specific time is given, please highlight any words giving clues about what time the injuries occurred (e.g. "hours after police warned protesters to leave the area")
 
 If 3.01.01, then 3.02
@@ -284,8 +284,8 @@ If 3.17.02, then 3.19
 4.01.01 Yes
 4.01.02 No
 4.01.03 Information not given
-4.02 tm When does the event permit start?
-4.03 tm When does the event permit expire?
+4.02 tb When does the event permit start?
+4.03 tb When does the event permit expire?
 4.04 mc Does the event permit come with conditions or requirements that the protesters must follow?
 4.04.01 Yes
 4.04.02 No
