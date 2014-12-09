@@ -48,7 +48,7 @@ class TUA(models.Model):
     offsets = models.TextField()
 
     # A unique id for TUAs of this type in this article
-    tua_id = models.IntegerField(max_length=10)
+    tua_id = models.IntegerField()
 
     # Have we answered questions about this TUA yet?
     is_processed = models.BooleanField(default=False)
@@ -83,15 +83,15 @@ class Question(models.Model):
     question_id = models.IntegerField()
 
     # The topic this question belongs to
-    topic = models.ForeignKey(Topic)
+    topic = models.ForeignKey(Topic, related_name="questions")
     
     # The type of question (e.g. multiple choice, text box, ...)
     # A list of all possible question types
     QUESTION_TYPE_CHOICES = (
-            ('MC', 'Multiple Choice'),
-            ('DT', 'Date Time'),
-            ('TB', 'Textbox'),
-            ('CL', 'Checklist')
+            ('mc', 'Multiple Choice'),
+            ('dt', 'Date Time'),
+            ('tb', 'Textbox'),
+            ('cl', 'Checklist')
     )
     type = models.CharField(max_length=2,
                             choices=QUESTION_TYPE_CHOICES)
@@ -112,7 +112,7 @@ class Answer(models.Model):
     answer_id = models.IntegerField()
 
     # The question to which this answer belongs
-    question = models.ForeignKey(Question)
+    question = models.ForeignKey(Question, related_name="answers")
     
     # The text of the amswer
     text = models.TextField()
@@ -125,42 +125,73 @@ class Answer(models.Model):
                                             self.question.question_id,
                                             self.question.topic.name)
 
+
 # A submitted highlight group
-# A highlight group contains the higlighted words and the answer
-# This is an abstract class to be subclassed for different types of questions
 class HighlightGroup(models.Model):
     # The tua being analyzed
     tua = models.ForeignKey(TUA)
 
-    # The question being answered
-    question = models.ForeignKey(Question)
+    # The highlighted text (stored as JSON array of offset tuples)
+    offsets = models.TextField()
 
-    # The higlighted text (stored as JSON array of offset tuples)
-    highlighted_text = models.TextField()
+    @property
+    def questions(self):
+        """
+        A property to access all the submitted answers in this highlight group
+        """
+        # The CL answers
+        cl_answers = list(CLSubmittedAnswer.objects.filter(highlight_group=self))
+        # The MC answers
+        mc_answers = list(MCSubmittedAnswer.objects.filter(highlight_group=self))
+        # The TB answers
+        tb_answers = list(TBSubmittedAnswer.objects.filter(highlight_group=self))
+        # The dt answers
+        dt_answers = list(DTSubmittedAnswer.objects.filter(highlight_group=self))
+        
+        return cl_answers + mc_answers + tb_answers + dt_answers
+
+# A submitted answer to a question
+# This is an abstract class which is subclassed to represent
+# specifi types of answers (MC, CL, TB, ...)
+class SubmittedAnswer(models.Model):
+    # The highlight group this answer is part of
+    highlight_group = models.ForeignKey(HighlightGroup)
 
     class Meta:
         abstract = True
 
+ 
+# A submitted answer for a Multiple Choice question
+class MCSubmittedAnswer(SubmittedAnswer):
+    # The question this answer is for
+    question = models.ForeignKey(Question, limit_choices_to={"type":"mc"})
 
-# A submitted highlight group for a Multiple Choice question
-class MCHighlightGroup(HighlightGroup):
-     # The answer chosen
-     answer = models.ForeignKey(Answer)
+    # The answer chosen
+    answer = models.ForeignKey(Answer)
 
-# A submitted highlight group for a Checklist question
-class CLHighlightGroup(HighlightGroup):
-     # For a checklist, each submission could include multiple answers 
-     # Answers are re-used across submissions
-     # Therefore we need a many to many relationship
-     answer = models.ManyToManyField(Answer)
+# A submitted answer for a Checklist question
+class CLSubmittedAnswer(SubmittedAnswer):
+    # The question this answer is for
+    question = models.ForeignKey(Question, limit_choices_to={"type":"cl"})
+
+    # For a checklist, each submission could include multiple answers 
+    # Answers are re-used across submissions
+    # Therefore we need a many to many relationship
+    answer = models.ManyToManyField(Answer)
 
 # A submitted higlight group for a Textbox question
-class TBHighlightGroup(HighlightGroup):
+class TBSubmittedAnswer(SubmittedAnswer):
+    # The question this answer is for
+    question = models.ForeignKey(Question, limit_choices_to={"type":"tb"})
+
     # The text of the answer
     answer = models.TextField()
 
-# A submitted highlight group for a Date Time question
-class DTHighlightGroup(HighlightGroup):
+# A submitted answer for a Date Time question
+class DTSubmittedAnswer(SubmittedAnswer):
+    # The question this answer is for
+    question = models.ForeignKey(Question, limit_choices_to={"type":"dt"})
+
     # The submitted date time answer
     answer = models.DateTimeField()
-
+    
