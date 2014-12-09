@@ -54,7 +54,6 @@ class TopicsSchemaParser(object):
             # Add the topic reference
             question_args['topic'] = topic
             
-            print question_args
             # Create the question
             question = Question.objects.create(**question_args)
             
