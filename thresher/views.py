@@ -15,7 +15,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 class TUAViewSet(viewsets.ModelViewSet):
-    queryset = TUA.objects.all()
+    queryset = TUA.objects.filter(analysis_type=AnalysisType.objects.get(id=1))
     serializer_class = TUASerializer
     paginate_by = 1
 
