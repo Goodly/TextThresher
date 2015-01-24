@@ -13,6 +13,7 @@ from django.db.utils import IntegrityError
 
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
+from parse_schema import TopicsSchemaParser
 from thresher.models import Article, AnalysisType, TUA
 
 ANALYSIS_TYPES = {}
@@ -37,6 +38,12 @@ def load_schema(schema):
 
     ANALYSIS_TYPES[schema_name] = schema_obj
     print "loading schema..."
+
+    # Load the topics, questions and answers of the schema
+    schema_parser = TopicsSchemaParser(analysis_type=schema_obj, 
+                                       schema=schema_obj.topics)
+
+    schema_parser.load_topics()
 
 def load_article(article):
     new_id = int(article['metadata']['article_id'])
