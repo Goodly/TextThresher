@@ -6,6 +6,18 @@ from models import (Article, AnalysisType, TUA,
                     HighlightGroup, MCSubmittedAnswer,
                     DTSubmittedAnswer, CLSubmittedAnswer,
                     TBSubmittedAnswer)
+# Custom JSON field
+class JSONSerializerField(serializers.Field):
+    """
+    A field which seralizes text fields into valid JSON
+    """
+    def to_representation(self, obj):
+        if obj:
+            return json.loads(obj)
+
+        else:
+            return {}
+
 
 # Serializers define the API representation of the models.
 
@@ -31,23 +43,24 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'email', 'is_staff', 'password')
 
-class JSONFieldModelSerializer(serializers.ModelSerializer):
-    json_fields = [] # subclasses should assign these
+#class serializers.ModelSerializer(serializers.ModelSerializer):
+#    json_fields = [] # subclasses should assign these
+#
+#    def __init__(self, *args, **kwargs):
+#        super(serializers.ModelSerializer, self).__init__(*args, **kwargs)
+#
+#        # add transformation methods for the relevant fields
+#        def to_json(obj, value):
+#            if not value:
+#                return json.loads("{}")
+#            return json.loads(value)
+#
+#        for field in self.json_fields:
+#            setattr(self, 'transform_' + field, to_json)
 
-    def __init__(self, *args, **kwargs):
-        super(JSONFieldModelSerializer, self).__init__(*args, **kwargs)
-
-        # add transformation methods for the relevant fields
-        def to_json(obj, value):
-            if not value:
-                return json.loads("{}")
-            return json.loads(value)
-
-        for field in self.json_fields:
-            setattr(self, 'transform_' + field, to_json)
-
-class ArticleSerializer(JSONFieldModelSerializer):
-    json_fields = ['annotators']
+class ArticleSerializer(serializers.ModelSerializer):
+    #json_fields = ['annotators']
+    annotators = JSONSerializerField()
 
     class Meta:
         model = Article
@@ -55,15 +68,17 @@ class ArticleSerializer(JSONFieldModelSerializer):
                   'state_published', 'periodical', 'periodical_code',
                   'parse_version', 'annotators')
 
-class AnalysisTypeSerializer(JSONFieldModelSerializer):
-    json_fields = ['glossary', 'topics', 'question_dependencies']
+class AnalysisTypeSerializer(serializers.ModelSerializer):
+    glossary = JSONSerializerField()
+    question_dependencies = JSONSerializerField()
+    topics = JSONSerializerField()
 
     class Meta:
         model = AnalysisType
         fields = ('id', 'name', 'instructions', 'glossary', 'topics',
                   'question_dependencies')
 
-class TUASerializer(JSONFieldModelSerializer):
+class TUASerializer(serializers.ModelSerializer):
     json_fields = ['offsets']
     analysis_type = AnalysisTypeSerializer()
     article = ArticleSerializer()
