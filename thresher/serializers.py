@@ -59,7 +59,6 @@ class UserSerializer(serializers.ModelSerializer):
 #            setattr(self, 'transform_' + field, to_json)
 
 class ArticleSerializer(serializers.ModelSerializer):
-    #json_fields = ['annotators']
     annotators = JSONSerializerField()
 
     class Meta:
@@ -79,9 +78,9 @@ class AnalysisTypeSerializer(serializers.ModelSerializer):
                   'question_dependencies')
 
 class TUASerializer(serializers.ModelSerializer):
-    json_fields = ['offsets']
     analysis_type = AnalysisTypeSerializer()
     article = ArticleSerializer()
+    offsets = JSONSerializerField()
 
     class Meta:
         model = TUA
