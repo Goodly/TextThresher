@@ -62,7 +62,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-CORS_ORIGIN_WHITELIST = ('*')
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'thresher_backend.urls'
 
