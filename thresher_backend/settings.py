@@ -17,7 +17,8 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        # This is only temporary for testing purposes
+        'rest_framework.permissions.AllowAny'
     ],
     'PAGINATE_BY': 10
 }
@@ -75,7 +76,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'thresher',
-        'USER': 'dhass',
+        'USER': 'fadyshoukry',
         'PASSWORD': '',
     }
 }
