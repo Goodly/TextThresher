@@ -1,8 +1,11 @@
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+
 from rest_framework import routers, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
+from rest_framework import status
+
 from models import TUA, Article, AnalysisType, Topic, HighlightGroup
 from serializers import (UserSerializer, TUASerializer,
                          ArticleSerializer, AnalysisTypeSerializer,
@@ -43,6 +46,18 @@ class TopicViewSet(viewsets.ModelViewSet):
 class HighlightGroupViewSet(viewsets.ModelViewSet):
     queryset = HighlightGroup.objects.all()
     serializer_class = HighlightGroupSerializer
+
+    def post(self, request, *args, **kwargs):
+        if isinstance(request.DATA, list):
+            serializer = HighlightGroupSerializer(data=request.DATA, many=True)
+            if serializer.is_valid():
+                self.object = serializer.save(force_insert=True)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return super(HighlightGroupViewSet, self).post(request, *args, **kwargs)
 
 # Register our viewsets with the router
 ROUTER = routers.DefaultRouter()
