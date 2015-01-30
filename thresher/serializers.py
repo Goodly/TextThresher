@@ -18,6 +18,9 @@ class JSONSerializerField(serializers.Field):
         else:
             return {}
 
+    def to_internal_value(self, data):
+        return json.dumps(data)
+
 
 # Serializers define the API representation of the models.
 
@@ -182,6 +185,7 @@ class GenericSubmittedAnswerField(serializers.Field):
 class HighlightGroupSerializer(serializers.ModelSerializer):
     # a custom field containing all the questions and answers
     questions = serializers.ListField(child=GenericSubmittedAnswerField())
+    offsets = JSONSerializerField()
 
     class Meta:
         model = HighlightGroup
