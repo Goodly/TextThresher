@@ -28,7 +28,7 @@ class AnalysisType(models.Model):
     requires_processing = models.BooleanField(default=False)
     instructions = models.TextField()
     glossary = models.TextField() # as a JSON map
-    topics = models.TextField() # as a big JSON blob.
+    #topics = models.TextField() # as a big JSON blob.
     question_dependencies = models.TextField() # as a big JSON blob.
 
     def __unicode__(self):
@@ -66,7 +66,7 @@ class Topic(models.Model):
     topic_id = models.IntegerField() 
 
     # The analysis type to which this topic belongs
-    analysis_type = models.ForeignKey(AnalysisType)
+    analysis_type = models.ForeignKey(AnalysisType, related_name='topics')
 
     # The name of the topic
     name = models.TextField()

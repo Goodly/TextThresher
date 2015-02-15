@@ -26,22 +26,27 @@ def load_schema(schema):
         requires_processing=schema_name not in ['Useless', 'Future'],
         instructions=schema['instructions'],
         glossary=json.dumps(schema['glossary']),
-        topics=json.dumps(schema['topics']),
+        #topics=json.dumps(schema['topics']),
         question_dependencies=json.dumps(schema['dependencies'])
     )
     try:
         schema_obj.save()
     except IntegrityError:
         # we've already loaded this schema, pull it into memory.
-        print "Schema already exists, loading it into memory..."
-        schema_obj = AnalysisType.objects.get(name=schema_name)
+        print "Schema already exists, It will be overwritten"
+        curr_schema_obj = AnalysisType.objects.get(name=schema_name)
+        # Since django by default emulates CASCADE DELETE,
+        # this will delete all topics, questions and answers related to this analysis_type
+        curr_schema_obj.delete()
+        # Save the new object
+        schema_obj.save()
 
     ANALYSIS_TYPES[schema_name] = schema_obj
     print "loading schema..."
 
     # Load the topics, questions and answers of the schema
     schema_parser = TopicsSchemaParser(analysis_type=schema_obj, 
-                                       schema=schema_obj.topics)
+                                       schema=schema['topics'])
 
     schema_parser.load_topics()
 
@@ -86,7 +91,7 @@ def load_article(article):
                     requires_processing=tua_type not in ['Useless', 'Future'],
                     instructions='',
                     glossary='',
-                    topics='',
+                    #topics='',
                     question_dependencies='',
                 )
                 ANALYSIS_TYPES[tua_type] = analysis_type

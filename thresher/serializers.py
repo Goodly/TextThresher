@@ -70,26 +70,6 @@ class ArticleSerializer(serializers.ModelSerializer):
                   'state_published', 'periodical', 'periodical_code',
                   'parse_version', 'annotators')
 
-class AnalysisTypeSerializer(serializers.ModelSerializer):
-    glossary = JSONSerializerField()
-    question_dependencies = JSONSerializerField()
-    topics = JSONSerializerField()
-
-    class Meta:
-        model = AnalysisType
-        fields = ('id', 'name', 'instructions', 'glossary', 'topics',
-                  'question_dependencies')
-
-class TUASerializer(serializers.ModelSerializer):
-    analysis_type = AnalysisTypeSerializer()
-    article = ArticleSerializer()
-    offsets = JSONSerializerField()
-
-    class Meta:
-        model = TUA
-        fields = ('id', 'tua_id', 'analysis_type', 'article', 'offsets')
-        #depth = 1
-
 class AnswerSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -111,6 +91,27 @@ class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = ('id', 'topic_id', 'name', 'questions')
+
+class AnalysisTypeSerializer(serializers.ModelSerializer):
+    glossary = JSONSerializerField()
+    question_dependencies = JSONSerializerField()
+    #topics = JSONSerializerField()
+    topics = TopicSerializer(many=True)
+
+    class Meta:
+        model = AnalysisType
+        fields = ('id', 'name', 'instructions', 'glossary', 'topics',
+                  'question_dependencies')
+
+class TUASerializer(serializers.ModelSerializer):
+    analysis_type = AnalysisTypeSerializer()
+    article = ArticleSerializer()
+    offsets = JSONSerializerField()
+
+    class Meta:
+        model = TUA
+        fields = ('id', 'tua_id', 'analysis_type', 'article', 'offsets')
+        #depth = 1
 
 class MCSubmittedAnswerSerializer(serializers.ModelSerializer):
     question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
