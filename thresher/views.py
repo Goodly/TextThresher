@@ -47,7 +47,7 @@ class HighlightGroupViewSet(viewsets.ModelViewSet):
     queryset = HighlightGroup.objects.all()
     serializer_class = HighlightGroupSerializer
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         if isinstance(request.DATA, list):
             serializer = HighlightGroupSerializer(data=request.DATA, many=True)
             if serializer.is_valid():
@@ -57,7 +57,7 @@ class HighlightGroupViewSet(viewsets.ModelViewSet):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         else:
-            return super(HighlightGroupViewSet, self).post(request, *args, **kwargs)
+            return super(HighlightGroupViewSet, self).create(request, *args, **kwargs)
 
 # Register our viewsets with the router
 ROUTER = routers.DefaultRouter()
