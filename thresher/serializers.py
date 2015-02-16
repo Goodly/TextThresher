@@ -196,6 +196,9 @@ class HighlightGroupSerializer(serializers.ModelSerializer):
         # Get the answers nested models
         answers = validated_data.pop('questions')
 
+        # Remove the force_insert if it's there
+        validated_data.pop('force_insert', None)
+
         # create the highlight group first
         highlight_group = HighlightGroup.objects.create(**validated_data)
 
