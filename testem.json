@@ -1,0 +1,25 @@
+{
+  "framework": "mocha",
+  "test_page": "spec/index.html",
+  "before_tests": "coffee -co lib src; coffee -co .tmp spec; coffee -co demo demo",
+  "src_files": [
+    "src/**/*.coffee",
+    "spec/index.html",
+    "spec/**/*.coffee",
+    "demo/**_demo.coffee"
+  ],
+  "serve_files": [
+    ".tmp/**/*.js",
+    "lib/**/*.js"
+  ],
+  "launch_in_dev": [
+    "Firefox",
+    "PhantomJS"
+  ],
+  "launch_in_ci": [
+    "Chrome",
+    "Firefox",
+    "Safari",
+    "Opera"
+  ]
+}

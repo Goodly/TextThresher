@@ -1,0 +1,14 @@
+{
+  "name": "annotator-custom-editor",
+  "dependencies": {
+    "jquery": "latest",
+    "annotator": "~1.2.9"
+  },
+  "devDependencies": {
+    "chai": "latest",
+    "chai-as-promised": "latest",
+    "mocha": "latest",
+    "sinon-chai": "latest",
+    "sinon": "latest"
+  }
+}

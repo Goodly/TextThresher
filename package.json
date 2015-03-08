@@ -1,0 +1,11 @@
+{
+  "name": "annotator-custom-editor",
+  "version": "1.0.0",
+  "description": "A custom editor plugin for annotator",
+  "preinstall": "npm install -g bower coffee-script testem",
+  "scripts": {
+    "test": "testem"
+  },
+  "author": "",
+  "license": "MIT"
+}
