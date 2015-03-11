@@ -18,9 +18,16 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 class TUAViewSet(viewsets.ModelViewSet):
-    queryset = TUA.objects.filter(analysis_type=AnalysisType.objects.get(id=1))
     serializer_class = TUASerializer
     paginate_by = 1
+    
+    def get_queryset(self):
+        analysis_types = AnalysisType.objects.filter(name="Protester")
+        if analysis_types:
+            protester_type = analysis_types[0]
+            return TUA.objects.filter(analysis_type=protester_type)
+        else:
+            return TUA.objects.all()
 
     @list_route()
     def random(self, request):
@@ -62,7 +69,7 @@ class HighlightGroupViewSet(viewsets.ModelViewSet):
 # Register our viewsets with the router
 ROUTER = routers.DefaultRouter()
 ROUTER.register(r'users', UserViewSet)
-ROUTER.register(r'tuas', TUAViewSet)
+ROUTER.register(r'tuas', TUAViewSet, base_name='tua')
 ROUTER.register(r'articles', ArticleViewSet)
 ROUTER.register(r'tua_types', AnalysisTypeViewSet)
 ROUTER.register(r'topics', TopicViewSet)
