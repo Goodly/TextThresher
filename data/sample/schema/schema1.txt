@@ -1,371 +1,502 @@
-title: Protester
+Please use this module as a guide for formatting your modules to the EXACT wording, grammar, punctuation, etc. Ive written comments on the things you should be looking for as well as last-minute changes weve (Sofie and I) made.
 
+					title: Protester
 1 Event type
-2 Event setting and composition (location, attendance, time/duration)
-3 Arrests/injuries
-4 Permit
-5 Community response
-
+2 Event location
+3 Event attendance
+4 Event time/duration
+5 Arrests
+6 Injuries
+7 Permit
+8 Community response
 
 1.01 mc What type of event is described in the highlighted text?
-1.01.01 March/Parade
-1.01.02 Rally/Demonstration
-1.01.03 Strike
-1.01.04 Blocking Action
-1.01.05 Establishing a Camp
-1.01.06 Moving a camp to a new location
-1.01.07 Disrupting an on-going event of the perceived 1%
-1.01.08 Divestment Action
-1.01.09 Voluntary Dissolution of a camp
-1.01.10 Strategic Violence
-1.01.11 Strategic Sabotage
+1.01.02 March/Parade
+1.01.03 Rally/Demonstration
+1.01.04 Strike
+1.01.05 Blocking Action
+1.01.06 Establishing a Camp
+1.01.07 Moving a camp to a new location
+1.01.08 Disrupting an on-going event of the perceived 1%
+1.01.09 Divestment Action1.01.10 Voluntary Dissolution of a camp
+1.01.11 Strategic Violence1.01.12 Strategic Sabotage
+
 1.02 mc What did the crowd block?
 1.02.01 Sidewalk 
 1.02.02 Street 
 1.02.03 Public transportation 
 1.02.04 Airport 
 1.02.05 Shipping port 
+1.02.06 Other
+
 1.03 mc What type of event did the protesters disrupt?
-1.03.01 Political campaign
-1.03.02 Politician's speech
+1.03.01 Political campaign1.03.02 Politician's speech
 1.03.03 City council meeting
 1.03.04 Auction
-1.04 mc What is the position or title of the 1% who is being protested against?
-1.04.01 CEO of some company
-1.04.02 City mayor
-1.04.03 City council member
-1.04.04 State legislature
-1.04.05 U.S. president
-1.05 mc What type of strategic violence occurred?
-1.05.01 Kidnapping 
-1.05.02 Assassination 
-1.05.03 Bombing 
-1.05.04 Assault 
-1.06 mc What type of strategic sabotage occurred?
-1.06.01 Pre-planned vandalism 
-1.06.02 Pre-planned arson 
+1.03.05 Country Club event
+1.03.06 Other
 
-If 1.01.04, then 1.02
-If 1.01.07, then 1.03
-If 1.03.any, then 1.04
-If 1.01.10, then 1.05
-If 1.01.11, then 1.06
+1.04 mc What is the title of the 1% who is being protested against?
+1.04.01 CEO of a company
+1.04.02 City mayor1.04.03 City council member
+1.04.04 State legislator1.04.05 U.S. president
+1.04.06 Other
+
+1.05 mc What type of strategic violence occurred?
+1.05.01 Kidnapping
+1.05.02 Assassination
+1.05.03 Bombing
+1.05.04 Assault 
+1.05.05 Other
+
+1.06 mc What type of strategic sabotage occurred?
+1.06.01 Pre-planned vandalism
+1.06.02 Pre-planned arson 
+1.06.03 Other
+
+if 1.01.05, then 1.02
+if 1.01.08, then 1.03
+if 1.01.11, then 1.05
+if 1.01.12, then 1.06
+if 1.03.any, then 1.04 
 
 2.01 mc Which of the following information does the text give about the event's location?
 2.01.01 The exact location or address
-2.01.02 An approximate location, or clues about where the event took place (e.g. "the small group of protesters marched down Market Street)
+2.01.02 An approximate location, or clues about where the event took place
 2.01.03 Information not given
+
 2.02 tb Exactly where did the event take place?
-2.03 tb Please highlight the text that gives clues about the approximate location of this event. 
-2.04 mc Which of the following information does the text give about the number of protesters at the event?
-2.04.01 The exact number
-2.04.02 An estimate or approximate number
-2.04.03 Information not given
-2.05 tb Exactly how many protesters were in attendance?
-2.06 mc Approximately how many protesters were in attendance?
-2.06.01 A "few," "handful," "small group," 2-5
-2.06.02 "Several," a "group", 6-11
-2.06.03 "A dozen (or so)" 12-19
-2.06.04 "A small crowd " A couple dozen" 20-34
-2.06.05 "A crowd" 35-75
-2.06.06 A "large crowd" " a hundred or so" 76-150 
-2.06.07 A "mass," "hundreds" 150-500
-2.06.08 "Several hundred" 501-850
-2.06.09 "About a thousand" 851-1300
-2.06.10 "Thousands," A few thousand" 1300-4500
-2.06.11 "Several thousand" 4501-8500
-2.06.12 "Around ten thousand" 8501-12000
-2.06.13 "Well over ten thousand" 1201-17000
-2.06.14 Tens of thousands 17001-30,000
-2.06.15 More than 30,000
-2.07 cl Who estimated the number of protesters in attendance?
-2.07.01 Media
-2.07.02 Police
-2.07.03 City official
-2.07.04 Protester
-2.07.05 Citizen or other person not affiliated with the camp, media, police, or city
-2.07.06 Information not given
-2.07.07 Other
-2.08 mc Which of the following information does the text give about the number of police at the event?
-2.08.01 The exact number
-2.08.02 An estimate or approximate number
-2.08.03 Information not given	
-2.09 tb Exactly how many police were in attendance?
-2.10 mc Approximately how many police were in attendance?
-2.10.01 A "few," "handful," "small group," 2-5
-2.10.02 "Several," a "group", 6-11
-2.10.03 "A dozen (or so)" 12-19
-2.10.04 "A small crowd" A couple dozen" 20-34
-2.10.05 "A crowd" 35-75
-2.10.06 A "large crowd" "a hundred or so" 76-150 
-2.10.07 A "mass," "hundreds" 150-500
-2.10.08 "Several hundred" 501-850
-2.10.09 "About a thousand" 851-1300
-2.10.10 "Thousands," A few thousand" 1300-4500
-2.10.11 "Several thousand" 4501-8500
-2.10.12 "Around ten thousand" 8501-12000
-2.10.13 "Well over ten thousand" 1201-17000
-2.10.14 Tens of thousands 17001-30,000
-2.10.15 More than 30,000
-2.11 mc Who estimated the number of police in attendance?
-2.11.01 Media
-2.11.02 Police
-2.11.03 City official
-2.11.04 Protester
-2.11.05 Citizen or other person not affiliated with the camp, media, police, or city
-2.11.06 Information not given
-2.11.07 Other
-2.12 cl Which of the following groups and identities were present at the event?
-2.12.01 Anarchists
-2.12.02 Homeless people
-2.12.03 Union members
-2.12.04 Reinforcement campers from other cities
-2.12.05 Religious leaders or communities
-2.12.06 Occupy the Hood protesters
-2.12.07	Other groups allied with Occupy
-2.12.08	African-American people
-2.12.09 Hispanic/Latino/Chicano people
-2.12.10 Asian-American/Pacific Islander people
-2.12.11	Native American people
-2.12.12	People under the age of 30
-2.12.13 Children
-2.12.14 Women
-2.12.15 Celebrities 
-2.12.16 Information not given
-2.13 cl Which of the following economic class groups were present at the event?		
-2.13.01	A wide variety of classes
-2.13.02	Working/Lower (less than $25,000)
-2.13.03 Lower-Middle ($25,000-$49,999)
-2.13.04 Middle ($50,000-$74,999)
-2.13.05 Upper-Middle ($75,000-$100,000)
-2.13.06 Upper ($100,000+)
-2.13.07 The 1% ($250,000+)
-2.13.08 Information not given
-2.14 cl Which of the following age groups were present at the event?
-2.14.01	A wide variety of ages
-2.14.02 Under 18 
-2.14.03 18-25 
-2.14.04 26-34 
-2.14.05 35-44
-2.14.06 45-64
-2.14.07 65+
-2.14.08 Information not given
-2.15 cl Which of the following educational attainment groups were present at the event? 	
-2.15.01	People with a wide variety of educational attainment levels
-2.15.02 Less than high school diploma
-2.15.03	High school diploma/GED
-2.15.04	Some college (2 years or fewer)
-2.15.05	College degree (B.A., B.S., trade school, technical school)
-2.15.06	Master's degree
-2.15.07 PhD 
-2.15.08 Information not given
-2.16 cl Which of the following job titles/occupations are held by people who attended the event?
-2.16.01 People with a wide variety of job titles/occupations
-2.16.02 Unemployed
-2.16.03 Teacher, professor
-2.16.04 Business worker
-2.16.05 Factory worker
-2.16.06 Caretaker
-2.16.07 Farmer
-2.17 mc Which of the following information does the text give about when the event occurred? 
-2.17.01 The exact start time
-2.17.02 An approximate start time
-2.17.03 The exact end time
-2.17.04 An approximate end time
-2.17.05 The duration (the length of time the event lasted after it began)
-2.17.06 Information not given
-2.18 tb When exactly did the event begin?
-2.19 mc Approximately when did the event begin? 
-2.19.01 Early morning (4am-9am)
-2.19.02 Late morning (9am-12pm)
-2.19.03 Afternoon (12pm-5pm)
-2.19.04 Evening (5pm-8pm)
-2.19.05 Night (8pm-11pm)
-2.19.06 Late night (11pm-4am)
-2.20 tb When exactly did the event end?
-2.21 mc Approximately when did the event end?
-2.21.01 Early morning (4am-9am)
-2.21.02 Late morning (9am-12pm)
-2.21.03 Afternoon (12pm-5pm)
-2.21.04 Evening (5pm-8pm)
-2.21.05 Night (8pm-11pm)
-2.21.06 Late night (11pm-4am)
-2.22 mc Approximately how long did the event last?
-2.22.01 ***will add attributes***
 
-If 2.01.01, then 2.02
-If 2.01.02, then 2.06
-If 2.06.any, then 2.07
-If 2.08.01, then 2.09
-If 2.08.02, then 2.10
-If 2.10.any, then 2.11
-If 2.17.01, then 2.18
-If 2.17.02, then 2.19
-If 2.17.03, then 2.20
-If 2.17.04, then 2.21
-If 2.17.05, then 2.22
+2.03 mc Approximately where did the event take place?
+2.03.01 Local bank 
+2.03.02 Local park 
+2.03.03 Near protester camp
+2.03.04 Downtown
+2.03.05 Near City Hall
+2.03.06 Other
 
-3.01 mc Which of the following information does the text give about arrests that occurred during the event?
+if 2.01.01, then 2.02
+if 2.01.02, then 2.03
+
+3.01 mc Which of the following information does the text give about the number of protesters in attendance?
 3.01.01 The exact number
-3.01.02 An estimate or approximate number
+3.01.02 An approximate number
 3.01.03 Information not given
-3.02 tb Exactly how many arrests occurred during the event? (If the text specifically states, "no arrests were made," then type in the number 0)
-3.03 mc Approximately how many arrests occurred?
-3.03.01 1-5
-3.03.02 5-10
-3.03.03 10-25
-3.03.04 25-50
-3.03.05 50-100
-3.03.06 100+
-3.04 cl Who was arrested?
-3.04.01 Protesters
-3.04.02 Counterprotesters
-3.04.03 Protesters from other cities
-3.04.04 Independent
-3.04.05 News reporters
-3.04.06 City official
+3.02 tb Exactly how many protesters were in attendance?
+
+3.03 mc Approximately how many protesters were in attendance?
+3.03.01 "A few," "a handful," "a small group": 2-5
+3.03.02 "Several," "a group: 6-10
+3.03.03 "A dozen (or so): 11-20
+3.03.04 "A small crowd," "a couple dozen: 21-35
+3.03.05 "A crowd: 36-75
+3.03.06 "A large crowd," "a hundred or so: 76-150
+3.03.07 "A mass," "hundreds": 151-500
+3.03.08 "Several hundred: 501-850
+3.03.09 "About a thousand": 851-1,300
+3.03.10 Thousands, a few thousand: 1,301-4,500
+3.03.11 "Several thousand": 4,501-8,500
+3.03.12 "Around ten thousand": 8,501-12,000
+3.03.13 "Well over ten thousand": 12,001-20,000
+3.03.14 "Tens of thousands": 20,001-90,000
+3.03.15 Hundreds of thousands: 100,000 or more
+
+3.04 mc Who estimated the number of protesters in attendance?
+3.04.01 Media
+3.04.02 Police
+3.04.03 City official
+3.04.04 Protester
+3.04.05 Citizen or other person not affiliated with the camp, media, police, or city
+3.04.06 Information not given
 3.04.07 Other
-3.05 mc Which of the following information does the text give about when the arrests occurred?
-3.05.01 The exact time
-3.05.02 An approximate time
+
+3.05 mc Which of the following information does the text give about the number of police in attendance?
+3.05.01 The exact number
+3.05.02 An approximate number
 3.05.03 Information not given
-3.06 tb Exactly when did the arrests occur?
-3.07 tb If no specific time is given, please highlight any words giving clues about what time the arrests occurred (e.g. "hours after police warned protesters to leave the area")
-3.08 mc Which of the following information does the text give about the number of protesters injured during the event?
-3.08.01 The exact number
-3.08.02 An estimate or approximate number
-3.08.03 Information not given
-3.09 tb Exactly how many protesters were injured during the event? (If the text specifically states, "no injuries occurred," then type in the number 0)
-3.10 mc Approximately how many protesters were injured during the event?
-3.10.01 1-5 
-3.10.02 5-10
-3.10.03 10-25
-3.10.04 25-50
-3.10.05 50+
-3.11 mc Which of the following information does the text give about when the protesters were injured?
-3.11.01 The exact time
-3.11.02 An approximate time
-3.11.03 Information not given
-3.12 tb Exactly when were the protesters injured? 
-3.13 tb If no specific time is given, please highlight any words giving clues about what time the arrests occurred (e.g. "hours after police warned protesters to leave the area")
-3.14 mc Which of the following information does the text give about the number of police injured during the event?
-3.14.01 The exact number
-3.14.02 An estimate or approximate number
-3.14.03 Information not given
-3.15 tb Exactly how many police were injured during the event? (If the text specifically states, "no injuries occurred," then type in the number 0)
-3.16 mc Approximately how many police were injured during the event?
-3.16.01 1-5 
-3.16.02 5-10
-3.16.03 10-25
-3.16.04 25-50
-3.16.05 50+
-3.17 mc Which of the following information does the text give about when the police were injured?
-3.17.01 The exact time
-3.17.02 An approximate time
-3.17.03 Information not given
-3.18 tb Exactly when were the police injured? 
-3.19 tb If no specific time is given, please highlight any words giving clues about what time the injuries occurred (e.g. "hours after police warned protesters to leave the area")
 
-If 3.01.01, then 3.02
-If 3.01.02, then 3.03
-If 3.03.any, then 3.04
-If 3.05.01, then 3.06
-If 3.05.02, then 3.07
-If 3.08.01, then 3.09
-If 3.08.02, then 3.10
-If 3.11.01, then 3.12
-If 3.11.02, then 3.13
-If 3.14.01, then 3.15
-If 3.14.02, then 3.16
-If 3.17.01, then 3.18
-If 3.17.02, then 3.19
+3.06 tb Exactly how many police were in attendance?
+3.07 mc Approximately how many police were in attendance?
+3.07.01 "A few," "a handful," "a small group": 2-5
+3.07.02 "Several," "a group: 6-10
+3.07.03 "A dozen (or so): 11-20
+3.07.04 "A small crowd," "a couple dozen: 21-35
+3.07.05 "A crowd: 36-75
+3.07.06 "A large crowd," "a hundred or so: 76-150
+3.07.07 "A mass," "hundreds": 151-500
+3.07.08 "Several hundred: 501-850
+3.07.09 "About a thousand": 851-1,300
+3.07.10 Thousands, a few thousand: 1,301-4,500
+3.07.11 "Several thousand": 4,501-8,500
+3.07.12 "Around ten thousand": 8,501-12,000
+3.07.13 "Well over ten thousand": 12,001-17,000
+3.07.14 "Tens of thousands": 20,001-90,000
 
-4.01 mc Was the event permitted?
-4.01.01 Yes
-4.01.02 No
-4.01.03 Information not given
-4.02 tb When does the event permit start?
-4.03 tb When does the event permit expire?
-4.04 mc Does the event permit come with conditions or requirements that the protesters must follow?
-4.04.01 Yes
-4.04.02 No
-4.04.03 Information not given
-4.05 cl Which are conditions or requirements of the event permit? Select all that apply:
-4.05.01	Tents and other semi-permanent structures cannot be present
-4.05.02	Must not close the street
-4.05.03	Must not block the sidewalk
-4.05.04	Must not block or restrict public property
-4.05.05	Must not sell merchandise, food, or beverage
-4.05.06	Must not place signage or banners
-4.05.07	The crowd must not exceed a certain number of people
-4.05.08 Other
-4.06 mc Was a permit necessary in order to hold the event, even though protesters did not acquire a permit?
-4.06.01 Yes
-4.06.02 No
-4.06.03 Information not given
-4.07 mc Is the city government and/or police informally allowing the event, despite it not having a permit?
-4.07.01 Yes
-4.07.02 No
-4.07.03 Information not given
+3.08 mc Who estimated the number of police in attendance?
+3.08.01 Media
+3.08.02 Police
+3.08.03 City official
+3.08.04 Protester
+3.08.05 Citizen or other person not affiliated with the camp, media, police, or city
+3.08.06 Information not given
+3.08.07 Other
 
-If 4.01.01, then 4.02
-If 4.01.01, then 4.03
-If 4.01.01, then 4.04
-If 4.04.01, then 4.05
-If 4.06.01, then 4.07
+3.09 cl Which of the following groups and identities were in attendance?
+3.09.01 A wide variety of groups and identities
+3.09.02 Women
+3.09.03 Anarchists
+3.09.04 Homeless
+3.09.05 Union members
+3.09.06 Reinforcement campers from other cities
+3.09.07 Religious leaders or communities
+3.09.08 Occupy the Hood protesters
+3.09.09 Other groups allied with Occupy
+3.09.10 Celebrities 
+3.09.11 Black/African-American 
+3.09.12 Hispanic/Latino/Chicano 
+3.09.13 Asian-American/Pacific Islander
+3.09.14 Native American
+3.09.15 Information not given
 
-5.01 cl Which of the following parties responded to the event?
-5.01.01 Individual affiliated with the event
-5.01.02 Passerby/onlooker, individual not affiliated with the event (ex. citizens, local business owners)
-5.01.03 Community group that is not Occupy (ex. church, interest group, local organization) 
-5.01.04 City government official
-5.01.05 Celebrity or politician
-5.01.06 Other
-5.01.07 Information not given
-5.02 mc What was the party's level of support?
-5.02.01 Strongly unsupportive, very negative, oppositional
-5.02.02 Somewhat unsupportive, slightly negative
-5.02.03 Neutral
-5.02.04 Somewhat supportive, slightly positive 
-5.02.05 Strongly supportive, very positive, enthusiastic
+3.10 cl Which of the following economic class groups were in attendance?
+3.10.01 A wide variety of classes
+3.10.02 Working/Lower (less than $24,999)
+3.10.03 Lower-Middle ($25,000-$49,999)
+3.10.04 Middle ($50,000-$74,999)
+3.10.05 Upper-Middle ($75,000-$99,999)
+3.10.06 Upper ($100,000-$249,999)
+3.10.07 The 1% ($250,000+)
+3.10.08 Information not given
 
-If 5.01.01, then 5.02
-If 5.01.02, then 5.02
-If 5.01.03, then 5.02
-If 5.01.04, then 5.02
-If 5.01.05, then 5.02
-If 5.01.06, then 5.02
+3.11 cl Which of the following age groups were in attendance?
+3.11.01 A wide variety of ages
+3.11.02 Under 18 
+3.11.03 18-25 
+3.11.04 26-35 
+3.11.05 36-45
+3.11.06 46-65
+3.11.07 66 or older
+3.11.08 Information not given
+
+3.12 cl Which of the following educational attainment groups were in attendance?
+3.12.01 A wide variety of educational attainment levels
+3.12.02 Less than high school diploma
+3.12.03 High school diploma/GED
+3.12.04 Some college (2 years or fewer)
+3.12.05 College degree (B.A., B.S., trade school, technical school)
+3.12.06 Master's degree3.12.07 PhD 3.12.08 Information not given
+
+3.13 cl Which career fields/occupations were in attendance?
+3.13.01 A wide variety of career fields/occupations
+3.13.02 Unemployed
+3.13.03 Architecture and Engineering
+3.13.04 Arts, Entertainment, and Media
+3.13.05 Cleaning and Janitorial
+3.13.06 Business and Finance
+3.13.07 Community and Social Services
+3.13.10 Computer and Mathematical
+3.13.11 Construction and Maintenance
+3.13.12 Education and Library
+3.13.13 Farming, Fishing, and Forestry
+3.13.14 Food Services
+3.13.15 Healthcare Practitioners, Technical, and Support
+3.13.16 Legal
+3.13.17 Life, Physical, and Social Science
+3.13.18 Office and Management
+3.13.19 Military
+3.13.20 Personal Care and Service
+3.13.21 Production
+3.13.22 Sales and Marketing
+3.13.23 Transportation 
+3.13.24 Information not given
+
+if 3.01.01, then 3.02
+if 3.01.02, then 3.03
+if 3.03.any, then 3.04
+if 3.05.01, then 3.06
+if 3.05.02, then 3.07
+if 3.07.any, then 3.08
+
+
+4.01 cl Which of the following information does the text give about when the event occurred? 
+4.01.01 The exact start time4.01.02 An approximate start time
+4.01.03 The exact end time4.01.04 An approximate end time
+4.01.05 The duration (the length of time the event lasted after it began)
+4.01.06 Information not given
+
+4.02 tb When exactly did the event begin?
+
+4.03 mc Approximately when did the event begin?
+4.03.01 Pre-dawn (12am-6am)
+4.03.02 Morning (6am-12pm)
+4.03.03 Midday (12pm-3pm)
+4.03.04 Afternoon (3pm-6pm)
+4.03.05 Evening (6pm-9pm)
+4.03.06 Night (9pm-12am)
+
+4.04 tb When exactly did the event end?
+
+4.05 mc Approximately when did the event end?
+4.05.01 Pre-dawn (12am-6am)
+4.05.02 Morning (6am-12pm)
+4.05.03 Midday (12pm-3pm)
+4.05.04 Afternoon (3pm-6pm)
+4.05.05 Evening (6pm-9pm)
+4.05.06 Night (9pm-12am)
+
+4.06 mc Approximately how long did the event last?
+4.06.01 Less than 15 minutes
+4.06.02 Under half an hour: 16-30 minutes
+4.06.03 Over half an hour: 31-60 minutes
+4.06.04 A few hours: 1-2 hours
+4.06.05 More than a few hours: 3-5 hours
+4.06.06 Over 6 hours: 6-11 hours
+4.06.07 Half a day: 12-15 hours
+4.06.08 A full day: 16-24 hours
+4.06.09 Overnight or More than 1 day 
+
+if 4.01.01, then 4.02
+if 4.01.02, then 4.03
+if 4.01.03, then 4.04
+if 4.01.04, then 4.05
+if 4.01.05, then 4.06 
+
+5.01 mc Which of the following information does the text give about arrests that occurred during the event?
+5.01.01 The exact number
+5.01.02 An approximate number
+5.01.03 Information not given 
+
+5.02 tb Exactly how many arrests occurred during the event? (if the text specifically states, "no arrests were made," then type in the number 0.)
+
+5.03 mc Approximately how many arrests occurred?
+5.03.01 "A few," "a handful," "a small group": 2-5
+5.03.02 "Several," "a group: 6-10
+5.03.03 "A dozen (or so): 11-20
+5.03.04 "A small crowd," "a couple dozen: 21-35
+5.03.05 "A crowd: 36-75
+5.03.06 "A large crowd," "a hundred or so: 76-150
+5.03.07 "A mass," "hundreds": 151-500
+5.03.08 Multiple hundreds, several hundreds: 501 or more
+
+5.04 cl Who was arrested?
+5.04.01 Protesters
+5.04.02 Counterprotesters
+5.04.03 Protesters from other cities
+5.04.04 Independents
+5.04.05 News reporters
+5.04.06 City officials
+5.04.07 Undercover police
+5.04.08 Other
+
+5.05 mc Which of the following information does the text give about when the arrests occurred?
+5.05.01 The exact time
+5.05.02 An approximate time
+5.05.03 Information not given
+
+5.06 tb Exactly when did the arrests occur?
+
+5.07 mc Approximately when did the arrests occur? 
+5.07.01 Pre-dawn (12am-6am)
+5.07.02 Morning (6am-12pm)
+5.07.03 Midday (12pm-3pm)
+5.07.04 Afternoon (3pm-6pm)
+5.07.05 Evening (6pm-9pm)
+5.07.06 Night (9pm-12am)
+
+if 5.01.01, then 5.02
+if 5.01.02, then 5.03
+if 5.03.any, then 5.04
+if 5.05.01, then 5.06
+if 5.05.02, then 5.07
+
+6.01 mc Which of the following information does the text give about the number of protesters injured during the event?
+6.01.01 The exact number
+6.01.02 An approximate number
+6.01.03 Information not given
+
+6.02 tb Exactly how many protesters were injured during the event? (if the text specifically states, "no injuries occurred," then type the number 0.)
+
+6.03 mc Approximately how many protesters were injured during the event?
+6.03.01 "A few," "a handful," "a small group": 2-5
+6.03.02 "Several," "a group: 6-10
+6.03.03 "A dozen (or so): 11-20
+6.03.04 "A small crowd," "a couple dozen: 21-35
+6.03.05 "A crowd: 36-75
+6.03.06 "A large crowd," "a hundred or so: 76-150
+6.03.07 "A mass," "hundreds": 151-5006.03.08 Multiple hundreds, several hundreds: 501 or more
+
+6.04 mc Which of the following information does the text give about when the protesters were injured?
+6.04.01 The exact time
+6.04.02 An approximate time
+6.04.03 Information not given
+
+6.05 tb Exactly when were the protesters injured? 
+
+6.06 mc Approximately when were the protesters injured?
+6.06.01 Pre-dawn (12am-6am)
+6.06.02 Morning (6am-12pm)
+6.06.03 Midday (12pm-3pm)
+6.06.04 Afternoon (3pm-6pm)
+6.06.05 Evening (6pm-9pm)
+6.06.06 Night (9pm-12am)
+
+6.07 mc Which of the following information does the text give about the number of police injured during the event?
+6.07.01 The exact number
+6.07.02 An approximate number
+6.07.03 Information not given
+
+6.08 tb Exactly how many police were injured during the event? (if the text specifically states, "no injuries occurred," then type in the number 0.)
+
+6.09 mc Approximately how many police were injured during the event?
+6.09.01 "A few," "a handful," "a small group": 2-5
+6.09.02 "Several," "a group: 6-10
+6.09.03 "A dozen (or so): 11-20
+6.09.04 "A small crowd," "a couple dozen: 21-35
+6.09.05 "A crowd: 36-75
+6.09.06 "A large crowd," "a hundred or so: 76-150
+6.09.07 "A mass," "hundreds": 151-500
+6.09.08 Multiple hundreds, several hundreds: 501 or more 
+
+6.10 mc Which of the following information does the text give about when the police were injured?
+6.10.01 The exact time
+6.10.02 An approximate time
+6.10.03 Information not given
+
+6.11 tb Exactly when were the police injured? 
+
+6.12 mc Approximately when were the police injured?
+6.12.01 Pre-dawn (12am-6am)
+6.12.02 Morning (6am-12pm)
+6.12.03 Midday (12pm-3pm)
+6.12.04 Afternoon (3pm-6pm)
+6.12.05 Evening (6pm-9pm)
+6.12.06 Night (9pm-12am)
+
+if 6.01.01, then 6.02
+if 6.01.02, then 6.03
+if 6.04.01, then 6.05
+if 6.04.02, then 6.06
+if 6.07.01, then 6.08
+if 6.07.02, then 6.09
+if 6.10.01, then 6.11
+if 6.10.02, then 6.12
+
+
+7.01 mc Was the event permitted?
+7.01.01 Yes
+7.01.02 No
+7.01.03 Information not given
+
+
+7.02 mc Which of the following information does the text give about the event permits time frame?
+7.02.01 The exact start time
+7.02.02 An approximate start time
+7.02.03 The exact expiration 
+7.02.04 An approximate expiration
+7.02.05 Information not given
+
+7.03 dt tm Exactly when did the event permit start?
+
+7.04 mc Approximately when did the event permit start?
+7.04.01 Pre-dawn (12am-6am)
+7.04.02 Morning (6am-12pm)
+7.04.03 Midday (12pm-3pm)
+7.04.04 Afternoon (3pm-6pm)
+7.04.05 Evening (6pm-9pm)
+7.04.06 Night (9pm-12am)
+
+7.05 dt tm Exactly when did the event permit expire?
+
+7.06 mc Approximately when did the event permit expire?
+7.06.01 Pre-dawn (12am-6am)
+7.06.02 Morning (6am-12pm)
+7.06.03 Midday (12pm-3pm)
+7.06.04 Afternoon (3pm-6pm)
+7.06.05 Evening (6pm-9pm)
+7.06.06 Night (9pm-12am)
+
+7.07 mc Does the event permit come with conditions or requirements that the protesters must follow?
+7.07.01 Yes
+7.07.02 No
+7.07.03 Information not given
+
+7.08 cl Which are conditions or requirements of the event permit?
+7.08.01 Tents and other semi-permanent structures cannot be present
+7.08.02 Must not close the street
+7.08.03 Must not block the sidewalk
+7.08.04 Must not block or restrict public property
+7.08.05 Must not sell merchandise, food, or beverage
+7.08.06 Must not place signage or banners
+7.08.07 The crowd must not exceed a certain number of people
+7.08.08 Other
+
+7.09 mc Was a permit necessary in order to hold the event, even though protesters did not acquire a permit?
+7.09.01 Yes
+7.09.02 No
+7.09.03 Information not given
+
+7.10 mc Is the city government and/or police informally allowing the event, despite it not having a permit?
+7.10.01 Yes
+7.10.02 No
+7.10.03 Information not given 
+
+if 7.01.01, then 7.02
+if 7.01.01, then 7.07
+if 7.01.02, then 7.09
+if 7.01.02, then 7.10
+if 7.02.01, then 7.03
+if 7.02.02, then 7.04
+if 7.02.03, then 7.05
+if 7.02.04, then 7.06 
+
+8.01 cl Which of the following parties responded to the event?
+8.01.01 Individual affiliated with the event
+8.01.02 Passerby/onlooker, individual not affiliated with the event (ex. citizens, local business owners)
+8.01.03 Community group that is not Occupy (ex. church, interest group, local organization)
+8.01.04 City/state official
+8.01.05 Celebrity or politician
+8.01.06 Information not given
+8.01.07 Other
+
+8.02 mc What was the party's level of support?
+8.02.01 Strongly unsupportive, very negative, oppositional
+8.02.02 Somewhat unsupportive, slightly negative
+8.02.03 Neutral
+8.02.04 Somewhat supportive, slightly positive 
+8.02.05 Strongly supportive, very positive, enthusiastic 
+
+if 8.01.any, then 8.02 
 
 Instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below.
 
-glossary: blocking action: type of protester-initiated event where a group of individuals  
+glossary: blocking action: protesters intentionally block access to transportation or commercial infrastructure. E.g. protesters block access to government buildings, streets, sidewalks, light rail systems, bank buildings, shipping ports, etc.
 
 glossary: camp:
 
 glossary: community response:
 
-glossary: counterprotester:
-		
-glossary: divestment action:
+glossary: counter-protester: individual protesting against the occupy movement
 
-glossary: disrupting an on-going event of the perceived 1%: 
+glossary: disrupting an on-going event of the perceived 1%: protesters disrupt an event held by people they oppose eg protesters shout down politician who is speaking, intentionally disrupt city council meeting, or interrupt the proceedings of a fundraiser, etc.
 	
-glossary: establishing a camp: 
+glossary: divestment action: protesters close their accounts with banks they oppose and encourage others to do so as well.
 
-glossary: independent:
+glossary: establishing a camp: protesters set up two or more tents with the intention of camping multiple nights on location. 
 
-glossary: injuries:
+glossary: independent: citizen or other person not affiliated with the camp, media, police, or city 
 
-glossary: march/parade: type of protester-initiated event. 
+glossary: injuries: 
 
-glossary: moving a camp to a new location: 
-	
-glossary: rally/demonstration: 
+glossary: march/parade: protesters move along a path usually chanting and holding signs. Note: if protesters spend time at their starting point or destination listening to speeches or musicians, that should be counted as a rally (an event separate from the march/parade). 
 
-glossary: strategic violence: 
-	
-glossary: strategic sabotage:
-		
-glossary: strike: 
-		
-glossary: voluntary dissolution of a camp:
+glossary: moving a camp to a new location: protesters pack up tents and structures and leave the site of their encampment and establish a camp at a new location. Note: if only some campers leave the original camp the event should be categorized as the establishment of a new camp. (NOTE: implies the dissolution of the previous camp, so only count it as a move if the other camp is dissolving in the process. if the old camp survives while some of the people move to a new location, the move to a new location should simply be coded as the establishment of a new camp.)	
+
+glossary: rally/demonstration: protesters stay in one spot while listening to speeches or musicians, chanting, carrying signs, etc. 
+
+glossary: strategic violence: protesters carry out a pre-planned act of violence against other humans eg. Kidnapping, bombing, assassination, assault. Note: only use this classification for the event if it is clear that the highlighted text describes activities that were planned in advance.	
+
+glossary: strategic sabotage: protesters carry out pre-planned act of destruction of physical property eg vandalism, setting fires, breaking windows, etc. Note: only use this classification for the event if it is clear that the highlighted text describes activities that were planned in advance.		
+
+glossary: strike: protesters and allies refuse to work at a specified time. Sometimes participants will carry signs and attempt to shame people who do not participate.		
+
+glossary: voluntary dissolution of a camp: protesters pack up tents and structures and leave the site of their encampment without being directly forced by police officers.
