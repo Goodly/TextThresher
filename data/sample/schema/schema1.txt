@@ -18,8 +18,10 @@ Please use this module as a guide for formatting your modules to the EXACT wordi
 1.01.06 Establishing a Camp
 1.01.07 Moving a camp to a new location
 1.01.08 Disrupting an on-going event of the perceived 1%
-1.01.09 Divestment Action1.01.10 Voluntary Dissolution of a camp
-1.01.11 Strategic Violence1.01.12 Strategic Sabotage
+1.01.09 Divestment Action
+1.01.10 Voluntary Dissolution of a camp
+1.01.11 Strategic Violence
+1.01.12 Strategic Sabotage
 
 1.02 mc What did the crowd block?
 1.02.01 Sidewalk 
@@ -30,7 +32,8 @@ Please use this module as a guide for formatting your modules to the EXACT wordi
 1.02.06 Other
 
 1.03 mc What type of event did the protesters disrupt?
-1.03.01 Political campaign1.03.02 Politician's speech
+1.03.01 Political campaign
+1.03.02 Politician's speech
 1.03.03 City council meeting
 1.03.04 Auction
 1.03.05 Country Club event
@@ -38,8 +41,10 @@ Please use this module as a guide for formatting your modules to the EXACT wordi
 
 1.04 mc What is the title of the 1% who is being protested against?
 1.04.01 CEO of a company
-1.04.02 City mayor1.04.03 City council member
-1.04.04 State legislator1.04.05 U.S. president
+1.04.02 City mayor
+1.04.03 City council member
+1.04.04 State legislator
+1.04.05 U.S. president
 1.04.06 Other
 
 1.05 mc What type of strategic violence occurred?
@@ -184,7 +189,9 @@ if 2.01.02, then 2.03
 3.12.03 High school diploma/GED
 3.12.04 Some college (2 years or fewer)
 3.12.05 College degree (B.A., B.S., trade school, technical school)
-3.12.06 Master's degree3.12.07 PhD 3.12.08 Information not given
+3.12.06 Master's degree
+3.12.07 PhD 
+3.12.08 Information not given
 
 3.13 cl Which career fields/occupations were in attendance?
 3.13.01 A wide variety of career fields/occupations
@@ -219,8 +226,10 @@ if 3.07.any, then 3.08
 
 
 4.01 cl Which of the following information does the text give about when the event occurred? 
-4.01.01 The exact start time4.01.02 An approximate start time
-4.01.03 The exact end time4.01.04 An approximate end time
+4.01.01 The exact start time
+4.01.02 An approximate start time
+4.01.03 The exact end time
+4.01.04 An approximate end time
 4.01.05 The duration (the length of time the event lasted after it began)
 4.01.06 Information not given
 
@@ -323,7 +332,8 @@ if 5.05.02, then 5.07
 6.03.04 "A small crowd," "a couple dozen: 21-35
 6.03.05 "A crowd: 36-75
 6.03.06 "A large crowd," "a hundred or so: 76-150
-6.03.07 "A mass," "hundreds": 151-5006.03.08 Multiple hundreds, several hundreds: 501 or more
+6.03.07 "A mass," "hundreds": 151-500
+6.03.08 Multiple hundreds, several hundreds: 501 or more
 
 6.04 mc Which of the following information does the text give about when the protesters were injured?
 6.04.01 The exact time
