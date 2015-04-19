@@ -14,7 +14,7 @@ from django.db.utils import IntegrityError
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 from parse_schema import TopicsSchemaParser
-from thresher.models import Article, AnalysisType, TUA
+from thresher.models import Article, AnalysisType, TUA, Topic
 
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
@@ -35,11 +35,15 @@ def load_schema(schema):
         # we've already loaded this schema, pull it into memory.
         print "Schema already exists, It will be overwritten"
         curr_schema_obj = AnalysisType.objects.get(name=schema_name)
-        # Since django by default emulates CASCADE DELETE,
-        # this will delete all topics, questions and answers related to this analysis_type
-        curr_schema_obj.delete()
-        # Save the new object
+        # We can't just delete the object because this will delete all TUAs associated with it.
+        # Instead, we update the Analysis Type and delete all the topics associated with it.
+        # When the id is set, django automatically knows to update instead of creating a new entry.
+        schema_obj.id = curr_schema_obj.id
+        # Save the updated object
         schema_obj.save()
+        # delete all topics associated with this Analysis Type
+        # This will CASCADE DELETE all questions and answers as well
+        Topic.objects.filter(analysis_type=schema_obj).delete()
 
     ANALYSIS_TYPES[schema_name] = schema_obj
     print "loading schema..."

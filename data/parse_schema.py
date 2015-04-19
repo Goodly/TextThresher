@@ -1,3 +1,5 @@
+import argparse
+
 IN_FILE = 'DecidingForceSchema_Sample/schema1.txt'
 
 TITLE_ID = 'title:'
@@ -28,6 +30,7 @@ def parse_schema(schema_file=IN_FILE):
                 parse_dependency(data, parsed_schema)
             else:
                 parse_question_entry(type_id, data, parsed_schema)
+
     return parsed_schema
 
 def parse_title(title, output):
@@ -53,6 +56,10 @@ def parse_question_entry(entry_id, data, output):
     type_bits = entry_id.split('.')
     num_bits = len(type_bits)
     if num_bits == 1:
+        try:
+            topics_id = int(type_bits[0])
+        except ValueError:
+            return 
         topic_id = type_bits[0]
         if 'topics' not in output:
             output['topics'] = []
@@ -86,5 +93,9 @@ def print_data(output):
     import pprint; pprint.pprint(output)
 
 if __name__ == '__main__':
-    output = parse_schema(IN_FILE)
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('filename', nargs=1)
+    args = arg_parser.parse_args()
+    
+    output = parse_schema(args.filename[0])
     print_data(output)
