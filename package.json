@@ -2,10 +2,17 @@
   "name": "annotator-custom-editor",
   "version": "1.0.0",
   "description": "A custom editor plugin for annotator",
-  "preinstall": "npm install -g bower coffee-script testem",
+  "repository": {
+  "type": "git",
+  "url": "git@github.com:Goodly/annotator-custom-editor.git"
+  },
   "scripts": {
-    "test": "testem"
+    "test": "testem",
+    "deploy": "babel src --out-dir lib --source-maps inline"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.1.10"
+  }
 }

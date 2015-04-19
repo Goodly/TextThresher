@@ -1,12 +1,12 @@
 {
   "framework": "mocha",
   "test_page": "spec/index.html",
-  "before_tests": "coffee -co lib src; coffee -co .tmp spec; coffee -co demo demo",
+  "before_tests": "babel src --out-dir .tmp --source-maps; babel spec --out-dir .tmp --source-maps",
   "src_files": [
-    "src/**/*.coffee",
+    "src/**/*.js",
     "spec/index.html",
-    "spec/**/*.coffee",
-    "demo/**_demo.coffee"
+    "spec/**/*.js",
+    "demo/**_demo.js"
   ],
   "serve_files": [
     ".tmp/**/*.js",
