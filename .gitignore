@@ -1,5 +1,5 @@
 .tmp
-bower_components
+vendor/bower_components
 node_modules
 testem.*.json
 tests.tap
