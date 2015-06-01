@@ -11,15 +11,5 @@
   "serve_files": [
     ".tmp/**/*.js",
     "lib/**/*.js"
-  ],
-  "launch_in_dev": [
-    "Firefox",
-    "PhantomJS"
-  ],
-  "launch_in_ci": [
-    "Chrome",
-    "Firefox",
-    "Safari",
-    "Opera"
   ]
 }
