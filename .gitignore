@@ -3,4 +3,4 @@ vendor/bower_components
 node_modules
 testem.*.json
 tests.tap
-libpeerconnection.log
+*.log

@@ -1,7 +1,9 @@
 {
   "name": "annotator-custom-editor",
   "dependencies": {
-    "jquery": "latest"
+    "jquery": "latest",
+    "bootstrap": "~3.3.5",
+    "handlebars": "~3.0.3"
   },
   "devDependencies": {
     "chai": "latest",
