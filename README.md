@@ -1,4 +1,4 @@
-# annotator-custom-editor
+# annotator-content-analysis
 Extends the jQuery Annotator plugin to allow for custom logic queries on each annotation
 
 ####To setup
