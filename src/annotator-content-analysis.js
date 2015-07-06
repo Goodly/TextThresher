@@ -80,12 +80,23 @@ function annotatorContentAnalysis(options){
 
         })
 
+        $('.next-question').on('click', e => {
+          $('.survey-unit__question').each((idx, question) => {
+            const selectedAnswer = $(question).find('.survey-unit__answer:checked')[0];
+            if (selectedAnswer) {
+              console.log('selected answer dependency: ', selectedAnswer.dataset.dependency);
+            }
+          });
+          return false;
+        })
+
       })
     },
 
     getTopics(element) {
+      const topicId = element.topic_id;
       element.questions.forEach((element) => {
-        this.getQuestions(element)
+        this.getQuestions(element, topicId)
       });
       let data = {
         element,
@@ -97,10 +108,11 @@ function annotatorContentAnalysis(options){
       this.survey.topics.push(topicTemplate(data))
     },
 
-    getQuestions(element) {
+    getQuestions(element, topicId) {
+      const dependencyId = `${topicId}.${element.question_id}`;
       this.parentId = element.id
       element.answers.forEach((element) => {
-        this.getAnswers(element)
+        this.getAnswers(element, dependencyId);
       });
       let data = {
         element,
@@ -111,10 +123,15 @@ function annotatorContentAnalysis(options){
       this.survey.questions.push(questionTemplate(data))
     },
 
-    getAnswers(element) {
+    getAnswers(element, dependencyId) {
+      const dependencies = this.data['analysis_type']['question_dependencies'];
+      const dependencyKey = `${dependencyId}.${element.answer_id}`;
+      const dependentQuestionId = dependencies[dependencyKey] || dependencies[`${dependencyId}.any`];
+
       let data = {
         element,
-        parentId: this.parentId
+        dependentQuestionId,
+        parentId: this.parentId,
       }
       let answerTemplate = Handlebars.compile(this.templates.answer);
 
