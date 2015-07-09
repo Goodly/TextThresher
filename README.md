@@ -6,7 +6,7 @@ Extends the jQuery Annotator plugin to allow for custom logic queries on each an
 Ensure you have **bower**, **livereload**, and **testem** installed as NPM globals. Otherwise, if you're not sure, run:
 
 ```
-npm install -g bower livereload testem
+npm install -g bower livereload testem node-sass
 ```
 
 Then, from the project directory, run
@@ -37,4 +37,3 @@ Run `npm run deploy` and the output files will be written to the `lib` directory
 
 ####NOTES:
 * Make changes ONLY to the ES6 `js` file in the `src`, not to `js` in `lib`. The lib is compiled down to run in modern browsers by `testem`.
-* Don't have a compatible set of browsers or want to test against something else? Change the browsers tested against in `testem.json`

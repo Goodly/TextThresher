@@ -1,12 +1,13 @@
 {
   "framework": "mocha",
   "test_page": "spec/index.html",
-  "before_tests": "babel src --out-dir .tmp --source-maps; babel spec --out-dir .tmp --source-maps",
+  "before_tests": "babel src --out-dir .tmp --source-maps; babel spec --out-dir .tmp --source-maps; node-sass style/annotator-content-analysis.scss --output .tmp",
   "src_files": [
     "src/**/*.js",
     "spec/index.html",
     "spec/**/*.js",
-    "demo/**_demo.js"
+    "demo/**_demo.js",
+    "style/**/*.scss"
   ],
   "serve_files": [
     ".tmp/**/*.js",

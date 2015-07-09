@@ -1,0 +1,23 @@
+.survey-unit {
+  position: relative;
+  // top: 0;
+  right: 0;
+
+  &__topic {
+    font-size: 1.2em;
+    &--name {
+      margin: 10px 0;
+    }
+  }
+
+  &__question {
+    font-weight: bold;
+    font-size: .75em;
+  }
+
+  &__answer {
+    font-weight: normal;
+    list-style-type: none;
+  }
+
+}
