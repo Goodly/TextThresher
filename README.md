@@ -3,10 +3,12 @@ Extends the jQuery Annotator plugin to allow for custom logic queries on each an
 
 ####To setup
 
-Ensure you have **bower**, **livereload**, and **testem** installed as NPM globals. Otherwise, if you're not sure, run:
+Ensure you have **gulp** installed as an NPM global and that it's version 3.9 or higher. *v3.9+ supports es6 syntax in the gulpfile*
+
+Otherwise run:
 
 ```
-npm install -g bower livereload testem node-sass
+npm install -g gulp
 ```
 
 Then, from the project directory, run
@@ -18,22 +20,15 @@ bower install
 
 ####To develop
 
-Run `testem` in a shell from the project dir and let the testem watcher compile changes from the `src` directory to the `tmp` folder.
+Run `gulp` in one shell from the project dir to start the file watcher and `gulp test` in another to start the test and demo server.
 
 The demo will be available at `http://localhost:7357/demo/index.html`
 
-Unit tests will be at `http://localhost:7357/`
-
-#####This project also uses `livereload` to recompile the project automatically as you work.
-
-To use run `livereload` in a separate shell window in the project dir, or run `livereload $YOUR_PROJECT_DIR` from any shell location.
-
-If you choose not to use livereload, the browser will complain that `GET http://localhost:35729/livereload.js net::ERR_ADDRESS_UNREACHABLE`. This is expected and won't affect development.
+Unit tests from `http://localhost:7357/`
 
 ####To deploy
 
-Run `npm run deploy` and the output files will be written to the `lib` directory.
-
+Run `npm run deploy` and the output files will be written to the `lib` directory. *(this will be deprecated and delegated to a gulp task in the future)*
 
 ####NOTES:
-* Make changes ONLY to the ES6 `js` file in the `src`, not to `js` in `lib`. The lib is compiled down to run in modern browsers by `testem`.
+* Make changes ONLY to the ES6 `js` in the `src`. The `.tmp` and `lib` folders are compiled down to run in modern browsers by `gulp`.
