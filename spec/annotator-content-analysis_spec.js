@@ -20,7 +20,7 @@ const annotationFixture = {
   ranges: [firstRange]
 };
 
-describe('Annotator Custom Editor ', function() {
+describe('Annotator Custom Editor ', () => {
   let analyzer = annotatorContentAnalysis(options);
   analyzer.start();
 
@@ -29,11 +29,10 @@ describe('Annotator Custom Editor ', function() {
   });
 
   describe('has the methods we want', () => {
-    it('should set the data', () => {
-      // TODO: create an annotation fixture, pass it into analyzer.beforeAnnotationCreated
-      // doing so now causes the module to log the survey to the page
-      // this is the first affirmation needed to decouple data presentation from data generation
+    it('should set the data', (done) => {
+      // TODO: figure out weird bugginess with promises. test output only not input.
       console.log('options.dataUrl', analyzer.beforeAnnotationCreated(annotationFixture));
+      done()
     });
 
   });
