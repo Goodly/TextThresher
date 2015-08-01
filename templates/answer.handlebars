@@ -1,1 +1,3 @@
-<input class="survey-unit__answer" type="radio" name="{{parentId}}" value="{{element.id}}">{{element.text}}</input>
+<input class="survey-unit__answer" type="radio" name="{{parentId}}" value="{{element.id}}" data-dependency="{{dependentQuestionId}}" id="{{element.answer_id}}">
+  {{element.text}}
+</input>
