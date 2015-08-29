@@ -3,9 +3,8 @@ function annotatorContentAnalysis(options){
     // ANNOTATOR LIFECYCLE EVENTS
     //
     start() {
-      this.options = options;
       this._elements();
-      this.createForm();
+      this.createForm(options);
     },
 
     beforeAnnotationCreated(annotation){
@@ -35,43 +34,46 @@ function annotatorContentAnalysis(options){
       this.templates = {}
     },
 
-    createForm(){
-      return this.getTemplates()
-        .then(() => {
-          return this.getData()
+    createForm(options){
+      return this.getTemplates(options.templates)
+        .then((results) => {
+          results.forEach((element, index) => {
+            this.templates[element.key] = element.value;
+          })
+          return this.getData(options)
             .then(() => {
               return this.setSurvey()
           });
       });
     },
 
-    // #TODO: make this less sloppy. remove iterator. make it generate a series of promises and resolve the block.
-    getTemplates() {
-      return new Promise((resolve, reject) => {
-        let i = 0
-        let templateKeys = Object.keys(this.options.templates)
-        templateKeys.forEach((key) => {
-          return this.getUrl(this.options.templates[key])
-            .then((data) => {
-              this.templates[key] = data;
-              i++
-              if (i == templateKeys.length) {
-                resolve()
-              }
-          })
+    // Returns templates block as promise which resolves when all are loaded
+    //
+    getTemplates(templates) {
+      return Promise.all(this.mapObjectToArray(templates, (arg, key) => {
+        return this.getUrl(arg, key)
+          .then((value) => {
+            return {key: key, value: value}
         });
-      })
+      }))
+    },
+
+    mapObjectToArray(obj, cb) {
+      let res = []
+      for (var key in obj)
+        res.push(cb(obj[key], key));
+      return res;
     },
 
     // GET data via AJAX or pass along data object
     //
     getData(){
       return new Promise((resolve, reject) => {
-        if (!!this.options.data) {
-          this.setData(this.options.data);
+        if (!!options.data) {
+          this.setData(options.data);
           resolve()
         } else {
-          let data = this.getUrl(this.options.dataUrl);
+          let data = this.getUrl(options.dataUrl);
           data.then((res) => {
             this.setData(res)
             resolve()

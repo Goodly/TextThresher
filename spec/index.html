@@ -1,29 +1,33 @@
 <!doctype html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Mocha Spec Runner</title>
-    <link rel="stylesheet" href="/vendor/bower_components/mocha/mocha.css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Mocha Spec Runner</title>
+  <link rel="stylesheet" href="/vendor/bower_components/mocha/mocha.css">
+  <link rel="stylesheet" href="/.tmp/annotator-content-analysis.css" type="text/css">
+  <link rel="stylesheet" href="/vendor/bower_components/bootstrap/dist/css/bootstrap.css" type="text/css">
 </head>
 <body>
-    <div id="mocha"></div>
-    <script src="http://localhost:35729/livereload.js"></script>
-    <script src="/vendor/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/vendor/bower_components/handlebars/handlebars.js"></script>
-    <script src="/vendor/annotator.min.js"></script>
+  <div id="mocha"></div>
+  <script src="http://localhost:35729/livereload.js"></script>
+  <script src="/vendor/bower_components/jquery/dist/jquery.js"></script>
+  <script src="../vendor/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="/vendor/bower_components/handlebars/handlebars.js"></script>
+  <script src="/vendor/annotator.min.js"></script>
 
-    <script src="/vendor/bower_components/mocha/mocha.js"></script>
-    <script>mocha.setup('bdd')</script>
-    <script src="/vendor/bower_components/chai/chai.js"></script>
-    <script>var expect = chai.expect</script>
-    <script src="/testem.js"></script>
+  <script src="/vendor/bower_components/mocha/mocha.js"></script>
+  <script>mocha.setup('bdd')</script>
+  <script src="/vendor/bower_components/chai/chai.js"></script>
+  <script src="/vendor/bower_components/chai-as-promised/lib/chai-as-promised.js"></script>
+  <script>var expect = chai.expect</script>
+  <script src="/testem.js"></script>
 
-    <!-- include source files here... -->
-    <script src="/.tmp/annotator-content-analysis.js"></script>
+  <!-- include source files here... -->
+  <script src="/.tmp/annotator-content-analysis.js"></script>
 
-    <!-- include spec files here... -->
-    <script src="/.tmp/annotator-content-analysis_spec.js"></script>
+  <!-- include spec files here... -->
+  <script src="/.tmp/annotator-content-analysis_spec.js"></script>
 
-    <script>mocha.run()</script>
+  <script>mocha.run()</script>
 </body>
 </html>

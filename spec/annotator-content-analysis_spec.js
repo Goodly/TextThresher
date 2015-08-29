@@ -8,6 +8,11 @@ const options = {
   }
 };
 
+const annotationFixture = {
+  quote: 'Santa Cruz city attorney',
+  ranges: [firstRange]
+};
+
 let firstRange = new Range({
   end: '/div[1]',
   endOffset: 24,
@@ -15,27 +20,19 @@ let firstRange = new Range({
   startOffset: 0
 });
 
-const annotationFixture = {
-  quote: 'Santa Cruz city attorney',
-  ranges: [firstRange]
-};
+let analyzer = null;
 
 describe('Annotator Custom Editor ', () => {
-  let analyzer = annotatorContentAnalysis(options);
-  analyzer.start();
-
-  describe('On loading the module', () => {
-    it('exists', () => expect(analyzer).to.exist);
-  });
-
-  describe('has the methods we want', () => {
-    it('should set the data', (done) => {
-      // TODO: figure out weird bugginess with promises. test output only not input.
-      console.log('options.dataUrl', analyzer.beforeAnnotationCreated(annotationFixture));
-      done()
+  beforeEach((done) => {
+    analyzer = annotatorContentAnalysis(options);
+    analyzer._elements();
+    analyzer.createForm(options)
+    .then(() =>{
+      done();
     });
-
   });
 
-
+  it('exists on load', () => {
+    expect(analyzer).to.exist;
+  });
 });
