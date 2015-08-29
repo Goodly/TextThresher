@@ -1,41 +1,83 @@
 function annotatorContentAnalysis(options){
   return {
+    // ANNOTATOR LIFECYCLE EVENTS
+    //
     start() {
       this.options = options;
       this._elements();
-      this.getTemplates();
-      this.getData();
+      this.createForm();
     },
 
+    beforeAnnotationCreated(annotation){
+      return this.appendSurveyToDom(annotation)
+        .then((annotation) => {
+          return annotation
+        });
+    },
+
+    annotationCreated(annotation) {
+      console.log(annotation); // #TODO: remove once we don't need this log
+      return annotation
+   },
+
+    annotationEditorHidden(editor) {
+      this.$el.empty() //#REVIEW why is this not firing when I hide the editor?
+    },
+
+   // MODULE EVENTS
+   //
     _elements() {
       this.survey = {
         answers: [],
         topics: [],
         questions: []
       }
+      this.templates = {}
     },
 
-    getTemplates() {
-      this.templates = {}
-      $.each(this.options.templates, (key, value, index) => {
-        let template = this.getUrl(value);
-        template.then((res) => {
-          this.templates[key] = res;
-        })
+    createForm(){
+      return this.getTemplates()
+        .then(() => {
+          return this.getData()
+            .then(() => {
+              return this.setSurvey()
+          });
       });
+    },
+
+    // #TODO: make this less sloppy. remove iterator. make it generate a series of promises and resolve the block.
+    getTemplates() {
+      return new Promise((resolve, reject) => {
+        let i = 0
+        let templateKeys = Object.keys(this.options.templates)
+        templateKeys.forEach((key) => {
+          return this.getUrl(this.options.templates[key])
+            .then((data) => {
+              this.templates[key] = data;
+              i++
+              if (i == templateKeys.length) {
+                resolve()
+              }
+          })
+        });
+      })
     },
 
     // GET data via AJAX or pass along data object
     //
     getData(){
-      if (!!this.options.data) {
-        this.setData(this.options.data);
-      } else {
-        let data = this.getUrl(this.options.dataUrl);
-        data.then((res) => {
-          this.setData(res)
-        });
-      }
+      return new Promise((resolve, reject) => {
+        if (!!this.options.data) {
+          this.setData(this.options.data);
+          resolve()
+        } else {
+          let data = this.getUrl(this.options.dataUrl);
+          data.then((res) => {
+            this.setData(res)
+            resolve()
+          });
+        }
+      })
     },
 
     // shortcut for AJAX get
@@ -58,26 +100,35 @@ function annotatorContentAnalysis(options){
       }
     },
 
-    // returns a promise that isn't resolved until our survey is submitted
+    setSurvey() {
+      this.data.analysis_type.topics.forEach((element) => {
+        this.getTopics(element)
+      });
+
+      this.data.compiled = {
+        thisTopics: this.survey.topics.join('')
+      };
+
+      this.formTemplate = Handlebars.compile(this.templates.form);
+
+      $('body').append('<div class="survey"></div>');
+
+      this.$el = $('.survey');
+    },
+
+    // append our formTemplate into the DOM
+    // promise is resolved on click of Submit button
     //
-    createSurvey(annotation) {
+    appendSurveyToDom(annotation) {
       return new Promise((resolve, reject) => {
-        this.data.analysis_type.topics.forEach((element) => {
-          this.getTopics(element)
-        });
-        let data = {
-          thisTopics: this.survey.topics.join('')
-        }
 
-        let formTemplate = Handlebars.compile(this.templates.form)
-
-        $('body').append(formTemplate(data))
+        this.$el.html(this.formTemplate(this.data.compiled))
 
         $('.submit').on('click', (e) => {
-          console.log($('form').serialize())
+          annotation.aca = $('form').serialize()
           resolve(annotation)
+          this.$el.empty()
           return false
-
         })
 
         $('.next-question').on('click', e => {
@@ -87,7 +138,6 @@ function annotatorContentAnalysis(options){
               console.log('selected answer dependency: ', selectedAnswer.dataset.dependency);
             }
           });
-          return false;
         })
 
       })
@@ -136,25 +186,7 @@ function annotatorContentAnalysis(options){
       let answerTemplate = Handlebars.compile(this.templates.answer);
 
       this.survey.answers.push(answerTemplate(data))
-    },
-
-    // this function runs once the promise in this.beforeAnnotationCreated() has been resolved
-    postResults(annotation) {
-      console.log('postResults');
-    },
-
-    // ANNOTATOR LIFECYCLE EVENTS
-    //
-    beforeAnnotationCreated(annotation){
-      return this.createSurvey(annotation)
-        .then((annotation) => {
-          return this.postResults(annotation);
-        });
-    },
-
-    annotationCreated(annotation) {
-      return annotation
-   }
+    }
 
   }
 }
