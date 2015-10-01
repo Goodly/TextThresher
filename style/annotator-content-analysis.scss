@@ -3,21 +3,17 @@
   // top: 0;
   right: 0;
 
-  &__topic {
+  .survey-unit__topic {
     font-size: 1.2em;
-    &--name {
-      margin: 10px 0;
+
+    .survey-unit__question {
+      font-weight: bold;
+      font-size: .75em;
+
+      .survey-unit__answer {
+        font-weight: normal;
+        list-style-type: none;
+      }
     }
   }
-
-  &__question {
-    font-weight: bold;
-    font-size: .75em;
-  }
-
-  &__answer {
-    font-weight: normal;
-    list-style-type: none;
-  }
-
 }

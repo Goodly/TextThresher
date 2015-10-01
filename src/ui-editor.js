@@ -1,30 +1,29 @@
-function annotatorContentAnalysis(options){
-  return {
-    // ANNOTATOR LIFECYCLE EVENTS
-    //
-    start() {
+class Editor{
+    constructor(options) {
       this._elements();
-      this.createForm(options);
-    },
+      this.createForm(options.extensions);
+    }
 
-    beforeAnnotationCreated(annotation){
+    load(annotation){
       return this.appendSurveyToDom(annotation)
         .then((annotation) => {
           return annotation
         });
-    },
+    }
+
+    destroy(){
+      console.log('destroy'); // #TODO: create destroy
+    }
 
     annotationCreated(annotation) {
-      console.log(annotation); // #TODO: remove once we don't need this log
+      console.log(annotation); // #TODO: this log used to fire, now that we're standing in for annotator ui it does not. Why?
       return annotation
-   },
+   }
 
     annotationEditorHidden(editor) {
       this.$el.empty() //#REVIEW why is this not firing when I hide the editor?
-    },
+    }
 
-   // MODULE EVENTS
-   //
     _elements() {
       this.survey = {
         answers: [],
@@ -32,7 +31,7 @@ function annotatorContentAnalysis(options){
         questions: []
       }
       this.templates = {}
-    },
+    }
 
     createForm(options){
       return this.getTemplates(options.templates)
@@ -45,7 +44,7 @@ function annotatorContentAnalysis(options){
               return this.setSurvey()
           });
       });
-    },
+    }
 
     // Returns templates block as promise which resolves when all are loaded
     //
@@ -56,18 +55,18 @@ function annotatorContentAnalysis(options){
             return {key: key, value: value}
         });
       }))
-    },
+    }
 
     mapObjectToArray(obj, cb) {
       let res = []
       for (var key in obj)
         res.push(cb(obj[key], key));
       return res;
-    },
+    }
 
     // GET data via AJAX or pass along data object
     //
-    getData(){
+    getData(options){
       return new Promise((resolve, reject) => {
         if (!!options.data) {
           this.setData(options.data);
@@ -80,14 +79,14 @@ function annotatorContentAnalysis(options){
           });
         }
       })
-    },
+    }
 
     // shortcut for AJAX get
     getUrl(url) {
       return $.get(url, (data) => {
         return data;
       });
-    },
+    }
 
     // #TODO: make this more universal
     //
@@ -100,7 +99,7 @@ function annotatorContentAnalysis(options){
         previous: value.previous,
         analysis_type: value.results[0].analysis_type
       }
-    },
+    }
 
     setSurvey() {
       this.data.analysis_type.topics.forEach((element) => {
@@ -116,7 +115,7 @@ function annotatorContentAnalysis(options){
       $('body').append('<div class="survey"></div>');
 
       this.$el = $('.survey');
-    },
+    }
 
     // append our formTemplate into the DOM
     // promise is resolved on click of Submit button
@@ -143,7 +142,7 @@ function annotatorContentAnalysis(options){
         })
 
       })
-    },
+    }
 
     getTopics(element) {
       const topicId = element.topic_id;
@@ -158,7 +157,7 @@ function annotatorContentAnalysis(options){
       let topicTemplate = Handlebars.compile(this.templates.topic);
 
       this.survey.topics.push(topicTemplate(data))
-    },
+    }
 
     getQuestions(element, topicId) {
       const dependencyId = `${topicId}.${element.question_id}`;
@@ -173,7 +172,7 @@ function annotatorContentAnalysis(options){
       this.survey.answers = []
       let questionTemplate = Handlebars.compile(this.templates.question);
       this.survey.questions.push(questionTemplate(data))
-    },
+    }
 
     getAnswers(element, dependencyId) {
       const dependencies = this.data['analysis_type']['question_dependencies'];
@@ -189,6 +188,20 @@ function annotatorContentAnalysis(options){
 
       this.survey.answers.push(answerTemplate(data))
     }
+}
 
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = Editor;
+}
+else {
+  if (typeof define === 'function' && define.amd) {
+    define([], function() {
+      return Editor;
+    });
+  }
+  else {
+    window.aca = {};
+    window.aca.ui = {};
+    window.aca.ui.editor = Editor;
   }
 }
