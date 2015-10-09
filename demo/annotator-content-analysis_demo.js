@@ -22,11 +22,7 @@ $(function() {
 
   function setupAnnotator(options){
     var app = new annotator.App()
-      .include(annotator.ui.main, {viewerExtensions: [annotator.ui.tags.viewerExtension]})
-      .include(annotatorContentAnalysis, options);
-
-      // TODO: eventually we want to either remove annotator.ui altogether in favor of our custom UI,
-      // or we want to only include a small piece of it.
+      .include(aca.ui.main, {viewerExtensions: [annotator.ui.tags.viewerExtension], editorExtensions: options});
 
     app.start();
   };
