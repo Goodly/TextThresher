@@ -1,9 +1,15 @@
+// #TODO: PORT WHAT IS NEEDED TO THE NEW REACT APP
+
 class Editor{
     constructor(options) {
       this._elements();
       this.createForm(options.extensions);
     }
 
+    // UI Main triggers this method when an a text selection is made and Adder is clicked.
+    //
+    // @param annotation [object] The annotation object which has been created by the Added and UI Utils
+    //
     load(annotation){
       return this.appendSurveyToDom(annotation)
         .then((annotation) => {
@@ -11,15 +17,25 @@ class Editor{
         });
     }
 
+    // This method is triggered by Annotator and exposed in UI Main.
+    //
     destroy(){
       console.log('destroy'); // #TODO: create destroy
     }
 
+    // Annotator core method that fires when annotation is created.
+    //
+    // @param annotation [object] The Annotation object
+    //
     annotationCreated(annotation) {
       console.log(annotation); // #TODO: this log used to fire, now that we're standing in for annotator ui it does not. Why?
       return annotation
    }
 
+    // Annotator core method that fires when the editor is hidden
+    //
+    // @param annotation [object] The Annotation object
+    //
     annotationEditorHidden(editor) {
       this.$el.empty() //#REVIEW why is this not firing when I hide the editor?
     }
