@@ -1,4 +1,4 @@
-/*package annotator.ui */
+// #TODO: PORT WHAT IS NEEDED TO THE NEW REACT APP
 "use strict";
 
 var adder = annotator.ui.adder;
