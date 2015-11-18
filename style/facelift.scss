@@ -1,12 +1,14 @@
 $font-newspaper: georgia, 'PT Serif', serif;
 $font-ui: 'Avenir Next', 'Montserrat', sans-serif;
 $transition-fast: 0.3s ease;
-$offblack : #333;
-$offwhite : #ededed;
-$accent1  : #F16061;
-$accent2  : #FDD484;
-$accent3  : #AFD792;
-$accent4  : #a8d2bf;
+$offblack      : #333;
+$offwhite      : #ededed;
+$red_accent    : #F16061;
+$yellow_accent : #FDD484;
+$green_accent  : #AFD792;
+$blue_accent   : #a8d2bf;
+
+$topic-picker-nav-width: 25%;
 
 
 @mixin newspaper {
@@ -39,23 +41,21 @@ $accent4  : #a8d2bf;
     /* the annotation plugin changes manually the color and
        structure of the page so this doesn't work */
     &[data-topic="1"]::selection {
-      background: $accent1;
+      background: $red_accent;
     }
     &[data-topic="2"]::selection {
-      background: $accent2;
+      background: $yellow_accent;
     }
     &[data-topic="3"]::selection {
-      background: $accent3;
+      background: $green_accent;
     }
     &[data-topic="4"]::selection {
-      background: $accent4;
+      background: $blue_accent;
     }
   }
 }
 
 .topic-picker {
-  $nav-width: 25%;
-
   position: fixed;
   top: 0;
   width: 100%;
@@ -106,7 +106,7 @@ $accent4  : #a8d2bf;
     }
 
     .topic-picker__nav {
-      width: $nav-width;
+      width: $topic-picker-nav-width;
       b {
         opacity: 1;
       }
@@ -123,22 +123,22 @@ $accent4  : #a8d2bf;
 
     li:nth-child(1) {
       &:hover, &.active {
-        background-color: $accent1;
+        background-color: $red_accent;
       }
     }
     li:nth-child(2) {
       &:hover, &.active {
-        background-color: $accent2;
+        background-color: $yellow_accent;
       }
     }
     li:nth-child(3) {
       &:hover, &.active {
-        background-color: $accent3;
+        background-color: $green_accent;
       }
     }
     li:nth-child(4) {
       &:hover, &.active {
-        background-color: $accent4;
+        background-color: $blue_accent;
       }
     }
   }
@@ -187,7 +187,7 @@ $accent4  : #a8d2bf;
 
   &__wrapper {
     opacity: 0;
-    padding-right: $nav-width;
+    padding-right: $topic-picker-nav-width;
   }
 }
 
