@@ -6,6 +6,7 @@ import ListenerMixin from 'alt/mixins/ListenerMixin';
 import Article from 'components/article';
 import Topics from 'components/topics';
 import TopicHeader from 'components/topicHeader';
+import TopicPicker from 'components/topicPicker';
 
 import AppStore from 'store/appStore';
 
@@ -34,9 +35,12 @@ export default React.createClass({
 
     return (
       <div className='tua'>
-        <TopicHeader topics={topics}/>
-        <Article article={article}/>
+        <div className='text-wrapper'>
+          <TopicHeader topics={topics}/>
+          <Article article={article}/>
+        </div>
         <Topics topics={topics}/>
+        <TopicPicker topics={topics}/>
       </div>
     );
   }
