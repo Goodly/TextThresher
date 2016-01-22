@@ -128,7 +128,7 @@ class Editor{
 
       this.formTemplate = Handlebars.compile(this.templates.form);
 
-      $('body').append('<div class="survey"></div>');
+      $('body').append('<div class="survey-wrapper"><div class="survey"></div></div>');
 
       this.$el = $('.survey');
     }
