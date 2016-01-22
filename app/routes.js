@@ -8,13 +8,17 @@ export default (
       path='tua/:tua_id'
       handler={require('./components/tua')}>
       <Route
-       name='topicAnalysis'
-       path='topic/:topic_id'>
-       <Route
-        name='questionAnalysis'
-        path='question/:question_id'/>
+        name='topicAnalysis'
+        path='topic/:topic_id'>
+        <Route
+          name='questionAnalysis'
+          path='question/:question_id'/>
       </Route>
     </Route>
+    <Route
+      name='quiz'
+      path='quiz'
+      handler={require('./components/quiz/Quiz')} />
     <NotFoundRoute
       handler={require('./components/error')} />
   </Route>

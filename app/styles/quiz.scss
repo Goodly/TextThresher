@@ -1,0 +1,34 @@
+@import 'styleguide';
+@import 'common';
+
+.quiz {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 150px;
+
+  &__next {
+    margin-top: 20px;
+    float: right;
+    font-family: $font-ui;
+    font-weight: bold;
+    color: $offblack;
+
+    &[disabled] {
+      color: $offwhite;
+    }
+  }
+
+  &__question {
+    .quiz__context {
+      font-size: 14pt;
+      span {
+        color: #CCC;
+      }
+
+      .highlighted {
+        color: #333;
+        font-style: italic;
+      }
+    }
+  }
+}

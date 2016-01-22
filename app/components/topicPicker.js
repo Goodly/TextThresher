@@ -2,6 +2,7 @@ import React from 'react';
 import {RouteHandler} from 'react-router';
 import objectAssign from 'object-assign';
 import ListenerMixin from 'alt/mixins/ListenerMixin';
+import jquery from 'jquery';
 
 import Article from 'components/article';
 import Question from 'components/question';
@@ -35,7 +36,47 @@ export default React.createClass({
     return AppStore.getState();
   },
 
+  componentDidMount() {
+    // TODO: once everything is react-ified we shouldn't need jquery
+    // though this is arguably much less boilerplate code than react
+    var $ = jquery;
+
+    function deleteMeSomeday() {
+      var currentTopic = '1';
+      function collapse(elem) {
+        $(elem).parent().children().toggle();
+        $(elem).toggle()
+               .toggleClass('variable-list__collapsible--closed');
+      }
+      function activateTopic(topic) {
+        $('.topic-picker__nav li').removeClass('active');
+        $(`.topic-picker__nav li[data-topic="${topic}"]`).addClass('active');
+        $('.text-wrapper__text').attr('data-topic', topic);
+
+        $('.topic-wrapper').hide();
+        $(`.topic-wrapper[data-topic="${topic}"]`).show();
+      }
+
+      $(document).ready(_ => {
+        $('.topic-picker__pin-button').click(function() {
+          $('.topic-picker').toggleClass('topic-picker--open');
+          $(this).toggleClass('fa-inverse');
+        });
+        $('.variable-list .variable-list__collapsible').click(function() {
+          collapse(this);
+        }).click();
+        $('.topic-picker__nav li').click(function() {
+          activateTopic($(this).attr('data-topic'));
+        });
+
+        activateTopic('1');
+      });
+    }
+    deleteMeSomeday();
+  },
+
   render() {
+    // TODO: break this into its component pieces
     const {topicId}: string = this.context.router.getCurrentParams();
 
     return (

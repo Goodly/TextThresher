@@ -112,7 +112,8 @@ export default {
       alias: {
         modernizr: resolveBowerPath('modernizr/modernizr.js'),
         lodash: resolveBowerPath('lodash/lodash.js'),
-        bootstrap_sass: resolveBowerPath('bootstrap-sass/assets/stylesheets/_bootstrap.scss')
+        bootstrap_sass: resolveBowerPath('bootstrap-sass/assets/stylesheets/_bootstrap.scss'),
+        jquery: resolveBowerPath('jquery/dist/jquery.js')
       },
       extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png'],
       modulesDirectories: ['app', 'node_modules', 'web_modules', bowerPath]

@@ -1,14 +1,10 @@
 @import 'styleguide';
+@import 'common';
 
 @mixin ul-reset {
   list-style: none;
   padding-left: initial;
   margin-bottom: initial;
-}
-@mixin vertical-align($position: relative) {
-  position: $position;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 $topic-picker-nav-width: 25%;
