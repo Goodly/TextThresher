@@ -17,8 +17,9 @@
     "autoprefixer-loader": "^1.2.0",
     "babel": "^5.1.9",
     "babel-core": "^5.1.9",
-    "babel-eslint": "^3.0.1",
+    "babel-eslint": "^4.1.6",
     "babel-loader": "^5.0.0",
+    "colors": "^1.1.2",
     "css-loader": "^0.9.1",
     "csswring": "^3.0.3",
     "debug": "^2.1.3",
@@ -30,7 +31,6 @@
     "exports-loader": "^0.6.2",
     "extract-text-webpack-plugin": "^0.7.0",
     "file-loader": "^0.8.1",
-    "gulp": "^3.9",
     "html-webpack-plugin": "^1.3.0",
     "imports-loader": "^0.6.3",
     "jscs": "^1.13.1",
@@ -52,6 +52,7 @@
     "webpack-dev-server": "^1.12.0"
   },
   "dependencies": {
-    "annotator": "^2.0.0-alpha.3"
+    "dom-anchor-text-position": "^2.0.1",
+    "jquery": "^2.2.0"
   }
 }
