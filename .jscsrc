@@ -54,6 +54,5 @@
   "safeContextKeyword": "_this",
   "validateQuoteMarks": "'",
   "validateIndentation": 2,
-  "esnext": true,
-  "esprima": "esprima-fb"
+  "esnext": true
 }

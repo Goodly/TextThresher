@@ -1,15 +1,9 @@
 import React from 'react';
-import AppStore from 'store/appStore';
 import QuizQuestion from 'components/quiz/QuizQuestion.js';
-
-import '../../styles/quiz.scss';
+import 'quiz.scss';
 
 export default React.createClass({
   displayName: 'Quiz',
-
-  contextTypes: {
-    router: React.PropTypes.func
-  },
 
   propTypes: {
     questions: React.PropTypes.array.isRequired
@@ -46,12 +40,14 @@ export default React.createClass({
     if (e.target.type === 'radio') {
       // a radio button
       this.setState({answer: [e.target.value]});
-    } else {
+    }
+    else {
       // a checkbox
       var newAnswers = new Set(this.state.answer);
       if (e.target.checked) {
         newAnswers.add(e.target.value);
-      } else {
+      }
+      else {
         newAnswers.delete(e.target.value);
       }
       newAnswers = Array.from(newAnswers);
@@ -62,15 +58,15 @@ export default React.createClass({
   render() {
     var opts = this.state.answer.length !== 0 ? {} : {disabled: true};
     return (
-      <div className="quiz">
-        {this.props.questions.map((question, i) => {
+      <div className='quiz'>
+        {this.props.questions.map((question) => {
           return (
             <QuizQuestion key={question.id}
                           question={question}
                           onUpdate={this.onUpdate} />
           );
         })}
-        <button className="quiz__next" {...opts}>Next</button>
+        <button className='quiz__next' {...opts}>Next</button>
       </div>
     );
   }

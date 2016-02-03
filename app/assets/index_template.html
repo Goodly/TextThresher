@@ -1,26 +1,16 @@
-<!DOCTYPE html>
-<html{% if(o.htmlWebpackPlugin.files.manifest) { %} manifest="{%= o.htmlWebpackPlugin.files.manifest %}"{% } %}>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="cleartype" content="on">
-  <title>{%=o.htmlWebpackPlugin.options.title || 'Webpack App'%}</title>
-  {% for (var css in o.htmlWebpackPlugin.files.css) { %}
-  <link href="{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet">
-  {% } %}
+  <meta charset="utf-8">
+  <title><%= htmlWebpackPlugin.options.title %></title>
 
   <!-- TODO: migrate -->
   <link rel="stylesheet" href="../vendor/bower_components/bootstrap/dist/css/bootstrap.css" type="text/css">
   <!-- resources -->
   <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-</head>
-<body>
-  {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
-  <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
-  {% } %}
-</body>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"></head>
+  <body>
+  </body>
+
 </html>
