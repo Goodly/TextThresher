@@ -22,40 +22,5 @@
   {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
   <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
   {% } %}
-  
-  <!-- temp -->
-  <script src="../../vendor/bower_components/jquery/dist/jquery.js"></script>
-  <script>
-    // this is hacky and belongs somewhere else
-    var currentTopic = "1";
-    function collapse(elem) {
-      $(elem).parent().children().toggle();
-      $(elem).toggle()
-             .toggleClass('variable-list__collapsible--closed');
-    }
-    function activateTopic(topic) {
-      $('.topic-picker__nav li').removeClass('active');
-      $(`.topic-picker__nav li[data-topic="${topic}"]`).addClass('active');
-      $('.text-wrapper__text').attr('data-topic', topic);
-
-      $('.topic-wrapper').hide();
-      $(`.topic-wrapper[data-topic="${topic}"]`).show();
-    }
-
-    $(document).ready(_ => {
-      $('.topic-picker__pin-button').click(function() {
-        $('.topic-picker').toggleClass('topic-picker--open');
-        $(this).toggleClass('fa-inverse');
-      });
-      $('.variable-list .variable-list__collapsible').click(function() {
-        collapse(this);
-      }).click();
-      $('.topic-picker__nav li').click(function() {
-        activateTopic($(this).attr('data-topic'));
-      });
-
-      activateTopic("1");
-    });
-  </script>
 </body>
 </html>
