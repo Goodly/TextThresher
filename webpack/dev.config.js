@@ -116,7 +116,10 @@ export default {
         jquery: resolveBowerPath('jquery/dist/jquery.js')
       },
       extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png'],
-      modulesDirectories: ['app', 'node_modules', 'web_modules', bowerPath]
+      modulesDirectories: ['app', 'node_modules', 'web_modules', bowerPath],
+      root: [
+        path.resolve('./app/styles'),
+      ]
     }
   }
 };

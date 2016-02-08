@@ -1,5 +1,4 @@
 import React from 'react';
-import AppStore from 'store/appStore';
 
 export default React.createClass({
   displayName: 'Article',

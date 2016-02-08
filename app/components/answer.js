@@ -13,9 +13,10 @@ export default React.createClass({
     let parentId = `parentId-${this.props.parentId}`;
 
     return (
-      <input className='survey-unit__answer' type='radio' value={answer.id} id={answer.answer_id} name={parentId}>
-        {answer.text}
-      </input>
+      <div className='answerWrapper'>
+        <input className='survey-unit__answer' type='radio' value={answer.id} id={answer.answer_id} name={parentId}/>
+          {answer.text}
+      </div>
     );
   }
 });

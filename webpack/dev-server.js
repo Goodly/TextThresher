@@ -1,6 +1,6 @@
 'use strict';
 
-require('babel/register');
+require('babel-register');
 
 var colors = require('colors');
 var debug = require('debug')('dev');

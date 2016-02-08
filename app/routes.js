@@ -1,12 +1,16 @@
 import React from 'react';
-import {Route, NotFoundRoute} from 'react-router';
+import {Route} from 'react-router';
+
+import App from './components/app';
+import Tua from './components/tua';
+import Quiz from './components/quiz/Quiz';
 
 export default (
-  <Route name='app' path='/' handler={require('./components/app')}>
+  <Route name='app' path='/' component={App}>
     <Route
       name='tuaAnalysis'
       path='tua/:tua_id'
-      handler={require('./components/tua')}>
+      component={Tua}>
       <Route
         name='topicAnalysis'
         path='topic/:topic_id'>
@@ -18,8 +22,6 @@ export default (
     <Route
       name='quiz'
       path='quiz'
-      handler={require('./components/quiz/Quiz')} />
-    <NotFoundRoute
-      handler={require('./components/error')} />
+      component={Quiz} />
   </Route>
 );

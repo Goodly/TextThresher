@@ -5,8 +5,8 @@ export default React.createClass({
 
   render() {
     return (
-      <div className="item">
-        <div className="404-message canvas-text">
+      <div className='item'>
+        <div className='404-message canvas-text'>
           <h1>
             Something went wrong...
           </h1>
