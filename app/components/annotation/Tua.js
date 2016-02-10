@@ -1,8 +1,7 @@
 import React from 'react';
-import Article from 'components/article';
-import Topics from 'components/topics';
-import TopicHeader from 'components/topicHeader';
-import TopicPicker from 'components/topicPicker';
+import Article from 'components/annotation/article';
+import Topics from 'components/annotation/topics';
+import TopicPicker from 'components/annotation/topicPicker';
 
 import AppStore from 'store/appStore';
 
@@ -36,8 +35,7 @@ export default React.createClass({
     return (
       <div className='tua'>
         <div className='text-wrapper'>
-          <TopicHeader topics={topics}/>
-          <Article article={article}/>
+          <Article topics={topics} article={article}/>
         </div>
         <Topics topics={topics}/>
         <TopicPicker topics={topics}/>

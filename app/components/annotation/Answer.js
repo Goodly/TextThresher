@@ -1,3 +1,4 @@
+// TODO: marked for deletion: topic picking view doesn't need Q&A
 import React from 'react';
 
 export default React.createClass({
