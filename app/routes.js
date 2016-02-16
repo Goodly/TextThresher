@@ -2,7 +2,7 @@ import React from 'react';
 import {Route} from 'react-router';
 
 import App from './components/app';
-import Tua from './components/tua';
+import Tua from './components/annotation/Tua';
 import Quiz from './components/quiz/Quiz';
 
 export default (

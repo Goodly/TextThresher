@@ -3,3 +3,9 @@
   top: 50%;
   transform: translateY(-50%);
 }
+
+@mixin ul-reset {
+  list-style: none;
+  padding-left: initial;
+  margin-bottom: initial;
+}

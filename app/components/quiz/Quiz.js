@@ -1,6 +1,6 @@
 import React from 'react';
 import QuizQuestion from 'components/quiz/QuizQuestion.js';
-import 'quiz.scss';
+import 'Quiz.scss';
 
 export default React.createClass({
   displayName: 'Quiz',

@@ -1,5 +1,6 @@
+// TODO: marked for deletion: topic picking view doesn't need Q&A
 import React from 'react';
-import Question from 'components/question';
+import Question from 'components/annotation/Question';
 import AppStore from 'store/appStore';
 
 export default React.createClass({

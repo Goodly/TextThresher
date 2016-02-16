@@ -1,0 +1,45 @@
+@import 'common';
+@import 'styleguide';
+
+.variable-list {
+  background: #fff;
+  padding: 5px 10px;
+  margin-top: 15px;
+
+  ul {
+    @include ul-reset;
+    padding-left: 13px;
+  }
+
+  &__collapsible {
+    &:before {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 5px;
+      background:
+        linear-gradient(to bottom,
+                        transparent 35%,
+                        $offblack 35%,
+                        $offblack 65%,
+                        transparent 65%);
+      content: '';
+    }
+
+    &--closed {
+      &:before {
+        background:
+        linear-gradient(to bottom,
+                        transparent 35%,
+                        $offblack 35%,
+                        $offblack 65%,
+                        transparent 65%),
+        linear-gradient(to right,
+                        transparent 35%,
+                        $offblack 35%,
+                        $offblack 65%,
+                        transparent 65%);
+      }
+    }
+  }
+}
