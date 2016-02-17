@@ -30,22 +30,21 @@ own username), change or neglect the sudo commands as appropriate.
 
     * Restart postgres:
       On Linux:
-        ```shell
-        $ sudo /etc/init.d/postgresql restart
-        ```
+      ```shell
+      sudo /etc/init.d/postgresql restart
+      ```
       On OSX:
-        ```shell
-        pg_ctl -D /usr/local/var/postgres/ -l /usr/local/var/postgres/server.log restart
-        ```
-
+      ```shell
+      pg_ctl -D /usr/local/var/postgres/ -l /usr/local/var/postgres/server.log restart
+      ```
 * Create the Django DB user (it should match the user in the `thresher_backend/settings.py` file, and is `zz` by default):
   ```shell
-  $ sudo -su postgres createuser --superuser USER_NAME
+  sudo -su postgres createuser --superuser USER_NAME
   ```
 
 * Create the database (should match the database in `settings.py`, default `thresher`):
   ```shell
-  $ createdb -O USER_NAME -U USER_NAME thresher
+  createdb -O USER_NAME -U USER_NAME thresher
   ```
 
 * Set up a virtualenv
@@ -72,7 +71,7 @@ own username), change or neglect the sudo commands as appropriate.
 * Load the data with `python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`, where `SCHEMA_DIR` is a directory containing a `.txt` file for each module topology, and `ARTICLE_DIR` is a directory containing a `.txt` file for each raw article.
 If you do not have access to a complete copy of the data, a sample schema and article directory are available under `text-thresher-backend/data/sample`.
   ```
-  $ python load_data.py -s data/sample/schema/ -d data/sample/article/
+  python load_data.py -s data/sample/schema/ -d data/sample/article/
   ```
 
 - Run the app with `foreman start`
