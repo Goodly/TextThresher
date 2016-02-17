@@ -10,47 +10,68 @@ The latest version of the backend is running
 
 #### Running the app locally
 
+**Note:** the instructions below assume that PostgreSQL is being run as user
+"postgres".  If that is not the case (e.g., if you are running it under your
+own username), change or neglect the sudo commands as appropriate.
+
 - install heroku toolbelt
   [(details)](https://devcenter.heroku.com/articles/getting-started-with-python#set-up)
 
 - install and run postgres:
   - do the install (with apt-get or brew, depending on your OS). 
   - Set up access control:
-    - Find the pg_hba.conf file:
-    
-            $ sudo -u postgres psql
-            > show hba_file;
-            > \q
-		
-    - Edit the pg_hba.conf file, and change the line starting with "local all" to "local" "all" "all" "trust"
-		
+    - Find the pg_hba.conf (PostgreSQL Client Authentication Configuration) file
+      by executing the following command:
+
+      $ sudo -u postgres psql -c 'show hba_file'
+
+    - Edit the pg_hba.conf file, and ensure that the line starting with "local all" becomes:
+
+      "local all all trust"
+
+      (This is already the case with default brew installations.)
+
 	- Restart postgres:
-	
-            $ sudo /etc/init.d/postgresql restart <-- On Linux
-            $ pg_ctl -D /usr/local/var/postgres/ -l /usr/local/var/postgres/server.log restart <-- on OSX
 
-	- Create the Django DB user (it should match the user in the `settings.py` file):
+      On Linux:
 
-		    $ sudo -su postgres
-		    $ createuser --superuser USER_NAME
-		    $ exit
-		
-	- Create the database(should match the database in `settings.py`, right now `thresher`):
+            $ sudo /etc/init.d/postgresql restart
 
-		    $ createdb -O USER_NAME -U USER_NAME thresher
+      On OSX:
+
+            $ pg_ctl -D /usr/local/var/postgres/ -l /usr/local/var/postgres/server.log restart
+
+    - Create the Django DB user (it should match the user in the `thresher_backend/settings.py` file,
+      and is "zz" by default):
+
+            $ sudo -su postgres createuser --superuser USER_NAME
+
+    - Create the database (should match the database in `settings.py`, default `thresher`):
+
+            $ createdb -O USER_NAME -U USER_NAME thresher
 
 - set up a virtualenv
 
 - install packages with `pip install -r requirements.txt`
 
+  **Note:** If you are running conda, it is better to install the requirements
+  using the conda package manager.  At least, you will *have* to ``pip
+  uninstall psycopg2`` and ``conda install psycopg2`` to ensure that you
+  get the correct libSSL linked version.
+
 - prepare static files with `python manage.py collectstatic --noinput`
 
 - prepare the database with `./reset_db.sh`
+
+  When asked whether to add a superuser, say "no" (TODO: should this be
+  "yes"?)
 
 - Load the data with `python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`, where `SCHEMA_DIR` is a directory
   containing a `.txt` file for each module topology, and `ARTICLE_DIR` is a directory containing a `.txt`
   file for each raw article. If you do not have access to a complete copy of the data, a sample schema and
   article directory are available under `text-thresher-backend/data/sample`.
+
+  $ python load_data.py -s data/sample/schema/ -d data/sample/article/
 
 - run the app with `foreman start`
 
