@@ -21,7 +21,7 @@ own username), change or neglect the sudo commands as appropriate.
     * Do the install (with apt-get or brew, depending on your OS). 
     * Set up access control:
         * Find the pg_hba.conf (PostgreSQL Client Authentication Configuration) file by executing the following command:
-        ```bash
+        ```shell
         sudo -u postgres psql -c 'show hba_file'
         ```
         * Edit the pg_hba.conf file, and ensure that the line starting with `local all` becomes:
@@ -30,28 +30,28 @@ own username), change or neglect the sudo commands as appropriate.
 
     * Restart postgres:
       On Linux:
-        ```bash
+        ```shell
         $ sudo /etc/init.d/postgresql restart
         ```
       On OSX:
-        ```bash
+        ```shell
         pg_ctl -D /usr/local/var/postgres/ -l /usr/local/var/postgres/server.log restart
         ```
 
 * Create the Django DB user (it should match the user in the `thresher_backend/settings.py` file, and is `zz` by default):
-  ```bash
+  ```shell
   $ sudo -su postgres createuser --superuser USER_NAME
   ```
 
 * Create the database (should match the database in `settings.py`, default `thresher`):
-  ```bash
+  ```shell
   $ createdb -O USER_NAME -U USER_NAME thresher
   ```
 
 * Set up a virtualenv
 
 * Install packages with 
-  ```bash
+  ```shell
   pip install -r requirements.txt
   ```
   **Note:** If you are running conda, it is better to install the requirements
@@ -60,17 +60,18 @@ own username), change or neglect the sudo commands as appropriate.
   get the correct libSSL linked version.
 
 * Prepare static files with 
-  ```bash
+  ```shell
   python manage.py collectstatic --noinput
   ```
 
 * Prepare the database with `./reset_db.sh`
+  
   When asked whether to add a superuser, say "no".
   [comment]: <> (TODO: should this be "yes"?)
 
 * Load the data with `python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`, where `SCHEMA_DIR` is a directory containing a `.txt` file for each module topology, and `ARTICLE_DIR` is a directory containing a `.txt` file for each raw article.
 If you do not have access to a complete copy of the data, a sample schema and article directory are available under `text-thresher-backend/data/sample`.
-  ```bash
+  ```
   $ python load_data.py -s data/sample/schema/ -d data/sample/article/
   ```
 
