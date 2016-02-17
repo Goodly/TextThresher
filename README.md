@@ -14,68 +14,69 @@ The latest version of the backend is running
 "postgres".  If that is not the case (e.g., if you are running it under your
 own username), change or neglect the sudo commands as appropriate.
 
-- install heroku toolbelt
+* Install heroku toolbelt
   [(details)](https://devcenter.heroku.com/articles/getting-started-with-python#set-up)
 
-- install and run postgres:
-  - do the install (with apt-get or brew, depending on your OS). 
-  - Set up access control:
-    - Find the pg_hba.conf (PostgreSQL Client Authentication Configuration) file
-      by executing the following command:
+* Install and run postgres:
+    * Do the install (with apt-get or brew, depending on your OS). 
+    * Set up access control:
+        * Find the pg_hba.conf (PostgreSQL Client Authentication Configuration) file by executing the following command:
+        ```bash
+        sudo -u postgres psql -c 'show hba_file'
+        ```
+        * Edit the pg_hba.conf file, and ensure that the line starting with `local all` becomes:
+        `local all all trust`
+        (This is already the case with default brew installations.)
 
-      $ sudo -u postgres psql -c 'show hba_file'
-
-    - Edit the pg_hba.conf file, and ensure that the line starting with "local all" becomes:
-
-      "local all all trust"
-
-      (This is already the case with default brew installations.)
-
-	- Restart postgres:
-
+    * Restart postgres:
       On Linux:
-
-            $ sudo /etc/init.d/postgresql restart
-
+        ```bash
+        $ sudo /etc/init.d/postgresql restart
+        ```
       On OSX:
+        ```bash
+        pg_ctl -D /usr/local/var/postgres/ -l /usr/local/var/postgres/server.log restart
+        ```
 
-            $ pg_ctl -D /usr/local/var/postgres/ -l /usr/local/var/postgres/server.log restart
+* Create the Django DB user (it should match the user in the `thresher_backend/settings.py` file, and is `zz` by default):
+  ```bash
+  $ sudo -su postgres createuser --superuser USER_NAME
+  ```
 
-    - Create the Django DB user (it should match the user in the `thresher_backend/settings.py` file,
-      and is "zz" by default):
+* Create the database (should match the database in `settings.py`, default `thresher`):
+  ```bash
+  $ createdb -O USER_NAME -U USER_NAME thresher
+  ```
 
-            $ sudo -su postgres createuser --superuser USER_NAME
+* Set up a virtualenv
 
-    - Create the database (should match the database in `settings.py`, default `thresher`):
-
-            $ createdb -O USER_NAME -U USER_NAME thresher
-
-- set up a virtualenv
-
-- install packages with `pip install -r requirements.txt`
-
+* Install packages with 
+  ```bash
+  pip install -r requirements.txt
+  ```
   **Note:** If you are running conda, it is better to install the requirements
-  using the conda package manager.  At least, you will *have* to ``pip
-  uninstall psycopg2`` and ``conda install psycopg2`` to ensure that you
+  using the conda package manager.  At least, you will *have* to `pip
+  uninstall psycopg2` and `conda install psycopg2` to ensure that you
   get the correct libSSL linked version.
 
-- prepare static files with `python manage.py collectstatic --noinput`
+* Prepare static files with 
+  ```bash
+  python manage.py collectstatic --noinput
+  ```
 
-- prepare the database with `./reset_db.sh`
+* Prepare the database with `./reset_db.sh`
+  When asked whether to add a superuser, say "no".
+  [comment]: <> (TODO: should this be "yes"?)
 
-  When asked whether to add a superuser, say "no" (TODO: should this be
-  "yes"?)
-
-- Load the data with `python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`, where `SCHEMA_DIR` is a directory
-  containing a `.txt` file for each module topology, and `ARTICLE_DIR` is a directory containing a `.txt`
-  file for each raw article. If you do not have access to a complete copy of the data, a sample schema and
-  article directory are available under `text-thresher-backend/data/sample`.
-
+* Load the data with `python load_data.py -s SCHEMA_DIR -d ARTICLE_DIR`, where `SCHEMA_DIR` is a directory containing a `.txt` file for each module topology, and `ARTICLE_DIR` is a directory containing a `.txt` file for each raw article.
+If you do not have access to a complete copy of the data, a sample schema and article directory are available under `text-thresher-backend/data/sample`.
+  ```bash
   $ python load_data.py -s data/sample/schema/ -d data/sample/article/
+  ```
 
-- run the app with `foreman start`
+- Run the app with `foreman start`
 
-- view the API in the browser at `http://127.0.0.1:5000/api/`
+- View the API in the browser at [http://127.0.0.1:5000/api/](http://127.0.0.1:5000/api/)
 
 #### Deployment
 
