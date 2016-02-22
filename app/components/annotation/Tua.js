@@ -3,7 +3,7 @@ import Article from 'components/annotation/article';
 import Topics from 'components/annotation/topics';
 import TopicPicker from 'components/annotation/topicPicker';
 
-import AppStore from 'store/appStore';
+import data from 'assets/tua.json';
 
 export default React.createClass({
   displayName: 'Tua',
@@ -23,7 +23,8 @@ export default React.createClass({
   },
 
   getInitialState() {
-    return AppStore.getState();
+    // TODO: receive this data as an action
+    return { tua: data.results };
   },
 
   render() {

@@ -1,7 +1,6 @@
 // TODO: marked for deletion: topic picking view doesn't need Q&A
 import React from 'react';
 import Question from 'components/annotation/Question';
-import AppStore from 'store/appStore';
 
 export default React.createClass({
   displayName: 'Topics',
@@ -24,10 +23,6 @@ export default React.createClass({
       topics: this.props.topics,
       params: this.context.params
     };
-  },
-
-  getInitialState() {
-    return AppStore.getState();
   },
 
   render() {
