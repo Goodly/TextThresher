@@ -1,7 +1,7 @@
 import React from 'react';
 import QuizAnswer from 'components/quiz/QuizAnswer.js';
 import QuizContext from 'components/quiz/QuizContext.js';
-import randomColor from 'utils/palette';
+import randomPalette from 'utils/palette';
 
 export default React.createClass({
   displayName: 'QuizQuestion',
@@ -13,10 +13,10 @@ export default React.createClass({
 
   getInitialState: function() {
     var isSelected = new Array(this.props.question.answers.length).fill(false);
-    var randomColors = this.props.question.type === 'checkbox' ?
-                       randomColor(this.props.question.answers.length) :
-                       randomColor(1);
-    return {colors: randomColors, isSelectedFlags: isSelected}
+    var randomColors = this.props.question.type === 'checkbox'
+      ? randomPalette(this.props.question.answers.length)
+      : randomPalette(1);
+    return {colors: randomColors, isSelectedFlags: isSelected};
   },
 
   answerClicked: function(id, selected) {
@@ -24,14 +24,13 @@ export default React.createClass({
     var isSelectedFlags = this.state.isSelectedFlags;
     if (this.props.question.type === 'checkbox') {
       // if it is a checkbox, it should update ONLY the required ID flag, leave others
-      isSelectedFlags[parseInt(id)] = selected;
-      this.setState({isSelectedFlags: isSelectedFlags});
-    }
-    else {
+      isSelectedFlags[id] = selected;
+      this.setState({isSelectedFlags});
+    } else {
       // if it is a radio, it should set ALL others to false, only this id flag to true
       isSelectedFlags = Array(isSelectedFlags.length).fill(false);
-      isSelectedFlags[parseInt(id)] = selected;
-      this.setState({isSelectedFlags: isSelectedFlags});
+      isSelectedFlags[id] = selected;
+      this.setState({isSelectedFlags});
     }
     this.props.onUpdate(this.props.question.id, isSelectedFlags.includes(true));
   },
@@ -45,9 +44,9 @@ export default React.createClass({
         <form>
           {this.props.question.answers.map((answer, i) => {
             var isSelected = this.state.isSelectedFlags[i]
-            var color = this.props.question.type === 'checkbox' ?
-                                           this.state.colors[i] :
-                                           this.state.colors[0] ;
+            var color = this.props.question.type === 'checkbox'
+              ? this.state.colors[i]
+              : this.state.colors[0];
             return (
               <QuizAnswer key={answer.text}
                           answer={answer}
