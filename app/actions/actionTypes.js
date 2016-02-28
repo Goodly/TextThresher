@@ -1,1 +1,3 @@
 export const ADD_HIGHLIGHT = 'ADD_HIGHLIGHT';
+export const NEW_ARTICLE = 'NEW_ARTICLE';
+export const NEW_QUESTIONS = 'NEW_QUESTIONS';
