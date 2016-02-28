@@ -111,7 +111,6 @@ export default {
     resolve: {
       alias: {
         modernizr: resolveBowerPath('modernizr/modernizr.js'),
-        lodash: resolveBowerPath('lodash/lodash.js'),
         bootstrap_sass: resolveBowerPath('bootstrap-sass/assets/stylesheets/_bootstrap.scss'),
         jquery: resolveBowerPath('jquery/dist/jquery.js')
       },

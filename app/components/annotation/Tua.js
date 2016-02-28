@@ -5,7 +5,7 @@ import TopicPicker from 'components/annotation/topicPicker';
 import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 import 'fadeIn.scss';
 
-import AppStore from 'store/appStore';
+import data from 'assets/tua.json';
 
 export default React.createClass({
   displayName: 'Tua',
@@ -25,7 +25,8 @@ export default React.createClass({
   },
 
   getInitialState() {
-    return AppStore.getState();
+    // TODO: receive this data as an action
+    return { tua: data.results };
   },
 
   render() {

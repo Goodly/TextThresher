@@ -43,6 +43,11 @@ body {
   .article {
     @include newspaper;
 
+    .highlighted {
+      // TODO: allow topic switching and don't just highlight one color
+      background-color: $red_accent;
+    }
+
     /* react makes this not work */
     &[data-topic="1"]::selection {
       background: $red_accent;

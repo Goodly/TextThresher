@@ -1,0 +1,1 @@
+export const ADD_HIGHLIGHT = 'ADD_HIGHLIGHT';

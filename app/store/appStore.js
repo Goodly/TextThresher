@@ -1,15 +1,16 @@
-import alt from 'utils/alt';
-import AppActions from 'actions/appActions';
-import data from 'assets/tua.json';
+import { createStore } from 'redux';
+import rootReducer from '../reducers'
 
-// #TODO: we will eventually need to move off mock data.
-// what is API structure? workflow? how are we fetching one TUA after the other?
+export default function configureStore(initialState) {
+  const store = createStore(rootReducer, initialState);
 
-class AppStore {
-  constructor() {
-    this.bindActions(AppActions);
-    this.tua = data.results;
+  if (module.hot) {
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('../reducers', () => {
+      const nextReducer = require('../reducers').default;
+      store.replaceReducer(nextReducer);
+    })
   }
-}
 
-export default alt.createStore(AppStore, 'AppStore');
+  return store;
+}
