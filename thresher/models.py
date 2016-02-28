@@ -65,11 +65,20 @@ class Topic(models.Model):
     # an id within the given Analysis Type
     topic_id = models.IntegerField() 
 
+    # an id of its parent topic
+    parent_id = models.ForeignKey(self, related_name="subtopics")
+
     # The analysis type to which this topic belongs
-    analysis_type = models.ForeignKey(AnalysisType, related_name='topics')
+    # analysis_type = models.ForeignKey(AnalysisType, related_name='topics')
 
     # The name of the topic
     name = models.TextField()
+
+    # Glossary for analysis, copied from Analysis Type
+    glossary = models.TextField() # as a JSON map
+
+    instructions = models.TextField()
+
     
     class Meta:
         unique_together = ("topic_id", "analysis_type")
@@ -78,13 +87,27 @@ class Topic(models.Model):
         return "Topic %s in Analysis Type %s" % (self.name, self.analysis_type.name) 
 
 # The question in a given topic
-class Question(models.Model):
+class QuestionUnderTopic(models.Model):
     # an id within the given topic
-    question_id = models.IntegerField()
+    question_id = models.OneToOneField(QuestionContent)
 
     # The topic this question belongs to
-    topic = models.ForeignKey(Topic, related_name="questions")
+    topic_id = models.ForeignKey(Topic, related_name="related_questions")
+
+    # The order of the question comparing to other questions under the same topic
+    order = models.IntegerField()
     
+    class Meta:
+        unique_together = ("question_id", "topic_id")
+
+    def __unicode__(self):
+        return "Question %d in Topic %s" % (self.question_id, self.topic_id.name)
+
+# Question itself
+class QuestionContent(models.Model):
+    # The question id the content is related to
+    question_id = models.IntegerField()
+
     # The type of question (e.g. multiple choice, text box, ...)
     # A list of all possible question types
     QUESTION_TYPE_CHOICES = (
@@ -97,13 +120,13 @@ class Question(models.Model):
                             choices=QUESTION_TYPE_CHOICES)
 
     # The question text
-    text = models.TextField()
-    
+    question_text = models.TextField()
+
     class Meta:
-        unique_together = ("question_id", "topic")
+        unique_together = ("question_text", "type")
 
     def __unicode__(self):
-        return "Question %d in Topic %s" % (self.question_id, self.topic.name)
+        return "Question %d of type %s" % (self.question_text, self.type)
 
 # Possible answers for a given question
 # NOTE: This does NOT represent submitted answers, only possible answers
@@ -112,18 +135,24 @@ class Answer(models.Model):
     answer_id = models.IntegerField()
 
     # The question to which this answer belongs
-    question = models.ForeignKey(Question, related_name="answers")
+    question_id = models.OneToOneField(QuestionContent)
     
     # The text of the amswer
-    text = models.TextField()
+    answer_content = models.TextField()
+
+    # The order of the answer popping up to user
+    order = models.IntegerField()
+
+    # The next question the answer is leading to
+    next_question_id = models.OneToOneField(QuestionContent)
 
     class Meta:
-        unique_together = ("answer_id", "question")
+        unique_together = ("answer_id", "question_id")
 
     def __unicode__(self):
         return "Answer %d for Question %d in Topic %s" % (self.answer_id, 
-                                            self.question.question_id,
-                                            self.question.topic.name)
+                                            self.question_id,
+                                            self.question_id.topic_id.name)
 
 
 # A submitted highlight group
@@ -156,6 +185,9 @@ class HighlightGroup(models.Model):
 class SubmittedAnswer(models.Model):
     # The highlight group this answer is part of
     highlight_group = models.ForeignKey(HighlightGroup)
+
+    # The id of the user who submitted this answer
+    user_id = models.IntegerField()
 
     class Meta:
         abstract = True
