@@ -141,7 +141,7 @@ class Answer(models.Model):
     answer_content = models.TextField()
 
     # The order of the answer popping up to user
-    order = models.IntegerField()
+    # order = models.IntegerField()
 
     # The next question the answer is leading to
     next_question_id = models.OneToOneField(QuestionContent)
