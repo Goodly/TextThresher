@@ -3,7 +3,10 @@ from django.contrib.auth import User
 
 # User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
 class UserProfile(models.Model):
+    # Add link to default User model
     user = models.OneToOneField(User)
+
+    # All topics have a set of users associated with them, so add a link to the parent Topic
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="Users")
 
     # Metadata
