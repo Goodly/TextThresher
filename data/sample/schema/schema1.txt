@@ -1,6 +1,7 @@
 Please use this module as a guide for formatting your modules to the EXACT wording, grammar, punctuation, etc. Ive written comments on the things you should be looking for as well as last-minute changes weve (Sofie and I) made.
 
 					title: Protester
+                    parent: Events
 1 Event type
 2 Event location
 3 Event attendance

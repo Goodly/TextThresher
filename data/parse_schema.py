@@ -3,6 +3,7 @@ import argparse
 IN_FILE = 'DecidingForceSchema_Sample/schema1.txt'
 
 TITLE_ID = 'title:'
+PARENT_ID = 'parent:'
 INSTRUCTIONS_ID = 'instructions:'
 GLOSSARY_ID = 'glossary:'
 DEPENDENCY_ID = 'if'
@@ -22,6 +23,8 @@ def parse_schema(schema_file=IN_FILE):
             type_id, data = raw_line.split(None, 1)
             if type_id.lower() == TITLE_ID:
                 parse_title(data, parsed_schema)
+            elif type_id.lower() == PARENT_ID:
+                parse_parent(data, parsed_schema)
             elif type_id.lower() == INSTRUCTIONS_ID:
                 parse_instructions(data, parsed_schema)
             elif type_id.lower() == GLOSSARY_ID:
@@ -35,6 +38,9 @@ def parse_schema(schema_file=IN_FILE):
 
 def parse_title(title, output):
     output['title'] = title
+
+def parse_parent(parent, output):
+    output['parent'] = parent
 
 def parse_instructions(instructions, output):
     output['instructions'] = instructions
