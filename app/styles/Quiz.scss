@@ -30,5 +30,20 @@
         font-style: italic;
       }
     }
+    
   }
+}
+
+.prompt {
+  position: relative;
+  opacity: 0;
+  //top: 50px;
+  left: 30%;
+  margin-top: 25px;
+  text-align: center;
+  transition: opacity 1s ease;
+  &.active {
+    opacity: 1;
+  }
+  
 }

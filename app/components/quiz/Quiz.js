@@ -3,6 +3,7 @@ import QuizQuestion from 'components/quiz/QuizQuestion.js';
 import 'Quiz.scss';
 import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 import 'fadeIn.scss';
+import classNames from 'classnames';
 
 export default React.createClass({
   displayName: 'Quiz',
@@ -23,44 +24,86 @@ export default React.createClass({
             highlights: [[6, 13], [26, 34]]
           },
           answers: [
-            { text: 'a', question: 1, type: 'radio'},
-            { text: 'b', question: 1, type: 'radio'},
-            { text: 'c', question: 1, type: 'radio'},
-            { text: 'd', question: 1, type: 'radio'}
-          ]
+            { text: 'a', question: 1},
+            { text: 'b', question: 1},
+            { text: 'c', question: 1},
+            { text: 'd', question: 1}
+          ],
+          type: 'checkbox'
+        },
+        {
+          id: 2,
+          text: 'Dummy question 2',
+          context: {
+            text: 'Dummy context for display purposes only',
+            highlights: [[6, 13], [26, 34]]
+          },
+          answers: [
+            { text: 'a', question: 2},
+            { text: 'b', question: 2},
+            { text: 'c', question: 2},
+            { text: 'd', question: 2}
+          ],
+          type: 'radio'
+        },
+        {
+          id: 3,
+          text: 'Dummy question 3',
+          context: {
+            text: 'Dummy context for display purposes only',
+            highlights: [[6, 13], [26, 34]]
+          },
+          answers: [
+            { text: 'a', question: 3},
+            { text: 'b', question: 3},
+            { text: 'c', question: 3},
+            { text: 'd', question: 3}
+          ],
+          type: 'radio'
         }
       ]
     };
   },
 
   getInitialState: function() {
-    return {answer: []};
+    var questionFlags = {}
+    for (var i = 0; i < this.props.questions.length; i++) {
+      questionFlags[this.props.questions[i].id] = false
+    }
+    return {questionAnswerFlags: questionFlags};
   },
 
-  onUpdate: function(e) {
-    // if you mix checkboxes and radio buttons there's undefined behavior
-    if (e.target.type === 'radio') {
-      // a radio button
-      this.setState({answer: [e.target.value]});
-    }
-    else {
-      // a checkbox
-      var newAnswers = new Set(this.state.answer);
-      if (e.target.checked) {
-        newAnswers.add(e.target.value);
+  onUpdate: function(questionId, onAnswered) {
+    var questionFlags = this.state.questionAnswerFlags;
+    questionFlags[questionId] = onAnswered;
+    this.setState({questionAnswerFlags: questionFlags});
+  },
+
+  canClickNext: function() {
+    var questionFlags = this.state.questionAnswerFlags;
+    for (var key in questionFlags) {
+      if (!questionFlags[key]) {
+        return false;
       }
-      else {
-        newAnswers.delete(e.target.value);
-      }
-      newAnswers = Array.from(newAnswers);
-      this.setState({answer: newAnswers});
     }
+    return true;
+  },
+
+  prompt: function() {
+    var questionFlags = this.state.questionAnswerFlags;
+    for (var key in questionFlags) {
+      if (questionFlags[key]) {
+        return true;
+      }
+    }
+    return false;
   },
 
   render() {
-    var opts = this.state.answer.length !== 0 ? {} : {disabled: true};
+    var opts = this.canClickNext() ? {} : {disabled: true};
     return (
       <ReactCSSTransitionsGroup transitionName='fadein' transitionAppear>
+        <span className={classNames('prompt', {active: this.prompt()})}>Please highlight the text from below</span>
         <div className='quiz'>
           {this.props.questions.map((question) => {
             return (
