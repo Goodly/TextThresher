@@ -7,7 +7,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
 
     # All topics have a set of users associated with them, so add a link to the parent Topic
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="Users")
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="users")
 
     # Metadata
     experience_score = models.DecimalField(max_digits=5, decimal_places=3)

@@ -10,7 +10,9 @@ class UserProfileInLine(admin.StackedInline):
 	""" Class meant to serve as an inline in the 
 	newly defined user. An inline allows the 
 	UserProfile class to be modified directly 
-	through the User class.	"""
+	through the User class, since an inline gets
+	modified on the same page as its parent on the
+	admin page.	"""
 
 	model = UserProfile
 	verbose_name_plural = 'user'
