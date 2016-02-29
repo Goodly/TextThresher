@@ -1,27 +1,27 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from thresher.models import (Client, Article, AnalysisType,
-							 TUA, Topic, Question, Answer, 
-							 HighlightGroup, MCSubmittedAnswer,
-							 CLSubmittedAnswer, TBSubmittedAnswer, 
-							 DTSubmittedAnswer)
+                             TUA, Topic, Question, Answer, 
+                             HighlightGroup, MCSubmittedAnswer,
+                             CLSubmittedAnswer, TBSubmittedAnswer, 
+                             DTSubmittedAnswer)
 
 class UserProfileInLine(admin.StackedInline):
-	""" Class meant to serve as an inline in the 
-	newly defined user. An inline allows the 
-	UserProfile class to be modified directly 
-	through the User class, since an inline gets
-	modified on the same page as its parent on the
-	admin page.	"""
+    """ Class meant to serve as an inline in the 
+    newly defined user. An inline allows the 
+    UserProfile class to be modified directly 
+    through the User class, since an inline gets
+    modified on the same page as its parent on the
+    admin page. """
 
-	model = UserProfile
-	verbose_name_plural = 'user'
+    model = UserProfile
+    verbose_name_plural = 'user'
 
 # Create a new User admin, adding the appropriate inline
 class NewUserAdmin(UserAdmin):
-	inlines = [
-		UserProfileInLine,	
-	]
+    inlines = [
+        UserProfileInLine,  
+    ]
 
 # Re-register UserAdmin, including the additional attributes added
 admin.site.unregister(User)
