@@ -68,14 +68,11 @@ class Topic(models.Model):
     # an id of its parent topic
     parent_id = models.ForeignKey(self, related_name="subtopics")
 
-    # The analysis type to which this topic belongs
-    # analysis_type = models.ForeignKey(AnalysisType, related_name='topics')
-
     # The name of the topic
     name = models.TextField()
 
-    # Glossary for analysis, copied from Analysis Type
-    glossary = models.TextField() # as a JSON map
+    # Glossary related to the topic under analysis
+    glossary = models.TextField()                 # as a JSON map
 
     instructions = models.TextField()
 
@@ -94,7 +91,7 @@ class QuestionUnderTopic(models.Model):
     # The topic this question belongs to
     topic_id = models.ForeignKey(Topic, related_name="related_questions")
 
-    # The order of the question comparing to other questions under the same topic
+    # The order of the question compared to other questions under the same topic
     order = models.IntegerField()
     
     class Meta:
@@ -139,9 +136,6 @@ class Answer(models.Model):
     
     # The text of the amswer
     answer_content = models.TextField()
-
-    # The order of the answer popping up to user
-    order = models.IntegerField()
 
     # The next question the answer is leading to
     next_question_id = models.OneToOneField(QuestionContent)
