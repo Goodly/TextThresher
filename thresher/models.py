@@ -204,7 +204,7 @@ class SubmittedAnswer(models.Model):
     highlight_group = models.ForeignKey(HighlightGroup)
 
     # The id of the user who submitted this answer
-    user_id = models.IntegerField()
+    user_id = models.OneToOneField(User)
 
     class Meta:
         abstract = True
