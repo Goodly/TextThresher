@@ -1,4 +1,27 @@
 from django.db import models
+from django.contrib.auth import User
+
+# User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
+class UserProfile(models.Model):
+    # Add link to default User model
+    user = models.OneToOneField(User)
+
+    # All topics have a set of users associated with them, so add a link to the parent Topic
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="users")
+
+    # Metadata
+    experience_score = models.DecimalField(max_digits=5, decimal_places=3)
+    accuracy_score = models.DecimalField(max_digits=5, decimal_places=3)
+
+    def __unicode__(self):
+        return "User %s" % self.user
+
+class Client(models.Model):
+    name = models.charField(max_length=100)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="clients")
+
+    def __unicode__(self):
+        return "Client %s" % username
 
 # Articles containing text for analysis
 class Article(models.Model):

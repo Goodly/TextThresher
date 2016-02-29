@@ -5,7 +5,7 @@ from models import (Article, AnalysisType, TUA,
                     Topic, Question, Answer,
                     HighlightGroup, MCSubmittedAnswer,
                     DTSubmittedAnswer, CLSubmittedAnswer,
-                    TBSubmittedAnswer)
+                    TBSubmittedAnswer, Client)
 # Custom JSON field
 class JSONSerializerField(serializers.Field):
     """
@@ -24,8 +24,17 @@ class JSONSerializerField(serializers.Field):
 
 # Serializers define the API representation of the models.
 
+class ClientSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Client
+        fields = ('name', 'topic')
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.Field(write_only=True)
+    experience_score = serializers.DecimalField(max_digits=5, decimal_places=3)
+    accuracy_score = serializers.DecimalField(max_digits=5, decimal_places=3)
+    topic = TopicSerializer(many=True)
 
     def restore_object(self, attrs, instance=None):
         if instance: # Update
@@ -33,31 +42,35 @@ class UserSerializer(serializers.ModelSerializer):
             user.username = attrs['username']
             user.email = attrs['url']
             user.is_staff = attrs['is_staff']
+            user.topic = None
+            user.experience_score = 0.0
+            user.accuracy_score = 0.0
         else: # Creation
             user = User(username=attrs['username'],
                         email=attrs['email'],
                         is_staff=attrs['is_staff'],
                         is_active=True,
                         is_superuser=False)
+
         user.set_password(attrs['password'])
         return user
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'is_staff', 'password')
+        fields = ('id', 'username', 'email', 'is_staff', 'password', 'experience_score', 'accuracy_score', 'topic')
 
-#class serializers.ModelSerializer(serializers.ModelSerializer):
+# class serializers.ModelSerializer(serializers.ModelSerializer):
 #    json_fields = [] # subclasses should assign these
-#
+
 #    def __init__(self, *args, **kwargs):
 #        super(serializers.ModelSerializer, self).__init__(*args, **kwargs)
-#
+
 #        # add transformation methods for the relevant fields
 #        def to_json(obj, value):
 #            if not value:
 #                return json.loads("{}")
 #            return json.loads(value)
-#
+
 #        for field in self.json_fields:
 #            setattr(self, 'transform_' + field, to_json)
 
@@ -88,9 +101,12 @@ class TopicSerializer(serializers.ModelSerializer):
     # A nested serializer for all the questions
     questions = QuestionSerializer(many=True)
 
+    # Nested serializer for all clients associated with a topic
+    clients = ClientSerializer(many=True)
+
     class Meta:
         model = Topic
-        fields = ('id', 'topic_id', 'name', 'questions')
+        fields = ('id', 'topic_id', 'name', 'questions', 'clients')
 
 class AnalysisTypeSerializer(serializers.ModelSerializer):
     glossary = JSONSerializerField()
