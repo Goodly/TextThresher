@@ -1,68 +1,32 @@
-import React from 'react';
-import QuizQuestion from 'components/quiz/QuizQuestion.js';
-import 'Quiz.scss';
-import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
-import 'fadeIn.scss';
+import { newQuestions } from 'actions/actions';
 import classNames from 'classnames';
+import QuizQuestion from 'components/quiz/QuizQuestion.js';
+import React from 'react';
+import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
+import { connect } from 'react-redux';
+import tmpQuestions from 'assets/tmpQuestions.json';
 
-export default React.createClass({
+import 'Quiz.scss';
+import 'fadeIn.scss';
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onNewQuestions: questions => {
+      dispatch(newQuestions(questions));
+    }
+  };
+}
+
+const mapStateToProps = state => {
+  return { questions: state.quizReducers.questions };
+}
+
+const Quiz = React.createClass({
   displayName: 'Quiz',
 
   propTypes: {
+    onNewQuestions: React.PropTypes.function,
     questions: React.PropTypes.array.isRequired
-  },
-
-  getDefaultProps: function() {
-    // TODO: receive this as an action
-    return {
-      questions: [
-        {
-          id: 1,
-          text: 'Dummy question',
-          context: {
-            text: 'Dummy context for display purposes only',
-            highlights: [[6, 13], [26, 34]]
-          },
-          answers: [
-            { text: 'a', question: 1},
-            { text: 'b', question: 1},
-            { text: 'c', question: 1},
-            { text: 'd', question: 1}
-          ],
-          type: 'checkbox'
-        },
-        {
-          id: 2,
-          text: 'Dummy question 2',
-          context: {
-            text: 'Dummy context for display purposes only',
-            highlights: [[6, 13], [26, 34]]
-          },
-          answers: [
-            { text: 'a', question: 2},
-            { text: 'b', question: 2},
-            { text: 'c', question: 2},
-            { text: 'd', question: 2}
-          ],
-          type: 'radio'
-        },
-        {
-          id: 3,
-          text: 'Dummy question 3',
-          context: {
-            text: 'Dummy context for display purposes only',
-            highlights: [[6, 13], [26, 34]]
-          },
-          answers: [
-            { text: 'a', question: 3},
-            { text: 'b', question: 3},
-            { text: 'c', question: 3},
-            { text: 'd', question: 3}
-          ],
-          type: 'radio'
-        }
-      ]
-    };
   },
 
   getInitialState: function() {
@@ -99,6 +63,10 @@ export default React.createClass({
     return false;
   },
 
+  handleNext: function(e) {
+    this.props.onNewQuestions(tmpQuestions.questions);
+  },
+
   render() {
     var opts = this.canClickNext() ? {} : {disabled: true};
     return (
@@ -112,10 +80,19 @@ export default React.createClass({
                             onUpdate={this.onUpdate} />
             );
           })}
-          <button className='quiz__next' {...opts}>Next</button>
+          <button className='quiz__next' {...opts}
+                  onClick={this.handleNext}
+          >
+            Next
+          </button>
         </div>
       </ReactCSSTransitionsGroup>
     );
   }
 
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Quiz);
