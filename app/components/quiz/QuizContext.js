@@ -21,16 +21,16 @@ export default React.createClass({
 
     return (
       <p className='quiz__context'>
-        {highlights.map((n) => {
-          // I'd rather not have to wrap these like this... is there a better way?
-          var markup = (
-            <span>
-              <span>{text.substring(start, n[0])}</span>
-              <span className='highlighted'>{text.substring(n[0], n[1])}</span>
-            </span>
-          );
-          start = n[1];
-          return markup;
+        {Array(highlights.length * 2).fill().map((_,i) => {
+          var curHL = highlights[i / 2 | 0];
+          if (i % 2 === 0) {
+            // render normal text
+            return (<span key={i}>{text.substring(start, curHL[0])}</span>);
+          } else {
+            // render highlight
+            start = curHL[1];
+            return (<span key={i} className='highlighted'>{text.substring(curHL[0], curHL[1])}</span>);
+          }
         })}
         { tail }
       </p>

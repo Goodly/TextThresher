@@ -3,10 +3,8 @@ import Article from 'components/annotation/article';
 import React from 'react';
 import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
-import Topics from 'components/annotation/topics';
 import TopicPicker from 'components/annotation/topicPicker';
 import tmpdata from 'assets/tmpArticles.json';
-import data from 'assets/tua.json';
 
 import 'fadeIn.scss';
 
@@ -19,7 +17,7 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mapStateToProps = state => {
-  return { article: state.articleReducers.article };
+  return { articles: state.articleReducers.article };
 }
 
 const Tua = React.createClass({
@@ -36,24 +34,27 @@ const Tua = React.createClass({
   },
 
   propTypes: {
-    article: React.PropTypes.object,
-    onNewArticle: React.PropTypes.function,
+    articles: React.PropTypes.array,
+    onNewArticle: React.PropTypes.func,
     params: React.PropTypes.object.isRequired
   },
 
-  handleNext(e) {
+  handleNext() {
     this.props.onNewArticle(tmpdata.results);
   },
 
   render() {
     const {tua_id}: string = this.props.params;
-    // let tua = this.state.tua[tua_id];
-    let tua = this.props.article[tua_id];
+    let tua = this.props.articles[tua_id];
     let article = tua.article;
     let topics = tua.analysis_type.topics;
 
     return (
-      <ReactCSSTransitionsGroup transitionName='fadein' transitionAppear>
+      <ReactCSSTransitionsGroup transitionName='fadein'
+                                transitionAppear
+                                transitionAppearTimeout={500}
+                                transitionEnterTimeout={500}
+                                transitionLeaveTimeout={500}>
         <div className='tua'>
           <div className='text-wrapper'>
             <Article topics={topics} article={article}/>

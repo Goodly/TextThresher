@@ -1,5 +1,5 @@
 import React from 'react';
-import 'quiz.scss';
+import 'Quiz.scss';
 
 export default React.createClass({
   displayName: 'QuizAnswer',
@@ -17,14 +17,13 @@ export default React.createClass({
     return {color: ''}
   },
 
-  onClick: function(e) {
+  onClick: function() {
     if (this.props.type === 'radio') {
       this.setState({color: this.props.colors});
       this.props.answerClicked(this.props.id, true);
-    }
-    else {
-      this.props.isSelected ? this.setState({color: ''}) :
-                this.setState({color: this.props.colors});
+    } else {
+      this.setState({color: this.props.isSelected ? ''
+                                                  : this.props.colors});
       this.props.answerClicked(this.props.id, !this.props.isSelected);
     }
   },
@@ -36,8 +35,7 @@ export default React.createClass({
       style = {
         backgroundColor: ''
       };
-    }
-    else {
+    } else {
       style = {
         backgroundColor: this.state.color
       };

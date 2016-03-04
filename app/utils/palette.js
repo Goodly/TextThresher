@@ -3,7 +3,8 @@ var colorOptions = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00',
 										'#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462',
 										'#b3de69','#fccde5','#d9d9d9','#bc80bd','#ccebc5',
 										'#ffed6f'];
-export default function getUniqueRandomColor(count) {
+
+export default function randomPalette(count) {
   var results = new Set([]);
   while (results.size !== count) {
     results.add(colorOptions[Math.floor(Math.random() * colorOptions.length)]);

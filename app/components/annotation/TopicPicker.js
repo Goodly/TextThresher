@@ -80,8 +80,10 @@ export default React.createClass({
         <ul className='topic-picker__nav'>
           { this.props.topicsTmp.map(topic => {
             return (
-              <li data-topic={topic.id}
-                  style={{height: 100 / this.props.topicsTmp.length + '%'}}>
+              <li key={topic.id}
+                  data-topic={topic.id}
+                  style={{height: 100 / this.props.topicsTmp.length + '%'}}
+              >
                 <b>{topic.name}</b>
               </li>
             );
@@ -93,7 +95,7 @@ export default React.createClass({
           </div>
           { this.props.topicsTmp.map(topic => {
             return (
-              <div className='topic-wrapper' data-topic={topic.id}>
+              <div key={topic.id} className='topic-wrapper' data-topic={topic.id}>
                 <div className='topic-wrapper__topic'>
                   { topic.description }
                   <CollapsibleList />

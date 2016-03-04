@@ -15,16 +15,18 @@ export default React.createClass({
     return {
       variables: [
         { name: 'variable 1',
+          id: 1,
           children: [
-            { name: 'subvariable a', children: [] },
-            { name: 'subvariable b', children: [] }
+            { name: 'subvariable a', id: 2, children: [] },
+            { name: 'subvariable b', id: 3, children: [] }
           ] },
         { name: 'variable 2',
+          id: 4,
           children: [
-            { name: 'subvariable c', children: [] },
-            { name: 'subvariable d', children: [
-              { name: 'subvariable i', children: [] },
-              { name: 'subvariable ii', children: [] }
+            { name: 'subvariable c', id: 5, children: [] },
+            { name: 'subvariable d', id: 6, children: [
+              { name: 'subvariable i', id: 7, children: [] },
+              { name: 'subvariable ii', id: 8, children: [] }
             ] }
           ] }
       ]
@@ -59,13 +61,14 @@ export default React.createClass({
     function renderMarkup(variable) {
       if (variable.children.length <= 0) {
         return (
-          <li>{ variable.name }</li>
+          <li key={variable.id}>{variable.name}</li>
         );
       }
       else
       {
         return (
-          <li><span className='variable-list__collapsible'>{ variable.name }</span>
+          <li key={variable.id}>
+            <span className='variable-list__collapsible'>{variable.name}</span>
             <ul>
             { variable.children.map(child => {
               return renderMarkup(child);

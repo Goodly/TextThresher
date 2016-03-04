@@ -25,7 +25,7 @@ const Quiz = React.createClass({
   displayName: 'Quiz',
 
   propTypes: {
-    onNewQuestions: React.PropTypes.function,
+    onNewQuestions: React.PropTypes.func,
     questions: React.PropTypes.array.isRequired
   },
 
@@ -44,33 +44,27 @@ const Quiz = React.createClass({
   },
 
   canClickNext: function() {
-    var questionFlags = this.state.questionAnswerFlags;
-    for (var key in questionFlags) {
-      if (!questionFlags[key]) {
-        return false;
-      }
-    }
-    return true;
+    var f = this.state.questionAnswerFlags;
+    return !Object.keys(f).map(i => f[i]).includes(false);
   },
 
   prompt: function() {
-    var questionFlags = this.state.questionAnswerFlags;
-    for (var key in questionFlags) {
-      if (questionFlags[key]) {
-        return true;
-      }
-    }
-    return false;
+    var f = this.state.questionAnswerFlags;
+    return Object.keys(f).map(i => f[i]).includes(true);
   },
 
-  handleNext: function(e) {
+  handleNext: function() {
     this.props.onNewQuestions(tmpQuestions.questions);
   },
 
   render() {
     var opts = this.canClickNext() ? {} : {disabled: true};
     return (
-      <ReactCSSTransitionsGroup transitionName='fadein' transitionAppear>
+      <ReactCSSTransitionsGroup transitionName='fadein'
+                                transitionAppear
+                                transitionAppearTimeout={500}
+                                transitionEnterTimeout={500}
+                                transitionLeaveTimeout={500}>
         <span className={classNames('prompt', {active: this.prompt()})}>Please highlight the text from below</span>
         <div className='quiz'>
           {this.props.questions.map((question) => {

@@ -24,7 +24,7 @@ const Article = React.createClass({
   propTypes: {
     article: React.PropTypes.object.isRequired,
     topics: React.PropTypes.array.isRequired,
-    onHighlight: React.PropTypes.function,
+    onHighlight: React.PropTypes.func,
     highlights: React.PropTypes.array
   },
 
@@ -79,11 +79,11 @@ const Article = React.createClass({
             var curHL = highlights[i / 2 | 0];
             if (i % 2 === 0) {
               // render normal text
-              return (<span>{text.substring(start, curHL.start)}</span>);
+              return (<span key={i}>{text.substring(start, curHL.start)}</span>);
             } else {
               // render highlight
               start = curHL.end;
-              return (<span className='highlighted'>{text.substring(curHL.start, curHL.end)}</span>);
+              return (<span key={i} className='highlighted'>{text.substring(curHL.start, curHL.end)}</span>);
             }
           })}
           { tail }
