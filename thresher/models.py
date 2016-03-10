@@ -204,9 +204,6 @@ class SubmittedAnswer(models.Model):
     # The highlight group this answer is part of
     highlight_group = models.ForeignKey(HighlightGroup)
 
-    # The user who submitted this answer
-    # user_profile = models.ForeignKey(UserProfile, related_name="submitted") THIS IS NOT RUNNING! ask Stefan.
-
     class Meta:
         abstract = True
 
@@ -216,6 +213,9 @@ class MCSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
     question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"mc"})
 
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_mc")
+
     # The answer chosen
     answer = models.ForeignKey(Answer)
 
@@ -223,6 +223,9 @@ class MCSubmittedAnswer(SubmittedAnswer):
 class CLSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
     question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"cl"})
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_cl")
 
     # For a checklist, each submission could include multiple answers 
     # Answers are re-used across submissions
@@ -234,6 +237,9 @@ class TBSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
     question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"tb"})
 
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_tb")
+
     # The text of the answer
     answer = models.TextField()
 
@@ -241,6 +247,9 @@ class TBSubmittedAnswer(SubmittedAnswer):
 class DTSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
     question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"dt"})
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_dt")
     
     # The submitted date time answer
     answer = models.DateTimeField()
