@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth import User
+from django.contrib.auth.models import User
 
 # User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
 class UserProfile(models.Model):
@@ -7,7 +7,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
 
     # All topics have a set of users associated with them, so add a link to the parent Topic
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="users")
+    topic = models.ForeignKey("Topic", on_delete=models.CASCADE, related_name="users")
+    # "Topic" is in strings because it has not yet been defined.
 
     # Metadata
     experience_score = models.DecimalField(max_digits=5, decimal_places=3)
@@ -17,9 +18,8 @@ class UserProfile(models.Model):
         return "User %s" % self.user
 
 class Client(models.Model):
-    name = models.charField(max_length=100)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="clients")
-
+    name = models.CharField(max_length=100)
+    topic = models.ForeignKey("Topic", on_delete=models.CASCADE, related_name="clients")
     def __unicode__(self):
         return "Client %s" % username
 
@@ -101,7 +101,7 @@ class Topic(models.Model):
 
     
     class Meta:
-        unique_together = ("topic_id", "analysis_type")
+        unique_together = ("topic_id", "name") # not sure if this is correct.
 
     def __unicode__(self):
         return "Topic %s in Analysis Type %s" % (self.name, self.analysis_type.name) 
@@ -109,7 +109,7 @@ class Topic(models.Model):
 # The question in a given topic
 class QuestionUnderTopic(models.Model):
     # an id within the given topic
-    question_id = models.OneToOneField(QuestionContent)
+    question_id = models.OneToOneField("QuestionContent")
 
     # The topic this question belongs to
     topic_id = models.ForeignKey(Topic, related_name="related_questions")
@@ -203,8 +203,8 @@ class SubmittedAnswer(models.Model):
     # The highlight group this answer is part of
     highlight_group = models.ForeignKey(HighlightGroup)
 
-    # The id of the user who submitted this answer
-    user_id = models.ForeignKey(User, related_name="submitted_answer")
+    # The user who submitted this answer
+    # user_profile = models.ForeignKey(UserProfile, related_name="submitted") THIS IS NOT RUNNING! ask Stefan.
 
     class Meta:
         abstract = True
@@ -213,7 +213,7 @@ class SubmittedAnswer(models.Model):
 # A submitted answer for a Multiple Choice question
 class MCSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"mc"})
+    question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"mc"})
 
     # The answer chosen
     answer = models.ForeignKey(Answer)
@@ -221,17 +221,17 @@ class MCSubmittedAnswer(SubmittedAnswer):
 # A submitted answer for a Checklist question
 class CLSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"cl"})
+    question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"cl"})
 
     # For a checklist, each submission could include multiple answers 
     # Answers are re-used across submissions
     # Therefore we need a many to many relationship
     answer = models.ManyToManyField(Answer)
 
-# A submitted higlight group for a Textbox question
+# A submitted highlight group for a Textbox question
 class TBSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"tb"})
+    question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"tb"})
 
     # The text of the answer
     answer = models.TextField()
@@ -239,8 +239,8 @@ class TBSubmittedAnswer(SubmittedAnswer):
 # A submitted answer for a Date Time question
 class DTSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"dt"})
-
+    question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"dt"})
+    
     # The submitted date time answer
     answer = models.DateTimeField()
     
