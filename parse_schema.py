@@ -30,16 +30,18 @@ class TopicsSchemaParser(object):
         self.dep = dependencies
 
     def clean_dependencies(self):
+        """
+        Returns a list of named tuples that represent each dependency:
+        [Dependency(topic, question, answer, next_topic, next_topic)]
+        Also converts strings to integers.
+        """
+        Dependency = namedtuple('Dependency', ['topic', 'question', 'answer', 'next_topic', 'next_question'])
         clean_dep = []
-        for d in self.dep:
-            # separate by topic, question, and id
-            clean_dep.append([d[0].split("."), d[0].split(".")])
-        for d in clean_dep:
-            # convert these to integers
-            for i in range(len(d[0])):
-                d[0][i] = int(d[0][i])
-            for i in range(len(d[1])):
-                d[1][i] = int(d[1][i])
+        for dep in self.dep:
+            new_dep = dep[0].split(".")
+            new_dep.extend(dep[1].split("."))
+            new_dep = [int(val) for val in new_dep]
+            clean_dep.append(Dependency(*new_dep))
         self.dep = clean_dep
 
     def load_answers(self, answers, question):
