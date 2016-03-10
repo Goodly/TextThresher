@@ -89,7 +89,7 @@ class Topic(models.Model):
     topic_id = models.IntegerField() 
 
     # an id of its parent topic
-    parent_id = models.ForeignKey(self, related_name="subtopics")
+    parent_id = models.ForeignKey("self", related_name="subtopics", on_delete=models.CASCADE)
 
     # The name of the topic
     name = models.TextField()
@@ -155,13 +155,13 @@ class Answer(models.Model):
     answer_id = models.IntegerField()
 
     # The question to which this answer belongs
-    question_id = models.OneToOneField(QuestionContent)
+    question_id = models.ForeignKey(QuestionContent, related_name="answers")
     
     # The text of the amswer
     answer_content = models.TextField()
 
     # The next question the answer is leading to
-    next_question_id = models.OneToOneField(QuestionContent)
+    next_question_id = models.ForeignKey(QuestionContent, related_name="next_question")
 
     class Meta:
         unique_together = ("answer_id", "question_id")
@@ -204,7 +204,7 @@ class SubmittedAnswer(models.Model):
     highlight_group = models.ForeignKey(HighlightGroup)
 
     # The id of the user who submitted this answer
-    user_id = models.OneToOneField(User)
+    user_id = models.ForeignKey(User, related_name="submitted_answer")
 
     class Meta:
         abstract = True
