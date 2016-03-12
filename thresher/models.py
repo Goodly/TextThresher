@@ -89,7 +89,7 @@ class Topic(models.Model):
     topic_id = models.IntegerField() 
 
     # an id of its parent topic
-    parent_id = models.ForeignKey("self", related_name="subtopics", on_delete=models.CASCADE)
+    parent = models.ForeignKey("self", related_name="subtopics", on_delete=models.CASCADE)
 
     # The name of the topic
     name = models.TextField()
@@ -110,16 +110,16 @@ class Topic(models.Model):
 # The question in a given topic
 class QuestionUnderTopic(models.Model):
     # an id within the given topic
-    question_id = models.OneToOneField("QuestionContent")
+    question = models.OneToOneField("QuestionContent")
 
     # The topic this question belongs to
-    topic_id = models.ForeignKey(Topic, related_name="related_questions")
+    topic = models.ForeignKey(Topic, related_name="related_questions")
 
     # The order of the question compared to other questions under the same topic
     order = models.IntegerField()
     
     class Meta:
-        unique_together = ("question_id", "topic_id")
+        unique_together = ("question", "topic")
 
     def __unicode__(self):
         return "Question %d in Topic %s" % (self.question_id, self.topic_id.name)
@@ -156,16 +156,16 @@ class Answer(models.Model):
     answer_id = models.IntegerField()
 
     # The question to which this answer belongs
-    question_id = models.ForeignKey(QuestionContent, related_name="answers")
+    question = models.ForeignKey(QuestionContent, related_name="answers")
     
     # The text of the amswer
     answer_content = models.TextField()
 
     # The next question the answer is leading to
-    next_question_id = models.ForeignKey(QuestionContent, related_name="next_question")
+    next_question = models.ForeignKey(QuestionContent, related_name="next_question")
 
     class Meta:
-        unique_together = ("answer_id", "question_id")
+        unique_together = ("answer_id", "question")
 
     def __unicode__(self):
         return "Answer %d for Question %d in Topic %s" % (self.answer_id, 
