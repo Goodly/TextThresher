@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth import User
+# from django.contrib.auth import User
+from django.contrib.auth.models import User
 
 # User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
 class UserProfile(models.Model):
