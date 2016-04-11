@@ -1,0 +1,51 @@
+@import 'styleguide';
+
+@mixin newspaper {
+  // text-indent: 20px;
+  // Think about em-dashes and more spaces / automatic <p> creation
+  white-space: pre-wrap;
+  line-height: 1.5;
+  font-family: $font-newspaper;
+}
+
+.text-wrapper {
+  max-width: 500px;
+  margin: 0 auto;
+  /* Make selection not span the whole page, just this div */
+  position: relative;
+
+  .article {
+    @include newspaper;
+
+    .highlighted {
+      // TODO: generate programmatically?
+      background-color: $red_accent;
+      &.topic1 {
+        background-color: $red_accent;
+      }
+      &.topic2 {
+        background-color: $yellow_accent;
+      }
+      &.topic3 {
+        background-color: $green_accent;
+      }
+      &.topic4 {
+        background-color: $blue_accent;
+      }
+    }
+
+    /* react makes this not work */
+    &[data-topic="1"]::selection {
+      background: $red_accent;
+    }
+    &[data-topic="2"]::selection {
+      background: $yellow_accent;
+    }
+    &[data-topic="3"]::selection {
+      background: $green_accent;
+    }
+    &[data-topic="4"]::selection {
+      background: $blue_accent;
+    }
+  }
+}

@@ -125,6 +125,12 @@ $topic-picker-nav-width: 25%;
     width: 300px;
     background-color: $offwhite;
     height: 100%;
+
+    .topic-picker__pin-button--active {
+      .fa-thumb-tack {
+        opacity: 1;
+      }
+    }
   }
 
 
@@ -136,6 +142,10 @@ $topic-picker-nav-width: 25%;
   &__wrapper {
     opacity: 0;
     padding-right: $topic-picker-nav-width;
+
+    .fa-thumb-tack {
+      opacity: 0.5;
+    }
   }
 }
 

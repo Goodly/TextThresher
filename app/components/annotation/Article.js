@@ -2,6 +2,8 @@ import React from 'react';
 import { addHighlight } from 'actions/actions';
 import { connect } from 'react-redux';
 
+import 'Article.scss';
+
 const mapDispatchToProps = dispatch => {
   return {
     onHighlight: (start, end, selectedText) => {
@@ -11,7 +13,8 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mapStateToProps = state => {
-  return { highlights: state.articleReducers.highlights };
+  return { highlights: state.articleReducers.highlights,
+           currentTopic: state.articleReducers.currentTopic };
 }
 
 const Article = React.createClass({
@@ -25,7 +28,8 @@ const Article = React.createClass({
     article: React.PropTypes.object.isRequired,
     topics: React.PropTypes.array.isRequired,
     onHighlight: React.PropTypes.func,
-    highlights: React.PropTypes.array
+    highlights: React.PropTypes.array,
+    currentTopic: React.PropTypes.string
   },
 
   getOffset: function(childNodes, targetNode) {
@@ -97,7 +101,9 @@ const Article = React.createClass({
             } else {
               // render highlight
               start = curHL.end;
-              return (<span key={i} className='highlighted'>{text.substring(curHL.start, curHL.end)}</span>);
+              return (<span key={i}
+                            className={'highlighted topic' + curHL.topic}
+                      >{text.substring(curHL.start, curHL.end)}</span>);
             }
           })}
           { tail }

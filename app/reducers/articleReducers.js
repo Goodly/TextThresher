@@ -1,4 +1,6 @@
-import { ADD_HIGHLIGHT, NEW_ARTICLE } from '../actions/actionTypes';
+import { ADD_HIGHLIGHT,
+         NEW_ARTICLE,
+         ACTIVATE_TOPIC } from '../actions/actionTypes';
 import data from 'assets/tua.json';
 
 // Note: not 100% sure this is the 'proper' reducer layout - we'll find out more
@@ -39,7 +41,8 @@ export default function articleReducer(state = initialState, action) {
       var newHighlights = state.highlights.concat(
         { start: action.selection.start,
           end: action.selection.end,
-          text: action.selection.selectedText }
+          text: action.selection.selectedText,
+          topic: state.currentTopic }
       ).sort((a,b) => {
         if (a.start === b.start) {
           return 0;
@@ -54,6 +57,10 @@ export default function articleReducer(state = initialState, action) {
     case NEW_ARTICLE:
       // TODO: save highlights before deleting htem
       return Object.assign({}, state, { article: action.article, highlights: [] });
+
+    case ACTIVATE_TOPIC:
+      return Object.assign({}, state, { currentTopic: action.topic });
+
     default:
       return state;
   }

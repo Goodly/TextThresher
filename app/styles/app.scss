@@ -1,13 +1,5 @@
 @import 'styleguide';
 
-@mixin newspaper {
-  // text-indent: 20px;
-  // Think about em-dashes and more spaces / automatic <p> creation
-  white-space: pre-wrap;
-  line-height: 1.5;
-  font-family: $font-newspaper;
-}
-
 body {
   font-size: 16px;
 }
@@ -31,35 +23,5 @@ body {
     border-bottom: .25em solid black;
     margin: 10px 0;
     font-style: italic;
-  }
-}
-
-.text-wrapper {
-  max-width: 500px;
-  margin: 0 auto;
-  /* Make selection not span the whole page, just this div */
-  position: relative;
-
-  .article {
-    @include newspaper;
-
-    .highlighted {
-      // TODO: allow topic switching and don't just highlight one color
-      background-color: $red_accent;
-    }
-
-    /* react makes this not work */
-    &[data-topic="1"]::selection {
-      background: $red_accent;
-    }
-    &[data-topic="2"]::selection {
-      background: $yellow_accent;
-    }
-    &[data-topic="3"]::selection {
-      background: $green_accent;
-    }
-    &[data-topic="4"]::selection {
-      background: $blue_accent;
-    }
   }
 }
