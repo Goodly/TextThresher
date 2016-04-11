@@ -28,25 +28,39 @@ const Article = React.createClass({
     highlights: React.PropTypes.array
   },
 
+  getOffset: function(childNodes, targetNode) {
+    // since we're splitting <Article> into <span>s we'll need to find which <span>
+    // anchorOffset is referring to, and find that offset from the start of <Article>
+    var offset = 0;
+    for (var i in childNodes) {
+      var childNode = childNodes[i];
+      if (childNode === targetNode) {
+        break;
+      } else {
+        offset += childNode.textContent.length;
+      }
+    }
+    return offset;
+  },
+
   handleClick: function() {
     var selectionObj = window.getSelection();
     if (selectionObj) {
       let selectedText = selectionObj.toString();
       let start = selectionObj.anchorOffset;
+      let end = selectionObj.extentOffset;
       if (this.articleRef.childNodes.length > 1) {
-        // since we're splitting <Article> into <span>s we'll need to find which <span>
-        // anchorOffset is referring to, and find that offset from the start of <Article>
-        for (var i in this.articleRef.childNodes) {
-          var childNode = this.articleRef.childNodes[i];
-          if (childNode === selectionObj.anchorNode.parentNode) {
-            break;
-          } else {
-            start += childNode.textContent.length;
-          }
-        }
+        start += this.getOffset(this.articleRef.childNodes,
+                                selectionObj.anchorNode.parentNode);
+        end += this.getOffset(this.articleRef.childNodes,
+                                selectionObj.extentNode.parentNode);
       }
-      let end = start + selectedText.length;
-      if (!(start === end && start === 0)) {
+      if (start > end) {
+        let tmp = start;
+        start = end;
+        end = tmp;
+      }
+      if (start !== end) {
         this.props.onHighlight(start, end, selectedText);
       }
     }
