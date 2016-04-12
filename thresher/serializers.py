@@ -247,8 +247,8 @@ class OffsetField(serializers.Field):
 
     # Override
     def to_representation(self, obj):
-        ret = {"selector": {"@type": "TextPositionSelector"}}
-        ret["selector"]["offsets"] = self.offsets
+        ret = {"selector": {"@type": "MultiplePositionTextSelector"}}
+        ret["selector"]["offsets"] = [{"start": start, "end": end} for (start, end) in self.offsets]
 
         return ret
 
