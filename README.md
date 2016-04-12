@@ -1,5 +1,7 @@
 # annotator-content-analysis
-Extends the jQuery Annotator plugin to allow for custom logic queries on each annotation
+Provides an annotation interface for detailed text annotation by crowdworkers along researcher-defined topics of interest.
+
+Built with (react)[https://facebook.github.io/react/] and (redux)[https://github.com/reactjs/redux].
 
 ####To setup
 
@@ -9,10 +11,16 @@ From the project directory, run
 npm install
 bower install
 ```
+and
+```
+npm install -g gulp
+```
+
+You might also want the nifty (Redux DevTools)[https://github.com/zalmoxisus/redux-devtools-extension].
 
 ####To develop
 
-Run `npm run dev` from the project dir to build the development app.
+Run `npm run dev` from the project dir to build and serve the development app.
 
 The demo with mock data will be available at `http://localhost:3001/app/#/tua/0/topic/0/question/0`
 
