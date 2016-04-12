@@ -1,15 +1,30 @@
 import React from 'react';
 import jquery from 'jquery';
 import CollapsibleList from 'components/CollapsibleList';
+import { activateTopic } from 'actions/actions';
+import { connect } from 'react-redux';
 
 import 'TopicPicker.scss';
 
-export default React.createClass({
+const mapDispatchToProps = dispatch => {
+  return {
+    onActivateTopic: (topic) => {
+      dispatch(activateTopic(topic));
+    }
+  };
+}
+
+const mapStateToProps = state => {
+  return { topic: state.currentTopic };
+}
+
+const TopicPicker = React.createClass({
   displayName: 'TopicPicker',
 
   propTypes: {
     topics: React.PropTypes.array.isRequired,
-    topicsTmp: React.PropTypes.array.isRequired
+    topicsTmp: React.PropTypes.array.isRequired,
+    onActivateTopic: React.PropTypes.func
   },
 
   childContextTypes: {
@@ -45,6 +60,7 @@ export default React.createClass({
     // TODO: once everything is react-ified we shouldn't need jquery
     // though this is arguably much less boilerplate code than react
     var $ = jquery;
+    var _this = this;
 
     function deleteMeSomeday() {
       function activateTopic(topic) {
@@ -54,12 +70,14 @@ export default React.createClass({
 
         $('.topic-wrapper').hide();
         $(`.topic-wrapper[data-topic="${topic}"]`).show();
+
+        _this.props.onActivateTopic(topic);
       }
 
       $(document).ready(() => {
         $('.topic-picker__pin-button').click(function() {
           $('.topic-picker').toggleClass('topic-picker--open');
-          $(this).toggleClass('fa-inverse');
+          $(this).toggleClass('topic-picker__pin-button--active');
         });
         $('.topic-picker__nav li').click(function() {
           activateTopic($(this).attr('data-topic'));
@@ -76,7 +94,7 @@ export default React.createClass({
     // const {topicId}: string = this.context.router.getCurrentParams();
 
     return (
-      <div className='topic-picker topic-picker--left'>
+      <div className='topic-picker topic-picker--left topic-picker--open'>
         <ul className='topic-picker__nav'>
           { this.props.topicsTmp.map(topic => {
             return (
@@ -90,7 +108,7 @@ export default React.createClass({
           })}
         </ul>
         <div className='topic-picker__wrapper'>
-          <div className='topic-picker__pin-button'>
+          <div className='topic-picker__pin-button topic-picker__pin-button--active'>
             <i className='fa fa-thumb-tack fa-lg'></i>
           </div>
           { this.props.topicsTmp.map(topic => {
@@ -109,3 +127,8 @@ export default React.createClass({
   }
 
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TopicPicker);

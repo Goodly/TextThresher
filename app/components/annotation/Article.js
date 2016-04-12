@@ -2,6 +2,8 @@ import React from 'react';
 import { addHighlight } from 'actions/actions';
 import { connect } from 'react-redux';
 
+import 'Article.scss';
+
 const mapDispatchToProps = dispatch => {
   return {
     onHighlight: (start, end, selectedText) => {
@@ -11,7 +13,8 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mapStateToProps = state => {
-  return { highlights: state.articleReducers.highlights };
+  return { highlights: state.articleReducers.highlights,
+           currentTopic: state.articleReducers.currentTopic };
 }
 
 const Article = React.createClass({
@@ -25,7 +28,23 @@ const Article = React.createClass({
     article: React.PropTypes.object.isRequired,
     topics: React.PropTypes.array.isRequired,
     onHighlight: React.PropTypes.func,
-    highlights: React.PropTypes.array
+    highlights: React.PropTypes.array,
+    currentTopic: React.PropTypes.string
+  },
+
+  getOffset: function(childNodes, targetNode) {
+    // since we're splitting <Article> into <span>s we'll need to find which <span>
+    // anchorOffset is referring to, and find that offset from the start of <Article>
+    var offset = 0;
+    for (var i in childNodes) {
+      var childNode = childNodes[i];
+      if (childNode === targetNode) {
+        break;
+      } else {
+        offset += childNode.textContent.length;
+      }
+    }
+    return offset;
   },
 
   handleClick: function() {
@@ -33,20 +52,19 @@ const Article = React.createClass({
     if (selectionObj) {
       let selectedText = selectionObj.toString();
       let start = selectionObj.anchorOffset;
+      let end = selectionObj.extentOffset;
       if (this.articleRef.childNodes.length > 1) {
-        // since we're splitting <Article> into <span>s we'll need to find which <span>
-        // anchorOffset is referring to, and find that offset from the start of <Article>
-        for (var i in this.articleRef.childNodes) {
-          var childNode = this.articleRef.childNodes[i];
-          if (childNode === selectionObj.anchorNode.parentNode) {
-            break;
-          } else {
-            start += childNode.textContent.length;
-          }
-        }
+        start += this.getOffset(this.articleRef.childNodes,
+                                selectionObj.anchorNode.parentNode);
+        end += this.getOffset(this.articleRef.childNodes,
+                                selectionObj.extentNode.parentNode);
       }
-      let end = start + selectedText.length;
-      if (!(start === end && start === 0)) {
+      if (start > end) {
+        let tmp = start;
+        start = end;
+        end = tmp;
+      }
+      if (start !== end) {
         this.props.onHighlight(start, end, selectedText);
       }
     }
@@ -83,7 +101,9 @@ const Article = React.createClass({
             } else {
               // render highlight
               start = curHL.end;
-              return (<span key={i} className='highlighted'>{text.substring(curHL.start, curHL.end)}</span>);
+              return (<span key={i}
+                            className={'highlighted topic' + curHL.topic}
+                      >{text.substring(curHL.start, curHL.end)}</span>);
             }
           })}
           { tail }
