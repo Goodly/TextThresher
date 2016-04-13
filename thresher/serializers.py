@@ -1,8 +1,7 @@
 import json
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from models import (Article, AnalysisType, TUA,
-                    Topic, Question, Answer,
+from models import (Article, Topic, Question, Answer,
                     HighlightGroup, MCSubmittedAnswer,
                     DTSubmittedAnswer, CLSubmittedAnswer,
                     TBSubmittedAnswer, Client)
@@ -29,6 +28,46 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ('name', 'topic')
+
+class ArticleSerializer(serializers.ModelSerializer):
+    annotators = JSONSerializerField()
+
+    class Meta:
+        model = Article
+        fields = ('article_id', 'text', 'date_published', 'city_published',
+                  'state_published', 'periodical', 'periodical_code',
+                  'parse_version', 'annotators')
+
+class AnswerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Answer
+        fields = ('id', 'answer_id', 'answer_content', 'next_question')
+
+class QuestionSerializer(serializers.ModelSerializer):
+    # A nested serializer for all the answers (if any)
+    answers = AnswerSerializer(many=True)
+
+    class Meta:
+        model = Question
+        fields = ('id', 'question_id', 'type', 'question_text', 'answers')
+
+class TopicSerializer(serializers.ModelSerializer):
+    # A nested serializer for all the questions
+    related_questions = QuestionSerializer(many=True)
+
+    # Nested serializer for all clients associated with a topic
+    clients = ClientSerializer(many=True)
+
+    glossary = JSONSerializerField()
+
+    highlight = fields.Nested('HighlightGroupSerializer')
+
+    class Meta:
+        model = Topic
+        fields = ('id', 'parent', 'name', 'article', 'highlight',
+                  'order', 'glossary', 'instructions', 
+                  'related_questions', 'clients')
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.Field(write_only=True)
@@ -57,107 +96,42 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'is_staff', 'password', 'experience_score', 'accuracy_score', 'topic')
-
-# class serializers.ModelSerializer(serializers.ModelSerializer):
-#    json_fields = [] # subclasses should assign these
-
-#    def __init__(self, *args, **kwargs):
-#        super(serializers.ModelSerializer, self).__init__(*args, **kwargs)
-
-#        # add transformation methods for the relevant fields
-#        def to_json(obj, value):
-#            if not value:
-#                return json.loads("{}")
-#            return json.loads(value)
-
-#        for field in self.json_fields:
-#            setattr(self, 'transform_' + field, to_json)
-
-class ArticleSerializer(serializers.ModelSerializer):
-    annotators = JSONSerializerField()
-
-    class Meta:
-        model = Article
-        fields = ('article_id', 'text', 'date_published', 'city_published',
-                  'state_published', 'periodical', 'periodical_code',
-                  'parse_version', 'annotators')
-
-class AnswerSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Answer
-        fields = ('id', 'answer_id', 'text')
-
-class QuestionSerializer(serializers.ModelSerializer):
-    # A nested serializer for all the answers (if any)
-    answers = AnswerSerializer(many=True)
-
-    class Meta:
-        model = Question
-        fields = ('id', 'question_id', 'type', 'text', 'answers')
-
-class TopicSerializer(serializers.ModelSerializer):
-    # A nested serializer for all the questions
-    questions = QuestionSerializer(many=True)
-
-    # Nested serializer for all clients associated with a topic
-    clients = ClientSerializer(many=True)
-
-    class Meta:
-        model = Topic
-        fields = ('id', 'topic_id', 'name', 'questions', 'clients')
-
-class AnalysisTypeSerializer(serializers.ModelSerializer):
-    glossary = JSONSerializerField()
-    question_dependencies = JSONSerializerField()
-    #topics = JSONSerializerField()
-    topics = TopicSerializer(many=True)
-
-    class Meta:
-        model = AnalysisType
-        fields = ('id', 'name', 'instructions', 'glossary', 'topics',
-                  'question_dependencies')
-
-class TUASerializer(serializers.ModelSerializer):
-    analysis_type = AnalysisTypeSerializer()
-    article = ArticleSerializer()
-    offsets = JSONSerializerField()
-
-    class Meta:
-        model = TUA
-        fields = ('id', 'tua_id', 'analysis_type', 'article', 'offsets')
-        #depth = 1
+        fields = ('id', 'username', 'email', 'is_staff', 'password', 
+                  'experience_score', 'accuracy_score', 'topic')
 
 class MCSubmittedAnswerSerializer(serializers.ModelSerializer):
     question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
     answer = serializers.PrimaryKeyRelatedField(queryset=Answer.objects.all()) 
+    user = UserSerializer()
 
     class Meta:
         model = MCSubmittedAnswer
-        fields = ('question', 'answer')
+        fields = ('question', 'answer', 'user')
 
 class CLSubmittedAnswerSerializer(serializers.ModelSerializer):
     question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
     answer = serializers.PrimaryKeyRelatedField(many=True, queryset=Answer.objects.all())
+    user = UserSerializer()
 
     class Meta:
          model = CLSubmittedAnswer
-         fields = ('question', 'answer')
+         fields = ('question', 'answer', 'user')
  
 class TBSubmittedAnswerSerializer(serializers.ModelSerializer):
     question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
+    user = UserSerializer()
 
     class Meta:
          model = TBSubmittedAnswer
-         fields = ('question', 'answer')
+         fields = ('question', 'answer', 'user')
    
 class DTSubmittedAnswerSerializer(serializers.ModelSerializer):
     question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
+    user = UserSerializer()
 
     class Meta:
          model = DTSubmittedAnswer
-         fields = ('question', 'answer')
+         fields = ('question', 'answer', 'user')
 
 ## Custom fields for the serializers ##
 
@@ -206,7 +180,7 @@ class HighlightGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HighlightGroup
-        fields = ('tua', 'offsets', 'questions')
+        fields = ('offsets', 'questions')
 
     def create(self, validated_data):
         # Get the answers nested models

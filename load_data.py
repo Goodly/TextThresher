@@ -10,31 +10,34 @@ from django.core.management.color import no_style
 from django.core.management.sql import sql_delete
 from django.db import connections, DEFAULT_DB_ALIAS, models
 from django.db.utils import IntegrityError
+from django.core.exceptions import ValidationError
 
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 from parse_schema import TopicsSchemaParser
-from thresher.models import Article, AnalysisType, TUA, Topic
-
+from thresher.models import Article, Topic
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
 
 def load_schema(schema):
     schema_name = schema['title']
-    schema_obj = AnalysisType(
+    schema_parent = schema['parent']
+    if schema_parent:
+        parent = Topic.objects.get(name=schema_parent)
+    else:
+        parent = None
+    schema_obj = Topic(
+        parent = parent,
         name=schema_name,
-        requires_processing=schema_name not in ['Useless', 'Future'],
         instructions=schema['instructions'],
-        glossary=json.dumps(schema['glossary']),
-        #topics=json.dumps(schema['topics']),
-        question_dependencies=json.dumps(schema['dependencies'])
+        glossary=json.dumps(schema['glossary'])
     )
     try:
         schema_obj.save()
-    except IntegrityError:
+    except ValidationError:
         # we've already loaded this schema, pull it into memory.
-        print "Schema already exists, It will be overwritten"
-        curr_schema_obj = AnalysisType.objects.get(name=schema_name)
+        print "Schema already exists. It will be overwritten"
+        curr_schema_obj = Topic.objects.get(name=schema_name)
         # We can't just delete the object because this will delete all TUAs associated with it.
         # Instead, we update the Analysis Type and delete all the topics associated with it.
         # When the id is set, django automatically knows to update instead of creating a new entry.
@@ -43,15 +46,15 @@ def load_schema(schema):
         schema_obj.save()
         # delete all topics associated with this Analysis Type
         # This will CASCADE DELETE all questions and answers as well
-        Topic.objects.filter(analysis_type=schema_obj).delete()
+        Topic.objects.filter(parent=schema_obj).delete()
 
     ANALYSIS_TYPES[schema_name] = schema_obj
-    print "loading schema..."
+    print "loading schema:", schema_name
 
     # Load the topics, questions and answers of the schema
-    schema_parser = TopicsSchemaParser(analysis_type=schema_obj, 
-                                       schema=schema['topics'])
-
+    schema_parser = TopicsSchemaParser(topic_obj=schema_obj, 
+                                       schema=schema['topics'],
+                                       dependencies=schema['dependencies'])
     schema_parser.load_topics()
 
 def load_article(article):
@@ -87,10 +90,10 @@ def load_article(article):
         for tua_id, offset_list in tuas.iteritems():
             try:
                 analysis_type = (ANALYSIS_TYPES.get(tua_type) or
-                                 AnalysisType.objects.get(name=tua_type))
-            except AnalysisType.DoesNotExist:
+                                 Topic.objects.get(name=tua_type))
+            except Topic.DoesNotExist:
                 # No analysis type loaded--create a dummy type.
-                analysis_type = AnalysisType.objects.create(
+                analysis_type = Topic.objects.create(
                     name=tua_type,
                     requires_processing=tua_type not in ['Useless', 'Future'],
                     instructions='',
@@ -102,7 +105,7 @@ def load_article(article):
 #                raise ValueError("No TUA type '" + tua_type +
 #                                 "' registered. Have you loaded the schemas?")
             try:
-                tua_obj = TUA(
+                tua_obj = Topic(
                     analysis_type=analysis_type,
                     article=article_obj,
                     offsets=json.dumps(offset_list), # Probably need to process this more.
