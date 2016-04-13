@@ -259,10 +259,9 @@ class OffsetField(serializers.Field):
 
 class TUASerializer(serializers.Serializer):
     # W3 Annotation Data Model properties
-    # def __init__(self, offsets):
-    #     self.offsets = offsets
-
-    target = OffsetField(TUA.offsets) # Here I'm assuming that TUASerializer has access to the 'offsets' field of TUA
+    def __init__(self, offsets):
+        self.offsets = offsets
+        target = OffsetField(self.offsets)
 
     # Keep TUA metadata
     analysis_type = AnalysisTypeSerializer()
