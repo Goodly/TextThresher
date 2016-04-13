@@ -273,7 +273,7 @@ class TUASerializer(serializers.Serializer):
 
 class HighlightGroupSerializer(serializers.Serializer):
     # W3 Annotation Data Model properties
-    def __init__(self):
+    def __init__(self, offsets):
         target = OffsetField(offsets)
 
     # Keep HighlightGroup metadata
