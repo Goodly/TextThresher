@@ -30,6 +30,31 @@ class ClientSerializer(serializers.ModelSerializer):
         model = Client
         fields = ('name', 'topic')
 
+class AnswerSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Answer
+        fields = ('id', 'answer_id', 'text')
+
+class QuestionSerializer(serializers.ModelSerializer):
+    # A nested serializer for all the answers (if any)
+    answers = AnswerSerializer(many=True)
+
+    class Meta:
+        model = Question
+        fields = ('id', 'question_id', 'type', 'text', 'answers')
+
+class TopicSerializer(serializers.ModelSerializer):
+    # A nested serializer for all the questions
+    questions = QuestionSerializer(many=True)
+
+    # Nested serializer for all clients associated with a topic
+    clients = ClientSerializer(many=True)
+
+    class Meta:
+        model = Topic
+        fields = ('id', 'topic_id', 'name', 'questions', 'clients')
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.Field(write_only=True)
     experience_score = serializers.DecimalField(max_digits=5, decimal_places=3)
@@ -82,31 +107,6 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ('article_id', 'text', 'date_published', 'city_published',
                   'state_published', 'periodical', 'periodical_code',
                   'parse_version', 'annotators')
-
-class AnswerSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Answer
-        fields = ('id', 'answer_id', 'text')
-
-class QuestionSerializer(serializers.ModelSerializer):
-    # A nested serializer for all the answers (if any)
-    answers = AnswerSerializer(many=True)
-
-    class Meta:
-        model = Question
-        fields = ('id', 'question_id', 'type', 'text', 'answers')
-
-class TopicSerializer(serializers.ModelSerializer):
-    # A nested serializer for all the questions
-    questions = QuestionSerializer(many=True)
-
-    # Nested serializer for all clients associated with a topic
-    clients = ClientSerializer(many=True)
-
-    class Meta:
-        model = Topic
-        fields = ('id', 'topic_id', 'name', 'questions', 'clients')
 
 class AnalysisTypeSerializer(serializers.ModelSerializer):
     glossary = JSONSerializerField()
