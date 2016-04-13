@@ -48,7 +48,7 @@ class UserProfile(models.Model):
         return "User %s" % self.user
 
 class Client(models.Model):
-    name = models.charField(max_length=100)
+    name = models.CharField(max_length=100)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="clients")
 
     def __unicode__(self):
