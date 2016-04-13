@@ -1,6 +1,7 @@
 import argparse
+from collections import namedtuple
 
-IN_FILE = 'DecidingForceSchema_Sample/schema1.txt'
+IN_FILE = 'sample/schema/schema1.txt'
 
 TITLE_ID = 'title:'
 PARENT_ID = 'parent:'
@@ -8,13 +9,26 @@ INSTRUCTIONS_ID = 'instructions:'
 GLOSSARY_ID = 'glossary:'
 DEPENDENCY_ID = 'if'
 DEPENDENCY_TARGET = 'then'
+MANDATORY_Q = '?'
+CONTINGENT_Q = '*'
+Dependency = namedtuple('Dependency', ['topic', 'question', 'answer', 'next_question'])
+
+def is_answer(type_id):
+    return type_id.isalpha() and len(type_id) == 1
+
+def load_defaults(output):
+    output['parent'] = ''
+    output['topics'] = []
+    output['glossary'] = {}
+    output['dependencies'] = []
 
 def parse_schema(schema_file=IN_FILE):
     parsed_schema = {}
+    load_defaults(parsed_schema)
+
     with open(schema_file, 'r') as f:
         for line in f:
             raw_line = line.strip()
-
             # Throw out blank lines
             if not raw_line:
                 continue
@@ -31,9 +45,14 @@ def parse_schema(schema_file=IN_FILE):
                 parse_glossary(data, parsed_schema)
             elif type_id.lower() == DEPENDENCY_ID:
                 parse_dependency(data, parsed_schema)
-            else:
-                parse_question_entry(type_id, data, parsed_schema)
-
+            elif type_id.isdigit():
+                parse_topic(type_id, data, parsed_schema)
+            elif type_id == MANDATORY_Q or type_id == CONTINGENT_Q:
+                parse_question(data, type_id == CONTINGENT_Q, 
+                               parsed_schema)
+            elif is_answer(type_id):
+                parse_answer(type_id, data, parsed_schema)
+    # import ipdb; ipdb.set_trace()
     return parsed_schema
 
 def parse_title(title, output):
@@ -46,53 +65,53 @@ def parse_instructions(instructions, output):
     output['instructions'] = instructions
 
 def parse_glossary(glossary_entry, output):
-    if 'glossary' not in output:
-        output['glossary'] = {}
     term, definition = glossary_entry.split(':', 1)
     output['glossary'][term.strip()] = definition.strip()
 
-def parse_dependency(dependency, output):
-    if 'dependencies' not in output:
-        output['dependencies'] = []
-    source, target = dependency.split(DEPENDENCY_TARGET, 1)
-    output['dependencies'].append((source.strip().strip(','),
-                                 target.strip()))
 
-def parse_question_entry(entry_id, data, output):
-    type_bits = entry_id.split('.')
-    num_bits = len(type_bits)
-    if num_bits == 1:
-        try:
-            topics_id = int(type_bits[0])
-        except ValueError:
-            return 
-        topic_id = type_bits[0]
-        if 'topics' not in output:
-            output['topics'] = []
-        output['topics'].append({
-            'id': topic_id,
-            'name': data.strip(),
-            'questions': [],
-        })
-    elif num_bits == 2:
-        topic_id, question_id = type_bits
-        question_id = type_bits[1]
-        topic = [t for t in output['topics'] if t['id'] == topic_id][0]
-        question_type, question_text = data.split(None, 1)
-        topic['questions'].append({
-            'id': question_id,
-            'text': question_text,
-            'type': question_type,
-            'answers': [],
-        })
-    else:
-        topic_id, question_id, answer_id = type_bits
-        topic = [t for t in output['topics'] if t['id'] == topic_id][0]
-        question = [q for q in topic['questions'] if q['id'] == question_id][0]
-        question['answers'].append({
-            'id': answer_id,
-            'text': data,
-        })
+def clean_answer_id(answer):
+    answer = answer.split(' ')[2].strip(',')
+    if answer != '*': # * represents any answer
+        answer = ord(answer) - 96
+    return answer
+
+def parse_dependency(dependency, output):
+    source_topic_id = output['topics'][-1]['id']
+    source_question_id = output['topics'][-1]['questions'][-1]['question_id']
+    source_answer_id, target_question = [x.strip() for x in 
+                                         dependency.split(DEPENDENCY_TARGET, 1)]
+    source_answer_id = clean_answer_id(source_answer_id)
+    target_question = int(target_question)
+    output['dependencies'].append(Dependency(source_topic_id, 
+                                             source_question_id, 
+                                             source_answer_id, target_question))
+
+def parse_topic(topic_id, data, output):
+    if 'topics' not in output:
+        output['topics'] = []
+    output['topics'].append({
+        'id': int(topic_id),
+        'name': data.strip(),
+        'questions': [],
+    })
+
+def parse_question(question, contingency, output):
+    topic = output['topics'][-1]
+    question_id, question_type, question_text = question.split(None, 2)
+    topic['questions'].append({
+        'question_id': int(question_id),
+        'question_text': question_text,
+        'type': question_type,
+        'contingency': contingency,
+        'answers': [],
+    })
+
+def parse_answer(answer_id, answer, output):
+    question = output['topics'][-1]['questions'][-1]
+    question['answers'].append({
+        'answer_id': ord(answer_id) - 96,
+        'answer_content': answer,
+    })
 
 def print_data(output):
     print "Here's the current parsed data:"

@@ -13,100 +13,131 @@ class TopicsSchemaParser(object):
     """
     Parses a json schema of topics and questions and populates the database
     """
-    def __init__(self, schema, dep, parent):
+    def __init__(self, topic_obj, schema, dependencies):
         """
-        schema: a json schema as a string or loaded json
-        dep: the list of answers that point to another question
-        parent: the Topic object that is the parent of this schema
+        topic_obj: The Topic object that is the parent of subtopics in schema
+        schema: A json schema as a string or loaded json with subtopics
+        dependencies: The list of answers that point to another question
         """
+        self.topic_obj = topic_obj
         # if the schema is a string, tries to load it as json, otherwise,
         # assumes it's already json
-        self.schema_json = json.loads(schema) if (isinstance(schema, str) or isinstance(schema, unicode)) else schema
+        if isinstance(schema, str) or isinstance(schema, unicode):
+            self.schema_json = json.loads(schema)
+        else:
+            self.schema_json = schema
         # ensure that the analysis_type is valid
-        if not isinstance(analysis_type, Topic):
-            raise ValueError("analysis_type must be an instance of Topic\
-                    model")
-        self.parent = parent
+        if not isinstance(topic_obj, Topic):
+            raise ValueError("schema must be an instance of Topic model")
         self.dep = dependencies
-
-    def clean_dependencies(self):
-        """
-        Returns a list of named tuples that represent each dependency:
-        [Dependency(topic, question, answer, next_topic, next_topic)]
-        Also converts strings to integers.
-        """
-        Dependency = namedtuple('Dependency', ['topic', 'question', 'answer', 'next_topic', 'next_question'])
-        clean_dep = []
-        for dep in self.dep:
-            new_dep = dep[0].split(".")
-            new_dep.extend(dep[1].split("."))
-            new_dep = [int(val) for val in new_dep]
-            clean_dep.append(Dependency(*new_dep))
-        self.dep = clean_dep
 
     def load_answers(self, answers, question):
         """
-        Creates the answers instances for a given question
+        Creates the answers instances for a given question.
+        answers: A list of answers 
+        question: The question that answers belongs to
         """
         # find the corresponding topic and question ids
-        topic_id = question.topic_id
-        question_id = question.question_id
-        topic_dep = [d for d in clean_dep if d[0][0] == topic_id]
-        question_dep = [d for d in topic_dep if d[0][1] == question_id]
-
         for answer_args in answers:
-            # rename the id to answer_id
-            answer_args['answer_id'] = answer_args.pop('id')
-            # rename text to answer_content
-            answer_args['answer_content'] = answer_args.pop('text')
-            # create the question reference
-            answer_args['question_id'] = question
-            
-            # check if there is a dependency
-            answer_dep = [d for d in question_dep if d[0][2] == answer_args['answer_id']]
-            if answer_dep:
-                answer_args['next_question_id'] = answer_dep[0][1][1]
-
+            # create the next question reference, it will be rewritten in
+            # load_next_question
+            answer_args['question'] = question
             # Create the answer in the database
             answer = Answer.objects.create(**answer_args)
 
     def load_questions(self, questions, topic):
         """
-        Creates the questions instances for the given topic
+        Creates the questions instances for the given topic.
+        questions: A list of questions
+        topic: The topic that questions belongs to
         """
         for question_args in questions:
-            # rename the id to question_id
-            question_args['question_id'] = question_args.pop('id')
-            # rename text to question_text
-            question_args['question_text'] = question_args.pop('text')
-            # remove the answers to be loaded after
+            # Create the topic
+            question_args['topic'] = topic
+            # Store the answers for later
             answers = question_args.pop('answers')
-
             # Create the Question
-            question = QuestionContent.objects.create(**question_args)
-            
-            # Create the QuestionUnderTopic
-            QuestionUnderTopic.objects.create(topic_id=topic, question_id=question, order=question.question_id)
-
-            # Load the question's answers
+            question = Question.objects.create(**question_args)
+            # Load the Question's answers
             self.load_answers(answers, question)
 
     def load_topics(self):
         """
-        loads all the topics, their questions and their answers
+        Loads all the topics, their questions and their answers.
         """
         for topic_args in self.schema_json:
-            # get the questions to add them later
+            # Get the questions to add them later
             questions = topic_args.pop('questions')
-            # replace id with topic_id
-            topic_args['topic_id'] = topic_args.pop('id')
-            # set the analysis type - not necessary, getting refactored into Topic
-            # topic_args['analysis_type'] = self.analysis_type
-            # set reference to parent
-            topic_args['parent_id'] = parent
-            
+            # Change id to order
+            topic_args['order'] = topic_args.pop('id')
+            # Set reference to parent
+            topic_args['parent'] = self.topic_obj
             # Create the topic with the values in topic_args
             topic = Topic.objects.create(**topic_args)
-
             self.load_questions(questions, topic)
+        self.load_next_question()
+        self.load_dependencies()
 
+    def load_next_question(self):
+        """
+        Loads all mandatory next_questions to Answer objects. 
+        If an answer does not point to another question, that 
+        signals the end. Also populates each mandatory question 
+        with a default next question.
+        """
+        topics = Topic.objects.filter(parent=self.topic_obj)
+        for topic in topics:
+            questions = Question.objects.filter(topic=topic, 
+                                                contingency=False) \
+                                        .order_by('question_id')
+            for i in range(len(questions) - 1):
+                self.write_answers(questions[i], questions[i + 1])
+
+    def write_answers(self, curr_question, next_question):
+        """
+        Helper method for load_next_question.
+        Writes the default next answer to the current question and its answers.
+        curr_question: the curr_question to be modified
+        next_question: the next_question curr_question should point to by
+                       default
+        """
+        curr_question.default_next = next_question
+        curr_question.save()
+        answers = Answer.objects.filter(question=curr_question)
+        for answer in answers:
+            answer.next_question = next_question
+            answer.save()
+
+    def load_dependencies(self):
+        """
+        Loads dependencies into targeted answers.
+        """
+        topics = Topic.objects.filter(parent=self.topic_obj)
+        for dep in self.dep:
+            topic = topics.filter(order=dep.topic)
+            question = Question.objects.filter(topic=topic, 
+                                               question_id=dep.question)[0]
+            answers = Answer.objects.filter(
+                question=question)
+            next_question = Question.objects.filter(
+                topic=topic, question_id=dep.next_question)[0]
+            next_question_answers = Answer.objects.filter(
+                question=next_question)
+            
+            next_question.default_next = question.default_next
+            next_question.save()
+
+            # First we populate the contingency question's answers with the
+            # default next answer
+            for answer in next_question_answers:
+                answer.next_question = next_question.default_next
+                answer.save()
+
+            # Now we point the current question's answer to the next question
+            if dep.answer == '*':
+                answers = answers
+            else:
+                answers = answers.filter(answer_id=dep.answer)
+            for answer in answers:
+                answer.next_question = next_question
+                answer.save()
