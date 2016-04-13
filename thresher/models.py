@@ -2,6 +2,25 @@ from django.db import models
 # from django.contrib.auth import User
 from django.contrib.auth.models import User
 
+
+# Possible topics for a given Analysis Type
+class Topic(models.Model):
+    # an id within the given Analysis Type
+    topic_id = models.IntegerField() 
+
+    # The analysis type to which this topic belongs
+    analysis_type = models.ForeignKey(AnalysisType, related_name='topics')
+
+    # The name of the topic
+    name = models.TextField()
+    
+    class Meta:
+        unique_together = ("topic_id", "analysis_type")
+
+    def __unicode__(self):
+        return "Topic %s in Analysis Type %s" % (self.name, self.analysis_type.name) 
+
+
 # User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
 class UserProfile(models.Model):
     # Add link to default User model
@@ -83,23 +102,6 @@ class TUA(models.Model):
 
     def __unicode__(self):
         return "TUA %d (type %s)" % (self.id, self.analysis_type.name)
-
-# Possible topics for a given Analysis Type
-class Topic(models.Model):
-    # an id within the given Analysis Type
-    topic_id = models.IntegerField() 
-
-    # The analysis type to which this topic belongs
-    analysis_type = models.ForeignKey(AnalysisType, related_name='topics')
-
-    # The name of the topic
-    name = models.TextField()
-    
-    class Meta:
-        unique_together = ("topic_id", "analysis_type")
-
-    def __unicode__(self):
-        return "Topic %s in Analysis Type %s" % (self.name, self.analysis_type.name) 
 
 # The question in a given topic
 class Question(models.Model):
