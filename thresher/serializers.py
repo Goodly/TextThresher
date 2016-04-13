@@ -173,9 +173,71 @@ class GenericSubmittedAnswerField(serializers.Field):
                                
 
 # A serializer for a highlight group
-class HighlightGroupSerializer(serializers.ModelSerializer):
-    # a custom field containing all the questions and answers
-    questions = serializers.ListField(child=GenericSubmittedAnswerField())
+# class HighlightGroupSerializer(serializers.ModelSerializer):
+#     # a custom field containing all the questions and answers
+#     questions = serializers.ListField(child=GenericSubmittedAnswerField())
+#     offsets = JSONSerializerField()
+
+#     class Meta:
+#         model = HighlightGroup
+#         fields = ('tua', 'offsets', 'questions')
+
+#     def create(self, validated_data):
+#         # Get the answers nested models
+#         answers = validated_data.pop('questions')
+
+#         # Remove the force_insert if it's there
+#         validated_data.pop('force_insert', None)
+
+#         # create the highlight group first
+#         highlight_group = HighlightGroup.objects.create(**validated_data)
+
+#         # Add the highlight group model to the kwargs and save
+#         for answer in answers:
+#             model = answer['class']
+#             kwargs = answer['data']
+#             # Add the highlight group instance to the kwargs
+#             kwargs['highlight_group'] = highlight_group
+            
+#             # There is a special case if it's a checklist,
+#             # Because of the many to many relationship, this needs to be saved differently
+#             if model == CLSubmittedAnswer:
+#                 # Get the answers:
+#                 answers = kwargs.pop('answer')
+#                 # first create the CLSubmitted answer
+#                 submission = CLSubmittedAnswer.objects.create(**kwargs)
+#                 # Now add the answers
+#                 submission.answer.add(*answers)
+
+#             # For all other models, simply create the objects
+#             else:
+#                 model.objects.create(**kwargs)
+
+#         return highlight_group 
+
+class OffsetField(serializers.Field):
+    def __init__(offsets):
+        self.offsets = offsets
+
+    # Override
+    def to_representation(self, obj):
+        ret = {"selector": {"@type": "MultiplePositionTextSelector"}}
+        ret["selector"]["offsets"] = [{"start": start, "end": end} for (start, end) in self.offsets]
+
+        return ret
+
+    # Override
+    def to_internal_value(self, data):
+        ret = json.loads(data) # Convert to Python dict
+        return json.dumps(ret["offsets"]) # Convert back to native form of offsets, a JSON object
+
+class HighlightGroupSerializer(serializers.Serializer):
+    # W3 Annotation Data Model properties
+    def __init__(self, offsets):
+        target = OffsetField(offsets)
+
+    # Keep HighlightGroup metadata
+    questions = serializers.ListField(child=GenericSubmittedAnswerField()) # A custom field containing all the questions and answers
     offsets = JSONSerializerField()
 
     class Meta:
@@ -199,7 +261,7 @@ class HighlightGroupSerializer(serializers.ModelSerializer):
             # Add the highlight group instance to the kwargs
             kwargs['highlight_group'] = highlight_group
             
-            # There is a special case if it's a checlist,
+            # There is a special case if it's a checklist,
             # Because of the many to many relationship, this needs to be saved differently
             if model == CLSubmittedAnswer:
                 # Get the answers:
@@ -213,5 +275,4 @@ class HighlightGroupSerializer(serializers.ModelSerializer):
             else:
                 model.objects.create(**kwargs)
 
-        return highlight_group 
-
+        return highlight_group

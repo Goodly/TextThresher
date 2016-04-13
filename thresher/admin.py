@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from thresher.models import (Client, Article, AnalysisType,
-                             TUA, Topic, Question, Answer, 
+from thresher.models import (UserProfile, Client, Article, 
+                             Topic, Question, Answer, 
                              HighlightGroup, MCSubmittedAnswer,
                              CLSubmittedAnswer, TBSubmittedAnswer, 
-                             DTSubmittedAnswer, UserProfile)
+                             DTSubmittedAnswer)
 
 class UserProfileInLine(admin.StackedInline):
     """ Class meant to serve as an inline in the 
@@ -30,8 +30,6 @@ admin.site.register(User, NewUserAdmin)
 
 admin.site.register(Client)
 admin.site.register(Article)
-admin.site.register(AnalysisType)
-admin.site.register(TUA)
 admin.site.register(Topic)
 admin.site.register(Question)
 admin.site.register(Answer)
