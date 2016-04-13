@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from thresher.models import (Client, Article, AnalysisType,
+from thresher.models import (UserProfile, Client, Article, AnalysisType,
                              TUA, Topic, Question, Answer, 
                              HighlightGroup, MCSubmittedAnswer,
                              CLSubmittedAnswer, TBSubmittedAnswer, 
