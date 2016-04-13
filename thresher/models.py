@@ -7,12 +7,6 @@ class UserProfile(models.Model):
     # Add link to default User model
     user = models.OneToOneField(User)
 
-    # All topics have a set of users associated with them, 
-    # so add a link to the parent Topic
-    topic = models.ForeignKey("Topic", on_delete=models.CASCADE, 
-                              related_name="users")
-    # "Topic" is in strings because it has not yet been defined.
-
     # Metadata
     experience_score = models.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = models.DecimalField(max_digits=5, decimal_places=3)

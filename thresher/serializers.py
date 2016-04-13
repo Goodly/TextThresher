@@ -52,28 +52,10 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'question_id', 'type', 'question_text', 'answers')
 
-class TopicSerializer(serializers.ModelSerializer):
-    # A nested serializer for all the questions
-    related_questions = QuestionSerializer(many=True)
-
-    # Nested serializer for all clients associated with a topic
-    clients = ClientSerializer(many=True)
-
-    glossary = JSONSerializerField()
-
-    highlight = fields.Nested('HighlightGroupSerializer')
-
-    class Meta:
-        model = Topic
-        fields = ('id', 'parent', 'name', 'article', 'highlight',
-                  'order', 'glossary', 'instructions', 
-                  'related_questions', 'clients')
-
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.Field(write_only=True)
     experience_score = serializers.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = serializers.DecimalField(max_digits=5, decimal_places=3)
-    topic = TopicSerializer(many=True)
 
     def restore_object(self, attrs, instance=None):
         if instance: # Update
@@ -276,3 +258,21 @@ class HighlightGroupSerializer(serializers.Serializer):
                 model.objects.create(**kwargs)
 
         return highlight_group
+
+class TopicSerializer(serializers.ModelSerializer):
+    # A nested serializer for all the questions
+    related_questions = QuestionSerializer(many=True)
+
+    # Nested serializer for all clients associated with a topic
+    clients = ClientSerializer(many=True)
+
+    glossary = JSONSerializerField()
+
+    highlight = HighlightGroupSerializer()
+
+    class Meta:
+        model = Topic
+        fields = ('id', 'parent', 'name', 'article', 'highlight',
+                  'order', 'glossary', 'instructions', 
+                  'related_questions', 'clients')
+
