@@ -2,6 +2,17 @@ from django.db import models
 # from django.contrib.auth import User
 from django.contrib.auth.models import User
 
+# Possible Analysis Types
+class AnalysisType(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+    requires_processing = models.BooleanField(default=False)
+    instructions = models.TextField()
+    glossary = models.TextField() # as a JSON map
+    #topics = models.TextField() # as a big JSON blob.
+    question_dependencies = models.TextField() # as a big JSON blob.
+
+    def __unicode__(self):
+        return "Analysis Type %s" % self.name
 
 # Possible topics for a given Analysis Type
 class Topic(models.Model):
@@ -65,17 +76,6 @@ class Article(models.Model):
             self.article_id, self.city_published, self.state_published,
             self.periodical)
 
-# Possible Analysis Types
-class AnalysisType(models.Model):
-    name = models.CharField(max_length=40, unique=True)
-    requires_processing = models.BooleanField(default=False)
-    instructions = models.TextField()
-    glossary = models.TextField() # as a JSON map
-    #topics = models.TextField() # as a big JSON blob.
-    question_dependencies = models.TextField() # as a big JSON blob.
-
-    def __unicode__(self):
-        return "Analysis Type %s" % self.name
 
 # A Text Unit of Analysis (TUA).
 # TUAs have types and reference text within an article
