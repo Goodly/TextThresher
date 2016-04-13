@@ -260,8 +260,8 @@ class OffsetField(serializers.Field):
 class TUASerializer(serializers.Serializer):
     # W3 Annotation Data Model properties
     def __init__(self, offsets):
-        self.offsets = offsets
-        target = OffsetField(self.offsets)
+        # self.offsets = offsets
+        target = OffsetField(offsets)
 
     # Keep TUA metadata
     analysis_type = AnalysisTypeSerializer()
@@ -273,7 +273,8 @@ class TUASerializer(serializers.Serializer):
 
 class HighlightGroupSerializer(serializers.Serializer):
     # W3 Annotation Data Model properties
-    target = OffsetField(offsets)
+    def __init__(self):
+        target = OffsetField(offsets)
 
     # Keep HighlightGroup metadata
     questions = serializers.ListField(child=GenericSubmittedAnswerField()) # A custom field containing all the questions and answers
