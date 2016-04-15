@@ -78,6 +78,8 @@ DATABASES = {
         'NAME': 'thresher',
         'USER': 'zz',
         'PASSWORD': '',
+        'HOST': 'db',
+        'PORT': '5432'
     }
 }
 

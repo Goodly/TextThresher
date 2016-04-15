@@ -10,6 +10,26 @@ The latest version of the backend is running
 
 #### Running the app locally
 
+1. Install Docker
+2. On OSX, run `eval $(docker-machine env default)`
+3. Run `docker-compose up`
+
+The server should now be up and running.  Initialize it by running
+`./init_docker.sh`.
+
+You should now be able to make your first query:
+
+- Find your Docker machine's ip using `docker-machine ip default`, let's say
+  it is `192.168.0.100`
+- Browse to `http://192.168.0.100/api`
+
+
+**Note:** If you are doing this a second time, you may want to first remove
+the database container with `docker-compose rm db``
+
+
+The instructions below are for a local installation:
+
 **Note:** the instructions below assume that PostgreSQL is being run as user
 "postgres".  If that is not the case (e.g., if you are running it under your
 own username), change or neglect the sudo commands as appropriate.
@@ -57,6 +77,9 @@ own username), change or neglect the sudo commands as appropriate.
   using the conda package manager.  At least, you will *have* to `pip
   uninstall psycopg2` and `conda install psycopg2` to ensure that you
   get the correct libSSL linked version.
+
+* Edit ``thresher_backend/settings.py`` and modify the database hostname from
+  ``db`` to ``localhost``.
 
 * Prepare static files with 
   ```shell
