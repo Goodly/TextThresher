@@ -92,6 +92,7 @@ class Question(models.Model):
     # The topic this question belongs to
     topic = models.ForeignKey(Topic, related_name="related_questions", 
                               on_delete=models.CASCADE)
+
     # The type of question (e.g. multiple choice, text box, ...)
     # A list of all possible question types
     QUESTION_TYPE_CHOICES = (
@@ -105,6 +106,7 @@ class Question(models.Model):
 
     # The question text
     question_text = models.TextField()
+
     # Whether the question is a contingency one or not
     contingency = models.BooleanField()
 
@@ -186,6 +188,9 @@ class MCSubmittedAnswer(SubmittedAnswer):
     # The user who submitted this answer
     user_submitted = models.ForeignKey(UserProfile, related_name="submitted_mc")
 
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_mc")
+
     # The answer chosen
     answer = models.ForeignKey(Answer)
 
@@ -193,6 +198,9 @@ class MCSubmittedAnswer(SubmittedAnswer):
 class CLSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
     question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"cl"})
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_cl")
 
     # The user who submitted this answer
     user_submitted = models.ForeignKey(UserProfile, related_name="submitted_cl")
@@ -209,6 +217,9 @@ class CLSubmittedAnswer(SubmittedAnswer):
 class TBSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
     question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"tb"})
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_tb")
 
     # The user who submitted this answer
     user_submitted = models.ForeignKey(UserProfile, related_name="submitted_tb")
