@@ -7,12 +7,6 @@ class UserProfile(models.Model):
     # Add link to default User model
     user = models.OneToOneField(User)
 
-    # All topics have a set of users associated with them, 
-    # so add a link to the parent Topic
-    topic = models.ForeignKey("Topic", on_delete=models.CASCADE, 
-                              related_name="users")
-    # "Topic" is in strings because it has not yet been defined.
-
     # Metadata
     experience_score = models.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = models.DecimalField(max_digits=5, decimal_places=3)
@@ -112,7 +106,7 @@ class Question(models.Model):
 
     # The question text
     question_text = models.TextField()
-    
+
     # Whether the question is a contingency one or not
     contingency = models.BooleanField()
 
@@ -134,7 +128,7 @@ class Answer(models.Model):
     answer_id = models.IntegerField()
 
     # The question to which this answer belongs
-    question = models.ForeignKey(Question, related_name="answers")
+    question = models.ForeignKey(QuestionContent, related_name="answers")
     
     # The text of the amswer
     answer_content = models.TextField()
@@ -142,7 +136,6 @@ class Answer(models.Model):
     # The next question the answer is leading to
     next_question = models.ForeignKey(Question, related_name="next_question", 
                                       null=True)
-
     class Meta:
         unique_together = ("answer_id", "question")
 
@@ -187,7 +180,13 @@ class SubmittedAnswer(models.Model):
 # A submitted answer for a Multiple Choice question
 class MCSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"mc"})
+    question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"mc"})
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_mc")
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_mc")
 
     # The user who submitted this answer
     user_submitted = models.ForeignKey(UserProfile, related_name="submitted_mc")
@@ -198,7 +197,13 @@ class MCSubmittedAnswer(SubmittedAnswer):
 # A submitted answer for a Checklist question
 class CLSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"cl"})
+    question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"cl"})
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_cl")
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_cl")
 
     # The user who submitted this answer
     user_submitted = models.ForeignKey(UserProfile, related_name="submitted_cl")
@@ -211,7 +216,13 @@ class CLSubmittedAnswer(SubmittedAnswer):
 # A submitted highlight group for a Textbox question
 class TBSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"tb"})
+    question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"tb"})
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_tb")
+
+    # The user who submitted this answer
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_tb")
 
     # The user who submitted this answer
     user_submitted = models.ForeignKey(UserProfile, related_name="submitted_tb")
@@ -222,7 +233,7 @@ class TBSubmittedAnswer(SubmittedAnswer):
 # A submitted answer for a Date Time question
 class DTSubmittedAnswer(SubmittedAnswer):
     # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"dt"})
+    question = models.ForeignKey(QuestionContent, limit_choices_to={"type":"dt"})
 
     # The user who submitted this answer
     user_submitted = models.ForeignKey(UserProfile, related_name="submitted_dt")

@@ -20,6 +20,9 @@ ANALYSIS_TYPES = {}
 HIGH_ID = 20000
 
 def load_schema(schema):
+    import ipdb; ipdb.set_trace()
+    print(schema['title'])
+    print(schema['parent'])
     schema_name = schema['title']
     schema_parent = schema['parent']
     if schema_parent:
