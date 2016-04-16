@@ -6,8 +6,8 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework import status
 
-from models import TUA, Article, AnalysisType, Topic, HighlightGroup, Client
-from serializers import (UserSerializer, ArticleSerializer, TopicSerializer, 
+from models import Article, SchemaTopic, HighlightGroup, Client
+from serializers import (UserSerializer, ArticleSerializer, SchemaTopicSerializer, 
                          HighlightGroupSerializer, ClientSerializer)
 
 # Views for serving the API
@@ -24,13 +24,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
-# class AnalysisTypeViewSet(viewsets.ModelViewSet):
-#     queryset = AnalysisType.objects.all()
-#     serializer_class = AnalysisTypeSerializer
- 
-class TopicViewSet(viewsets.ModelViewSet):
-    queryset = Topic.objects.all()
-    serializer_class = TopicSerializer
+class SchemaTopicViewSet(viewsets.ModelViewSet):
+    queryset = SchemaTopic.objects.all()
+    serializer_class = SchemaTopicSerializer
 
 class HighlightGroupViewSet(viewsets.ModelViewSet):
     queryset = HighlightGroup.objects.all()
@@ -53,5 +49,5 @@ ROUTER = routers.DefaultRouter()
 ROUTER.register(r'clients', ClientViewSet)
 ROUTER.register(r'users', UserViewSet)
 ROUTER.register(r'articles', ArticleViewSet)
-ROUTER.register(r'topics', TopicViewSet)
+ROUTER.register(r'schema_topics', SchemaTopicViewSet)
 ROUTER.register(r'highlight_groups', HighlightGroupViewSet)
