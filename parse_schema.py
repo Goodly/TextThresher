@@ -27,8 +27,8 @@ class TopicsSchemaParser(object):
         else:
             self.schema_json = schema
         # ensure that the analysis_type is valid
-        if not isinstance(topic_obj, Topic):
-            raise ValueError("schema must be an instance of Topic model")
+        if not isinstance(topic_obj, SchemaTopic):
+            raise ValueError("schema must be an instance of SchemaTopic model")
         self.dep = dependencies
 
     def load_answers(self, answers, question):
@@ -73,7 +73,7 @@ class TopicsSchemaParser(object):
             # Set reference to parent
             topic_args['parent'] = self.topic_obj
             # Create the topic with the values in topic_args
-            topic = Topic.objects.create(**topic_args)
+            topic = SchemaTopic.objects.create(**topic_args)
             self.load_questions(questions, topic)
         self.load_next_question()
         self.load_dependencies()
@@ -85,7 +85,7 @@ class TopicsSchemaParser(object):
         signals the end. Also populates each mandatory question 
         with a default next question.
         """
-        topics = Topic.objects.filter(parent=self.topic_obj)
+        topics = SchemaTopic.objects.filter(parent=self.topic_obj)
         for topic in topics:
             questions = Question.objects.filter(topic=topic, 
                                                 contingency=False) \
@@ -112,7 +112,7 @@ class TopicsSchemaParser(object):
         """
         Loads dependencies into targeted answers.
         """
-        topics = Topic.objects.filter(parent=self.topic_obj)
+        topics = SchemaTopic.objects.filter(parent=self.topic_obj)
         for dep in self.dep:
             topic = topics.filter(order=dep.topic)
             question = Question.objects.filter(topic=topic, 

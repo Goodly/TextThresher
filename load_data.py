@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 from parse_schema import TopicsSchemaParser
-from thresher.models import Article, Topic
+from thresher.models import Article, SchemaTopic, Topic, HighlightGroup
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
 
@@ -26,11 +26,11 @@ def load_schema(schema):
     schema_name = schema['title']
     schema_parent = schema['parent']
     if schema_parent:
-        parent = Topic.objects.get(name=schema_parent)
+        parent = SchemaTopic.objects.get(name=schema_parent)
     else:
         parent = None
-    schema_obj = Topic(
-        parent = parent,
+    schema_obj = SchemaTopic(
+        parent=parent,
         name=schema_name,
         instructions=schema['instructions'],
         glossary=json.dumps(schema['glossary'])
@@ -40,7 +40,7 @@ def load_schema(schema):
     except ValidationError:
         # we've already loaded this schema, pull it into memory.
         print "Schema already exists. It will be overwritten"
-        curr_schema_obj = Topic.objects.get(name=schema_name)
+        curr_schema_obj = SchemaTopic.objects.get(name=schema_name)
         # We can't just delete the object because this will delete all TUAs associated with it.
         # Instead, we update the Analysis Type and delete all the topics associated with it.
         # When the id is set, django automatically knows to update instead of creating a new entry.
@@ -49,7 +49,7 @@ def load_schema(schema):
         schema_obj.save()
         # delete all topics associated with this Analysis Type
         # This will CASCADE DELETE all questions and answers as well
-        Topic.objects.filter(parent=schema_obj).delete()
+        SchemaTopic.objects.filter(parent=schema_obj).delete()
 
     ANALYSIS_TYPES[schema_name] = schema_obj
     print "loading schema:", schema_name
@@ -90,35 +90,35 @@ def load_article(article):
     article_obj.save()
 
     for tua_type, tuas in article['tuas'].iteritems():
+        offsets = []
+        try:
+            schema_topic_to_copy = SchemaTopic.objects.filter(name=tua_type)[0]
+            #analysis_type = (ANALYSIS_TYPES.get(tua_type) or
+            #                 Topic.objects.get(name=tua_type))
+        except IndexError:
+            # No analysis type loaded--create a dummy type.
+            schema_topic_to_copy = SchemaTopic.objects.create(
+                name=tua_type,
+                instructions='',
+                glossary='',
+            )
+            ANALYSIS_TYPES[tua_type] = schema_topic_to_copy
+            print("made a dummy topic")
+#           raise ValueError("No TUA type '" + tua_type +
+#                            "' registered. Have you loaded the schemas?")
         for tua_id, offset_list in tuas.iteritems():
-            try:
-                analysis_type = (ANALYSIS_TYPES.get(tua_type) or
-                                 Topic.objects.get(name=tua_type))
-            except Topic.DoesNotExist:
-                # No analysis type loaded--create a dummy type.
-                analysis_type = Topic.objects.create(
-                    name=tua_type,
-                    requires_processing=tua_type not in ['Useless', 'Future'],
-                    instructions='',
-                    glossary='',
-                    #topics='',
-                    question_dependencies='',
-                )
-                ANALYSIS_TYPES[tua_type] = analysis_type
-#                raise ValueError("No TUA type '" + tua_type +
-#                                 "' registered. Have you loaded the schemas?")
-            try:
-                tua_obj = Topic(
-                    analysis_type=analysis_type,
-                    article=article_obj,
-                    offsets=json.dumps(offset_list), # Probably need to process this more.
-                    tua_id=tua_id,
-                )
-                tua_obj.save()
-            except IntegrityError as e:
-                print "error!"
+            offsets.extend(offset_list)
 
-    print "loading article..."
+        highlight = HighlightGroup.objects.create(offsets=json.dumps(offsets))
+
+        try:
+            Topic.objects.create(schema=schema_topic_to_copy, 
+                                 article=article_obj, highlight=highlight)
+
+        except ValidationError as e:
+            print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
+        
+    print 'loading article...'
 
 def load_schema_dir(dirpath):
     for schema_file in os.listdir(dirpath):
