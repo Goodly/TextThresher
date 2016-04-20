@@ -21,7 +21,7 @@ You should now be able to make your first query:
 
 - Find your Docker machine's ip using `docker-machine ip default`, let's say
   it is `192.168.0.100`
-- Browse to `http://192.168.0.100/api`
+- Browse to `http://192.168.0.100:5000/api`
 
 
 **Note:** If you are doing this a second time, you may want to first remove
