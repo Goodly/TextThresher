@@ -1,0 +1,18 @@
+thresher_api:
+  build: .
+  ports:
+    - "5000:5000"
+  links:
+    - db
+  volumes:
+    - .:/home/thresher
+
+db:
+  image: postgres
+#  volumes:
+#    - ./_postgres_data:/var/lib/postgresql/data/
+  environment:
+    - POSTGRES_USER=zz
+    - POSTGRES_PASSWORD=
+#    - PGDATA=/var/lib/postgresql/data/pgdata
+    - POSTGRES_DB=thresher

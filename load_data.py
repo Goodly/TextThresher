@@ -20,9 +20,6 @@ ANALYSIS_TYPES = {}
 HIGH_ID = 20000
 
 def load_schema(schema):
-    import ipdb; ipdb.set_trace()
-    print(schema['title'])
-    print(schema['parent'])
     schema_name = schema['title']
     schema_parent = schema['parent']
     if schema_parent:
@@ -117,7 +114,8 @@ def load_article(article):
 
         except ValidationError as e:
             print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
-        
+            print e
+
     print 'loading article...'
 
 def load_schema_dir(dirpath):

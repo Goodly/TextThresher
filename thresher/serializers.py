@@ -1,10 +1,12 @@
 import json
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from models import (Article, Topic, Question, Answer,
+from models import (Article, SchemaTopic, Topic, Question, Answer,
                     HighlightGroup, MCSubmittedAnswer,
                     DTSubmittedAnswer, CLSubmittedAnswer,
                     TBSubmittedAnswer, Client)
+
+
 # Custom JSON field
 class JSONSerializerField(serializers.Field):
     """
@@ -79,7 +81,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'is_staff', 'password', 
-                  'experience_score', 'accuracy_score', 'topic')
+                  'experience_score', 'accuracy_score')
 
 class MCSubmittedAnswerSerializer(serializers.ModelSerializer):
     question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
@@ -198,8 +200,9 @@ class GenericSubmittedAnswerField(serializers.Field):
 #         return highlight_group 
 
 class OffsetField(serializers.Field):
-    def __init__(offsets):
-        self.offsets = offsets
+#    def __init__(self, offsets, *args, **kwargs):
+#        serializers.Field.__init__(*args, **kwargs)
+#        self.offsets = offsets
 
     # Override
     def to_representation(self, obj):
@@ -215,8 +218,10 @@ class OffsetField(serializers.Field):
 
 class HighlightGroupSerializer(serializers.Serializer):
     # W3 Annotation Data Model properties
-    def __init__(self, offsets):
-        target = OffsetField(offsets)
+#    def __init__(self, offsets=[], **kwargs):
+#        serializers.Serializer.__init__(self, **kwargs)
+#        target = OffsetField(offsets)
+
 
     # Keep HighlightGroup metadata
     questions = serializers.ListField(child=GenericSubmittedAnswerField()) # A custom field containing all the questions and answers
@@ -242,7 +247,7 @@ class HighlightGroupSerializer(serializers.Serializer):
             kwargs = answer['data']
             # Add the highlight group instance to the kwargs
             kwargs['highlight_group'] = highlight_group
-            
+
             # There is a special case if it's a checklist,
             # Because of the many to many relationship, this needs to be saved differently
             if model == CLSubmittedAnswer:
@@ -259,20 +264,14 @@ class HighlightGroupSerializer(serializers.Serializer):
 
         return highlight_group
 
-class TopicSerializer(serializers.ModelSerializer):
+class SchemaTopicSerializer(serializers.ModelSerializer):
     # A nested serializer for all the questions
     related_questions = QuestionSerializer(many=True)
 
-    # Nested serializer for all clients associated with a topic
-    clients = ClientSerializer(many=True)
-
     glossary = JSONSerializerField()
 
-    highlight = HighlightGroupSerializer()
-
     class Meta:
-        model = Topic
-        fields = ('id', 'parent', 'name', 'article', 'highlight',
+        model = SchemaTopic
+        fields = ('id', 'parent', 'name',
                   'order', 'glossary', 'instructions', 
-                  'related_questions', 'clients')
-
+                  'related_questions')

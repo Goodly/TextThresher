@@ -52,7 +52,6 @@ def parse_schema(schema_file=IN_FILE):
                                parsed_schema)
             elif is_answer(type_id):
                 parse_answer(type_id, data, parsed_schema)
-    # import ipdb; ipdb.set_trace()
     return parsed_schema
 
 def parse_title(title, output):
