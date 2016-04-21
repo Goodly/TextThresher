@@ -88,7 +88,7 @@ const Article = React.createClass({
     }
 
     return (
-      <div>
+      <div className='article'>
         <div className='tua__header-text'>
           Focus on the bold text about '{topic.name}' and answer the questions.
         </div>

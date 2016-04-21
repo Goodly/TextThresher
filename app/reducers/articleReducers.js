@@ -1,16 +1,21 @@
 import { ADD_HIGHLIGHT,
          NEW_ARTICLE,
          ACTIVATE_TOPIC } from '../actions/actionTypes';
-import data from 'assets/tua.json';
+import api from '../api.js';
 
 // Note: not 100% sure this is the 'proper' reducer layout - we'll find out more
 // as we go
 
-const initialState = {
-  // For testing purposes there will be a default static article
-  article: data.results,
-  highlights: [],
+function getInitialState() {
+  return { articles: api.getArticles() };
 }
+
+const initialState = Object.assign({
+  articles: [],
+  highlights: [],
+  // TODO: somehow track what the user's seen in their sessions not just count
+  curArticle: 0,
+}, getInitialState());
 
 function mergeHighlights(list) {
   // TODO: write tests for me
@@ -55,12 +60,16 @@ export default function articleReducer(state = initialState, action) {
       return Object.assign({}, state,
                            { highlights: mergeHighlights(newHighlights) });
     case NEW_ARTICLE:
-      // TODO: save highlights before deleting htem
-      return Object.assign({}, state, { article: action.article, highlights: [] });
-
+      api.sendHighlights(state.highlights);
+      if (!action.article || action.article >= state.articles.length) {
+        return Object.assign({}, state, { articles: api.getArticles(),
+                                          highlights: [],
+                                          curArticle: 0 });
+      }
+      return Object.assign({}, state, { highlights: [],
+                                        curArticle: state.curArticle + 1 });
     case ACTIVATE_TOPIC:
       return Object.assign({}, state, { currentTopic: action.topic });
-
     default:
       return state;
   }

@@ -15,7 +15,6 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "alt": "^0.18.2",
     "autoprefixer-loader": "^3.2.0",
     "babel-core": "^6.4.5",
     "babel-eslint": "^4.1.8",

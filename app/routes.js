@@ -9,7 +9,7 @@ export default (
   <Route name='app' path='/' component={App}>
     <Route
       name='tuaAnalysis'
-      path='tua/:tua_id'
+      path='tua/:cur_article'
       component={Tua}>
       <Route
         name='topicAnalysis'

@@ -16,6 +16,7 @@
 
   .article {
     @include newspaper;
+    transition: opacity $transition-slow;
 
     .highlighted {
       // TODO: generate programmatically?

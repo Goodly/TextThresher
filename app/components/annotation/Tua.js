@@ -1,12 +1,12 @@
 import { newArticle } from 'actions/actions';
 import Article from 'components/annotation/article';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import TopicPicker from 'components/annotation/topicPicker';
-import tmpdata from 'assets/tmpArticles.json';
 
-import 'fadeIn.scss';
+import 'fade.scss';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -17,7 +17,8 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mapStateToProps = state => {
-  return { articles: state.articleReducers.article };
+  return { articles: state.articleReducers.articles,
+           curArticle: state.articleReducers.curArticle };
 }
 
 const Tua = React.createClass({
@@ -36,16 +37,20 @@ const Tua = React.createClass({
   propTypes: {
     articles: React.PropTypes.array,
     onNewArticle: React.PropTypes.func,
-    params: React.PropTypes.object.isRequired
+    params: React.PropTypes.object.isRequired,
+    curArticle: React.PropTypes.number
   },
 
   handleNext() {
-    this.props.onNewArticle(tmpdata.results);
+    this.props.onNewArticle(this.props.curArticle + 1);
+    ReactDOM.findDOMNode(this).scrollIntoView();
   },
 
   render() {
-    const {tua_id}: string = this.props.params;
-    let tua = this.props.articles[tua_id];
+    // TODO: we need to have a larger discussion of route design
+    // const {cur_article}: string = this.props.params;
+    let cur_article = this.props.curArticle;
+    let tua = this.props.articles[cur_article];
     let article = tua.article;
     let topics = tua.analysis_type.topics;
 
@@ -57,7 +62,13 @@ const Tua = React.createClass({
                                 transitionLeaveTimeout={500}>
         <div className='tua'>
           <div className='text-wrapper'>
-            <Article topics={topics} article={article}/>
+            <ReactCSSTransitionsGroup transitionName='fade-between'
+                                      transitionAppear
+                                      transitionAppearTimeout={500}
+                                      transitionEnterTimeout={500}
+                                      transitionLeaveTimeout={500}>
+              <Article topics={topics} article={article} key={cur_article}/>
+            </ReactCSSTransitionsGroup>
             <br/>
             <button onClick={this.handleNext}>Next</button>
           </div>

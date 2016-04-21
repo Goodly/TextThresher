@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import tmpQuestions from 'assets/tmpQuestions.json';
 
 import 'Quiz.scss';
-import 'fadeIn.scss';
+import 'fade.scss';
 
 const mapDispatchToProps = dispatch => {
   return {

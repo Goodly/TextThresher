@@ -9,6 +9,8 @@ export function activateTopic(topic) {
 }
 
 export function newArticle(article) {
+  // Where article is the index of the next article to get, or null to indicate
+  // we should hit the backend for a fresh batch of articles
   return { type: types.NEW_ARTICLE, article };
 }
 
