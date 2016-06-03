@@ -10,7 +10,7 @@ The frontend stack
 * Sass
 * Webpack
 
-Formally, this repo contains a Redux app written with ES6 javascript and styled using Sass, served with hotloading and module support from webpack. It relies on a backend with a RESTful API found (here)[https://github.com/Goodly/text-thresher-backend] which is a Django server running PostgreSQL in Docker.
+Formally, this repo contains a Redux app written with ES6 javascript and styled using Sass, served with hotloading and module support from webpack. It relies on a backend with a RESTful API found [here](https://github.com/Goodly/text-thresher-backend) which is a Django server running PostgreSQL in Docker.
 
 Uh, where does the code even start?
 ---
@@ -24,7 +24,7 @@ What's Redux?
 ---
 Redux is a framework exceptionally good for building understandable and manageable UIs, because of it's unified state, unidirectional data flow, and pure functional mutations of state. The Redux docs ARE good, and you should read them until at least like the section labeled 'Advanced'. This one is the hardest to understand, after React. Read up and ask questions.
 
-I've written a somewhat helpful gist on React and Redux (here)[https://gist.github.com/phorust/b4e61af8600f0b2843675f926a9f8ee0].
+I've written a somewhat helpful gist on React and Redux [here](https://gist.github.com/phorust/b4e61af8600f0b2843675f926a9f8ee0).
 
 What's ES6?
 ---
