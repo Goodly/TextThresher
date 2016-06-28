@@ -4,7 +4,8 @@
     "bootstrap": "~3.3.5",
     "jquery": "~2.1.3",
     "lodash": "~3.7.0",
-    "modernizr": "~2.8.3"
+    "modernizr": "~2.8.3",
+    "text-highlighter": "^1.2.0"
   },
   "devDependencies": {
     "chai": "latest",

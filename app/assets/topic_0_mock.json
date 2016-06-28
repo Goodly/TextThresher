@@ -1,0 +1,97 @@
+{
+  "count": 10,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "name": "Events",
+      "order": null,
+      "glossary": {
+        "major event": "A major event."
+      },
+      "instructions": "Highlight the text that describes the following topic."
+    },
+    {
+      "id": 5,
+      "name": "Camp",
+      "order": null,
+      "glossary": {
+
+      },
+      "instructions": ""
+    },
+    {
+      "id": 6,
+      "name": "Opinionor",
+      "order": null,
+      "glossary": {
+
+      },
+      "instructions": ""
+    },
+    {
+      "id": 7,
+      "name": "Police",
+      "order": null,
+      "glossary": {
+
+      },
+      "instructions": ""
+    },
+    {
+      "id": 8,
+      "name": "Government",
+      "order": null,
+      "glossary": {
+
+      },
+      "instructions": ""
+    },
+    {
+      "id": 9,
+      "name": "Info",
+      "order": null,
+      "glossary": {
+
+      },
+      "instructions": ""
+    },
+    {
+      "id": 10,
+      "name": "Legal_Action",
+      "order": null,
+      "glossary": {
+
+      },
+      "instructions": ""
+    },
+    {
+      "id": 11,
+      "name": "Strategy",
+      "order": null,
+      "glossary": {
+
+      },
+      "instructions": ""
+    },
+    {
+      "id": 12,
+      "name": "ToBe",
+      "order": null,
+      "glossary": {
+
+      },
+      "instructions": ""
+    },
+    {
+      "id": 13,
+      "name": "Useless",
+      "order": null,
+      "glossary": {
+
+      },
+      "instructions": ""
+    }
+  ]
+}

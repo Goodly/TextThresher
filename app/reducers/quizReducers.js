@@ -1,4 +1,4 @@
-import { NEW_QUESTIONS } from '../actions/actionTypes';
+import { NEW_QUESTIONS } from 'actions/article'; // TODO: create new action here
 import tmpQuestions from '../assets/tmpQuestions.json';
 
 const initialState = {

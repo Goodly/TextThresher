@@ -1,10 +1,10 @@
 import data from 'assets/tua.json';
 import $ from 'jquery';
 
-const USE_DOCKER = false;
+const USE_DOCKER = true;
 let   BASE_URL   = 'http://text-thresher.herokuapp.com';
 if (USE_DOCKER) {
-  BASE_URL       = 'http://192.168.99.100:5000';
+  BASE_URL       = 'http://local.docker:5000';
 }
 const ARTICLES_URL   = BASE_URL + '/api/articles/';
 const HIGHLIGHTS_URL = BASE_URL + '/api/highlight_groups/';

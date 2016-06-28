@@ -1,5 +1,4 @@
-@import 'styleguide';
-@import 'common';
+@import 'app/containers/App/styles/_variables.scss';
 
 .quiz {
   width: 50%;
@@ -30,7 +29,7 @@
         font-style: italic;
       }
     }
-    
+
   }
 }
 
@@ -45,5 +44,5 @@
   &.active {
     opacity: 1;
   }
-  
+
 }

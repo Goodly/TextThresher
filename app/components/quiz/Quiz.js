@@ -1,4 +1,4 @@
-import { newQuestions } from 'actions/actions';
+import { newQuestions } from 'actions/article';
 import classNames from 'classnames';
 import QuizQuestion from 'components/quiz/QuizQuestion.js';
 import React from 'react';
@@ -6,8 +6,8 @@ import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import tmpQuestions from 'assets/tmpQuestions.json';
 
-import 'Quiz.scss';
-import 'fade.scss';
+// import 'Quiz.scss';
+// import 'fade.scss';
 
 const mapDispatchToProps = dispatch => {
   return {

@@ -1,24 +1,17 @@
 import React from 'react';
 import {Route} from 'react-router';
 
-import App from './components/app';
-import Tua from './components/annotation/Tua';
-import Quiz from './components/quiz/Quiz';
+import App from 'containers/App';
+import { TopicHighlighter } from 'containers/TopicHighlighter';
+
+import Quiz from 'components/quiz/Quiz';
 
 export default (
-  <Route name='app' path='/' component={App}>
+  <Route path='/' component={App}>
     <Route
-      name='tuaAnalysis'
-      path='tua/:cur_article'
-      component={Tua}>
-      <Route
-        name='topicAnalysis'
-        path='topic/:topic_id'>
-        <Route
-          name='questionAnalysis'
-          path='question/:question_id'/>
-      </Route>
-    </Route>
+      name='topic'
+      path='topics/:articleId'
+      component={TopicHighlighter} />
     <Route
       name='quiz'
       path='quiz'

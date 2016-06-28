@@ -35,7 +35,7 @@ export default {
   },
   webpack: {
     context: path.join(__dirname, '../'),
-    devtool: 'eval-source-map',
+    devtool: 'source-map',
     entry: {
       app: [
         `webpack-dev-server/client?http://localhost:${WEBPACK_PORT}`,
@@ -51,14 +51,7 @@ export default {
       publicPath: PUBLIC_PATH
     },
     module: {
-      preLoaders: [
-        {
-          test: /\.js$|.jsx$/,
-          include: path.join(__dirname, '../app'),
-          exclude: /node-modules/,
-          loaders: ['eslint', 'jscs']
-        }
-      ],
+
       loaders: [
         {
           test: /\.json$/,
@@ -83,9 +76,10 @@ export default {
           loader: "file-loader"
         },
         {
-          test: /\.js$|.jsx$/,
+          test: /\.js$/,
           include: /app/,
-          loaders: ['react-hot', 'babel']
+          exclue: /node_modules/,
+          loaders: ['babel-loader']
         }
       ]
     },

@@ -1,8 +1,9 @@
 import React from 'react';
-import { addHighlight } from 'actions/actions';
+import { addHighlight } from 'actions/article';
 import { connect } from 'react-redux';
+import 'text-highlighter/src/TextHighlighter'
 
-import 'Article.scss';
+import { styles } from './styles.scss';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -13,23 +14,24 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mapStateToProps = state => {
-  return { highlights: state.articleReducers.highlights,
-           currentTopic: state.articleReducers.currentTopic };
+  return { highlights: state.article.highlights,
+           currentTopic: state.article.currentTopic };
 }
 
 const Article = React.createClass({
   displayName: 'Article',
 
-  contextTypes: {
-    params: React.PropTypes.object.isRequired
-  },
 
   propTypes: {
     article: React.PropTypes.object.isRequired,
-    topics: React.PropTypes.array.isRequired,
     onHighlight: React.PropTypes.func,
     highlights: React.PropTypes.array,
     currentTopic: React.PropTypes.string
+  },
+
+  componentDidMount: function() {
+    let articleContainer = document.getElementById('article-container');
+    this.annotationsObject = new TextHighlighter(articleContainer);
   },
 
   getOffset: function(childNodes, targetNode) {
@@ -71,8 +73,9 @@ const Article = React.createClass({
   },
 
   render() {
-    const {topic_id}: string = this.context.params
-    let topic = this.props.topics[topic_id];
+    // console.log(this.props);
+    // const {topic_id}: string = this.context.params
+    // let topic = this.props.topics[topic_id];
 
     var text = this.props.article.text;
     var highlights = this.props.highlights || [];
@@ -90,9 +93,9 @@ const Article = React.createClass({
     return (
       <div className='article'>
         <div className='tua__header-text'>
-          Focus on the bold text about '{topic.name}' and answer the questions.
+          Focus on the bold text about FOO and answer the questions.
         </div>
-        <div ref={(ref) => this.articleRef = ref} className='article' onClick={this.handleClick}>
+        <div ref={(ref) => this.articleRef = ref} id='article-container' className='article' onClick={this.handleClick}>
           {Array(highlights.length * 2).fill().map((_,i) => {
             var curHL = highlights[i / 2 | 0];
             if (i % 2 === 0) {

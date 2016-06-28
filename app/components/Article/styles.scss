@@ -1,12 +1,5 @@
-@import 'styleguide';
-
-@mixin newspaper {
-  // text-indent: 20px;
-  // Think about em-dashes and more spaces / automatic <p> creation
-  white-space: pre-wrap;
-  line-height: 1.5;
-  font-family: $font-newspaper;
-}
+@import 'app/containers/App/styles/_mixins.scss';
+@import 'app/containers/App/styles/_variables.scss';
 
 .text-wrapper {
   max-width: 500px;

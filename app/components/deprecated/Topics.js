@@ -1,6 +1,6 @@
 // TODO: marked for deletion: topic picking view doesn't need Q&A
 import React from 'react';
-import Question from 'components/annotation/Question';
+import Question from 'components/deprecated/Question';
 
 export default React.createClass({
   displayName: 'Topics',
