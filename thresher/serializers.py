@@ -1,10 +1,10 @@
 import json
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from models import (Article, SchemaTopic, Topic, Question, Answer,
+from models import (Article, Topic, Question, Answer,
                     HighlightGroup, MCSubmittedAnswer,
                     DTSubmittedAnswer, CLSubmittedAnswer,
-                    TBSubmittedAnswer, Client)
+                    TBSubmittedAnswer, Client, ArticleHighlight)
 
 
 # Custom JSON field
@@ -264,14 +264,30 @@ class HighlightGroupSerializer(serializers.Serializer):
 
         return highlight_group
 
-class SchemaTopicSerializer(serializers.ModelSerializer):
-    # A nested serializer for all the questions
+class ArticleHighlightSerializer(serializers.ModelSerializer):
+    article = ArticleSerializer()
+    highlight = HighlightGroupSerializer()
+    class Meta:
+        model = ArticleHighlight
+        fields = ('article', 'highlight')
+
+class TopicSerializer(serializers.ModelSerializer):
+        # A nested serializer for all the questions
     related_questions = QuestionSerializer(many=True)
 
     glossary = JSONSerializerField()
 
+    article_highlight = ArticleHighlightSerializer(many=True)
+
     class Meta:
-        model = SchemaTopic
+        model = Topic
         fields = ('id', 'parent', 'name',
                   'order', 'glossary', 'instructions', 
-                  'related_questions')
+                  'related_questions', 'article_highlight')
+
+class RootTopicSerializer(serializers.ModelSerializer):
+    glossary = JSONSerializerField()
+
+    class Meta:
+        model = Topic
+        fields = ('id', 'name', 'order', 'glossary', 'instructions')

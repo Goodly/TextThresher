@@ -43,10 +43,8 @@ class Article(models.Model):
             self.article_id, self.city_published, self.state_published,
             self.periodical)
 
-# SchemaTopics that are either parents of leaf topics, or leaf topics with questions.
-# Topics (defined further down) are "instances" of SchemaTopics, meaning that they
-# reference SchemaTopics' questions, answers, etc.
-class SchemaTopic(models.Model):
+# Topics that are either parents of leaf topics, or leaf topics with questions.
+class Topic(models.Model):
     # an id of its parent topic
     parent = models.ForeignKey("self", related_name="subtopics",
                                on_delete=models.CASCADE, null=True)
@@ -63,13 +61,13 @@ class SchemaTopic(models.Model):
     instructions = models.TextField()
 
     def validate_unique(self, exclude=None):
-        qs = SchemaTopic.objects.filter(name=self.name)
+        qs = Topic.objects.filter(name=self.name)
         if qs.filter(parent=self.parent).exists() and self.id != qs[0].id:
             raise ValidationError('Subtopics need to be unique.')
 
     def save(self, *args, **kwargs):
         self.validate_unique()
-        super(SchemaTopic, self).save(*args, **kwargs)
+        super(Topic, self).save(*args, **kwargs)
 
     class Meta:
         unique_together = ("parent", "order", "name")
@@ -79,28 +77,13 @@ class SchemaTopic(models.Model):
             return "Topic %s in Parent %s" % (self.name, self.parent.name)
         return "Topic %s (no parent)" % (self.name)
 
-# A Topic that is bound to a specific article.
-class Topic(models.Model):
-    # The schema topic we will be using
-    schema = models.ForeignKey(SchemaTopic, related_name="article_topic")
-
-    # The referenced article
-    article = models.ForeignKey(Article)
-
-    # The relevant offsets in the article text.
-    # Stored as a JSON list of (start, end) pairs.
-    highlight = models.OneToOneField("HighlightGroup")
-
-    def __unicode__(self):
-        return "Topic %s for Article %s" %(self.schema.name, self.article.article_id)
-
 # Question
 class Question(models.Model):
     # The question id the content is related to
     question_id = models.IntegerField()
 
     # The topic this question belongs to
-    topic = models.ForeignKey(SchemaTopic, related_name="related_questions", 
+    topic = models.ForeignKey(Topic, related_name="related_questions", 
                               on_delete=models.CASCADE)
 
     # The type of question (e.g. multiple choice, text box, ...)
@@ -176,6 +159,18 @@ class HighlightGroup(models.Model):
         
         return cl_answers + mc_answers + tb_answers + dt_answers
 
+# A container class for an Article and its Highlight Group
+# that will be referenced by a topic
+class ArticleHighlight(models.Model):
+    topic = models.ForeignKey(Topic, related_name="article_highlight",
+                              on_delete=models.CASCADE)
+    highlight = models.OneToOneField(HighlightGroup)
+    article = models.ForeignKey(Article, related_name="highlight_groups", on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return ("Highlights %s in Article %d") % (self.highlight.offsets, 
+                                                  self.article.article_id)
+
 # A submitted answer to a question
 # This is an abstract class which is subclassed to represent
 # specifi types of answers (MC, CL, TB, ...)
@@ -250,4 +245,3 @@ class DTSubmittedAnswer(SubmittedAnswer):
     
     # The submitted date time answer
     answer = models.DateTimeField()
-    
