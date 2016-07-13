@@ -1,0 +1,1 @@
+web: gunicorn --access-logfile access.log --error-logfile error.log --log-level debug thresher_backend.wsgi

@@ -1,0 +1,5 @@
+title: Events
+
+Instructions: Highlight the text that describes the following topic.
+
+glossary: major event: A major event.

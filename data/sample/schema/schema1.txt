@@ -1,0 +1,118 @@
+Please use this module as a guide for formatting your modules to the EXACT wording, grammar, punctuation, etc. Ive written comments on the things you should be looking for as well as last-minute changes weve (Sofie and I) made.
+
+title: Protester
+parent: Events
+
+1 Event type
+
+? 01 mc What type of event is described in the highlighted text?
+a March/Parade
+b Rally/Demonstration
+c Strike
+d Blocking Action
+e Establishing a Camp
+f Moving a camp to a new location
+g Disrupting an on-going event of the perceived 1%
+h Divestment Action
+i Voluntary Dissolution of a camp
+j Strategic Violence
+k Strategic Sabotage
+
+if 01 == d, then 02
+if 01 == g, then 03
+if 01 == j, then 05
+if 01 == k, then 06
+
+* 02 mc What did the crowd block?
+a Sidewalk 
+b Street 
+c Public transportation 
+d Airport 
+e Shipping port 
+f Other
+
+* 03 mc What type of event did the protesters disrupt?
+a Political campaign
+b Politician's speech
+c City council meeting
+d Auction
+e Country Club event
+f Other
+
+if 03 == *, then 04
+
+* 04 mc What is the title of the 1% who is being protested against?
+a CEO of a company
+b City mayor
+c City council member
+d State legislator
+e U.S. president
+f Other
+
+* 05 mc What type of strategic violence occurred?
+a Kidnapping
+b Assassination
+c Bombing
+d Assault 
+e Other
+
+* 06 mc What type of strategic sabotage occurred?
+a Pre-planned vandalism
+b Pre-planned arson 
+c Other 
+
+? 07 mc A dummy question
+a A dummmy answer
+
+2 Event Location
+? 01 mc Which of the following information does the text give about the event's location?
+a The exact location or address
+b An approximate location, or clues about where the event took place
+c Information not given
+
+if 01 == a, then 02
+if 01 == b, then 03
+
+* 02 tb Exactly where did the event take place?
+
+* 03 mc Approximately where did the event take place?
+a Local bank 
+b Local park 
+c Near protester camp
+d Downtown
+e Near City Hall
+f Other
+
+Instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below.
+
+glossary: blocking action: protesters intentionally block access to transportation or commercial infrastructure. E.g. protesters block access to government buildings, streets, sidewalks, light rail systems, bank buildings, shipping ports, etc.
+
+glossary: camp:
+
+glossary: community response:
+
+glossary: counter-protester: individual protesting against the occupy movement
+
+glossary: disrupting an on-going event of the perceived 1%: protesters disrupt an event held by people they oppose eg protesters shout down politician who is speaking, intentionally disrupt city council meeting, or interrupt the proceedings of a fundraiser, etc.
+	
+glossary: divestment action: protesters close their accounts with banks they oppose and encourage others to do so as well.
+
+glossary: establishing a camp: protesters set up two or more tents with the intention of camping multiple nights on location. 
+
+glossary: independent: citizen or other person not affiliated with the camp, media, police, or city 
+
+glossary: injuries: 
+
+glossary: march/parade: protesters move along a path usually chanting and holding signs. Note: if protesters spend time at their starting point or destination listening to speeches or musicians, that should be counted as a rally (an event separate from the march/parade). 
+
+glossary: moving a camp to a new location: protesters pack up tents and structures and leave the site of their encampment and establish a camp at a new location. Note: if only some campers leave the original camp the event should be categorized as the establishment of a new camp. (NOTE: implies the dissolution of the previous camp, so only count it as a move if the other camp is dissolving in the process. if the old camp survives while some of the people move to a new location, the move to a new location should simply be coded as the establishment of a new camp.)	
+
+glossary: rally/demonstration: protesters stay in one spot while listening to speeches or musicians, chanting, carrying signs, etc. 
+
+glossary: strategic violence: protesters carry out a pre-planned act of violence against other humans eg. Kidnapping, bombing, assassination, assault. Note: only use this classification for the event if it is clear that the highlighted text describes activities that were planned in advance.	
+
+glossary: strategic sabotage: protesters carry out pre-planned act of destruction of physical property eg vandalism, setting fires, breaking windows, etc. Note: only use this classification for the event if it is clear that the highlighted text describes activities that were planned in advance.	
+
+glossary: strike: protesters and allies refuse to work at a specified time. Sometimes participants will carry signs and attempt to shame people who do not participate.		
+
+glossary: voluntary dissolution of a camp: protesters pack up tents and structures and leave the site of their encampment without being directly forced by police officers.

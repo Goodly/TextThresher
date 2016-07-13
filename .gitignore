@@ -3,4 +3,25 @@ vendor/bower_components
 node_modules
 testem.*.json
 tests.tap
+
+# emacs artifacts
+*~
+*#
+
+# intellij artifacts
+.idea/
+*.iml
+
+# python artifacts
+*.pyc
+.Python
+bin/
+include/
+lib/
+pip-selfcheck.json
+
+# django artifacts
+staticfiles
+
+# gunicorn artifacts
 *.log
