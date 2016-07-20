@@ -31,8 +31,9 @@ export class TopicHighlighter extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     if (this.props.curArticle != nextProps.routeParams.articleId){
-      this.props.getArticle(nextProps.routeParams.articleId);
+      this.props.fetchArticle(nextProps.routeParams.articleId);
     }
   }
 

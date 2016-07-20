@@ -3,6 +3,18 @@ export const ACTIVATE_TOPIC = 'ACTIVATE_TOPIC';
 export const NEW_QUESTIONS = 'NEW_QUESTIONS';
 export const NEW_ARTICLE = 'NEW_ARTICLE';
 
+export function fetchArticle(articleId) {
+  return (dispatch) => {
+    dispatch({ type: 'FETCH_ARTICLE'});
+
+    return fetch(`http://localhost:5000/api/articles/${articleId}/?format=json`).then(
+      (response) => dispatch({ type: 'FETCH_SUCCESS', response}),
+      (error) => dispatch({ type: 'FETCH_FAIL', error})
+    );
+  };
+}
+
+
 export function addHighlight(start, end, selectedText) {
   return { type: ADD_HIGHLIGHT, selection: {start, end, selectedText} };
 }

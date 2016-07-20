@@ -9,8 +9,8 @@ import Quiz from 'components/quiz/Quiz';
 export default (
   <Route path='/' component={App}>
     <Route
-      name='topic'
-      path='topics/:articleId'
+      name='article'
+      path='article/:articleId'
       component={TopicHighlighter} />
     <Route
       name='quiz'

@@ -18,7 +18,7 @@ function getInitialState() {
 }
 
 const initialState = Object.assign({
-  article: [],
+  article: {},
   topics: [],
   highlights: [],
   curArticle: null
@@ -82,6 +82,11 @@ export function article(state = initialState, action) {
       return {
         ...state,
         curArticle: Number(action.articleId)
+      }
+    case 'FETCH_SUCCESS':
+      return {
+        ...state,
+        curArticle: arguments
       }
     default:
       return state;
