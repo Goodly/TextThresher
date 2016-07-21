@@ -9,12 +9,17 @@ import * as articleActionCreators from 'actions/article';
 const assembledActionCreators = Object.assign({}, articleActionCreators)
 
 import Article from 'components/Article';
-import TopicPicker from 'components/topicPicker';
+import TopicPicker from 'components/TopicPicker';
+
+import { styles } from './styles.scss';
 
 const mapStateToProps = state => {
-  return { articles: state.article.articles,
-           topics: state.article.topics,
-           curArticle: state.article.curArticle };
+  return {
+    article: state.article.article,
+    articles: state.article.articles,
+    topics: state.article.topics,
+    curArticle: state.article.curArticle
+  };
 }
 
 @connect (
@@ -31,7 +36,6 @@ export class TopicHighlighter extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (this.props.curArticle != nextProps.routeParams.articleId){
       this.props.fetchArticle(nextProps.routeParams.articleId);
     }
@@ -48,7 +52,7 @@ export class TopicHighlighter extends Component {
     if (cur_article == null) {
       return false
     }
-    let article = this.props.articles[cur_article];
+    let article = this.props.article;
     let topics = this.props.topics[cur_article];
 
     return (
@@ -57,8 +61,11 @@ export class TopicHighlighter extends Component {
                                 transitionAppearTimeout={500}
                                 transitionEnterTimeout={500}
                                 transitionLeaveTimeout={500}>
+        <div className='topic-picker-wrapper col-xs-4'>
+          <TopicPicker {...this.props}/>
+        </div>
         <div className='tua'>
-          <div className='text-wrapper'>
+          <div className='article-wrapper col-xs-8'>
             <ReactCSSTransitionsGroup transitionName='fade-between'
                                       transitionAppear
                                       transitionAppearTimeout={500}
@@ -69,7 +76,6 @@ export class TopicHighlighter extends Component {
             <br/>
             <button onClick={this.handleNext}>Next</button>
           </div>
-          <TopicPicker {...this.props}/>
         </div>
       </ReactCSSTransitionsGroup>
     );

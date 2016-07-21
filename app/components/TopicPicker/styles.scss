@@ -4,11 +4,10 @@
 $topic-picker-nav-width: 25%;
 
 .topic-picker {
-  position: relative;;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 70%;
-  height: 100vw;
+  z-index: 3;
 
   background-color: $offblack;
   overflow: hidden;
@@ -47,7 +46,7 @@ $topic-picker-nav-width: 25%;
   }
 
   &:hover, &--open {
-    height: 300px;
+    height: 400px;
     background-color: $offwhite;
 
     .topic-picker__wrapper {

@@ -1,7 +1,7 @@
 import React from 'react';
 import jquery from 'jquery';
 
-import 'CollapsibleList.scss';
+import 'styles/CollapsibleList.scss';
 
 export default React.createClass({
   displayName: 'CollapsibleList',

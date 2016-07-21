@@ -1,6 +1,7 @@
 import React from 'react';
 import { addHighlight } from 'actions/article';
 import { connect } from 'react-redux';
+
 import 'text-highlighter/src/TextHighlighter'
 
 import { styles } from './styles.scss';
@@ -14,12 +15,14 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mapStateToProps = state => {
-  return {currentTopic: state.article.currentTopic };
+  return {
+    article: state.article.article,
+    currentTopic: state.article.currentTopic
+  };
 }
 
 const Article = React.createClass({
   displayName: 'Article',
-
 
   propTypes: {
     article: React.PropTypes.object.isRequired
@@ -31,12 +34,14 @@ const Article = React.createClass({
   },
 
   render() {
+    let article = this.props.article.article;
     var text = this.props.article.text;
 
+    let fetchingClass = this.props.article.isFetching ? 'is-fetching' : '';
     return (
-      <div className='article'>
+      <div className={`article ${fetchingClass}`}>
         <div className='tua__header-text'>
-          Focus on the bold text about FOO and answer the questions.
+          Focus on the bold text and answer the questions.
         </div>
         <div ref={(ref) => this.articleRef = ref} id='article-container' className='article'>
           {text}
