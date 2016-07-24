@@ -40,10 +40,10 @@ const Article = React.createClass({
     let fetchingClass = this.props.article.isFetching ? 'is-fetching' : '';
     return (
       <div className={`article ${fetchingClass}`}>
-        <div className='tua__header-text'>
-          Focus on the bold text and answer the questions.
+        <div className='article__header-text'>
+          Please skim the text below and highlight words about the Topics listed in the margins.
         </div>
-        <div ref={(ref) => this.articleRef = ref} id='article-container' className='article'>
+        <div ref={(ref) => this.articleRef = ref} id='article-container'>
           {text}
         </div>
       </div>

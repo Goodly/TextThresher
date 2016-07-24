@@ -1,6 +1,4 @@
 import React from 'react';
-import jquery from 'jquery';
-import CollapsibleList from 'components/collapsibleList';
 import { fetchTopic } from 'actions/article';
 import { connect } from 'react-redux';
 
@@ -33,11 +31,6 @@ const TopicPicker = React.createClass({
   componentDidMount() {
   },
 
-  toggleTopicTray() {
-    // DO WE NEED THIS FUNCTIONALITY?
-    console.log('toggleTopicTray');
-  },
-
   activateTopic(e) {
     console.log(e);
   },
@@ -48,33 +41,18 @@ const TopicPicker = React.createClass({
 
     return (
       <div className='topic-picker topic-picker--left topic-picker--open'>
+        <div className="topic-picker__header">
+          Click a topic name to change highlighter color
+        </div>
         <ul className='topic-picker__nav'>
           { topics.map(topic => {
             return (
-              <li onClick={this.activateTopic} key={topic.id}
-                  data-topic={topic.id}
-                  style={{height: 100 / topics.length + '%'}}
-              >
+              <li onClick={this.activateTopic} key={topic.id}>
                 <b>{topic.name}</b>
               </li>
             );
           })}
         </ul>
-        <div className='topic-picker__wrapper'>
-          {topics.map(topic => {
-            return (
-              <div key={topic.id} className='topic-wrapper' data-topic={topic.id}>
-                <div className='topic-wrapper__topic'>
-                  { topic.description }
-                  <CollapsibleList />
-                </div>
-              </div>
-            )})
-          }
-          <div className='topic-picker__pin-button topic-picker__pin-button--active' onClick={this.toggleTopicTray}>
-            <i className='fa fa-thumb-tack fa-lg'></i>
-          </div>
-        </div>
       </div>
     );
   }

@@ -1,24 +1,32 @@
 import topicJsonMock from '../assets/topic_0_mock.json';
+import { browserHistory } from 'react-router';
+import { getIntOfLength } from 'utils/math';
+
+const ARTICLE_INDEX_ARRAY = [0, 9, 11, 38, 53, 55, 202, 209, 236, 259];
+
+function getNextArticle(articleId) {
+  let currentIndex = ARTICLE_INDEX_ARRAY.indexOf(articleId);
+  ARTICLE_INDEX_ARRAY.splice(currentIndex, 1);
+  console.log(ARTICLE_INDEX_ARRAY.length);
+  return ARTICLE_INDEX_ARRAY[getIntOfLength(ARTICLE_INDEX_ARRAY)];
+}
 
 function getInitialState() {
   return {
-    article: {
-      isFetching: true
-    },
+    article: {},
+    currentArticle: null,
+    nextArticle: null,
     topics: topicJsonMock.results
   };
 }
 
 const initialState = Object.assign({
   article: {},
+  articleIndex: [],
   topics: [],
-  highlights: [],
-  curArticle: null,
+  highlights: []
 }, getInitialState());
 
-function mergeHighlights(list) {
-
-}
 
 export function article(state = initialState, action) {
   console.log(action);
@@ -27,12 +35,16 @@ export function article(state = initialState, action) {
       console.log('ADD_HIGHLIGHT :: ACTION_PLAYING!');
     case 'ACTIVATE_TOPIC':
       return Object.assign({}, state, { currentTopic: action.topic });
-    case 'GET_ARTICLE':
+    case 'FETCH_ARTICLE':
       return {
         ...state,
-        curArticle: Number(action.articleId)
+        article: {
+          isFetching: true
+        },
+        currentArticle: Number(action.articleId),
+        nextArticle: getNextArticle(action.articleId)
       }
-    case 'FETCH_SUCCESS':
+    case 'FETCH_ARTICLE_SUCCESS':
       return {
         ...state,
         article: action.response
