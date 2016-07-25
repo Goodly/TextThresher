@@ -44,9 +44,7 @@ export class TopicHighlighter extends Component {
 
   render() {
     let current_article = this.props.currentArticle;
-    if (current_article == null) {
-      return false
-    }
+
     let article = this.props.article;
     let topics = this.props.topics[current_article];
 
@@ -68,7 +66,7 @@ export class TopicHighlighter extends Component {
                                       transitionAppearTimeout={500}
                                       transitionEnterTimeout={500}
                                       transitionLeaveTimeout={500}>
-              <Article article={article} key={current_article}/>
+            {<Article article={article} key={current_article}/>}
             </ReactCSSTransitionsGroup>
             <br/>
             <button><Link to={`/article/${this.props.nextArticle}`}>Next Article</Link></button>

@@ -14,10 +14,6 @@ export default React.createClass({
     children: React.PropTypes.object.isRequired
   },
 
-  onChange() {
-    this.setState(this.getInitialState());
-  },
-
   render() {
     return (
       <Provider store={store}>

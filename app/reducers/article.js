@@ -1,5 +1,4 @@
 import topicJsonMock from '../assets/topic_0_mock.json';
-import { browserHistory } from 'react-router';
 import { getIntOfLength } from 'utils/math';
 
 const ARTICLE_INDEX_ARRAY = [0, 9, 11, 38, 53, 55, 202, 209, 236, 259];
@@ -7,7 +6,6 @@ const ARTICLE_INDEX_ARRAY = [0, 9, 11, 38, 53, 55, 202, 209, 236, 259];
 function getNextArticle(articleId) {
   let currentIndex = ARTICLE_INDEX_ARRAY.indexOf(articleId);
   ARTICLE_INDEX_ARRAY.splice(currentIndex, 1);
-  console.log(ARTICLE_INDEX_ARRAY.length);
   return ARTICLE_INDEX_ARRAY[getIntOfLength(ARTICLE_INDEX_ARRAY)];
 }
 

@@ -25,16 +25,9 @@ const TopicPicker = React.createClass({
     topics: React.PropTypes.array.isRequired,
   },
 
-  getDefaultProps() {
+  activateTopic(topicId, props) {
+    console.log(topicId);
   },
-
-  componentDidMount() {
-  },
-
-  activateTopic(e) {
-    console.log(e);
-  },
-
 
   render() {
     let topics = this.props.topics;
@@ -47,7 +40,7 @@ const TopicPicker = React.createClass({
         <ul className='topic-picker__nav'>
           { topics.map(topic => {
             return (
-              <li onClick={this.activateTopic} key={topic.id}>
+              <li onClick={this.activateTopic.bind(this, topic.id, this.props)} key={topic.id}>
                 <b>{topic.name}</b>
               </li>
             );
