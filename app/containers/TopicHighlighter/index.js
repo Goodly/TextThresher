@@ -51,6 +51,7 @@ export class TopicHighlighter extends Component {
     if (this.props.nextArticle == undefined) {
       return (<div>DONE</div>) // TODO: Clean this up.
     }
+
     return (
       <ReactCSSTransitionsGroup transitionName='fadein'
                                 transitionAppear

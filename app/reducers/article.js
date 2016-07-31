@@ -4,8 +4,7 @@ import { getIntOfLength } from 'utils/math';
 const ARTICLE_INDEX_ARRAY = [0, 9, 11, 38, 53, 55, 202, 209, 236, 259];
 
 function getNextArticle(articleId) {
-  let currentIndex = ARTICLE_INDEX_ARRAY.indexOf(articleId);
-  ARTICLE_INDEX_ARRAY.splice(currentIndex, 1);
+  ARTICLE_INDEX_ARRAY.splice(ARTICLE_INDEX_ARRAY.indexOf(articleId), 1);
   return ARTICLE_INDEX_ARRAY[getIntOfLength(ARTICLE_INDEX_ARRAY)];
 }
 
@@ -34,13 +33,14 @@ export function article(state = initialState, action) {
     case 'ACTIVATE_TOPIC':
       return Object.assign({}, state, { currentTopic: action.topic });
     case 'FETCH_ARTICLE':
+      let nextArticleIndex = getNextArticle(Number(action.articleId));
       return {
         ...state,
         article: {
           isFetching: true
         },
         currentArticle: Number(action.articleId),
-        nextArticle: getNextArticle(action.articleId)
+        nextArticle: nextArticleIndex
       }
     case 'FETCH_ARTICLE_SUCCESS':
       return {
