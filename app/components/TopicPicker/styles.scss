@@ -1,0 +1,60 @@
+@import 'app/styles/_mixins.scss';
+@import 'app/styles/_variables.scss';
+
+$topic-picker-nav-width: 25%;
+
+.topic-picker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  height: 100%;
+  width: 250px;
+  background-color: $offblack;
+  overflow: hidden;
+  transition: background $transition-fast;
+
+  .topic-picker__header {
+    background-color: $offwhite;
+    padding: 1em;
+  }
+
+  ul.topic-picker__nav {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    li {
+      color: $offwhite;
+      height: 4em;
+      padding: 1em 2em;
+      font-family: $font-ui;
+      font-size: 1.1em;
+      background-color: $offblack;
+      letter-spacing: 2px;
+      text-align: center;
+      text-transform: uppercase;
+      list-style: none;
+    }
+
+    li:nth-child(1) {
+      &:hover, &.active {
+        background-color: $red_accent;
+      }
+    }
+    li:nth-child(2) {
+      &:hover, &.active {
+        background-color: $yellow_accent;
+      }
+    }
+    li:nth-child(3) {
+      &:hover, &.active {
+        background-color: $green_accent;
+      }
+    }
+    li:nth-child(4) {
+      &:hover, &.active {
+        background-color: $blue_accent;
+      }
+    }
+  }
+}

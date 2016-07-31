@@ -22,6 +22,7 @@ pip-selfcheck.json
 
 # django artifacts
 staticfiles
+_postgres_data
 
 # gunicorn artifacts
 *.log

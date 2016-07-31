@@ -12,6 +12,11 @@ const PUBLIC_PATH = `${PROTOCOL}://${HOST}:${PORT}/app/`;
 const WEBPACK_PORT = parseInt(process.env.PORT) + 1 || 3001;
 const bowerPath = path.join(__dirname, '../vendor/bower_components');
 
+const PATHS = {
+  app: path.join(__dirname, '../app'),
+  build: path.join(__dirname, '../dist')
+};
+
 let resolveBowerPath = function(componentPath) {
   return path.join(bowerPath, componentPath);
 };
@@ -42,6 +47,15 @@ export default {
         'webpack/hot/only-dev-server',
         './app/index'
       ]
+    },
+    resolve: {
+      alias: {
+        modernizr: resolveBowerPath('modernizr/modernizr.js'),
+        bootstrap_sass: resolveBowerPath('bootstrap-sass/assets/stylesheets/_bootstrap.scss'),
+        jquery: resolveBowerPath('jquery/dist/jquery.js')
+      },
+      extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png'],
+      modulesDirectories: ['node_modules', 'web_modules', bowerPath, PATHS.app]
     },
     publicPath: PUBLIC_PATH,
     output: {
@@ -101,18 +115,6 @@ export default {
       new webpack.optimize.OccurenceOrderPlugin(),
 
     ],
-    noParse: [bowerPath, 'node_modules'],
-    resolve: {
-      alias: {
-        modernizr: resolveBowerPath('modernizr/modernizr.js'),
-        bootstrap_sass: resolveBowerPath('bootstrap-sass/assets/stylesheets/_bootstrap.scss'),
-        jquery: resolveBowerPath('jquery/dist/jquery.js')
-      },
-      extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png'],
-      modulesDirectories: ['app', 'node_modules', 'web_modules', bowerPath],
-      root: [
-        path.resolve('./app/styles'),
-      ]
-    }
+    noParse: [bowerPath, 'node_modules']
   }
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import 'Quiz.scss';
+import 'styles/Quiz.scss';
 
 export default React.createClass({
   displayName: 'QuizAnswer',

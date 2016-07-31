@@ -17,4 +17,4 @@ devServer.listen(config.server.port, 'localhost', function () {
 });
 
 console.log('server available at:'.underline.yellow);
-console.log('http://localhost:3001/app/#/topics/0'.underline.yellow);
+console.log(`http://localhost:${config.server.port}/app/#/article/0`.underline.yellow);

@@ -1,87 +1,51 @@
-// import api from '../api.js';
-
-import articleJsonMock_0 from '../assets/article_0_mock.json';
-import articleJsonMock_9 from '../assets/article_9_mock.json';
-
 import topicJsonMock from '../assets/topic_0_mock.json';
+import { getIntOfLength } from 'utils/math';
 
-// NOTE: create mock article routes at `/topics/0` and `/topics/9`
-var articleMock = new Array(9)
-articleMock[0] = articleJsonMock_0
-articleMock[9] = articleJsonMock_9
+const ARTICLE_INDEX_ARRAY = [0, 9, 11, 38, 53, 55, 202, 209, 236, 259];
+
+function getNextArticle(articleId) {
+  ARTICLE_INDEX_ARRAY.splice(ARTICLE_INDEX_ARRAY.indexOf(articleId), 1);
+  return ARTICLE_INDEX_ARRAY[getIntOfLength(ARTICLE_INDEX_ARRAY)];
+}
 
 function getInitialState() {
   return {
-    articles: articleMock,
+    article: {},
+    currentArticle: null,
+    nextArticle: null,
     topics: topicJsonMock.results
   };
 }
 
 const initialState = Object.assign({
-  article: [],
+  article: {},
+  articleIndex: [],
   topics: [],
-  highlights: [],
-  curArticle: null
+  highlights: []
 }, getInitialState());
 
-function mergeHighlights(list) {
-  // TODO: write tests for me
-  var newlist = [];
-  var n = list.length;
-  for (var i = 0; i < n;) {
-    var newrange = Object.assign({}, list[i]);
-    for (var j = i + 1; j < n; j++) {
-      if (list[i].end >= list[j].start) {
-        newrange.text += list[j].text.substring(
-          Math.min(newrange.end, list[j].end) - list[j].start, list[j].end
-        );
-        newrange.end = Math.max(list[j].end, newrange.end);
-        continue;
-      } else {
-        break;
-      }
-    }
-    i = j;
-    newlist.push(newrange);
-  }
-  return newlist;
-}
 
 export function article(state = initialState, action) {
   console.log(action);
   switch (action.type) {
     case 'ADD_HIGHLIGHT':
-      var newHighlights = state.highlights.concat(
-        { start: action.selection.start,
-          end: action.selection.end,
-          text: action.selection.selectedText,
-          topic: state.currentTopic }
-      ).sort((a,b) => {
-        if (a.start === b.start) {
-          return 0;
-        } else if (a.start < b.start) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-      return Object.assign({}, state,
-                           { highlights: mergeHighlights(newHighlights) });
-    // case NEW_ARTICLE:
-    //   api.sendHighlights(state.highlights);
-    //   if (!action.article || action.article >= state.articles.length) {
-    //     return Object.assign({}, state, { articles: api.getArticles(),
-    //                                       highlights: [],
-    //                                       curArticle: 0 });
-    //   }
-    //   return Object.assign({}, state, { highlights: [],
-    //                                     curArticle: state.curArticle + 1 });
+      console.log('ADD_HIGHLIGHT :: ACTION_PLAYING!');
     case 'ACTIVATE_TOPIC':
       return Object.assign({}, state, { currentTopic: action.topic });
-    case 'GET_ARTICLE':
+    case 'FETCH_ARTICLE':
+      let nextArticleIndex = getNextArticle(Number(action.articleId));
       return {
         ...state,
-        curArticle: Number(action.articleId)
+        article: {
+          isFetching: true
+        },
+        currentArticle: Number(action.articleId),
+        nextArticle: nextArticleIndex
+      }
+    case 'FETCH_ARTICLE_SUCCESS':
+      return {
+        ...state,
+        article: action.response
       }
     default:
       return state;

@@ -1,45 +1,55 @@
-@import 'app/containers/App/styles/_mixins.scss';
-@import 'app/containers/App/styles/_variables.scss';
+@import 'app/styles/_mixins.scss';
+@import 'app/styles/_variables.scss';
 
-.text-wrapper {
-  max-width: 500px;
-  margin: 0 auto;
-  /* Make selection not span the whole page, just this div */
-  position: relative;
+.article {
+  @include newspaper;
+  transition: opacity $transition-slow;
 
-  .article {
-    @include newspaper;
-    transition: opacity $transition-slow;
-
-    .highlighted {
-      // TODO: generate programmatically?
+  .highlighted {
+    // TODO: generate programmatically?
+    background-color: $red_accent;
+    &.topic1 {
       background-color: $red_accent;
-      &.topic1 {
-        background-color: $red_accent;
-      }
-      &.topic2 {
-        background-color: $yellow_accent;
-      }
-      &.topic3 {
-        background-color: $green_accent;
-      }
-      &.topic4 {
-        background-color: $blue_accent;
-      }
     }
-
-    /* react makes this not work */
-    &[data-topic="1"]::selection {
-      background: $red_accent;
+    &.topic2 {
+      background-color: $yellow_accent;
     }
-    &[data-topic="2"]::selection {
-      background: $yellow_accent;
+    &.topic3 {
+      background-color: $green_accent;
     }
-    &[data-topic="3"]::selection {
-      background: $green_accent;
-    }
-    &[data-topic="4"]::selection {
-      background: $blue_accent;
+    &.topic4 {
+      background-color: $blue_accent;
     }
   }
+
+  /* react makes this not work */
+  &[data-topic="1"]::selection {
+    background: $red_accent;
+  }
+  &[data-topic="2"]::selection {
+    background: $yellow_accent;
+  }
+  &[data-topic="3"]::selection {
+    background: $green_accent;
+  }
+  &[data-topic="4"]::selection {
+    background: $blue_accent;
+  }
+  &.is-fetching {
+    border: 2px dotted black; //TODO: REMOVE THESE TEMP STYLES
+    opacity: 0.5;
+  }
+
+  .article__header-text {
+    font-size: 2em;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+
+  #article-container {
+    padding: 1em;
+    border: 1px solid black;
+  }
+
 }
