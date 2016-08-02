@@ -42,6 +42,25 @@ export class TopicHighlighter extends Component {
     }
   }
 
+  articleNotLoaded() {
+    if(this.props.article.isFetching) {
+      return (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            zIndex: '100',
+            top: '0px',
+            position: 'fixed',
+            backgroundColor: 'rgba(30, 30, 30, 0.2)'
+          }}
+      ></div>
+      );
+    } else {
+      return <div></div>;
+    }
+  }
+
   render() {
     let current_article = this.props.currentArticle;
 
@@ -58,6 +77,7 @@ export class TopicHighlighter extends Component {
                                 transitionAppearTimeout={500}
                                 transitionEnterTimeout={500}
                                 transitionLeaveTimeout={500}>
+        { this.articleNotLoaded() }
         <div className='topic-picker-wrapper'>
           <TopicPicker {...this.props}/>
         </div>
