@@ -42,42 +42,32 @@ export class TopicHighlighter extends Component {
     }
   }
 
-  articleNotLoaded() {
-    if(this.props.article.isFetching) {
-      return (
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            zIndex: '100',
-            top: '0px',
-            position: 'fixed',
-            backgroundColor: 'rgba(30, 30, 30, 0.2)'
-          }}
-      ></div>
-      );
-    } else {
-      return <div></div>;
-    }
-  }
-
   render() {
     let current_article = this.props.currentArticle;
 
     let article = this.props.article;
     let topics = this.props.topics[current_article];
 
+    let loadingClass = '';
+
     if (this.props.nextArticle == undefined) {
       return (<div>DONE</div>) // TODO: Clean this up.
     }
+
+    if (this.props.article.isFetching) {
+      loadingClass = 'loading';
+    }
+
+    console.log(this.props.article.isFetching, loadingClass);
 
     return (
       <ReactCSSTransitionsGroup transitionName='fadein'
                                 transitionAppear
                                 transitionAppearTimeout={500}
                                 transitionEnterTimeout={500}
-                                transitionLeaveTimeout={500}>
-        { this.articleNotLoaded() }
+                                transitionLeaveTimeout={500}
+                                className='loading-screen'>
+        <div className={loadingClass}></div>
         <div className='topic-picker-wrapper'>
           <TopicPicker {...this.props}/>
         </div>
