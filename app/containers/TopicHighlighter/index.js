@@ -58,15 +58,12 @@ export class TopicHighlighter extends Component {
       loadingClass = 'loading';
     }
 
-    console.log(this.props.article.isFetching, loadingClass);
-
     return (
       <ReactCSSTransitionsGroup transitionName='fadein'
                                 transitionAppear
                                 transitionAppearTimeout={500}
                                 transitionEnterTimeout={500}
-                                transitionLeaveTimeout={500}
-                                className='loading-screen'>
+                                transitionLeaveTimeout={500}>
         <div className={loadingClass}></div>
         <div className='topic-picker-wrapper'>
           <TopicPicker {...this.props}/>
