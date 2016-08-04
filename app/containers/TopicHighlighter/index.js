@@ -27,6 +27,7 @@ const mapStateToProps = state => {
     mapStateToProps,
     dispatch => bindActionCreators(assembledActionCreators, dispatch)
 )
+
 export class TopicHighlighter extends Component {
   constructor(props) {
     super(props);
@@ -48,15 +49,11 @@ export class TopicHighlighter extends Component {
     let article = this.props.article;
     let topics = this.props.topics[current_article];
 
-    let loadingClass = '';
-
     if (this.props.nextArticle == undefined) {
       return (<div>DONE</div>) // TODO: Clean this up.
     }
 
-    if (this.props.article.isFetching) {
-      loadingClass = 'loading';
-    }
+    let loadingClass = this.props.article.isFetching ? 'loading' : '';
 
     return (
       <ReactCSSTransitionsGroup transitionName='fadein'
