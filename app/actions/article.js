@@ -31,16 +31,19 @@ export function getArticle(articleId) {
   };
 }
 
-export function addHighlight(start, end, selectedText) {
+/*export function addHighlight(start, end, selectedText) {
   return {
     type: 'ADD_HIGHLIGHT',
     selection: {start, end, selectedText}
   };
-}
+}*/
 
-export function activateTopic(topicId) {
+/*export function activateTopic(topicId) {
   return {
     type: 'ACTIVATE_TOPIC',
     topicId
   }
+}*/
+export function activateTopic(topic) {
+  return { type: 'ACTIVATE_TOPIC', topic };
 }

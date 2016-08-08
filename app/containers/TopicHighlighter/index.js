@@ -45,7 +45,8 @@ export class TopicHighlighter extends Component {
 
   render() {
     let current_article = this.props.currentArticle;
-
+    console.log('topichighlighter')
+    console.log(this.props)
     let article = this.props.article;
     let topics = this.props.topics[current_article];
 
