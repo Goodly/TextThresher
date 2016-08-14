@@ -118,7 +118,7 @@ def load_article(article):
     print 'loading article...'
 
 def load_schema_dir(dirpath):
-    for schema_file in os.listdir(dirpath):
+    for schema_file in sorted(os.listdir(dirpath)):
         if os.path.splitext(schema_file)[1] != '.txt':
             continue
         load_schema(parse_schema(os.path.join(dirpath, schema_file)))
