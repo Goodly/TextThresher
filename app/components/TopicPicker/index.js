@@ -43,7 +43,7 @@ const TopicPicker = React.createClass({
     };
   },
 
-  getDefaultProps() {
+  /*getDefaultProps() {
     return {
       // TODO: we're getting topics in props, but it's structure looks outdated
       // in any case it needs to be removed or refactored as topic data
@@ -57,60 +57,11 @@ const TopicPicker = React.createClass({
         { id: '4', name: 'Topic 4', description: '' }
       ]
     };
-  },
-
-  /*componentDidMount() {
-    // TODO: once everything is react-ified we shouldn't need jquery
-    // though this is arguably much less boilerplate code than react
-    //var $ = jquery;
-    var _this = this;
-
-    /*
-    What does this do?
-    activateTopic:
-    - removes active from all list elements
-    - adds active class to the current topic's list element
-    - change the data-topic attribute to the current topic
-    - hide all topic-wrappers
-    - show onlythe topic-wrapper of the current topic
-    - calls onActivateTopic of the original props to activate the topic
-
-    document.ready section:
-    - when pin-bottom is clicked,
-    - topic picker add topic-picker--open class
-    - changes button to topic-pocker__pin-buttom--active
-    - when topic-picker__nav li element is clicked activateTopic of that element,
-    with its data-topic attribute as the parameter
-    */
-
-
-
-    /*function deleteMeSomeday() {
-      function activateTopic(topic) {
-        $('.topic-picker__nav li').removeClass('active'); //done
-        $(`.topic-picker__nav li[data-topic='${topic}']`).addClass('active'); //done
-        $('.text-wrapper__text').attr('data-topic', topic);
-
-        $('.topic-wrapper').hide();
-        $(`.topic-wrapper[data-topic="${topic}"]`).show();
-
-        _this.props.onActivateTopic(topic);
-      }
-
-      $(document).ready(() => {
-        $('.topic-picker__pin-button').click(function() {
-          $('.topic-picker').toggleClass('topic-picker--open');
-          $(this).toggleClass('topic-picker__pin-button--active');
-        });
-        $('.topic-picker__nav li').click(function() {
-          activateTopic($(this).attr('data-topic'));
-        });
-
-        activateTopic('1');
-      });
-    }
-    deleteMeSomeday();
   },*/
+
+  componentDidMount() {
+      this.activateTopic('1');
+  },
 
   activateTopic(topic) {
     this.props.onActivateTopic(topic);
