@@ -2,7 +2,9 @@ import React from 'react';
 import { fetchTopic } from 'actions/article';
 import { connect } from 'react-redux';
 import { activateTopic } from 'actions/article';
-const $ = require('jquery');
+//import reactCSS, { hover } from 'reactcss'
+var Radium = require('radium');
+//const $ = require('jquery');
 /*
 var script = document.createElement('script');
 script.src = 'http://code.jquery.com/jquery-1.11.0.min.js';
@@ -64,75 +66,100 @@ const TopicPicker = React.createClass({
   },
 
   activateTopic(topic) {
+    console.log('clicked')
     this.props.onActivateTopic(topic);
   },
+
+  /*triggerBackground(this, color){
+    this.style.backgroundColor = color
+  },*/
+
+  /*test(func1, func2) {
+    //this.activateTopic.bind(this,id);
+    //this.forceUpdate()
+    func1
+    func2
+  },*/
 
   render() {
     var colors =['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
     var index = -1;
     var classname;
+    var defcolor;
     var list = this.props.topics.map(topic => {
+      var topic_id = topic.id + ''
+      var func = this.activateTopic.bind(this, topic_id);
+      //var update = this.forceUpdate();
+      //var func = this.test(funct, update)
+      //var func = this.test(topic_id)
       index += 1;
-      classname = 'inactive';
-      if (topic == this.props.currentTopic){
-        classname = 'active';
+      /*triggerBackground(this, color){
+        this.style.backgroundColor = color
+      }
+      restoreBackground(this, color){
+        this.style.backgroundColor = color
+      }*/
+
+
+      /*classname = reactCSS({
+        'default': {
+          card: {
+            backgroundColor: colors[index],
+            height: 100 / this.props.topics.length + '%',
+          }
+        },
+        'hover': {
+          card: {
+            backgroundColor: '#4c4545',
+            height: 100 / this.props.topics.length + '%',
+          },
+        },
+      })*/
+
+      console.log(this.props.currentTopic)
+      defcolor = '#4c4545';
+      if (topic_id == this.props.currentTopic){
+        defcolor = colors[index]
       } else {
-      return (
-        <li key={topic.id}
-            className={classname}
-            onClick={this.activateTopic(topic.id)}
-            data-topic={topic.id}
-            style={{height: 100 / this.props.topics.length + '%', color: colors[index]}}
-        >
-          <b>{topic.name}</b>
-        </li>
-
-    )}
-  });
+        var styles = {
+          listElement: {
+            backgroundColor: defcolor,
+            height: 100 / this.props.topics.length + '%',
+             ':hover': {
+               backgroundColor: colors[index]
+            }
+          }
+        }
 
 
-
-
-
-    //let topics = this.props.topics;
-
+        return (
+          <li key={topic.id}
+              //className={classname.card}
+              //onClick={(func) => {
+              //  func;
+              //}}
+              onClick={func}
+              //onMouseOver={this.triggerBackground(colors[index])}
+              //onMouseOut={this.style.backgroundColor = defcolor}
+              data-topic={topic.id}
+              style={styles.listElement/*{height: 100 / this.props.topics.length + '%', backgroundColor: defcolor}*/}
+          >
+            <b>{topic.name}</b>
+          </li>
+        );
+      }
+    });
     return (
       <div className='topic-picker topic-picker--left topic-picker--open'>
         <ul className='topic-picker__nav'>
-          /*{ this.props.topics.map(topic => {
-            return (
-              <li key={topic.id}
-                  data-topic={topic.id}
-                  style={{height: 100 / this.props.topics.length + '%'},
-                   {color: }}
-              >
-                <b>{topic.name}</b>
-              </li>
-            );
-          })}*/
           {list}
         </ul>
       </div>
-      /*<div className='topic-picker topic-picker--left topic-picker--open'>
-        <div className="topic-picker__header">
-          Click a topic name to change highlighter color
-        </div>
-        <ul className='topic-picker__nav'>
-          { topics.map(topic => {
-            return (
-              <li onClick={this.activateTopic.bind(this, topic.id, this.props)} key={topic.id}>
-                <b>{topic.name}</b>
-              </li>
-            );
-          })}
-        </ul>
-      </div>*/
     );
   }
-
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TopicPicker);
+)(Radium(TopicPicker));
