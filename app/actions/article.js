@@ -1,3 +1,7 @@
+function nextPage(articleId) {
+
+}
+
 export function fetchArticle(articleId) {
   return (dispatch) => {
     dispatch({ type: 'FETCH_ARTICLE', articleId});
@@ -10,24 +14,17 @@ export function fetchArticle(articleId) {
           var fetch_next = false;
           for (var entry in response.results) {
             var article = response.results[entry];
-            console.log(fetch_next)
-
-
             if (article.article_id == articleId) {
                fetch_next = true;
                var curr = article;
             } else if (fetch_next) {
               var next = article.article_id;
-              console.log(next);
               break;
             }
           }
           dispatch({type: 'FETCH_ARTICLE_SUCCESS', curr, next})},
           (error) => dispatch({ type: 'FETCH_ARTICLE_FAIL', error})
         );
-
-
-
     /*return fetch(`http://192.168.99.100:5000/api/articles/${articleId}/?format=json`) // TODO: resolve this absolute URL issue with backend
       .then(response => response.json())
       .then(

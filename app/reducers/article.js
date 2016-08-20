@@ -1,12 +1,5 @@
-import topicJsonMock from '../assets/topic_0_mock.json';
+//import topicJsonMock from '../assets/topic_0_mock.json';
 import { getIntOfLength } from 'utils/math';
-
-/*const ARTICLE_INDEX_ARRAY = [0, 9, 11, 38, 53, 55, 202, 209, 236, 259];
-
-function getNextArticle(articleId) {
-  ARTICLE_INDEX_ARRAY.splice(ARTICLE_INDEX_ARRAY.indexOf(articleId), 1);
-  return ARTICLE_INDEX_ARRAY[getIntOfLength(ARTICLE_INDEX_ARRAY)];
-}*/
 
 function getInitialState() {
   return {
@@ -31,7 +24,7 @@ export function article(state = initialState, action) {
     case 'ACTIVATE_TOPIC':
       return Object.assign({}, state, { currentTopic: action.topic });
     case 'FETCH_ARTICLE':
-      let nextArticleIndex = getNextArticle(Number(action.articleId));
+      //let nextArticleIndex = getNextArticle(Number(action.articleId));
       return {
         ...state,
         article: {
