@@ -75,28 +75,29 @@ const TopicPicker = React.createClass({
       index += 1;
 
       defcolor = '#4c4545';
+
       if (topic_id == this.props.currentTopic){
         defcolor = colors[index]
-      } else {
-        var styles = {
-          listElement: {
-            backgroundColor: defcolor,
-            height: 100 / this.props.topics.length + '%',
-             ':hover': {
-               backgroundColor: colors[index]
-            }
+      }
+      var styles = {
+        listElement: {
+          backgroundColor: defcolor,
+          height: 100 / this.props.topics.length + '%',
+           ':hover': {
+             backgroundColor: colors[index]
           }
         }
-        return (
-          <li key={topic.id}
-              onClick={func}
-              data-topic={topic.id}
-              style={styles.listElement/*{height: 100 / this.props.topics.length + '%', backgroundColor: defcolor}*/}
-          >
-            <b>{topic.name}</b>
-          </li>
-        );
       }
+      return (
+        <li key={topic.id}
+            onClick={func}
+            data-topic={topic.id}
+            style={styles.listElement/*{height: 100 / this.props.topics.length + '%', backgroundColor: defcolor}*/}
+        >
+          <b>{topic.name}</b>
+        </li>
+      );
+
     });
     return (
       <div className='topic-picker topic-picker--left topic-picker--open'>
