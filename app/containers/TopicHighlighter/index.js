@@ -23,7 +23,8 @@ const mapStateToProps = state => {
     currentArticle: state.article.currentArticle,
     nextArticle: state.article.nextArticle,
     topics: state.article.topics,
-    currentTopic: state.article.currentTopic
+    currentTopic: state.article.currentTopic,
+    colors: state.article.colors
   };
 }
 
@@ -38,7 +39,11 @@ export class TopicHighlighter extends Component {
   }
 
   componentDidMount() {
+    console.log('TOPICHILIGHTER COMPONENTDIDMOUNT')
+    console.log(this.props)
+    //this.props.colors = ['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
     this.props.fetchArticle(this.props.routeParams.articleId);
+    this.props
   }
 
   componentWillReceiveProps(nextProps) {
@@ -48,6 +53,7 @@ export class TopicHighlighter extends Component {
   }
 
   render() {
+    //var colors =['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
     let current_article = this.props.currentArticle;
     console.log('TOPICHILIGHTER RENDER')
     console.log(this.props)
@@ -76,7 +82,7 @@ export class TopicHighlighter extends Component {
                                       transitionAppearTimeout={500}
                                       transitionEnterTimeout={500}
                                       transitionLeaveTimeout={500}>
-            {<Article article={article} key={current_article}/>}
+            {<Article article={article} key={current_article} colors={this.props.colors}/>}
             </ReactCSSTransitionsGroup>
             <br/>
             <button><Link to={`/article/${this.props.nextArticle}`}>Next Article</Link></button>

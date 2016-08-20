@@ -21,13 +21,10 @@ const mapStateToProps = state => {
   };
 }*/
 const mapStateToProps = state => {
-  console.log('article state')
-  console.log(state)
   return {
           highlights: state.article.highlights,
           currentTopic: state.article.currentTopic,
           topics: state.article.topics
-         //selectedHighlight: state.article.selectedHighlight,
        };
 }
 
@@ -48,13 +45,13 @@ const Article = React.createClass({
   },
 
   render() {
+    console.log('ARTICLE RENDER')
+    console.log(this.props)
     //let article = this.props.article.article;
     //var text = this.props.article.text;
 
     let fetchingClass = this.props.article.isFetching ? 'is-fetching' : '';
-    var colors =['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
-    console.log('article props')
-    console.log(this.props)
+    //var colors =['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
     return (
       <div className={`article ${fetchingClass}`}>
         <div className='article__header-text'>
@@ -62,7 +59,7 @@ const Article = React.createClass({
         </div>
         <div id='article-container' className='article'>
         <HighlightModule
-        colors={colors}
+        colors={this.props.colors}
         text={this.props.article.text} //Hard copy of text that goes unchanged
         topics={this.props.topics} //Using to adapt merge-colors properly
         currentTopic={this.props.currentTopic} //Needs current from outside

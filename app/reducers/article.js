@@ -13,7 +13,8 @@ function getInitialState() {
     article: {},
     currentArticle: null,
     nextArticle: null,
-    topics: topicJsonMock.results
+    topics: topicJsonMock.results,
+    colors: ['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)']
   };
 }
 
@@ -21,15 +22,14 @@ const initialState = Object.assign({
   article: {},
   articleIndex: [],
   topics: [],
-  highlights: []
+  highlights: [],
+  //colors: ['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)']
+
 }, getInitialState());
 
 
 export function article(state = initialState, action) {
-  console.log(action);
   switch (action.type) {
-    /*case 'ADD_HIGHLIGHT':
-      console.log('ADD_HIGHLIGHT :: ACTION_PLAYING!');*/
     case 'ACTIVATE_TOPIC':
       console.log('ACTIVATE TOPIC')
       console.log(action)
@@ -44,8 +44,6 @@ export function article(state = initialState, action) {
         currentArticle: Number(action.articleId),
         nextArticle: nextArticleIndex
       }
-    /*case 'PASS_TOPIC_TO_PICKER':
-      return Object.assign({}, state, { currentTopic: action.topic });*/
     case 'FETCH_ARTICLE_SUCCESS':
       return {
         ...state,

@@ -22,14 +22,13 @@ const mapDispatchToProps = dispatch => {
   };
 }
 
-const mapStateToProps = state => {
+/*const mapStateToProps = state => {
   console.log('TOPICPICKER STATE')
   console.log(state)
   return {
-    //topic: state.currentTopic,
     currentTopic: state.currentTopic
   };
-}
+}*/
 
 const TopicPicker = React.createClass({
   displayName: 'TopicPicker',
@@ -37,7 +36,8 @@ const TopicPicker = React.createClass({
   propTypes: {
     topics: React.PropTypes.array.isRequired,
     onActivateTopic: React.PropTypes.func,
-    currentTopic: React.PropTypes.string.isRequired
+    currentTopic: React.PropTypes.string.isRequired,
+    //colors: React.PropTypes.array.isRequired
   },
 
   /*childContextTypes: {
