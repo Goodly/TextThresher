@@ -6,18 +6,16 @@ import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 
 import * as articleActionCreators from 'actions/article';
-//import * as topicpickerActionCreators from 'actions/topicpicker';
 
 const assembledActionCreators = Object.assign({}, articleActionCreators)
-//const assembledActionCreators = Object.assign({}, articleActionCreators)
 
 import Article from 'components/Article';
 import TopicPicker from 'components/TopicPicker';
 import { styles } from './styles.scss';
 
 const mapStateToProps = state => {
-  console.log('TOPIC HIGHLIGHTER MAPSTATETOPROPS')
-  console.log(state)
+  //console.log('TOPIC HIGHLIGHTER MAPSTATETOPROPS')
+  //console.log(state)
   return {
     article: state.article.article,
     currentArticle: state.article.currentArticle,
@@ -41,9 +39,9 @@ export class TopicHighlighter extends Component {
   componentDidMount() {
     console.log('TOPICHILIGHTER COMPONENTDIDMOUNT')
     console.log(this.props)
-    //this.props.colors = ['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
     this.props.fetchArticle(this.props.routeParams.articleId);
-    this.props
+    this.props.fetchTopic();
+    console.log(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -53,12 +51,11 @@ export class TopicHighlighter extends Component {
   }
 
   render() {
-    //var colors =['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
     let current_article = this.props.currentArticle;
     console.log('TOPICHILIGHTER RENDER')
     console.log(this.props)
     let article = this.props.article;
-    let topics = this.props.topics[current_article];
+    //let topics = this.props.topics[current_article];
 
     if (this.props.nextArticle == undefined) {
       return (<div>DONE</div>) // TODO: Clean this up.

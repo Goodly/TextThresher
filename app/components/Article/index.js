@@ -60,9 +60,9 @@ const Article = React.createClass({
         <div id='article-container' className='article'>
         <HighlightModule
         colors={this.props.colors}
-        text={this.props.article.text} //Hard copy of text that goes unchanged
-        topics={this.props.topics} //Using to adapt merge-colors properly
-        currentTopic={this.props.currentTopic} //Needs current from outside
+        text={this.props.article.text}
+        topics={this.props.topics}
+        currentTopic={this.props.currentTopic}
         />
         </div>
       </div>
