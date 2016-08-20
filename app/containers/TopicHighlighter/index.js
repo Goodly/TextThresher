@@ -6,20 +6,24 @@ import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 
 import * as articleActionCreators from 'actions/article';
+//import * as topicpickerActionCreators from 'actions/topicpicker';
 
 const assembledActionCreators = Object.assign({}, articleActionCreators)
+//const assembledActionCreators = Object.assign({}, articleActionCreators)
 
 import Article from 'components/Article';
 import TopicPicker from 'components/TopicPicker';
-
 import { styles } from './styles.scss';
 
 const mapStateToProps = state => {
+  console.log('TOPIC HIGHLIGHTER MAPSTATETOPROPS')
+  console.log(state)
   return {
     article: state.article.article,
     currentArticle: state.article.currentArticle,
     nextArticle: state.article.nextArticle,
-    topics: state.article.topics
+    topics: state.article.topics,
+    currentTopic: state.article.currentTopic
   };
 }
 
@@ -45,7 +49,7 @@ export class TopicHighlighter extends Component {
 
   render() {
     let current_article = this.props.currentArticle;
-    console.log('topichighlighter')
+    console.log('TOPICHILIGHTER RENDER')
     console.log(this.props)
     let article = this.props.article;
     let topics = this.props.topics[current_article];

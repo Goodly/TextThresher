@@ -170,7 +170,7 @@ const HighlightModule = React.createClass({
   Take topics, find the number, generate that many colors
   */
   mergeColors: function(topics, selected) {
-    console.log('mergeColors');
+    //console.log('mergeColors');
     var list = [];
     var index = 0;
     var colors = this.props.colors;
@@ -205,7 +205,7 @@ const HighlightModule = React.createClass({
   },
 
   getOffset: function(childNodes, targetNode) {
-    console.log('getOffset');
+    //console.log('getOffset');
     var offset = 0;
     //console.log(childNodes) //spans
     //.log(targetNode) //new (?)
@@ -228,10 +228,10 @@ const HighlightModule = React.createClass({
   },
 
   handleClick: function() {
-    console.log('handleClick');
-    console.log(this.props)
+    //console.log('handleClick');
+    //console.log(this.props)
     var currentTopic = this.props.currentTopic.slice();
-    console.log('current topic')
+    //console.log('current topic')
     var selectionObj = window.getSelection();
     if (selectionObj) {
       let selectedText = selectionObj.toString();
@@ -260,7 +260,7 @@ const HighlightModule = React.createClass({
   },
 
   componentDidMount: function() {
-    console.log('Did Mount');
+    //console.log('Did Mount');
     document.addEventListener('keydown',this.handleKeyDown);
     /* pass in oncontextmenu obj into contextMenu*/
     document.addEventListener('contextmenu', this.contextMenu(event));
@@ -268,7 +268,7 @@ const HighlightModule = React.createClass({
   },
 
   handleKeyDown: function(e) {
-    console.log('HandleKeyDown');
+    //console.log('HandleKeyDown');
     e.preventDefault();
     if (e.keyCode == 8 || e.keyCode == 46) {
       if (this.props.selectedHighlight) {
@@ -280,14 +280,14 @@ const HighlightModule = React.createClass({
   },
 
   contextMenu: function(e) {
-    console.log('contextMenu')
-    console.log(e)
+    //console.log('contextMenu')
+    //console.log(e)
 
   },
 
 
   handleSelect: function(source) {
-    console.log('HandleSelect');
+    //console.log('HandleSelect');
     /*console.log(source)
     for (var i=0; i < source.length; i++) {
       console.log(source[i])

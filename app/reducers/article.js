@@ -31,6 +31,8 @@ export function article(state = initialState, action) {
     /*case 'ADD_HIGHLIGHT':
       console.log('ADD_HIGHLIGHT :: ACTION_PLAYING!');*/
     case 'ACTIVATE_TOPIC':
+      console.log('ACTIVATE TOPIC')
+      console.log(action)
       return Object.assign({}, state, { currentTopic: action.topic });
     case 'FETCH_ARTICLE':
       let nextArticleIndex = getNextArticle(Number(action.articleId));
@@ -42,6 +44,8 @@ export function article(state = initialState, action) {
         currentArticle: Number(action.articleId),
         nextArticle: nextArticleIndex
       }
+    /*case 'PASS_TOPIC_TO_PICKER':
+      return Object.assign({}, state, { currentTopic: action.topic });*/
     case 'FETCH_ARTICLE_SUCCESS':
       return {
         ...state,
