@@ -22,7 +22,8 @@ const mapStateToProps = state => {
     nextArticle: state.article.nextArticle,
     topics: state.article.topics,
     currentTopic: state.article.currentTopic,
-    colors: state.article.colors
+    colors: state.article.colors,
+    page: state.article.page
   };
 }
 
@@ -39,14 +40,14 @@ export class TopicHighlighter extends Component {
   componentDidMount() {
     console.log('TOPICHILIGHTER COMPONENTDIDMOUNT')
     console.log(this.props)
-    this.props.fetchArticle(this.props.routeParams.articleId);
+    this.props.fetchArticle(this.props.routeParams.articleId, this.props.page);
     this.props.fetchTopic();
     console.log(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.currentArticle != nextProps.routeParams.articleId && !nextProps.article.isFetching){
-      this.props.fetchArticle(nextProps.routeParams.articleId);
+      this.props.fetchArticle(nextProps.routeParams.articleId,this.props.page);
     }
   }
 

@@ -21,6 +21,8 @@ const mapStateToProps = state => {
   };
 }*/
 const mapStateToProps = state => {
+  console.log('MAPSTATETOPROPS ARTICLE')
+  console.log(state)
   return {
           highlights: state.article.highlights,
           currentTopic: state.article.currentTopic,
