@@ -1,12 +1,12 @@
 import React from 'react';
-import { addHighlight } from 'actions/article';
+import { addHighlight, deleteHighlight, selectHighlight } from 'actions/article';
 import { connect } from 'react-redux';
 
-import 'text-highlighter/src/TextHighlighter'
+import HighlightModule from 'components/highlight/highlight';
 
 import { styles } from './styles.scss';
 
-const mapDispatchToProps = dispatch => {
+/*const mapDispatchToProps = dispatch => {
   return {
     onHighlight: (start, end, selectedText) => {
       dispatch(addHighlight(start, end, selectedText));
@@ -19,6 +19,15 @@ const mapStateToProps = state => {
     article: state.article.article,
     currentTopic: state.article.currentTopic
   };
+}*/
+const mapStateToProps = state => {
+  console.log('MAPSTATETOPROPS ARTICLE')
+  console.log(state)
+  return {
+          highlights: state.article.highlights,
+          currentTopic: state.article.currentTopic,
+          topics: state.article.topics
+       };
 }
 
 const Article = React.createClass({
@@ -30,12 +39,16 @@ const Article = React.createClass({
 
   componentDidMount: function() {
     let articleContainer = document.getElementById('article-container');
-    this.annotationsObject = new TextHighlighter(articleContainer);
+    //this.annotationsObject = new TextHighlighter(articleContainer);
+  },
+
+  serializeData: function() {
+    return this.props.Highlight.highlights;
   },
 
   render() {
-    let article = this.props.article.article;
-    var text = this.props.article.text;
+    console.log('ARTICLE RENDER')
+    console.log(this.props)
 
     let fetchingClass = this.props.article.isFetching ? 'is-fetching' : '';
     return (
@@ -43,8 +56,13 @@ const Article = React.createClass({
         <div className='article__header-text'>
           Please skim the text below and highlight words about the Topics listed in the margins.
         </div>
-        <div ref={(ref) => this.articleRef = ref} id='article-container'>
-          {text}
+        <div id='article-container' className='article'>
+        <HighlightModule
+        colors={this.props.colors}
+        text={this.props.article.text}
+        topics={this.props.topics}
+        currentTopic={this.props.currentTopic}
+        />
         </div>
       </div>
     );
@@ -54,5 +72,6 @@ const Article = React.createClass({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
+  //mapDispatchToProps
 )(Article);
