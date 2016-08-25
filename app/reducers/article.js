@@ -1,4 +1,4 @@
-//import topicJsonMock from '../assets/topic_0_mock.json';
+
 import { getIntOfLength } from 'utils/math';
 
 function getInitialState() {
@@ -25,7 +25,6 @@ export function article(state = initialState, action) {
     case 'ACTIVATE_TOPIC':
       return Object.assign({}, state, { currentTopic: action.topic });
     case 'FETCH_ARTICLE':
-      //let nextArticleIndex = getNextArticle(Number(action.articleId));
       return {
         ...state,
         article: {

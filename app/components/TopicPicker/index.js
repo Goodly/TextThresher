@@ -3,16 +3,7 @@ import { fetchTopic } from 'actions/article';
 import { connect } from 'react-redux';
 import { activateTopic,passTopic } from 'actions/article';
 import {CollapsibleList} from 'components/CollapsibleList';
-//import {} from 'actions/topicpicker';
-//import reactCSS, { hover } from 'reactcss'
 var Radium = require('radium');
-//const $ = require('jquery');
-/*
-var script = document.createElement('script');
-script.src = 'http://code.jquery.com/jquery-1.11.0.min.js';
-script.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(script);*/
-
 import { styles } from './styles.scss';
 
 const mapDispatchToProps = dispatch => {
@@ -64,7 +55,7 @@ const TopicPicker = React.createClass({
   },
 
   render() {
-    var colors =this.props.colors;//['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
+    var colors =this.props.colors;
     var index = -1;
     var defcolor;
     console.log('TOPICPICKER RENDER')
@@ -93,7 +84,7 @@ const TopicPicker = React.createClass({
         <li key={topic.id}
             onClick={func}
             data-topic={topic.id}
-            style={styles.listElement/*{height: 100 / this.props.topics.length + '%', backgroundColor: defcolor}*/}
+            style={styles.listElement}
         >
           <b>{topic.name}</b>
         </li>
@@ -118,7 +109,7 @@ const TopicPicker = React.createClass({
           <div className='topic-picker__pin-button topic-picker__pic-button--active'>
             <i className='fa fa-thumb-tack fa-lg'></i>
           </div>
-          
+
         </div>
       </div>
     );

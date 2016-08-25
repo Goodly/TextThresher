@@ -46,16 +46,6 @@ const HighlightModule = React.createClass({
   distinct spans that appear to be overlapping
   */
 
-  /*onHighlight: function(start, end, selectedText) {
-    dispatch(addHighlight(start, end, selectedText));
-  },
-  onDeleteHighlight: function(source) {
-    dispatch(deleteHighlight(source));
-  },
-  onSelectHighlight: function(source) {
-    dispatch(selectHighlight(source));
-  },*/
-
   processHighlights: function(highlights) {
     console.log('processHighlights');
 
@@ -170,7 +160,6 @@ const HighlightModule = React.createClass({
   Take topics, find the number, generate that many colors
   */
   mergeColors: function(topics, selected) {
-    //console.log('mergeColors');
     var list = [];
     var index = 0;
     var colors = this.props.colors;
@@ -205,18 +194,12 @@ const HighlightModule = React.createClass({
   },
 
   getOffset: function(childNodes, targetNode) {
-    //console.log('getOffset');
     var offset = 0;
-    //console.log(childNodes) //spans
-    //.log(targetNode) //new (?)
-
     for (var i in childNodes) {
       var childNode = childNodes[i];
       if (childNode === targetNode) {
         break;
       } else {
-        //console.log('text content')
-        //console.log(childNode.textContent)
         if (childNode.textContent == null) {
           break;
         } else {
@@ -228,10 +211,7 @@ const HighlightModule = React.createClass({
   },
 
   handleClick: function() {
-    //console.log('handleClick');
-    //console.log(this.props)
     var currentTopic = this.props.currentTopic.slice();
-    //console.log('current topic')
     var selectionObj = window.getSelection();
     if (selectionObj) {
       let selectedText = selectionObj.toString();
@@ -256,7 +236,6 @@ const HighlightModule = React.createClass({
     }
     //removes selection after creating highlight
     window.getSelection().removeAllRanges();
-    //window.selection.clear();
   },
 
   componentDidMount: function() {
@@ -267,7 +246,6 @@ const HighlightModule = React.createClass({
   },
 
   handleKeyDown: function(e) {
-    //console.log('HandleKeyDown');
     e.preventDefault();
     if (e.keyCode == 8 || e.keyCode == 46) {
       if (this.props.selectedHighlight) {
@@ -286,21 +264,7 @@ const HighlightModule = React.createClass({
 
 
   handleSelect: function(source) {
-    //console.log('HandleSelect');
-    /*console.log(source)
-    for (var i=0; i < source.length; i++) {
-      console.log(source[i])
-      console.log(source[i].top)
-      console.log(this.props.currentTopic)
-      if (source[i].top != this.props.currentTopic.toString()) {
-        console.log('change color')
-        source[i].top = this.props.currentTopic.toString();
-      }
-    }
-    console.log('source 2')
-    console.log(source)*/
     this.props.selectHighlight(source);
-    //event.stopPropagation();
   },
 
   render() {
@@ -319,7 +283,6 @@ const HighlightModule = React.createClass({
         {Array(highlights.length).fill().map((_,i) => {
           var curHL = highlights[i];
           start = curHL.end;
-          //title
           var topics = []
           for (var j = 0; j < curHL.topics.length; j++) {
             var id = curHL.topics[j];

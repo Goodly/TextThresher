@@ -14,8 +14,6 @@ import TopicPicker from 'components/TopicPicker';
 import { styles } from './styles.scss';
 
 const mapStateToProps = state => {
-  //console.log('TOPIC HIGHLIGHTER MAPSTATETOPROPS')
-  //console.log(state)
   return {
     article: state.article.article,
     currentArticle: state.article.currentArticle,
@@ -56,7 +54,6 @@ export class TopicHighlighter extends Component {
     console.log('TOPICHILIGHTER RENDER')
     console.log(this.props)
     let article = this.props.article;
-    //let topics = this.props.topics[current_article];
 
     if (this.props.nextArticle == undefined) {
       return (<div>DONE</div>) // TODO: Clean this up.
