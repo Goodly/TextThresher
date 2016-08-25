@@ -61,7 +61,3 @@ export function getArticle(articleId) {
 export function activateTopic(topic) {
   return { type: 'ACTIVATE_TOPIC', topic };
 }
-
-/*export function passTopic(topic) {
-  return { type: 'PASS_TOPIC_TO_PICKER', topic };
-}*/

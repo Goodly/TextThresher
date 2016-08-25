@@ -260,7 +260,6 @@ const HighlightModule = React.createClass({
   },
 
   componentDidMount: function() {
-    //console.log('Did Mount');
     document.addEventListener('keydown',this.handleKeyDown);
     /* pass in oncontextmenu obj into contextMenu*/
     document.addEventListener('contextmenu', this.contextMenu(event));
@@ -343,7 +342,6 @@ const HighlightModule = React.createClass({
       </div>
     );
   }
-
 });
 
 export default connect(
