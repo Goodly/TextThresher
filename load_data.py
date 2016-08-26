@@ -159,7 +159,7 @@ def load_schema(schema):
         parent = Topic.objects.get(name=schema_parent)
     else:
         parent = None
-    schema_obj = Topic(
+    schema_obj = Topic.objects.create(
         parent=parent,
         name=schema_name,
         instructions=schema['instructions'],
