@@ -9,7 +9,7 @@ from rest_framework import status
 from models import Article, Topic, HighlightGroup, Client, Question, Answer, ArticleHighlight
 from serializers import (UserSerializer, ArticleSerializer, TopicSerializer, 
                          HighlightGroupSerializer, ClientSerializer, QuestionSerializer,
-                         ArticleHighlightSerializer, RootTopicSerializer)
+                         ArticleHighlightSerializer, RootTopicSerializer, SubmittedAnswerSerializer)
 
 # Views for serving the API
 
@@ -119,6 +119,8 @@ def post_question(request):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# TODO: submit answer endpoint
 
 # Register our viewsets with the router
 ROUTER = routers.DefaultRouter()
