@@ -53,7 +53,12 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'question_id', 'type', 'question_text', 'answers')
 
-    # TODO add create method
+    def create(self, validated_data):
+        answers = validated_data.pop('answers')
+        question = Question.objects.create(**validated_data)
+        for answer in answers:
+            Answer.objects.create(question=question, **answer)
+        return question
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.Field(write_only=True)
