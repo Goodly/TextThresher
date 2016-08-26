@@ -2,7 +2,6 @@ import React from 'react';
 import { fetchTopic } from 'actions/article';
 import { connect } from 'react-redux';
 import { activateTopic,passTopic } from 'actions/article';
-import {CollapsibleList} from 'components/CollapsibleList';
 var Radium = require('radium');
 import { styles } from './styles.scss';
 
@@ -31,19 +30,6 @@ const TopicPicker = React.createClass({
     currentTopic: React.PropTypes.string.isRequired,
     //colors: React.PropTypes.array.isRequired
   },
-
-  /*childContextTypes: {
-    topics: React.PropTypes.array.isRequired
-  },
-
-  getChildContext() {
-    console.log('context')
-    console.log(this.props)
-    return {
-      //topics: this.props.topics,
-      //currentTopic: this.props.currentTopic
-    };
-  },*/
 
   componentDidMount() {
       this.activateTopic('1');
@@ -105,12 +91,6 @@ const TopicPicker = React.createClass({
         <ul className='topic-picker__nav'>
           {list}
         </ul>
-        <div className='topic-picker__wrapper'>
-          <div className='topic-picker__pin-button topic-picker__pic-button--active'>
-            <i className='fa fa-thumb-tack fa-lg'></i>
-          </div>
-
-        </div>
       </div>
     );
   }

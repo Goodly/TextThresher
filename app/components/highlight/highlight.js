@@ -52,7 +52,7 @@ const HighlightModule = React.createClass({
     var parsedHighlights = [];
     var final = [];
 
-    // (1) works
+    // (1)
     var temp_index = 0;
     while (temp_index < highlights.length) {
       var i = highlights[temp_index];
@@ -63,7 +63,7 @@ const HighlightModule = React.createClass({
       temp_index += 1;
     }
 
-    // (2) works
+    // (2)
     parsedHighlights.sort((a,b) => {
       return a.index - b.index;
     });
@@ -95,7 +95,6 @@ const HighlightModule = React.createClass({
         while (select_index < selectedHighlights.length) {
 
           var selected_high = selectedHighlights[select_index]
-          //Case for Single Highlight
           if ((selected_high[0] == processed.start) && (selected_high[1] == processed.end)) {
             processed.selected = true;
             break;
@@ -109,7 +108,7 @@ const HighlightModule = React.createClass({
           select_index += 1;
         }
       }
-      // Add processed span to final
+
       start = i.index;
       var list_index = 0;
       while (list_index < activeTopics.length) {

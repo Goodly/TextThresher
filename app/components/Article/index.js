@@ -21,8 +21,6 @@ const mapStateToProps = state => {
   };
 }*/
 const mapStateToProps = state => {
-  console.log('MAPSTATETOPROPS ARTICLE')
-  console.log(state)
   return {
           highlights: state.article.highlights,
           currentTopic: state.article.currentTopic,
@@ -39,7 +37,6 @@ const Article = React.createClass({
 
   componentDidMount: function() {
     let articleContainer = document.getElementById('article-container');
-    //this.annotationsObject = new TextHighlighter(articleContainer);
   },
 
   serializeData: function() {
@@ -47,8 +44,6 @@ const Article = React.createClass({
   },
 
   render() {
-    console.log('ARTICLE RENDER')
-    console.log(this.props)
 
     let fetchingClass = this.props.article.isFetching ? 'is-fetching' : '';
     return (
