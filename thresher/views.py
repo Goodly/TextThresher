@@ -108,7 +108,7 @@ def next_question(request, id, ans_id):
         serializer = QuestionSerializer(next_question, many=False)
         return Response(serializer.data)
 
-
+## Example POST data: {"id":1,"type":"mc","question_id":17,"question_text":"foo?","answers":[{"answer_content":"bar","answer_id":1},{"answer_content":"baz","answer_id":2},{"answer_content":"xyzzy","answer_id":3}]}
 # TODO: Post a highlight group.
 @api_view(['POST'])
 def post_question(request):
@@ -120,7 +120,16 @@ def post_question(request):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# TODO: submit answer endpoint
+## Example POST data: {"question":6,"answer":1,"user":{"username":"nicketynick","password":"xyzzy","accuracy_score":0.9,"experience_score":2.2},"highlight_group":""}
+@api_view(['POST'])
+def submit_answer(request):
+    if request.method == 'POST':
+        print("data", request.data)
+        serializer = SubmittedAnswerSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Register our viewsets with the router
 ROUTER = routers.DefaultRouter()
