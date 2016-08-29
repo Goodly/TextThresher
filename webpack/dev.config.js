@@ -99,6 +99,7 @@ export default {
     },
     plugins: [
       new HtmlWebpackPlugin({
+        title: 'TextThresher',
         template: './app/assets/index_template.html'
       }),
       new webpack.HotModuleReplacementPlugin(),
