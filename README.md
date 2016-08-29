@@ -10,26 +10,30 @@ Built with [React](https://facebook.github.io/react/) and [Redux](https://github
 The backend is supported by Docker. If you do not have it already, you will need to install it.
 * For OS X, go [here](https://docs.docker.com/docker-for-mac/).
 * For Windows, go [here](https://docs.docker.com/docker-for-windows/).
-* For Ubuntu and other Linux distributions, go [here](https://docs.docker.com/engine/installation/linux/ubuntulinux/).
+* For Ubuntu and other Linux distributions, install
+[docker](https://docs.docker.com/engine/installation/linux/ubuntulinux/) and
+[docker-compose](https://docs.docker.com/compose/install/).
+
+To [avoid having to use sudo when you use the docker command]
+(https://docs.docker.com/engine/installation/linux/ubuntulinux/#/create-a-docker-group),
+create a Unix group called docker and add users to it:
+> 1. `sudo groupadd docker`
+> 2. `sudo usermod -aG docker $USER`.
 
 Once installed, start the Docker application (if on a Mac), then go to the project directory and run:
 
-1. `docker-compose up`
+1. `docker-compose up -d`
 2. `./init_docker.sh`
 3. `npm install`
 4. `bower install`
 
 You will only need to run the above commands once. Those will do the preliminary setup for the application by installing the dependencies and seeding the Docker containers to setup the database.
 
+Use `docker-compose stop` to stop the containers or `docker-compose down` to both stop and remove the containers.
+
 You might also want to install Devtools for [React](https://facebook.github.io/react/blog/2015/09/02/new-react-developer-tools.html). For Redux, you can install the [Google Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) or use the other methods described in the README [here](https://github.com/zalmoxisus/redux-devtools-extension).
 
 **Note:** If you are setting up Docker a second time, you may want to first remove the previous database containers with `docker-compose rm db`.
-
-**Note:** If you are on Ubuntu and encounter the error:
-```
-Couldn't connect to Docker daemon at http+unix://var/run/docker.sock - is it running?
-```
-run `sudo groupadd docker` and `sudo usermod -aG docker $USER`. This is also listed as a first step [here](https://docs.docker.com/engine/installation/linux/ubuntulinux/#/create-a-docker-group) under "Optional Configs".
 
 # To develop
 
