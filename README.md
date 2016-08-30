@@ -13,12 +13,10 @@ The backend is supported by Docker. If you do not have it already, you will need
 * For Ubuntu and other Linux distributions, install
 [docker](https://docs.docker.com/engine/installation/linux/ubuntulinux/) and
 [docker-compose](https://docs.docker.com/compose/install/).
-
-To [avoid having to use sudo when you use the docker command]
-(https://docs.docker.com/engine/installation/linux/ubuntulinux/#/create-a-docker-group),
+  To [avoid having to use sudo when you use the docker command](https://docs.docker.com/engine/installation/linux/ubuntulinux/#/create-a-docker-group),
 create a Unix group called docker and add users to it:
-> 1. `sudo groupadd docker`
-> 2. `sudo usermod -aG docker $USER`.
+  1. `sudo groupadd docker`
+  2. `sudo usermod -aG docker $USER`.
 
 Once installed, start the Docker application (if on a Mac), then go to the project directory and run:
 
