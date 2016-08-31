@@ -9,7 +9,6 @@ const WEBPACK_LISTEN_IP = process.env.WEBPACK_LISTEN_IP || 'localhost';
 const WEBPACK_HOSTNAME = process.env.WEBPACK_HOSTNAME || 'localhost';
 const WEBPACK_PORT = parseInt(process.env.WEBPACK_PORT, 10) || 3001;
 const PUBLIC_PATH = `${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}/app/`;
-console.log(PUBLIC_PATH);
 
 const bowerPath = path.join(__dirname, '../vendor/bower_components');
 
