@@ -5,11 +5,11 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const PROTOCOL = 'http';
-const HOST = 'localhost';
-const PORT = '3001';
-const PUBLIC_PATH = `${PROTOCOL}://${HOST}:${PORT}/app/`;
+const WEBPACK_LISTEN_IP = process.env.WEBPACK_LISTEN_IP || 'localhost';
+const WEBPACK_HOSTNAME = process.env.WEBPACK_HOSTNAME || 'localhost';
+const WEBPACK_PORT = parseInt(process.env.WEBPACK_PORT, 10) || 3001;
+const PUBLIC_PATH = `${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}/app/`;
 
-const WEBPACK_PORT = parseInt(process.env.PORT) + 1 || 3001;
 const bowerPath = path.join(__dirname, '../vendor/bower_components');
 
 const PATHS = {
@@ -23,6 +23,7 @@ let resolveBowerPath = function(componentPath) {
 
 export default {
   server: {
+    listen_ip: WEBPACK_LISTEN_IP,
     port: WEBPACK_PORT,
     options: {
       publicPath: PUBLIC_PATH,
@@ -43,7 +44,7 @@ export default {
     devtool: 'source-map',
     entry: {
       app: [
-        `webpack-dev-server/client?http://localhost:${WEBPACK_PORT}`,
+        `webpack-dev-server/client?${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}`,
         'webpack/hot/only-dev-server',
         './app/index'
       ]
@@ -99,6 +100,7 @@ export default {
     },
     plugins: [
       new HtmlWebpackPlugin({
+        title: 'TextThresher',
         template: './app/assets/index_template.html'
       }),
       new webpack.HotModuleReplacementPlugin(),
