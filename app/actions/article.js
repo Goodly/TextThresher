@@ -1,7 +1,14 @@
+
+import axios from 'axios';
+
+
 export function postHighlights(highlights) {
   //highlights.map(function(highlight){
+  console.log("POST HIGHLIGHTS")
+  console.log(highlights)
   axios.post("/post_highlights/", JSON.parse(highlights)).then(
     function (response) {
+      console.log("in parse")
       console.log(response)
     }
   )

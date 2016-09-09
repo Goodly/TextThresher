@@ -1,7 +1,7 @@
 import React from 'react';
 import { fetchTopic } from 'actions/article';
 import { connect } from 'react-redux';
-import { activateTopic,passTopic } from 'actions/article';
+import { activateTopic, postHighlights } from 'actions/article';
 var Radium = require('radium');
 import { styles } from './styles.scss';
 
@@ -33,6 +33,7 @@ const TopicPicker = React.createClass({
   },
 
   render() {
+    //postHighlights({"ool": "lalalal"});
     var colors =this.props.colors;
     var index = -1;
     var defcolor;
