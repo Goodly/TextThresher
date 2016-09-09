@@ -44,6 +44,8 @@ const Article = React.createClass({
   },
 
   render() {
+    console.log("child test")
+    console.log(this.props.children)
 
     let fetchingClass = this.props.article.isFetching ? 'is-fetching' : '';
     return (

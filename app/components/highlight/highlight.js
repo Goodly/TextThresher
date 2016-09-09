@@ -48,7 +48,8 @@ const HighlightModule = React.createClass({
 
   processHighlights: function(highlights) {
     console.log('processHighlights');
-
+    console.log('highlights')
+    console.log(highlights)
     var parsedHighlights = [];
     var final = [];
 
@@ -118,6 +119,7 @@ const HighlightModule = React.createClass({
         list_index += 1;
       }
       final = final.concat(processed);
+      console.log(final)
 
       // (5) Activate/Deactivate Topics
       var active_state = i.type === 'start'

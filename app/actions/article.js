@@ -1,3 +1,13 @@
+export function postHighlights(highlights) {
+  //highlights.map(function(highlight){
+  axios.post("/post_highlights/", JSON.parse(highlights)).then(
+    function (response) {
+      console.log(response)
+    }
+  )
+  //})
+}
+
 export function fetchArticle(articleId, page) {
   return (dispatch) => {
     dispatch({ type: 'FETCH_ARTICLE', articleId});

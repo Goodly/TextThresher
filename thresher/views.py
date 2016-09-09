@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from models import Article, Topic, HighlightGroup, Client, Question, Answer, ArticleHighlight
-from serializers import (UserSerializer, ArticleSerializer, TopicSerializer, 
+from serializers import (UserSerializer, ArticleSerializer, TopicSerializer,
                          HighlightGroupSerializer, ClientSerializer, QuestionSerializer,
                          ArticleHighlightSerializer, RootTopicSerializer)
 
@@ -15,7 +15,7 @@ from serializers import (UserSerializer, ArticleSerializer, TopicSerializer,
 
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
-    serializer_class = ClientSerializer    
+    serializer_class = ClientSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -115,6 +115,16 @@ def post_question(request):
     if request.method == 'POST':
         print("data", request.data)
         serializer = QuestionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def post_highlights(request):
+    if request.method == 'POST':
+        print("data", request.data)
+        serializer = ArticleHighlightSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

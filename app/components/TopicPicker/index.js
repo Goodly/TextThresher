@@ -13,14 +13,6 @@ const mapDispatchToProps = dispatch => {
   };
 }
 
-/*const mapStateToProps = state => {
-  console.log('TOPICPICKER STATE')
-  console.log(state)
-  return {
-    currentTopic: state.currentTopic
-  };
-}*/
-
 const TopicPicker = React.createClass({
   displayName: 'TopicPicker',
 

@@ -86,3 +86,4 @@ export class TopicHighlighter extends Component {
     );
   }
 };
+/*<button><form method="post" onclick={postHighlights(this.props.children[topicpicker].children[highlighter].highlights)}>Submit</form></button>*/
