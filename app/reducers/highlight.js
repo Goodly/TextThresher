@@ -87,6 +87,11 @@ export function highlight(state = initialState, action) {
         stateindex += 1;
       }
       return Object.assign({}, state, { highlights: new_state, selectedHighlight: []});
+    case 'CLEAR_HIGHLIGHTS':
+      return Object.assign({}, state, { highlights: [], selectedHighlight: []});
+    case 'SAVE_HIGHLIGHTS':
+    //field for saved or not? When saved turn to true, otherwise false if there are unsaved changes 
+
     default:
       return state;
   }

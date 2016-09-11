@@ -1,7 +1,8 @@
 
 import axios from 'axios';
 
-
+//probably wrong
+//TODO: Fix dis shit
 export function postHighlights(highlights) {
   //highlights.map(function(highlight){
   console.log("POST HIGHLIGHTS")
@@ -12,7 +13,6 @@ export function postHighlights(highlights) {
       console.log(response)
     }
   )
-  //})
 }
 
 export function fetchArticle(articleId, page) {

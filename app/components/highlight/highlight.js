@@ -46,6 +46,18 @@ const HighlightModule = React.createClass({
   distinct spans that appear to be overlapping
   */
 
+  saveHighlights: function() {
+
+  },
+
+  clearHighlights: function() {
+    this.props.highlights = [];
+  },
+
+  finalSaveHighlights: function() {
+
+  },
+
   processHighlights: function(highlights) {
     console.log('processHighlights');
     console.log('highlights')
