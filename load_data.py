@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import fnmatch
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'thresher_backend.settings'
 from django.conf import settings
@@ -118,9 +119,8 @@ def load_article(article):
     print 'loading article...'
 
 def load_schema_dir(dirpath):
-    for schema_file in os.listdir(dirpath):
-        if os.path.splitext(schema_file)[1] != '.txt':
-            continue
+    schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
+    for schema_file in schema_files:
         load_schema(parse_schema(os.path.join(dirpath, schema_file)))
 
 def load_article_dir(dirpath):
