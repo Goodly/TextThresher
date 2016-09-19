@@ -6,10 +6,11 @@ import rootReducer from '../reducers';
 export default function configureStore(initialState) {
   const store = createStore(rootReducer,
     initialState,
-    applyMiddleware(thunk),
     compose(
-    window.devToolsExtension ? window.devToolsExtension() : _ => _
-  ));
+      applyMiddleware(thunk),
+      window.devToolsExtension ? window.devToolsExtension() : f => f
+    )
+  );
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
