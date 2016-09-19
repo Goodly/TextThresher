@@ -1,9 +1,9 @@
 @import 'app/styles/_mixins.scss';
 @import 'app/styles/_variables.scss';
 
-$topic-picker-nav-width: 25%;
+$topic-picker-nav-width: 42%;
 
-.topic-picker {
+/*.topic-picker {
   position: fixed;
   top: 0;
   left: 0;
@@ -56,5 +56,138 @@ $topic-picker-nav-width: 25%;
         background-color: $blue_accent;
       }
     }
+  }
+}*/
+
+.topic-picker {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 10px;
+
+  background-color: $offblack;
+  overflow: hidden;
+
+  transition: background $transition-fast,
+              height $transition-fast;
+
+  &__nav {
+    @include ul-reset;
+    $height: 30px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    height: $height;
+    line-height: $height;
+    transition: color $transition-fast,
+                width $transition-fast;
+
+    li {
+      float: left;
+      width: 100%;
+      height: inherit;
+      line-height: inherit;
+
+      background-color: $offblack;
+      transition: background-color $transition-fast;
+
+      font-family: $font-ui;
+      font-size: 0.8em;
+      letter-spacing: 2px;
+      text-align: center;
+      color: $offblack;
+      text-transform: uppercase;
+    }
+  }
+
+  &:hover, &--open {
+    height: 300px;
+    background-color: $offwhite;
+
+    .topic-picker__wrapper {
+      opacity: 1;
+    }
+
+    .topic-picker__nav {
+      width: $topic-picker-nav-width;
+      b {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__nav {
+    li {
+      color: #fff;
+      b {
+        opacity: 0;
+      }
+    }
+  }
+
+  &--left {
+    width: 10px;
+    height: 100%;
+
+    transition: background $transition-fast,
+                width $transition-fast;
+
+    .topic-picker__nav {
+      height: 100%;
+      li {
+        float: initial;
+        height: 25%;
+        display: block;
+        margin-left: auto;
+
+        b {
+          @include vertical-align();
+          display: block;
+        }
+      }
+    }
+
+    &:hover {
+      width: 300px;
+      background-color: $offwhite;
+      height: 100%;
+    }
+  }
+
+  /* hacky */
+  &--open {
+    width: 300px;
+    background-color: $offwhite;
+    height: 100%;
+
+    .topic-picker__pin-button--active {
+      .fa-thumb-tack {
+        opacity: 1;
+      }
+    }
+  }
+
+
+  &__pin-button {
+    margin: 10px;
+    //text-align: right;
+    text-align: left;
+  }
+
+  &__wrapper {
+    opacity: 0;
+    padding-right: $topic-picker-nav-width;
+
+    .fa-thumb-tack {
+      opacity: 0.5;
+    }
+  }
+},
+
+.topic-wrapper {
+  &__topic {
+    padding: 5px 10px;
+    line-height: 1.5;
   }
 }

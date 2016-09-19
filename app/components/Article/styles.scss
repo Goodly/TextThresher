@@ -4,6 +4,7 @@
 .article {
   @include newspaper;
   transition: opacity $transition-slow;
+  width: 600px;
 
   .highlighted {
     // TODO: generate programmatically?
@@ -53,3 +54,27 @@
   }
 
 }
+
+/*.text-wrapper {
+  max-width: 500px;
+  margin: 0 auto;
+
+  position: relative;
+
+  .article {
+    @include newspaper;
+    transition: opacity $transition-slow;
+  }
+
+  .article__header-text {
+    font-size: 2em;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+
+  #article-container {
+    padding: 1em;
+    border: 1px solid black;
+  }
+}*/

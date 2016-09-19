@@ -15,6 +15,8 @@ export default React.createClass({
   },
 
   render() {
+    console.log('APP')
+    console.log(this.props.children)
     return (
       <Provider store={store}>
         <div className='app'>

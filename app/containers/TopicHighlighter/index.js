@@ -11,7 +11,6 @@ const assembledActionCreators = Object.assign({}, articleActionCreators)
 
 import Article from 'components/Article';
 import TopicPicker from 'components/TopicPicker';
-
 import { styles } from './styles.scss';
 
 const mapStateToProps = state => {
@@ -19,7 +18,10 @@ const mapStateToProps = state => {
     article: state.article.article,
     currentArticle: state.article.currentArticle,
     nextArticle: state.article.nextArticle,
-    topics: state.article.topics
+    topics: state.article.topics,
+    currentTopic: state.article.currentTopic,
+    colors: state.article.colors,
+    page: state.article.page
   };
 }
 
@@ -34,20 +36,24 @@ export class TopicHighlighter extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchArticle(this.props.routeParams.articleId);
+    console.log('TOPICHILIGHTER COMPONENTDIDMOUNT')
+    console.log(this.props)
+    this.props.fetchArticle(this.props.routeParams.articleId, this.props.page);
+    this.props.fetchTopic();
+    console.log(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.currentArticle != nextProps.routeParams.articleId && !nextProps.article.isFetching){
-      this.props.fetchArticle(nextProps.routeParams.articleId);
+      this.props.fetchArticle(nextProps.routeParams.articleId,this.props.page);
     }
   }
 
   render() {
     let current_article = this.props.currentArticle;
-
+    console.log('TOPICHILIGHTER RENDER')
+    console.log(this.props)
     let article = this.props.article;
-    let topics = this.props.topics[current_article];
 
     if (this.props.nextArticle == undefined) {
       return (<div>DONE</div>) // TODO: Clean this up.
@@ -71,7 +77,7 @@ export class TopicHighlighter extends Component {
                                       transitionAppearTimeout={500}
                                       transitionEnterTimeout={500}
                                       transitionLeaveTimeout={500}>
-            {<Article article={article} key={current_article}/>}
+            {<Article article={article} key={current_article} colors={this.props.colors}/>}
             </ReactCSSTransitionsGroup>
             <br/>
             <button><Link to={`/article/${this.props.nextArticle}`}>Next Article</Link></button>

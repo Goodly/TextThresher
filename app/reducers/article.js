@@ -1,19 +1,14 @@
-import topicJsonMock from '../assets/topic_0_mock.json';
+
 import { getIntOfLength } from 'utils/math';
-
-const ARTICLE_INDEX_ARRAY = [0, 9, 11, 38, 53, 55, 202, 209, 236, 259];
-
-function getNextArticle(articleId) {
-  ARTICLE_INDEX_ARRAY.splice(ARTICLE_INDEX_ARRAY.indexOf(articleId), 1);
-  return ARTICLE_INDEX_ARRAY[getIntOfLength(ARTICLE_INDEX_ARRAY)];
-}
 
 function getInitialState() {
   return {
     article: {},
     currentArticle: null,
     nextArticle: null,
-    topics: topicJsonMock.results
+    topics: [],
+    colors: ['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'],
+    page: `http://192.168.99.100:5000/api/articles/?format=json`
   };
 }
 
@@ -21,31 +16,46 @@ const initialState = Object.assign({
   article: {},
   articleIndex: [],
   topics: [],
-  highlights: []
+  highlights: [],
 }, getInitialState());
 
 
 export function article(state = initialState, action) {
-  console.log(action);
   switch (action.type) {
-    case 'ADD_HIGHLIGHT':
-      console.log('ADD_HIGHLIGHT :: ACTION_PLAYING!');
     case 'ACTIVATE_TOPIC':
       return Object.assign({}, state, { currentTopic: action.topic });
     case 'FETCH_ARTICLE':
-      let nextArticleIndex = getNextArticle(Number(action.articleId));
       return {
         ...state,
         article: {
           isFetching: true
         },
         currentArticle: Number(action.articleId),
-        nextArticle: nextArticleIndex
+        nextArticle: {
+          isFetching: true
+        },
+      }
+    case 'FETCH_TOPICS':
+      return {
+          topics: []
       }
     case 'FETCH_ARTICLE_SUCCESS':
+    console.log('Fetch article')
+    console.log(action)
       return {
         ...state,
-        article: action.response
+        article: action.curr,
+        nextArticle: action.next,
+        page: action.newpage
+      }
+    case 'FETCH_TOPIC_SUCCESS':
+      return {
+        ...state,
+        topics: action.response.results
+      }
+    case 'FETCH_TOPIC_FAIL':
+      return {
+        ...state,
       }
     default:
       return state;

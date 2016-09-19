@@ -70,13 +70,26 @@ export default {
       loaders: [
         {
           test: /\.json$/,
-          loader: 'json'
+          loader: 'json-loader'
+        },
+
+        /*{
+          test: /\.scss$/,
+          loader: 'style!css?sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap'
+        },*/
+        {
+            test: /\.css$/,
+            loader: "style-loader!css-loader"
         },
 
         {
-          test: /\.scss$/,
-          loader: 'style!css?sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap'
-        },
+           test: /\.scss$/,
+           loaders: ["style", "css", "sass"]
+         },
+        /*{
+            test: /\.scss$/,
+            loader: "style-loader!css-loader!sass-loader"
+        },*/
         {
           test: /\.jpg$/,
           loader: 'file'
