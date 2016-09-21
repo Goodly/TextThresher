@@ -44,9 +44,15 @@ export default {
     devtool: 'source-map',
     entry: {
       app: [
+        'babel-polyfill',
         `webpack-dev-server/client?${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}`,
         'webpack/hot/only-dev-server',
         './app/index'
+      ],
+      test: [
+        'babel-polyfill',
+        `webpack-dev-server/client?${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}`,
+        './test/test_chai'
       ]
     },
     resolve: {
@@ -58,7 +64,6 @@ export default {
       extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png'],
       modulesDirectories: ['node_modules', 'web_modules', bowerPath, PATHS.app]
     },
-    publicPath: PUBLIC_PATH,
     output: {
       path: __dirname,
       filename: '[name]-[hash].js',
@@ -93,8 +98,7 @@ export default {
         },
         {
           test: /\.js$/,
-          include: /app/,
-          exclue: /node_modules/,
+          include: [/app/, /test/],
           loaders: ['babel-loader']
         }
       ]
@@ -102,7 +106,14 @@ export default {
     plugins: [
       new HtmlWebpackPlugin({
         title: 'TextThresher',
-        template: './app/assets/index_template.html'
+        template: './app/assets/index_template.html',
+        chunks: ['app']
+      }),
+      new HtmlWebpackPlugin({
+        title: 'Test TextThresher',
+        template: './test/index.html',
+        filename: 'test.html',
+        chunks: ['test']
       }),
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoErrorsPlugin(),

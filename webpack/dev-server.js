@@ -32,3 +32,5 @@ devServer.listen(config.server.port, config.server.listen_ip, function () {
 console.log('server available at:'.underline.red);
 console.log(`${config.server.options.publicPath}#/article/0`.underline.yellow);
 console.log(`${config.server.options.publicPath}#/quiz/0`.underline.green);
+console.log('Mocha test available at:'.underline.cyan);
+console.log(`${config.server.options.publicPath}test.html`.underline.cyan);
