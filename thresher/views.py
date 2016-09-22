@@ -108,7 +108,7 @@ def next_question(request, id, ans_id):
         serializer = QuestionSerializer(next_question, many=False)
         return Response(serializer.data)
 
-## Example POST data: {"id":1,"type":"mc","question_id":17,"question_text":"foo?","answers":[{"answer_content":"bar","answer_id":1},{"answer_content":"baz","answer_id":2},{"answer_content":"xyzzy","answer_id":3}]}
+## Example POST data: {"id":1,"question_id":17,"question_text":"foo?","answers":[{"answer_content":"bar","answer_id":1},{"answer_content":"baz","answer_id":2},{"answer_content":"xyzzy","answer_id":3}]}
 # TODO: Post a highlight group.
 @api_view(['POST'])
 def post_question(request):

@@ -100,8 +100,8 @@ class Question(models.Model):
         unique_together = ("topic", "question_text")
 
     def __unicode__(self):
-        return "Question %d of type %s in topic %s" % (
-            self.question_id, self.type, self.topic.name)
+        return "Question %d in topic %s" % (
+            self.question_id, self.topic.name)
 
 # Possible answers for a given question
 # NOTE: This does NOT represent submitted answers, only possible answers
@@ -153,8 +153,6 @@ class ArticleHighlight(models.Model):
                                                   self.article.article_id)
 
 # A submitted answer to a question
-# This is an abstract class which is subclassed to represent
-# specifi types of answers (MC, CL, TB, ...)
 class SubmittedAnswer(models.Model):
     # The highlight group this answer is part of
     highlight_group = models.ForeignKey(HighlightGroup, related_name="submitted_answer")

@@ -16,7 +16,7 @@ from django.core.exceptions import ValidationError
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 from thresher.models import (Article, Topic, HighlightGroup, 
-                             ArticleHighlight, Question)
+                             ArticleHighlight, Question, Answer)
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
 
@@ -67,6 +67,8 @@ class TopicsSchemaParser(object):
             question_args['topic'] = topic
             # Store the answers for later
             answers = question_args.pop('answers')
+            # No type for Questions any more
+            question_args.pop('type')
             # Create the Question
             question = Question.objects.create(**question_args)
             # Load the Question's answers
