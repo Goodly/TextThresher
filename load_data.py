@@ -242,6 +242,7 @@ def load_article(article):
 #                            "' registered. Have you loaded the schemas?")
         for tua_id, offset_list in tuas.iteritems():
             offsets.extend(offset_list)
+            # print offsets
 
         highlight = HighlightGroup.objects.create(offsets=json.dumps(offsets))
         try:
@@ -252,7 +253,7 @@ def load_article(article):
             print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
             print e
 
-    print 'loading article...'
+    # print 'loading article...'
 
 def load_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))

@@ -155,7 +155,8 @@ class ArticleHighlight(models.Model):
 # A submitted answer to a question
 class SubmittedAnswer(models.Model):
     # The highlight group this answer is part of
-    highlight_group = models.ForeignKey(HighlightGroup, related_name="submitted_answer")
+    # highlight_group = models.ForeignKey(HighlightGroup, related_name="submitted_answer")
+    highlight_group = models.OneToOneField(HighlightGroup)
     question = models.ForeignKey(Question)
     user_submitted = models.ForeignKey(UserProfile, related_name="submitted_answer")
     answer = models.TextField()

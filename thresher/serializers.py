@@ -63,7 +63,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         return question
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.Field(write_only=True)
+    password = serializers.CharField(write_only=True)
     experience_score = serializers.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = serializers.DecimalField(max_digits=5, decimal_places=3)
 
@@ -93,7 +93,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class SubmittedAnswerSerializer(serializers.ModelSerializer):
     question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
-    answer = serializers.PrimaryKeyRelatedField(queryset=Answer.objects.all()) 
+    # answer = serializers.PrimaryKeyRelatedField(queryset=Answer.objects.all()) 
     user = UserSerializer()
 
     class Meta:
@@ -104,7 +104,7 @@ class SubmittedAnswerSerializer(serializers.ModelSerializer):
         user_data = validated_data.pop('user')
         highlight_data = validated_data.pop('highlight_group')
         submitted_answer = SubmittedAnswer.objects.create(**validated_data)
-        highlight_group = HighlightGroup.objects.update(submitted_answer=submitted_answer, **highlight_data)
+        highlight_group = HighlightGroup.objects.create(submitted_answer=submitted_answer, **highlight_data)
         user = UserProfile.objects.update(submitted_answer=submitted_answer, **user_data)
         return submitted_answer
                                
@@ -139,7 +139,7 @@ class HighlightGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HighlightGroup
-        fields = ('offsets')
+        fields = ('offsets', 'questions')
 
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
