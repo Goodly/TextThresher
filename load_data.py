@@ -15,7 +15,8 @@ from django.core.exceptions import ValidationError
 
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
-from thresher.models import Article, Topic, HighlightGroup, ArticleHighlight
+from thresher.models import (Article, Topic, HighlightGroup, 
+                             ArticleHighlight, Question)
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
 
