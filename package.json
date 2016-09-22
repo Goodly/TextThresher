@@ -16,6 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
+    "axios": "^0.14.0",
     "babel-core": "^6.4.5",
     "babel-eslint": "^4.1.8",
     "babel-loader": "^6.2.1",
@@ -53,6 +54,7 @@
     "node-sass": "^3.0.0-beta.7",
     "object-assign": "^4.0.1",
     "postcss-loader": "^0.8.0",
+    "radium": "^0.18.1",
     "raw-loader": "^0.5.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
