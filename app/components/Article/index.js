@@ -17,7 +17,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     article: state.article.article,
-    currentTopic: state.article.currentTopic
   };
 }
 
@@ -33,7 +32,12 @@ const Article = React.createClass({
     this.annotationsObject = new TextHighlighter(articleContainer);
   },
 
+  serializeHighlights: function() {
+    return this.annotationsObject.serializeHighlights();
+  },
+
   render() {
+    console.log(this.props);
     let article = this.props.article.article;
     var text = this.props.article.text;
 
@@ -46,6 +50,7 @@ const Article = React.createClass({
         <div ref={(ref) => this.articleRef = ref} id='article-container'>
           {text}
         </div>
+        <button onClick={this.props.serializeHighlights.bind(this, this.serializeHighlights, this.props)}>Submit highlights</button>
       </div>
     );
   }
