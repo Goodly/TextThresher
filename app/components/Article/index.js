@@ -33,11 +33,11 @@ const Article = React.createClass({
   },
 
   serializeHighlights: function() {
-    return this.annotationsObject.serializeHighlights();
+    let highlightsString = this.annotationsObject.serializeHighlights();
+    this.props.postArticleHighlights(highlightsString, this.props.article.article_id);
   },
 
   render() {
-    console.log(this.props);
     let article = this.props.article.article;
     var text = this.props.article.text;
 
@@ -50,7 +50,7 @@ const Article = React.createClass({
         <div ref={(ref) => this.articleRef = ref} id='article-container'>
           {text}
         </div>
-        <button onClick={this.props.serializeHighlights.bind(this, this.serializeHighlights, this.props)}>Submit highlights</button>
+        <button onClick={this.serializeHighlights}>Submit highlights</button>
       </div>
     );
   }

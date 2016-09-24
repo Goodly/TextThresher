@@ -45,13 +45,8 @@ export class TopicHighlighter extends Component {
     }
   }
 
-  serializeHighlights(obj) {
-    console.log(obj());
-  }
-
   render() {
     let current_article = this.props.currentArticle;
-
     let article = this.props.article;
 
     if (this.props.nextArticle == undefined) {
@@ -76,7 +71,7 @@ export class TopicHighlighter extends Component {
                                       transitionAppearTimeout={500}
                                       transitionEnterTimeout={500}
                                       transitionLeaveTimeout={500}>
-            {<Article article={article} key={current_article} serializeHighlights={this.serializeHighlights}/>}
+            {<Article article={article} key={current_article} postArticleHighlights={this.props.postArticleHighlights}/>}
             </ReactCSSTransitionsGroup>
             <br/>
             <button><Link to={`/article/${this.props.nextArticle}`}>Fetch next Article</Link></button>

@@ -10,3 +10,20 @@ export function fetchArticle(articleId) {
       );
   };
 }
+
+export function postArticleHighlights(highlightsString, articleId) {
+  console.log(highlightsString, articleId)
+  return (dispatch) => {
+    dispatch({ type: 'POST_HIGHLIGHTS'});
+
+    return fetch(`http://localhost:5000/api/postHighlights/${articleId}`, {
+        method: 'POST',
+        body: highlightsString
+      })
+      .then(response => response.json())
+      .then(
+        (response) => dispatch({ type: 'POST_HIGHLIGHTS_SUCCESS'}, response),
+        (error) => dispatch({ type: 'POST_HIGHLIGHTS_FAIL', error})
+      );
+  };
+}

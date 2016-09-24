@@ -40,6 +40,9 @@ export function article(state = initialState, action) {
         ...state,
         article: action.response
       }
+    case 'POST_HIGHLIGHTS':
+      console.log(action);
+      return state
     default:
       return state;
   }
