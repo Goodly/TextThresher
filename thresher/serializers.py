@@ -137,7 +137,7 @@ class HighlightGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HighlightGroup
-        fields = ('offsets')
+        fields = ('offsets', 'questions')
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
     article = ArticleSerializer()
