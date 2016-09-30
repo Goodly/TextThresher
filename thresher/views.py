@@ -108,18 +108,17 @@ def next_question(request, id, ans_id):
         serializer = QuestionSerializer(next_question, many=False)
         return Response(serializer.data)
 
-
-# TODO: Post a highlight group.
-## Example POST data: {"id":1,"question_id":17,"question_text":"foo?","answers":[{"answer_content":"bar","answer_id":1},{"answer_content":"baz","answer_id":2},{"answer_content":"xyzzy","answer_id":3}]}
-@api_view(['POST'])
-def post_question(request):
-    if request.method == 'POST':
-        print("data", request.data)
-        serializer = QuestionSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# Deprecated
+# # Example POST data: {"id":1,"question_id":17,"question_text":"foo?","answers":[{"answer_content":"bar","answer_id":1},{"answer_content":"baz","answer_id":2},{"answer_content":"xyzzy","answer_id":3}]}
+# @api_view(['POST'])
+# def post_question(request):
+#     if request.method == 'POST':
+#         print("data", request.data)
+#         serializer = QuestionSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # TODO: submit answer endpoint
 
