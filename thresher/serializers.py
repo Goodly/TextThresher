@@ -51,7 +51,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'question_id', 'type', 'question_text', 'answers')
+        fields = ('id', 'question_id', 'question_text', 'answers')
 
     def create(self, validated_data):
         answers = validated_data.pop('answers')
@@ -95,7 +95,7 @@ class SubmittedAnswerSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
     class Meta:
-        model = MCSubmittedAnswer
+        model = SubmittedAnswer
         fields = ('question', 'answer', 'user', 'highlight_group')
 
     def create(self, validated_data):
@@ -125,7 +125,7 @@ class OffsetField(serializers.Field):
         ret = json.loads(data) # Convert to Python dict
         return json.dumps(ret["offsets"]) # Convert back to native form of offsets, a JSON object
 
-class HighlightGroupSerializer(serializers.Serializer):
+class HighlightGroupSerializer(serializers.ModelSerializer):
     # W3 Annotation Data Model properties
 #    def __init__(self, offsets=[], **kwargs):
 #        serializers.Serializer.__init__(self, **kwargs)
@@ -133,31 +133,11 @@ class HighlightGroupSerializer(serializers.Serializer):
 
 
     # Keep HighlightGroup metadata
-    questions = serializers.ListField(child=GenericSubmittedAnswerField()) # A custom field containing all the questions and answers
     offsets = JSONSerializerField()
 
     class Meta:
         model = HighlightGroup
-        fields = ('offsets', 'questions')
-
-    def create(self, validated_data):
-        # Get the answers nested models
-        answers = validated_data.pop('questions')
-
-        # Remove the force_insert if it's there
-        validated_data.pop('force_insert', None)
-
-        # create the highlight group first
-        highlight_group = HighlightGroup.objects.create(**validated_data)
-
-        # Add the highlight group model to the kwargs and save
-        for answer in answers:
-            model = answer['class']
-            kwargs = answer['data']
-            # Add the highlight group instance to the kwargs
-            kwargs['highlight_group'] = highlight_group
-
-        return highlight_group
+        fields = ('offsets')
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
     article = ArticleSerializer()
