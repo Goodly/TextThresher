@@ -2,9 +2,8 @@ import json
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from models import (Article, Topic, Question, Answer,
-                    HighlightGroup, MCSubmittedAnswer,
-                    DTSubmittedAnswer, CLSubmittedAnswer,
-                    TBSubmittedAnswer, Client, ArticleHighlight)
+                    HighlightGroup, SubmittedAnswer,
+                    Client, ArticleHighlight, UserProfile)
 
 
 # Custom JSON field
@@ -52,7 +51,14 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'question_id', 'type', 'question_text', 'answers')
+        fields = ('id', 'question_id', 'question_text', 'answers')
+
+    def create(self, validated_data):
+        answers = validated_data.pop('answers')
+        question = Question.objects.create(**validated_data)
+        for answer in answers:
+            Answer.objects.create(question=question, **answer)
+        return question
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.Field(write_only=True)
@@ -83,121 +89,24 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'is_staff', 'password', 
                   'experience_score', 'accuracy_score')
 
-class MCSubmittedAnswerSerializer(serializers.ModelSerializer):
+class SubmittedAnswerSerializer(serializers.ModelSerializer):
     question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
     answer = serializers.PrimaryKeyRelatedField(queryset=Answer.objects.all()) 
     user = UserSerializer()
 
     class Meta:
-        model = MCSubmittedAnswer
-        fields = ('question', 'answer', 'user')
+        model = SubmittedAnswer
+        fields = ('question', 'answer', 'user', 'highlight_group')
 
-class CLSubmittedAnswerSerializer(serializers.ModelSerializer):
-    question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
-    answer = serializers.PrimaryKeyRelatedField(many=True, queryset=Answer.objects.all())
-    user = UserSerializer()
-
-    class Meta:
-         model = CLSubmittedAnswer
-         fields = ('question', 'answer', 'user')
- 
-class TBSubmittedAnswerSerializer(serializers.ModelSerializer):
-    question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
-    user = UserSerializer()
-
-    class Meta:
-         model = TBSubmittedAnswer
-         fields = ('question', 'answer', 'user')
-   
-class DTSubmittedAnswerSerializer(serializers.ModelSerializer):
-    question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
-    user = UserSerializer()
-
-    class Meta:
-         model = DTSubmittedAnswer
-         fields = ('question', 'answer', 'user')
-
-## Custom fields for the serializers ##
-
-class GenericSubmittedAnswerField(serializers.Field):
-    """
-    A custom field that represents a single submitted answer
-    """
-    models = {"mc" : MCSubmittedAnswer,
-              "cl": CLSubmittedAnswer,
-              "tb" : TBSubmittedAnswer,
-              "dt" : DTSubmittedAnswer}
-    
-    serializers = {"mc" : MCSubmittedAnswerSerializer,
-                   "cl": CLSubmittedAnswerSerializer,
-                   "tb" : TBSubmittedAnswerSerializer,
-                   "dt" : DTSubmittedAnswerSerializer}
-
-    def to_representation(self, obj):
-        question_type = obj.question.type
-        serializer = self.serializers[question_type]
-
-        return serializer(obj).data
-
-    def to_internal_value(self, data):
-        question_id = data.get('question', None)
-        try:
-            question = Question.objects.get(id=question_id)
-        except:
-            raise serializers.ValidationError('Invalid Question ID')
-
-        serializer = self.serializers[question.type]
-        serialized_instance = serializer(data=data)
-        if not serialized_instance.is_valid():
-            raise serializers.ValidationError(serialized_instance.errors)
-        deserialized_data = serialized_instance.validated_data
-        model = self.models[question.type]
-
-        return {'class':model, 'data':deserialized_data} 
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        highlight_data = validated_data.pop('highlight_group')
+        submitted_answer = SubmittedAnswer.objects.create(**validated_data)
+        highlight_group = HighlightGroup.objects.update(submitted_answer=submitted_answer, **highlight_data)
+        user = UserProfile.objects.update(submitted_answer=submitted_answer, **user_data)
+        return submitted_answer
                                
-
-# A serializer for a highlight group
-# class HighlightGroupSerializer(serializers.ModelSerializer):
-#     # a custom field containing all the questions and answers
-#     questions = serializers.ListField(child=GenericSubmittedAnswerField())
-#     offsets = JSONSerializerField()
-
-#     class Meta:
-#         model = HighlightGroup
-#         fields = ('tua', 'offsets', 'questions')
-
-#     def create(self, validated_data):
-#         # Get the answers nested models
-#         answers = validated_data.pop('questions')
-
-#         # Remove the force_insert if it's there
-#         validated_data.pop('force_insert', None)
-
-#         # create the highlight group first
-#         highlight_group = HighlightGroup.objects.create(**validated_data)
-
-#         # Add the highlight group model to the kwargs and save
-#         for answer in answers:
-#             model = answer['class']
-#             kwargs = answer['data']
-#             # Add the highlight group instance to the kwargs
-#             kwargs['highlight_group'] = highlight_group
-            
-#             # There is a special case if it's a checklist,
-#             # Because of the many to many relationship, this needs to be saved differently
-#             if model == CLSubmittedAnswer:
-#                 # Get the answers:
-#                 answers = kwargs.pop('answer')
-#                 # first create the CLSubmitted answer
-#                 submission = CLSubmittedAnswer.objects.create(**kwargs)
-#                 # Now add the answers
-#                 submission.answer.add(*answers)
-
-#             # For all other models, simply create the objects
-#             else:
-#                 model.objects.create(**kwargs)
-
-#         return highlight_group 
+## Custom fields for the serializers ##
 
 class OffsetField(serializers.Field):
 #    def __init__(self, offsets, *args, **kwargs):
@@ -216,7 +125,7 @@ class OffsetField(serializers.Field):
         ret = json.loads(data) # Convert to Python dict
         return json.dumps(ret["offsets"]) # Convert back to native form of offsets, a JSON object
 
-class HighlightGroupSerializer(serializers.Serializer):
+class HighlightGroupSerializer(serializers.ModelSerializer):
     # W3 Annotation Data Model properties
 #    def __init__(self, offsets=[], **kwargs):
 #        serializers.Serializer.__init__(self, **kwargs)
@@ -224,45 +133,11 @@ class HighlightGroupSerializer(serializers.Serializer):
 
 
     # Keep HighlightGroup metadata
-    questions = serializers.ListField(child=GenericSubmittedAnswerField()) # A custom field containing all the questions and answers
     offsets = JSONSerializerField()
 
     class Meta:
         model = HighlightGroup
         fields = ('offsets', 'questions')
-
-    def create(self, validated_data):
-        # Get the answers nested models
-        answers = validated_data.pop('questions')
-
-        # Remove the force_insert if it's there
-        validated_data.pop('force_insert', None)
-
-        # create the highlight group first
-        highlight_group = HighlightGroup.objects.create(**validated_data)
-
-        # Add the highlight group model to the kwargs and save
-        for answer in answers:
-            model = answer['class']
-            kwargs = answer['data']
-            # Add the highlight group instance to the kwargs
-            kwargs['highlight_group'] = highlight_group
-
-            # There is a special case if it's a checklist,
-            # Because of the many to many relationship, this needs to be saved differently
-            if model == CLSubmittedAnswer:
-                # Get the answers:
-                answers = kwargs.pop('answer')
-                # first create the CLSubmitted answer
-                submission = CLSubmittedAnswer.objects.create(**kwargs)
-                # Now add the answers
-                submission.answer.add(*answers)
-
-            # For all other models, simply create the objects
-            else:
-                model.objects.create(**kwargs)
-
-        return highlight_group
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
     article = ArticleSerializer()
