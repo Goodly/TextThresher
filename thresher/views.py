@@ -9,7 +9,7 @@ from rest_framework import status
 from models import Article, Topic, HighlightGroup, Client, Question, Answer, ArticleHighlight
 from serializers import (UserSerializer, ArticleSerializer, TopicSerializer, 
                          HighlightGroupSerializer, ClientSerializer, QuestionSerializer,
-                         ArticleHighlightSerializer, RootTopicSerializer)
+                         ArticleHighlightSerializer, RootTopicSerializer, SubmittedAnswerSerializer)
 
 # Views for serving the API
 
@@ -108,13 +108,25 @@ def next_question(request, id, ans_id):
         serializer = QuestionSerializer(next_question, many=False)
         return Response(serializer.data)
 
-
+# Deprecated:
+## Example POST data: {"id":1,"question_id":17,"question_text":"foo?","answers":[{"answer_content":"bar","answer_id":1},{"answer_content":"baz","answer_id":2},{"answer_content":"xyzzy","answer_id":3}]}
 # TODO: Post a highlight group.
+# @api_view(['POST'])
+# def post_question(request):
+#     if request.method == 'POST':
+#         print("data", request.data)
+#         serializer = QuestionSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+## Example POST data: {"question":6,"answer":1,"user":{"username":"nicketynick","password":"xyzzy","accuracy_score":0.9,"experience_score":2.2},"highlight_group":""}
 @api_view(['POST'])
-def post_question(request):
+def submit_answer(request):
     if request.method == 'POST':
         print("data", request.data)
-        serializer = QuestionSerializer(data=request.data)
+        serializer = SubmittedAnswerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
