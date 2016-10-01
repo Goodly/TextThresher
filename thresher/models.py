@@ -86,17 +86,6 @@ class Question(models.Model):
     topic = models.ForeignKey(Topic, related_name="related_questions", 
                               on_delete=models.CASCADE)
 
-    # The type of question (e.g. multiple choice, text box, ...)
-    # A list of all possible question types
-    QUESTION_TYPE_CHOICES = (
-            ('mc', 'Multiple Choice'),
-            ('dt', 'Date Time'),
-            ('tb', 'Textbox'),
-            ('cl', 'Checklist')
-    )
-    type = models.CharField(max_length=2,
-                            choices=QUESTION_TYPE_CHOICES)
-
     # The question text
     question_text = models.TextField()
 
@@ -108,11 +97,11 @@ class Question(models.Model):
                                      on_delete=models.CASCADE, null=True)
 
     class Meta:
-        unique_together = ("topic", "question_text", "type")
+        unique_together = ("topic", "question_text")
 
     def __unicode__(self):
         return "Question %d of type %s in topic %s" % (
-            self.question_id, self.type, self.topic.name)
+            self.question_id, self.topic.name)
 
 # Possible answers for a given question
 # NOTE: This does NOT represent submitted answers, only possible answers
@@ -148,16 +137,8 @@ class HighlightGroup(models.Model):
         """
         A property to access all the submitted answers in this highlight group
         """
-        # The CL answers
-        cl_answers = list(CLSubmittedAnswer.objects.filter(highlight_group=self))
-        # The MC answers
-        mc_answers = list(MCSubmittedAnswer.objects.filter(highlight_group=self))
-        # The TB answers
-        tb_answers = list(TBSubmittedAnswer.objects.filter(highlight_group=self))
-        # The dt answers
-        dt_answers = list(DTSubmittedAnswer.objects.filter(highlight_group=self))
-        
-        return cl_answers + mc_answers + tb_answers + dt_answers
+        answers = list(SubmittedAnswer.objects.filter(highlight_group=self))
+        return answers
 
 # A container class for an Article and its Highlight Group
 # that will be referenced by a topic
@@ -172,76 +153,10 @@ class ArticleHighlight(models.Model):
                                                   self.article.article_id)
 
 # A submitted answer to a question
-# This is an abstract class which is subclassed to represent
-# specifi types of answers (MC, CL, TB, ...)
 class SubmittedAnswer(models.Model):
     # The highlight group this answer is part of
-    highlight_group = models.ForeignKey(HighlightGroup)
-
-    class Meta:
-        abstract = True
-
- 
-# A submitted answer for a Multiple Choice question
-class MCSubmittedAnswer(SubmittedAnswer):
-    # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"mc"})
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_mc")
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_mc")
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_mc")
-
-    # The answer chosen
-    answer = models.ForeignKey(Answer)
-
-# A submitted answer for a Checklist question
-class CLSubmittedAnswer(SubmittedAnswer):
-    # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"cl"})
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_cl")
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_cl")
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_cl")
-
-    # For a checklist, each submission could include multiple answers 
-    # Answers are re-used across submissions
-    # Therefore we need a many to many relationship
-    answer = models.ManyToManyField(Answer)
-
-# A submitted highlight group for a Textbox question
-class TBSubmittedAnswer(SubmittedAnswer):
-    # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"tb"})
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_tb")
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_tb")
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_tb")
-
-    # The text of the answer
+    highlight_group = models.ForeignKey(HighlightGroup, related_name="submitted_answer")
+    question = models.ForeignKey(Question)
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_answer")
     answer = models.TextField()
-
-# A submitted answer for a Date Time question
-class DTSubmittedAnswer(SubmittedAnswer):
-    # The question this answer is for
-    question = models.ForeignKey(Question, limit_choices_to={"type":"dt"})
-
-    # The user who submitted this answer
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_dt")
-    
-    # The submitted date time answer
-    answer = models.DateTimeField()
+ 

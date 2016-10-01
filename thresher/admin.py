@@ -3,9 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from thresher.models import (UserProfile, Client, Article, 
                              Topic, Question, Answer, 
-                             HighlightGroup, MCSubmittedAnswer,
-                             CLSubmittedAnswer, TBSubmittedAnswer, 
-                             DTSubmittedAnswer)
+                             HighlightGroup, SubmittedAnswer)
 
 class UserProfileInLine(admin.StackedInline):
     """ Class meant to serve as an inline in the 
@@ -34,7 +32,4 @@ admin.site.register(Topic)
 admin.site.register(Question)
 admin.site.register(Answer)
 admin.site.register(HighlightGroup)
-admin.site.register(MCSubmittedAnswer)
-admin.site.register(CLSubmittedAnswer)
-admin.site.register(TBSubmittedAnswer)
-admin.site.register(DTSubmittedAnswer)
+admin.site.register(SubmittedAnswer)
