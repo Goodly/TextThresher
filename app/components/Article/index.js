@@ -24,7 +24,8 @@ const Article = React.createClass({
   displayName: 'Article',
 
   propTypes: {
-    article: React.PropTypes.object.isRequired
+    article: React.PropTypes.object.isRequired,
+    postArticleHighlights: React.PropTypes.func.isRequired
   },
 
   componentDidMount: function() {

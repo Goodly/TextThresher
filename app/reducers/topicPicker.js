@@ -1,16 +1,9 @@
-function getInitialState() {
-  return {
-    topics: {},
-    currentTopic: 1
-  }
-}
-
 const initialState = Object.assign({
   topics: {},
   currentTopic: null
-}, getInitialState());
+}, {});
 
-export function topics(state = initialState, action) {
+export function topicPicker(state = initialState, action) {
   console.log(action);
   switch (action.type) {
     case 'ACTIVATE_TOPIC':

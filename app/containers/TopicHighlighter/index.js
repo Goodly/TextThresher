@@ -6,12 +6,12 @@ import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 
 import * as articleActionCreators from 'actions/article';
-import * as topicsActionCreators from 'actions/topics';
+import * as topicsActionCreators from 'actions/topicPicker';
 
 const assembledActionCreators = Object.assign({}, articleActionCreators, topicsActionCreators)
 
 import Article from 'components/Article';
-import Topics from 'components/Topics';
+import TopicPicker from 'components/TopicPicker';
 
 import { styles } from './styles.scss';
 
@@ -20,7 +20,7 @@ const mapStateToProps = state => {
     article: state.article.article,
     currentArticle: state.article.currentArticle,
     nextArticle: state.article.nextArticle,
-    topics: state.topics.topics
+    topics: state.topicPicker.topics
   };
 }
 
@@ -63,7 +63,7 @@ export class TopicHighlighter extends Component {
                                 transitionLeaveTimeout={500}>
         <div className={loadingClass}></div>
         <div className='topics-wrapper'>
-          <Topics {...this.props}/>
+          <TopicPicker topics={this.props.topics}/>
         </div>
         <div className='article-wrapper'>
             <ReactCSSTransitionsGroup transitionName='fade-between'
