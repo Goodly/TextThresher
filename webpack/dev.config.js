@@ -63,6 +63,7 @@ export default {
       path: __dirname,
       filename: '[name]-[hash].js',
       chunkFilename: '[name]-[hash].js',
+      sourceMapFilename: "[name]-[hash].js.map",
       publicPath: PUBLIC_PATH
     },
     module: {

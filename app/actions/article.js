@@ -11,36 +11,19 @@ export function fetchArticle(articleId) {
   };
 }
 
-export function fetchTopic(topicId) {
+export function postArticleHighlights(highlightsString, articleId) {
+  console.log(highlightsString, articleId)
   return (dispatch) => {
-    dispatch({ type: 'FETCH_TOPIC'});
+    dispatch({ type: 'POST_HIGHLIGHTS'});
 
-    return fetch(`http://localhost:5000/api/topics/${topicId}/?format=json`) // TODO: resolve this absolute URL issue with backend
+    return fetch(`http://localhost:5000/api/postHighlights/${articleId}`, {
+        method: 'POST',
+        body: highlightsString
+      })
       .then(response => response.json())
       .then(
-        (response) => dispatch({ type: 'FETCH_TOPIC_SUCCESS', response}),
-        (error) => dispatch({ type: 'FETCH_TOPIC_FAIL', error})
+        (response) => dispatch({ type: 'POST_HIGHLIGHTS_SUCCESS'}, response),
+        (error) => dispatch({ type: 'POST_HIGHLIGHTS_FAIL', error})
       );
   };
-}
-
-export function getArticle(articleId) {
-  return {
-    type: 'GET_ARTICLE',
-    articleId
-  };
-}
-
-export function addHighlight(start, end, selectedText) {
-  return {
-    type: 'ADD_HIGHLIGHT',
-    selection: {start, end, selectedText}
-  };
-}
-
-export function activateTopic(topicId) {
-  return {
-    type: 'ACTIVATE_TOPIC',
-    topicId
-  }
 }

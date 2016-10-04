@@ -17,7 +17,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     article: state.article.article,
-    currentTopic: state.article.currentTopic
   };
 }
 
@@ -25,12 +24,18 @@ const Article = React.createClass({
   displayName: 'Article',
 
   propTypes: {
-    article: React.PropTypes.object.isRequired
+    article: React.PropTypes.object.isRequired,
+    postArticleHighlights: React.PropTypes.func.isRequired
   },
 
   componentDidMount: function() {
     let articleContainer = document.getElementById('article-container');
     this.annotationsObject = new TextHighlighter(articleContainer);
+  },
+
+  serializeHighlights: function() {
+    let highlightsString = this.annotationsObject.serializeHighlights();
+    this.props.postArticleHighlights(highlightsString, this.props.article.article_id);
   },
 
   render() {
@@ -46,6 +51,7 @@ const Article = React.createClass({
         <div ref={(ref) => this.articleRef = ref} id='article-container'>
           {text}
         </div>
+        <button onClick={this.serializeHighlights}>Submit highlights</button>
       </div>
     );
   }

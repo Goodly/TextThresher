@@ -70,10 +70,6 @@
     "webpack-dev-server": "^1.12.0"
   },
   "dependencies": {
-    "classnames": "^2.2.3",
-    "dom-anchor-text-position": "^2.0.1",
-    "immutable": "^3.7.6",
-    "jquery": "^2.2.0",
     "react-addons-css-transition-group": "^0.14.7"
   }
 }

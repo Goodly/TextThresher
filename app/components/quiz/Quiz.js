@@ -1,5 +1,4 @@
 import { newQuestions } from 'actions/article';
-import classNames from 'classnames';
 import QuizQuestion from 'components/quiz/QuizQuestion.js';
 import React from 'react';
 import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
@@ -65,7 +64,7 @@ const Quiz = React.createClass({
                                 transitionAppearTimeout={500}
                                 transitionEnterTimeout={500}
                                 transitionLeaveTimeout={500}>
-        <span className={classNames('prompt', {active: this.prompt()})}>Please highlight the text from below</span>
+        <span className='prompt'>Please highlight the text from below</span> 
         <div className='quiz'>
           {this.props.questions.map((question) => {
             return (

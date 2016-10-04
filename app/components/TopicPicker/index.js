@@ -22,29 +22,36 @@ const TopicPicker = React.createClass({
   displayName: 'TopicPicker',
 
   propTypes: {
-    topics: React.PropTypes.array.isRequired,
+    topics: React.PropTypes.object.isRequired,
   },
 
   activateTopic(topicId, props) {
     console.log(topicId);
   },
 
-  render() {
+  renderTopics() {
     let topics = this.props.topics;
+    if (topics.results) {
+      return (
+          topics.results.map(topic => {
+            return (
+              <li onClick={this.activateTopic.bind(this, topic.id, this.props)} key={topic.id}>
+                <b>{topic.name}</b>
+              </li>
+            );
+          })
+      )
+    }
+  },
 
+  render() {
     return (
       <div className='topic-picker topic-picker--left topic-picker--open'>
         <div className="topic-picker__header">
           Click a topic name to change highlighter color
         </div>
         <ul className='topic-picker__nav'>
-          { topics.map(topic => {
-            return (
-              <li onClick={this.activateTopic.bind(this, topic.id, this.props)} key={topic.id}>
-                <b>{topic.name}</b>
-              </li>
-            );
-          })}
+          { this.renderTopics()}
         </ul>
       </div>
     );
