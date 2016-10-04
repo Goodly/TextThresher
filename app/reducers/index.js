@@ -1,13 +1,12 @@
 import { combineReducers } from 'redux';
 import { article } from './article';
 import { topicPicker } from './topicPicker';
-
-import quizReducers from './quizReducers';
+import { quiz } from './quiz';
 
 const rootReducer = combineReducers({
   article,
   topicPicker,
-  quizReducers
+  quiz
 });
 
 export default rootReducer;

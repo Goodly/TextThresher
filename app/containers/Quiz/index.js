@@ -12,7 +12,7 @@ import {styles} from './styles.scss';
 
 const mapStateToProps = state => {
   return {
-    question: state.question
+    question: state.quiz.question
   };
 }
 
@@ -30,7 +30,7 @@ export class Quiz extends Component {
   }
   render() {
     return (
-      <div><Question/></div>
+      <div><Question question={this.props.question}/></div>
     )
   }
 }
