@@ -18,8 +18,8 @@ const mapStateToProps = state => {
   };
 }
 
-const Topics = React.createClass({
-  displayName: 'Topics',
+const TopicPicker = React.createClass({
+  displayName: 'TopicPicker',
 
   propTypes: {
     topics: React.PropTypes.object.isRequired,
@@ -46,11 +46,11 @@ const Topics = React.createClass({
 
   render() {
     return (
-      <div className='topics topics--left topics--open'>
-        <div className="topics__header">
+      <div className='topic-picker topic-picker--left topic-picker--open'>
+        <div className="topic-picker__header">
           Click a topic name to change highlighter color
         </div>
-        <ul className='topics__nav'>
+        <ul className='topic-picker__nav'>
           { this.renderTopics()}
         </ul>
       </div>
@@ -62,4 +62,4 @@ const Topics = React.createClass({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Topics);
+)(TopicPicker);

@@ -62,7 +62,7 @@ export class TopicHighlighter extends Component {
                                 transitionEnterTimeout={500}
                                 transitionLeaveTimeout={500}>
         <div className={loadingClass}></div>
-        <div className='topics-wrapper'>
+        <div className='topic-picker-wrapper'>
           <TopicPicker topics={this.props.topics}/>
         </div>
         <div className='article-wrapper'>
