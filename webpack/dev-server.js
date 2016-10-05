@@ -29,5 +29,6 @@ devServer.listen(config.server.port, config.server.listen_ip, function () {
     config.server.port);
 });
 
-console.log('server available at:'.underline.yellow);
+console.log('server available at:'.underline.red);
 console.log(`${config.server.options.publicPath}#/article/0`.underline.yellow);
+console.log(`${config.server.options.publicPath}#/quiz/0`.underline.green);
