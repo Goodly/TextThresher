@@ -1,8 +1,9 @@
 export function fetchArticle(articleId) {
   return (dispatch) => {
     dispatch({ type: 'FETCH_ARTICLE', articleId});
-
-    return fetch(`http://localhost:5000/api/articles/${articleId}/?format=json`) // TODO: resolve this absolute URL issue with backend
+    //http://192.168.99.100:5000/api/articles
+    //http://localhost:5000/api/
+    return fetch(`http://192.168.99.100:5000/api/articles/${articleId}/?format=json`) // TODO: resolve this absolute URL issue with backend
       .then(response => response.json())
       .then(
         (response) => dispatch({ type: 'FETCH_ARTICLE_SUCCESS', response}),
@@ -16,7 +17,7 @@ export function postArticleHighlights(highlightsString, articleId) {
   return (dispatch) => {
     dispatch({ type: 'POST_HIGHLIGHTS'});
 
-    return fetch(`http://localhost:5000/api/postHighlights/${articleId}`, {
+    return fetch(`http://192.168.99.100:5000/api/postHighlights/${articleId}`, {
         method: 'POST',
         body: highlightsString
       })
