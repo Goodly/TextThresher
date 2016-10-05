@@ -13,11 +13,11 @@ const mapDispatchToProps = dispatch => {
   };
 }
 
-/*const mapStateToProps = state => {
+const mapStateToProps = state => {
   return {
-    currentTopic: state.currentTopic
+    currentTopic: state.topicPicker.currentTopic
   };
-}*/
+}
 
 const TopicPicker = React.createClass({
   displayName: 'TopicPicker',
@@ -27,28 +27,21 @@ const TopicPicker = React.createClass({
     currentTopic: React.PropTypes.string.isRequired,
   },
 
-  /*activateTopic(topicId, props) {
-    console.log(topicId);
-  },*/
-
   activateTopic(topic) {
     this.props.onActivateTopic(topic);
-    //this.props.onPassTopic(topic);
   },
 
   componentDidMount() {
-    console.log('activated 1');
     this.activateTopic('1');
   },
 
   render() {
-    //var colors =this.props.colors;
     var colors = ['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
 
     var index = -1;
     var defcolor;
+    var textcolor;
     console.log('TOPICPICKER RENDER')
-    console.log(this.props)
     var topic_array = this.props.topics.results;
 
     var list = topic_array.map(topic => {
@@ -58,17 +51,29 @@ const TopicPicker = React.createClass({
       index += 1;
 
       defcolor = '#4c4545';
-
       if (topic_id == this.props.currentTopic){
         defcolor = colors[index]
       }
+      var height = 100 / topic_array.length + '%';
       var styles = {
         listElement: {
           backgroundColor: defcolor,
-          height: 100 / topic_array.length + '%',
+          position: 'relative',
+          borderBottom: 'solid',
+          borderWidth: '1px',
+          borderColor: 'gray',
+          height: height,
            ':hover': {
-             backgroundColor: colors[index]
+             backgroundColor: colors[index],
           }
+        },
+        topicColor: {
+          position: 'absolute',
+          height: '90%',
+          right: '0px',
+          top: '5%',
+          width: '10px',
+          backgroundColor: colors[index],
         }
       }
       return (
@@ -77,6 +82,8 @@ const TopicPicker = React.createClass({
             data-topic={topic.id}
             style={styles.listElement}
         >
+          <div style ={styles.topicColor}>
+          </div>
           <b>{topic.name}</b>
         </li>
       );
@@ -108,6 +115,6 @@ const TopicPicker = React.createClass({
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Radium(TopicPicker));

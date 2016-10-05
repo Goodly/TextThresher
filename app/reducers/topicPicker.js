@@ -3,15 +3,13 @@ const initialState = Object.assign({
   currentTopic: null
 }, {});
 
-export function TopicPicker(state = initialState, action) {
-  console.log('topic picker reducer');
+export function topicPicker(state = initialState, action) {
   switch (action.type) {
     case 'ACTIVATE_TOPIC':
-    return Object.assign({}, state, { currentTopic: action.topic });
-    /*return {
+    return {
       ...state,
       currentTopic: action.currentTopic,
-    }*/
+    }
     case 'FETCH_TOPICS_SUCCESS':
     return {
       ...state,

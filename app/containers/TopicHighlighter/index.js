@@ -19,6 +19,7 @@ const mapStateToProps = state => {
   return {
     article: state.article.article,
     currentArticle: state.article.currentArticle,
+    currentTopic: state.article.currentTopic,
     nextArticle: state.article.nextArticle,
     topics: state.topicPicker.topics
   };
