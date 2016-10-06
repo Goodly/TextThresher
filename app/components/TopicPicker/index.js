@@ -19,12 +19,65 @@ const mapStateToProps = state => {
   };
 }
 
+const TopicItem = React.createClass({
+  displayName: 'TopicItem',
+
+  propTypes: {
+    topic: React.PropTypes.object.isRequired,
+    currentTopicId: React.PropTypes.number.isRequired,
+    color: React.PropTypes.string.isRequired,
+    height: React.PropTypes.string.isRequired,
+    clickFunc: React.PropTypes.func.isRequired,
+  },
+
+  render() {
+    var topic = this.props.topic;
+    var color = this.props.color;
+    var defcolor = '#4c4545';
+    if (topic.id == this.props.currentTopicId) {
+      defcolor = color;
+    };
+    var listElement = {
+        backgroundColor: defcolor,
+        position: 'relative',
+        borderBottom: 'solid',
+        borderWidth: '1px',
+        borderColor: 'gray',
+        height: this.props.height,
+         ':hover': {
+           backgroundColor: color,
+        }
+     };
+     var topicColor = {
+        position: 'absolute',
+        height: '90%',
+        right: '0px',
+        top: '5%',
+        width: '10px',
+        backgroundColor: color,
+    };
+    return (
+      <li key={topic.id}
+          onClick={this.props.clickFunc}
+          title={topic.instructions}
+          data-topic={topic.id}
+          style={listElement}
+      >
+        <div style ={topicColor}>
+        </div>
+        <b>{topic.name}</b>
+      </li>
+    );
+  }
+});
+
 const TopicPicker = React.createClass({
   displayName: 'TopicPicker',
 
   propTypes: {
     topics: React.PropTypes.object.isRequired,
     currentTopicId: React.PropTypes.number.isRequired,
+    onActivateTopic: React.PropTypes.func.isRequired,
   },
 
   activateTopic(topic) {
@@ -34,53 +87,15 @@ const TopicPicker = React.createClass({
   render() {
     var colors = ['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
 
-    var defcolor;
     var topic_array = this.props.topics.results;
-
-    var list = topic_array.map((topic, index) => {
-      var topic_id = topic.id;
-      var func = this.activateTopic.bind(this, topic_id);
-
-      defcolor = '#4c4545';
-      if (topic_id == this.props.currentTopicId){
-        defcolor = colors[index]
-      }
-      var height = 100 / topic_array.length + '%';
-      var styles = {
-        listElement: {
-          backgroundColor: defcolor,
-          position: 'relative',
-          borderBottom: 'solid',
-          borderWidth: '1px',
-          borderColor: 'gray',
-          height: height,
-           ':hover': {
-             backgroundColor: colors[index],
-          }
-        },
-        topicColor: {
-          position: 'absolute',
-          height: '90%',
-          right: '0px',
-          top: '5%',
-          width: '10px',
-          backgroundColor: colors[index],
-        }
-      }
-      return (
-        <li key={topic.id}
-            onClick={func}
-            title={topic.instructions}
-            data-topic={topic.id}
-            style={styles.listElement}
-        >
-          <div style ={styles.topicColor}>
-          </div>
-          <b>{topic.name}</b>
-        </li>
-      );
-    });
-
+    var list = topic_array.map( (topic, index) =>
+        <TopicItem key={topic.id}
+                   topic={topic}
+                   currentTopicId={this.props.currentTopicId}
+                   color={colors[index]}
+                   height={100 / topic_array.length + '%'}
+                   clickFunc={this.activateTopic.bind(this, topic.id)}
+        />);
     return (
       <div className='topic-picker topic-picker--left topic-picker--open'>
         <ul className='topic-picker__nav'>
