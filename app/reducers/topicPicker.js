@@ -1,6 +1,6 @@
 const initialState = Object.assign({
   topics: {},
-  currentTopic: null
+  currentTopicId: null
 }, {});
 
 export function topicPicker(state = initialState, action) {
@@ -8,7 +8,7 @@ export function topicPicker(state = initialState, action) {
     case 'ACTIVATE_TOPIC':
     return {
       ...state,
-      currentTopic: action.currentTopic,
+      currentTopicId: action.currentTopicId,
     }
     case 'FETCH_TOPICS_SUCCESS':
     return {

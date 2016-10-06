@@ -15,7 +15,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    currentTopic: state.topicPicker.currentTopic
+    currentTopicId: state.topicPicker.currentTopicId
   };
 }
 
@@ -24,7 +24,7 @@ const TopicPicker = React.createClass({
 
   propTypes: {
     topics: React.PropTypes.object.isRequired,
-    currentTopic: React.PropTypes.string.isRequired,
+    currentTopicId: React.PropTypes.number.isRequired,
   },
 
   activateTopic(topic) {
@@ -32,7 +32,7 @@ const TopicPicker = React.createClass({
   },
 
   componentDidMount() {
-    this.activateTopic('1');
+    this.activateTopic(1);
   },
 
   render() {
@@ -40,18 +40,17 @@ const TopicPicker = React.createClass({
 
     var index = -1;
     var defcolor;
-    var textcolor;
     console.log('TOPICPICKER RENDER')
     var topic_array = this.props.topics.results;
 
     var list = topic_array.map(topic => {
-      var topic_id = topic.id + ''
+      var topic_id = topic.id;
       var func = this.activateTopic.bind(this, topic_id);
 
       index += 1;
 
       defcolor = '#4c4545';
-      if (topic_id == this.props.currentTopic){
+      if (topic_id == this.props.currentTopicId){
         defcolor = colors[index]
       }
       var height = 100 / topic_array.length + '%';
@@ -79,6 +78,7 @@ const TopicPicker = React.createClass({
       return (
         <li key={topic.id}
             onClick={func}
+            title={topic.instructions}
             data-topic={topic.id}
             style={styles.listElement}
         >
@@ -87,15 +87,6 @@ const TopicPicker = React.createClass({
           <b>{topic.name}</b>
         </li>
       );
-    });
-    var topicInfo = topic_array.map(topic => {
-        return (
-          <div key={topic.id} className='topic-wrapper' data-topic={topic.id}>
-            <div className='topic-wrapper_topic'>
-              {topic.glossary}
-            </div>
-          </div>
-        )
     });
 
     return (
