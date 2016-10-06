@@ -1,6 +1,8 @@
 const initialState = Object.assign({
-  topics: {},
-  currentTopicId: null
+  topics: {
+    results: []
+  },
+  currentTopicId: 0
 }, {});
 
 export function topicPicker(state = initialState, action) {
@@ -13,7 +15,9 @@ export function topicPicker(state = initialState, action) {
     case 'FETCH_TOPICS_SUCCESS':
     return {
       ...state,
-      topics: action.response
+      topics: action.response,
+      currentTopicId: action.response.results.length > 0 ?
+                      action.response.results[0].id : 0
     }
     default:
       return state;
