@@ -2,8 +2,8 @@ export function fetchArticle(articleId) {
   return (dispatch) => {
     dispatch({ type: 'FETCH_ARTICLE', articleId});
     // TODO: resolve this absolute URL issue with backend
-    let host = "http://localhost:5000";
-    // let host = "http://192.168.99.100:5000";
+    //let host = "http://localhost:5000";
+    let host = "http://192.168.99.100:5000";
     return fetch(host + `/api/articles/${articleId}/?format=json`)
       .then(response => response.json())
       .then(
