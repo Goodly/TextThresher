@@ -18,9 +18,9 @@ tests.tap
 # python artifacts
 *.pyc
 .Python
-bin/
-include/
-lib/
+/bin/
+/include/
+/lib/
 pip-selfcheck.json
 __pycache__/
 
