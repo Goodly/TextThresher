@@ -26,3 +26,6 @@ _postgres_data
 
 # gunicorn artifacts
 *.log
+
+# npm artifacts
+npm-debug.log.*
