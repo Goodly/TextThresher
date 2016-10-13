@@ -1,18 +1,21 @@
-thresher_api:
-  build: .
-  ports:
-    - "5000:5000"
-  links:
-    - db
-  volumes:
-    - .:/home/thresher
+version: '2'
+services:
+  thresher_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/home/thresher
 
-db:
-  image: postgres
-#  volumes:
+  db:
+    # use the same postgres version that python:2.7-slim uses
+    image: postgres:9.4
+#   volumes:
 #    - ./_postgres_data:/var/lib/postgresql/data/
-  environment:
-    - POSTGRES_USER=zz
-    - POSTGRES_PASSWORD=
+    environment:
+      - POSTGRES_USER=zz
+      - POSTGRES_PASSWORD=
 #    - PGDATA=/var/lib/postgresql/data/pgdata
-    - POSTGRES_DB=thresher
+      - POSTGRES_DB=thresher
