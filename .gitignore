@@ -8,6 +8,9 @@ tests.tap
 *~
 *#
 
+# vim artifacts
+*.swp
+
 # intellij artifacts
 .idea/
 *.iml
@@ -15,10 +18,11 @@ tests.tap
 # python artifacts
 *.pyc
 .Python
-bin/
-include/
-lib/
+/bin/
+/include/
+/lib/
 pip-selfcheck.json
+__pycache__/
 
 # django artifacts
 staticfiles
