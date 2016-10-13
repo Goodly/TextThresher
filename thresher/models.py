@@ -90,7 +90,7 @@ class Question(models.Model):
     question_text = models.TextField()
 
     # Whether the question is a contingency one or not
-    contingency = models.BooleanField()
+    contingency = models.BooleanField(default=False)
 
     # The default next question (for mandatory questions)
     default_next = models.ForeignKey('self', related_name="next_default", 
