@@ -33,7 +33,6 @@ SECRET_KEY = 'yfxov0&1l8#ouo-f6_(_gigpewf72_a84srnlk%f#11$xzai5e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -65,6 +64,22 @@ MIDDLEWARE_CLASSES = (
 CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'thresher_backend.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 WSGI_APPLICATION = 'thresher_backend.wsgi.application'
 
