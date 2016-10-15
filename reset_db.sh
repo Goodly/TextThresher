@@ -1,2 +1,3 @@
 #!/bin/bash
-(python manage.py sqlclear thresher | python manage.py dbshell) && python manage.py syncdb
+DJANGO_SETTINGS_MODULE=thresher_backend.settings
+(python manage.py sqlflush | python manage.py dbshell) && python manage.py migrate
