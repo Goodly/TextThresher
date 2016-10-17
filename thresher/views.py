@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator
 
 from rest_framework import routers, viewsets
 from rest_framework.decorators import list_route, api_view
