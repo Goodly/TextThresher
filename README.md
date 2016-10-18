@@ -43,6 +43,7 @@ use the following table as a guide. But you should probably perform ALL
 the steps and then test your work before submitting a pull request.
 
 To refresh your containers, first stop and remove them with:
+
 0. `docker-compose down`
 
 |Step |Command |Restart at this step when:|
@@ -56,7 +57,12 @@ To refresh your containers, first stop and remove them with:
 
 To view a browsable interface for the queries, navigate to `localhost:5000/api/`.
 
-For easier front-end development, we recommend Devtools for [React](https://facebook.github.io/react/blog/2015/09/02/new-react-developer-tools.html). For Redux, you can install the [Google Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) or use the other methods described in the README [here](https://github.com/zalmoxisus/redux-devtools-extension).
+For easier front-end development, we recommend
+[React Dev Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
+and the
+[Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
+or use the other install methods described in the
+[Redux DevTools Extension README](https://github.com/zalmoxisus/redux-devtools-extension).
 
 **Note:** If you encounter an error that the module `text-highlighter/src/TextHighlighter` cannot be found, you will need to update brew by running `brew update`.
 
