@@ -60,11 +60,11 @@ To view a browsable interface for the queries, navigate to `localhost:5000/api/`
 For easier front-end development, we recommend
 [React Dev Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
 and the
-[Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
-or use the other install methods described in the
+[Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd).
+Other install options for Redux DevTools are discussed in
 [Redux DevTools Extension README](https://github.com/zalmoxisus/redux-devtools-extension).
 
-**Note:** If you encounter an error that the module `text-highlighter/src/TextHighlighter` cannot be found, you will need to update brew by running `brew update`.
+**Mac Note:** If you encounter an error that the module `text-highlighter/src/TextHighlighter` cannot be found, you will need to update brew by running `brew update`.
 
 # To deploy
 
