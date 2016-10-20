@@ -14,6 +14,6 @@ export function fetchTopics() {
 export function activateTopic(topicId) {
   return {
     type: 'ACTIVATE_TOPIC',
-    topicId
+    currentTopicId: topicId
   }
 }

@@ -23,7 +23,6 @@ const initialState = Object.assign({
 
 
 export function article(state = initialState, action) {
-  console.log(action);
   switch (action.type) {
     case 'FETCH_ARTICLE':
       let nextArticleIndex = getNextArticle(Number(action.articleId));
@@ -41,7 +40,6 @@ export function article(state = initialState, action) {
         article: action.response
       }
     case 'POST_HIGHLIGHTS':
-      console.log(action);
       return state
     default:
       return state;
