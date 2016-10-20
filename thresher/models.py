@@ -14,12 +14,12 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return "User %s" % self.user
 
-class Client(models.Model):
+class Project(models.Model):
     name = models.CharField(max_length=100)
-    topic = models.ForeignKey("Topic", on_delete=models.CASCADE, 
-                              related_name="clients")
+    instructions = models.TextField()
+
     def __unicode__(self):
-        return "Client %s" % username
+        return "Project %d: %s" % (self.id, self.name)
 
 # Articles containing text for analysis
 class Article(models.Model):

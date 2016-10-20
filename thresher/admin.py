@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from thresher.models import (UserProfile, Client, Article, 
-                             Topic, Question, Answer, 
+from thresher.models import (UserProfile, Project, Article,
+                             Topic, Question, Answer,
                              HighlightGroup, SubmittedAnswer)
 
 class UserProfileInLine(admin.StackedInline):
@@ -26,7 +26,7 @@ class NewUserAdmin(UserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, NewUserAdmin)
 
-admin.site.register(Client)
+admin.site.register(Project)
 admin.site.register(Article)
 admin.site.register(Topic)
 admin.site.register(Question)
