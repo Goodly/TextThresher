@@ -1,0 +1,5 @@
+title: Opinionor
+
+Instructions: This topic is about someone's opinion.
+
+glossary: major event: A major event.
