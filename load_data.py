@@ -1,13 +1,13 @@
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "thresher_backend.settings")
+
 import django
 django.setup()
+from django.conf import settings
 
 import argparse
 import json
-import os
 import fnmatch
-
-os.environ['DJANGO_SETTINGS_MODULE'] = 'thresher_backend.settings'
-from django.conf import settings
 
 from django.core.management import call_command
 from django.core.management.color import no_style
