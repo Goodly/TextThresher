@@ -20,26 +20,51 @@ create a Unix group called docker and add users to it:
 
 Once installed, start the Docker application (if on a Mac), then go to the project directory and run:
 
+0. `docker-compose build`
 1. `docker-compose up -d`
 2. `./init_docker.sh`
 3. `npm install`
 4. `bower install`
+5. `npm run dev`
 
 You will only need to run the above commands once. Those will do the preliminary setup for the application by installing the dependencies and seeding the Docker containers to setup the database.
 
 Use `docker-compose stop` to stop the containers or `docker-compose down` to both stop and remove the containers.
 
-You might also want to install Devtools for [React](https://facebook.github.io/react/blog/2015/09/02/new-react-developer-tools.html). For Redux, you can install the [Google Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) or use the other methods described in the README [here](https://github.com/zalmoxisus/redux-devtools-extension).
-
-**Note:** If you are setting up Docker a second time, you may want to first remove the previous database containers with `docker-compose rm db`.
 
 # To develop
 
-In the project directory, run `docker-compose start` and `npm run dev`.
+You will have to refresh your containers depending on the types of changes that happen as you develop, or when you switch to another git branch.
 
-To view a browsable interface for the queries, navigate to `localhost:5000/api`. Another browsable interface is available [on Heroku](http://text-thresher.herokuapp.com/api/), but is not fully up-to-date.
+If you are NOT CERTAIN what has changed in the current commit since the last
+time the containers were initialized and started, the most prudent course
+is to perform ALL of the following steps. If you want to take a shortcut,
+use the following table as a guide. But you should probably perform ALL
+the steps and then test your work before submitting a pull request.
 
-**Note:** If you encounter an error that the module `text-highlighter/src/TextHighlighter` cannot be found, you will need to update brew by running `brew update`. 
+To refresh your containers, first stop and remove them with:
+
+0. `docker-compose down`
+
+|Step |Command |Restart at this step when:|
+|---|---|---|
+|2.| `docker-compose build`| requirements.txt changes |
+|3.| `docker-compose up -d`| sample data changes      |
+|4.| `./init_docker.sh`    |                          |
+|5.| `npm install`         | package.json changes     |
+|6.| `bower install`       | bower.json changes       |
+|7.| `npm run dev`         | webpack changes          |
+
+To view a browsable interface for the queries, navigate to `localhost:5000/api/`.
+
+For easier front-end development, we recommend
+[React Dev Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
+and the
+[Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd).
+Other install options for Redux DevTools are discussed in
+[Redux DevTools Extension README](https://github.com/zalmoxisus/redux-devtools-extension).
+
+**Mac Note:** If you encounter an error that the module `text-highlighter/src/TextHighlighter` cannot be found, you will need to update brew by running `brew update`.
 
 # To deploy
 

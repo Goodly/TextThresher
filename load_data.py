@@ -1,3 +1,6 @@
+import django
+django.setup()
+
 import argparse
 import json
 import os
@@ -8,13 +11,13 @@ from django.conf import settings
 
 from django.core.management import call_command
 from django.core.management.color import no_style
-from django.core.management.sql import sql_delete
 from django.db import connections, DEFAULT_DB_ALIAS, models
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
 
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
+
 from thresher.models import (Article, Topic, HighlightGroup, 
                              ArticleHighlight, Question, Answer)
 ANALYSIS_TYPES = {}
@@ -273,30 +276,10 @@ def load_args():
     parser.add_argument(
         '-d', '--article-dir',
         help='The directory holding raw article files for the TUA types')
-    parser.add_argument(
-        '-r', '--reset-db',
-        action='store_true',
-        default=False,
-        help='Reset the database before loading data?')
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = load_args()
-    if args.reset_db:
-        conn = connections[DEFAULT_DB_ALIAS]
-
-        # generate sql to delete all app tables
-        reset_sql = '\n'.join(
-            sql_delete(models.get_app('thresher'), no_style(), conn))
-        print "Resetting DB..."
-        print reset_sql
-
-        # execute the sql in a transaction
-        # TODO: TRANSACTION
-        conn.cursor().execute(reset_sql)
-
-        # run syncdb to recreate tables/indexes
-        call_command('syncdb')
     if args.schema_dir:
         load_schema_dir(args.schema_dir)
     if args.article_dir:
