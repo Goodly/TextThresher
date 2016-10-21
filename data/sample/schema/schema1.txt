@@ -83,7 +83,7 @@ d Downtown
 e Near City Hall
 f Other
 
-Instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below.
+Instructions: This topic includes all information describing protester-initiated events like marches, demonstration, rallies, and more. Highlight all the words that describe the scene, timing, participants, and actions occurring during such events. Include police activity, too, if it is occurring during and in immediate response to the protester-initiated event. EXCLUDE any details about what protesters are doing in their encampments. Such information is covered by the ‘Camp’ topic. EXCLUDE any information about planned or future events. Such information is covered by the ‘Future’ topic.
 
 glossary: blocking action: protesters intentionally block access to transportation or commercial infrastructure. E.g. protesters block access to government buildings, streets, sidewalks, light rail systems, bank buildings, shipping ports, etc.
 

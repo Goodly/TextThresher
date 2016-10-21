@@ -1,0 +1,5 @@
+title: Strategy
+
+Instructions: This topic is about Strategy
+
+glossary: major event: A major event.

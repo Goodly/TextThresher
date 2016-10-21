@@ -240,7 +240,7 @@ def load_article(article):
                 glossary='',
             )
             ANALYSIS_TYPES[tua_type] = topic
-            print("made a dummy topic")
+            print("made a dummy topic: %s" % tua_type)
 #           raise ValueError("No TUA type '" + tua_type +
 #                            "' registered. Have you loaded the schemas?")
         for tua_id, offset_list in tuas.iteritems():
