@@ -5,6 +5,7 @@
   @include newspaper;
   transition: opacity $transition-slow;
   margin-bottom: 80px;
+  line-height: 2.2;
 
   .highlighted {
     // TODO: generate programmatically?
