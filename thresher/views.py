@@ -21,7 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all().order_by('article_id')
+    queryset = Article.objects.all().order_by('id')
     serializer_class = ArticleSerializer
 
 class TopicViewSet(viewsets.ModelViewSet):
@@ -95,31 +95,17 @@ def question(request, id):
         return Response(serializer.data)
 
 @api_view(['GET'])
-def next_question(request, id, ans_id):
+def next_question(request, id, ans_num):
     """
-    /question/id/ans_id
-    Gets the next question based on the ans_id
+    /question/id/ans_num
+    Gets the next question based on the ans_num
     """
     if request.method == 'GET':
         question = Question.objects.get(id=id)
-        answer = Answer.objects.get(question=question, answer_id=ans_id)
+        answer = Answer.objects.get(question=question, answer_number=ans_num)
         next_question = answer.next_question
         serializer = QuestionSerializer(next_question, many=False)
         return Response(serializer.data)
-
-# Deprecated
-# # Example POST data: {"id":1,"question_id":17,"question_text":"foo?","answers":[{"answer_content":"bar","answer_id":1},{"answer_content":"baz","answer_id":2},{"answer_content":"xyzzy","answer_id":3}]}
-# @api_view(['POST'])
-# def post_question(request):
-#     if request.method == 'POST':
-#         print("data", request.data)
-#         serializer = QuestionSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# TODO: submit answer endpoint
 
 # Register our viewsets with the router
 ROUTER = routers.DefaultRouter()

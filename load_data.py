@@ -105,7 +105,7 @@ class TopicsSchemaParser(object):
         for topic in topics:
             questions = Question.objects.filter(topic=topic, 
                                                 contingency=False) \
-                                        .order_by('question_id')
+                                        .order_by('question_number')
             for i in range(len(questions) - 1):
                 self.write_answers(questions[i], questions[i + 1])
 
@@ -132,11 +132,11 @@ class TopicsSchemaParser(object):
         for dep in self.dep:
             topic = topics.filter(order=dep.topic)
             question = Question.objects.filter(topic=topic, 
-                                               question_id=dep.question)[0]
+                                               question_number=dep.question)[0]
             answers = Answer.objects.filter(
                 question=question)
             next_question = Question.objects.filter(
-                topic=topic, question_id=dep.next_question)[0]
+                topic=topic, question_number=dep.next_question)[0]
             next_question_answers = Answer.objects.filter(
                 question=next_question)
             
@@ -153,15 +153,15 @@ class TopicsSchemaParser(object):
             if dep.answer == '*':
                 answers = answers
             else:
-                answers = answers.filter(answer_id=dep.answer)
+                answers = answers.filter(answer_number=dep.answer)
             for answer in answers:
                 answer.next_question = next_question
                 answer.save()
 
 def load_projects():
     Project.objects.create(name="Deciding Force",
-                           instructions="This project analyzes media "
-                                        "descriptions of interactions "
+                           instructions="This project analyzes media " +
+                                        "descriptions of interactions " +
                                         "between police and protestors."
     )
 
@@ -204,12 +204,12 @@ def load_schema(schema):
     schema_parser.load_topics()
 
 def load_article(article):
-    new_id = int(article['metadata']['article_id'])
+    new_id = int(article['metadata']['article_number'])
 
     try: # Catch duplicate article ids and assign new ids.
-        existing_article = Article.objects.get(article_id=new_id)
+        existing_article = Article.objects.get(article_number=new_id)
         if article['text'] != existing_article.text:
-            max_id = Article.objects.all().order_by('-article_id')[0].article_id
+            max_id = Article.objects.all().order_by('-article_number')[0].article_number
             new_id = max_id + 1 if max_id >= HIGH_ID else HIGH_ID
             print "NEW ID!", new_id
         else:
@@ -220,7 +220,7 @@ def load_article(article):
         pass
 
     article_obj = Article(
-        article_id=new_id,
+        article_number=new_id,
         text=article['text'],
         date_published=article['metadata']['date_published'],
         city_published=article['metadata']['city'],
