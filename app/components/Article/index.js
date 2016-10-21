@@ -2,8 +2,8 @@ import React from 'react';
 import { addHighlight } from 'actions/article';
 import { connect } from 'react-redux';
 
-import 'text-highlighter/src/TextHighlighter'
-
+//import 'text-highlighter/src/TextHighlighter';
+import HighlightModule from 'components/highlight/highlighter';
 import { styles } from './styles.scss';
 
 const mapDispatchToProps = dispatch => {
@@ -29,8 +29,8 @@ const Article = React.createClass({
   },
 
   componentDidMount: function() {
-    let articleContainer = document.getElementById('article-container');
-    this.annotationsObject = new TextHighlighter(articleContainer);
+    //let articleContainer = document.getElementById('article-container');
+    //this.annotationsObject = new TextHighlighter(articleContainer);
   },
 
   serializeHighlights: function() {
@@ -39,6 +39,7 @@ const Article = React.createClass({
   },
 
   render() {
+    var colors = ['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
     let article = this.props.article.article;
     var text = this.props.article.text;
   
@@ -48,13 +49,17 @@ const Article = React.createClass({
         <div className='article__header-text'>
         </div>
         <div ref={(ref) => this.articleRef = ref} id='article-container'>
-          {text}
+        <HighlightModule
+          text={text}
+          topics={this.props.topics}
+          colors={colors}
+          currentTopicId={this.props.currentTopicId}
+          />
         </div>
         <button onClick={this.serializeHighlights}>Submit highlights</button>
       </div>
     );
   }
-
 });
 
 export default connect(

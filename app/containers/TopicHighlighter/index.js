@@ -21,7 +21,7 @@ const mapStateToProps = state => {
   return {
     article: state.article.article,
     currentArticle: state.article.currentArticle,
-    currentTopicId: state.article.currentTopicId,
+    currentTopicId: state.topicPicker.currentTopicId,
     nextArticle: state.article.nextArticle,
     topics: state.topicPicker.topics
   };
@@ -52,7 +52,6 @@ export class TopicHighlighter extends Component {
   render() {
     let current_article = this.props.currentArticle;
     let article = this.props.article;
-
     if (this.props.nextArticle == undefined) {
       return (<div>DONE</div>) // TODO: Clean this up.
     }
@@ -76,7 +75,13 @@ export class TopicHighlighter extends Component {
                                       transitionAppearTimeout={500}
                                       transitionEnterTimeout={500}
                                       transitionLeaveTimeout={500}>
-            {<Article article={article} key={current_article} postArticleHighlights={this.props.postArticleHighlights}/>}
+            {<Article
+            article={article}
+            key={current_article}
+            topics={this.props.topics.results}
+            currentTopicId={this.props.currentTopicId}
+            postArticleHighlights={this.props.postArticleHighlights}
+            />}
             </ReactCSSTransitionsGroup>
             <br/>
             <button><Link to={`/article/${this.props.nextArticle}`}>Fetch next Article</Link></button>
