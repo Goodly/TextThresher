@@ -35,7 +35,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('article_id', 'text', 'date_published', 'city_published',
+        fields = ('id', 'article_number', 'text', 'date_published', 'city_published',
                   'state_published', 'periodical', 'periodical_code',
                   'parse_version', 'annotators')
 
@@ -43,7 +43,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('id', 'answer_id', 'answer_content', 'next_question')
+        fields = ('id', 'answer_number', 'answer_content', 'next_question')
 
 class QuestionSerializer(serializers.ModelSerializer):
     # A nested serializer for all the answers (if any)
@@ -51,7 +51,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'question_id', 'question_text', 'answers')
+        fields = ('id', 'question_number', 'question_text', 'answers')
 
     def create(self, validated_data):
         answers = validated_data.pop('answers')

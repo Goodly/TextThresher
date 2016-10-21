@@ -23,8 +23,8 @@ class Project(models.Model):
 
 # Articles containing text for analysis
 class Article(models.Model):
-    # unique id
-    article_id = models.IntegerField(primary_key=True)
+    # A number assigned by researcher. Not the autofield.
+    article_number = models.IntegerField(null=True)
 
     # raw article text
     text = models.TextField()
@@ -40,7 +40,7 @@ class Article(models.Model):
 
     def __unicode__(self):
         return "Article %d: %s, %s (%s)" % (
-            self.article_id, self.city_published, self.state_published,
+            self.article_number, self.city_published, self.state_published,
             self.periodical)
 
 # Topics that are either parents of leaf topics, or leaf topics with questions.
@@ -79,8 +79,8 @@ class Topic(models.Model):
 
 # Question
 class Question(models.Model):
-    # The question id the content is related to
-    question_id = models.IntegerField()
+    # The question number the content is related to
+    question_number = models.IntegerField()
 
     # The topic this question belongs to
     topic = models.ForeignKey(Topic, related_name="related_questions", 
@@ -106,8 +106,8 @@ class Question(models.Model):
 # Possible answers for a given question
 # NOTE: This does NOT represent submitted answers, only possible answers
 class Answer(models.Model):
-    # an id within the given question
-    answer_id = models.IntegerField()
+    # A number within the given question
+    answer_number = models.IntegerField()
 
     # The question to which this answer belongs
     question = models.ForeignKey(Question, related_name="answers")
@@ -119,7 +119,7 @@ class Answer(models.Model):
     next_question = models.ForeignKey(Question, related_name="next_question", 
                                       null=True)
     class Meta:
-        unique_together = ("answer_id", "question")
+        unique_together = ("answer_number", "question")
 
     def __unicode__(self):
         return ("Answer %d for Question %s " 
@@ -150,7 +150,7 @@ class ArticleHighlight(models.Model):
 
     def __unicode__(self):
         return ("Highlights %s in Article %d") % (self.highlight.offsets, 
-                                                  self.article.article_id)
+                                                  self.article.article_number)
 
 # A submitted answer to a question
 class SubmittedAnswer(models.Model):

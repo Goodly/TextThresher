@@ -76,7 +76,7 @@ def clean_answer_id(answer):
 
 def parse_dependency(dependency, output):
     source_topic_id = output['topics'][-1]['id']
-    source_question_id = output['topics'][-1]['questions'][-1]['question_id']
+    source_question_id = output['topics'][-1]['questions'][-1]['question_number']
     source_answer_id, target_question = [x.strip() for x in 
                                          dependency.split(DEPENDENCY_TARGET, 1)]
     source_answer_id = clean_answer_id(source_answer_id)
@@ -96,19 +96,19 @@ def parse_topic(topic_id, data, output):
 
 def parse_question(question, contingency, output):
     topic = output['topics'][-1]
-    question_id, question_type, question_text = question.split(None, 2)
+    question_number, question_type, question_text = question.split(None, 2)
     topic['questions'].append({
-        'question_id': int(question_id),
+        'question_number': int(question_number),
         'question_text': question_text,
         'type': question_type,
         'contingency': contingency,
         'answers': [],
     })
 
-def parse_answer(answer_id, answer, output):
+def parse_answer(answer_number, answer, output):
     question = output['topics'][-1]['questions'][-1]
     question['answers'].append({
-        'answer_id': ord(answer_id) - 96,
+        'answer_number': ord(answer_number) - 96,
         'answer_content': answer,
     })
 
