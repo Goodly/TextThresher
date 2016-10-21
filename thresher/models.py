@@ -141,6 +141,13 @@ class HighlightGroup(models.Model):
 
     # The highlighted text (stored as JSON array of offset tuples)
     offsets = models.TextField()
+    # 
+    case_number = models.IntegerField()
+    # Highlighted text
+    highlight_text = models.TextField()
+    # The Article highlight object it belongs to
+    article_highlight = models.ForeignKey('ArticleHighlight', related_name="highlights",
+                                          on_delete=models.CASCADE)
 
     @property
     def questions(self):
@@ -153,10 +160,18 @@ class HighlightGroup(models.Model):
 # A container class for an Article and its Highlight Group
 # that will be referenced by a topic
 class ArticleHighlight(models.Model):
-    topic = models.ForeignKey(Topic, related_name="article_highlight",
+    topic = models.ForeignKey(Topic, related_name="article_highlights",
                               on_delete=models.CASCADE)
-    highlight = models.OneToOneField(HighlightGroup)
+    # highlight = models.OneToOneField(HighlightGroup)
     article = models.ForeignKey(Article, related_name="highlight_groups", on_delete=models.CASCADE)
+    created_by = models.ForeignKey(UserProfile, related_name="article_highlights",
+                                   on_delete=models.CASCADE)
+    # Source of the highlight
+    HIGHLIGHT_SOURCE_CHOICES = (
+        ('HLTR', 'Highlighter'), 
+        ('QUIZ', 'Quiz'),
+    )
+    highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES, max_length=4)
 
     def __unicode__(self):
         return ("Highlights %s in Article %d") % (self.highlight.offsets, 
@@ -165,8 +180,8 @@ class ArticleHighlight(models.Model):
 # A submitted answer to a question
 class SubmittedAnswer(models.Model):
     # The highlight group this answer is part of
-    highlight_group = models.ForeignKey(HighlightGroup, related_name="submitted_answer")
-    question = models.ForeignKey(Question)
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_answer")
+    highlight_group = models.ForeignKey(HighlightGroup, related_name="submitted_answers")
+    question = models.ForeignKey(Question, related_name="submitted_answers")
+    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_answers")
     answer = models.TextField()
  
