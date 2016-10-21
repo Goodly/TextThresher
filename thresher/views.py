@@ -5,8 +5,8 @@ from rest_framework.decorators import list_route, api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from models import Article, Topic, HighlightGroup, Project, Question, Answer, ArticleHighlight
-from serializers import (UserSerializer, ArticleSerializer, TopicSerializer, 
+from models import Article, Topic, HighlightGroup, Project, Question, Answer, ArticleHighlight, UserProfile
+from serializers import (UserProfileSerializer, ArticleSerializer, TopicSerializer, 
                          HighlightGroupSerializer, ProjectSerializer, QuestionSerializer,
                          ArticleHighlightSerializer, RootTopicSerializer, SubmittedAnswerSerializer)
 
@@ -16,9 +16,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all().order_by('id')
@@ -110,7 +110,7 @@ def next_question(request, id, ans_num):
 # Register our viewsets with the router
 ROUTER = routers.DefaultRouter()
 ROUTER.register(r'projects', ProjectViewSet)
-ROUTER.register(r'users', UserViewSet)
+ROUTER.register(r'users', UserProfileViewSet)
 ROUTER.register(r'articles', ArticleViewSet)
 ROUTER.register(r'topics', TopicViewSet)
 ROUTER.register(r'highlight_groups', HighlightGroupViewSet)

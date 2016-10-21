@@ -19,9 +19,15 @@ from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 
 from thresher.models import (Project, Article, Topic, HighlightGroup,
-                             ArticleHighlight, Question, Answer)
+                             ArticleHighlight, Question, Answer,
+                             UserProfile)
+from django.contrib.auth.models import User
+
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
+USER = User.objects.create(username="researcher")
+USER.save()
+USERPROFILE = UserProfile.objects.create(user=USER, experience_score=0.0, accuracy_score=0.0)
 
 class TopicsSchemaParser(object):
     """
@@ -250,16 +256,27 @@ def load_article(article):
         for tua_id, offset_list in tuas.iteritems():
             offsets.extend(offset_list)
 
-        highlight = HighlightGroup.objects.create(offsets=json.dumps(offsets))
         try:
-            ArticleHighlight.objects.create(topic=topic,
-                                            highlight=highlight, 
-                                            article=article_obj)
+            # Note that I used None for the user object in created_by field
+            # because in our new design, researchers don't provide initial highlights,
+            # so article_highlight actually should not be created here.
+            article_highlight = ArticleHighlight.objects.create(topic=topic,
+                                                                article=article_obj,
+                                                                created_by=USERPROFILE,
+                                                                highlight_source='HLTR')
+
+            # Not sure what to put in case_number. Use 0 here as a placeholder.
+            # Note that we don't get highlight_text from parse_document.py, so
+            # use "placeholder" here as a placeholder.
+            highlight = HighlightGroup.objects.create(offsets=json.dumps(offsets),
+                                                      case_number=0,
+                                                      highlight_text="placeholder",
+                                                      article_highlight=article_highlight)
+
         except ValidationError as e:
             print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
             print e
 
-    print 'loading article...'
 
 def load_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
@@ -288,4 +305,5 @@ if __name__ == '__main__':
     if args.schema_dir:
         load_schema_dir(args.schema_dir)
     if args.article_dir:
+        print 'loading article...'
         load_article_dir(args.article_dir)

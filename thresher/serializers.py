@@ -30,14 +30,45 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ('name', 'instructions')
 
+class SubmittedAnswerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SubmittedAnswer
+        fields = ('id', 'answer')
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        highlight_data = validated_data.pop('highlight_group')
+        submitted_answer = SubmittedAnswer.objects.create(**validated_data)
+        highlight_group = HighlightGroup.objects.update(submitted_answer=submitted_answer, **highlight_data)
+        user = UserProfile.objects.update(submitted_answer=submitted_answer, **user_data)
+        return submitted_answer
+
+class HighlightGroupSerializer(serializers.ModelSerializer):
+    # Keep HighlightGroup metadata
+    offsets = JSONSerializerField()      # Should we use OffsetFieldSerializer instead of this?
+    submitted_answers = SubmittedAnswerSerializer(many=True)
+
+    class Meta:
+        model = HighlightGroup
+        fields = ('id', 'offsets', 'case_number', 'highlight_text', 'submitted_answers')
+
+class ArticleHighlightSerializer(serializers.ModelSerializer):
+    highlights = HighlightGroupSerializer(many=True)
+
+    class Meta:
+        model = ArticleHighlight
+        fields = ('id', 'highlights', 'highlight_source')
+
 class ArticleSerializer(serializers.ModelSerializer):
     annotators = JSONSerializerField()
+    highlight_groups = ArticleHighlightSerializer(many=True)
 
     class Meta:
         model = Article
         fields = ('id', 'article_number', 'text', 'date_published', 'city_published',
                   'state_published', 'periodical', 'periodical_code',
-                  'parse_version', 'annotators')
+                  'parse_version', 'annotators', 'highlight_groups')
 
 class AnswerSerializer(serializers.ModelSerializer):
 
@@ -48,6 +79,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     # A nested serializer for all the answers (if any)
     answers = AnswerSerializer(many=True)
+    submitted_answers = SubmittedAnswerSerializer(many=True)
 
     class Meta:
         model = Question
@@ -60,10 +92,19 @@ class QuestionSerializer(serializers.ModelSerializer):
             Answer.objects.create(question=question, **answer)
         return question
 
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.Field(write_only=True)
+class UserProfileSerializer(serializers.ModelSerializer):
+    # Getting info from User model
+    username = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+    is_staff = serializers.SerializerMethodField()
+    password = serializers.SerializerMethodField()
+
+    # Custom fields
     experience_score = serializers.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = serializers.DecimalField(max_digits=5, decimal_places=3)
+    article_highlights = ArticleHighlightSerializer(many=True)
+    submitted_answers = SubmittedAnswerSerializer(many=True)
+    
 
     def restore_object(self, attrs, instance=None):
         if instance: # Update
@@ -84,28 +125,25 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(attrs['password'])
         return user
 
+    def get_username(self, obj):
+        return obj.user.username
+
+    def get_email(self, obj):
+        return obj.user.email
+
+    def get_is_staff(self, obj):
+        return obj.user.is_staff
+
+    def get_password(self, obj):
+        return obj.user.password
+
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'is_staff', 'password', 
-                  'experience_score', 'accuracy_score')
+                  'experience_score', 'accuracy_score', 'article_highlights',
+                  'submitted_answers')
 
-class SubmittedAnswerSerializer(serializers.ModelSerializer):
-    question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
-    answer = serializers.PrimaryKeyRelatedField(queryset=Answer.objects.all()) 
-    user = UserSerializer()
-
-    class Meta:
-        model = SubmittedAnswer
-        fields = ('question', 'answer', 'user', 'highlight_group')
-
-    def create(self, validated_data):
-        user_data = validated_data.pop('user')
-        highlight_data = validated_data.pop('highlight_group')
-        submitted_answer = SubmittedAnswer.objects.create(**validated_data)
-        highlight_group = HighlightGroup.objects.update(submitted_answer=submitted_answer, **highlight_data)
-        user = UserProfile.objects.update(submitted_answer=submitted_answer, **user_data)
-        return submitted_answer
-                               
+                             
 ## Custom fields for the serializers ##
 
 class OffsetField(serializers.Field):
@@ -125,26 +163,7 @@ class OffsetField(serializers.Field):
         ret = json.loads(data) # Convert to Python dict
         return json.dumps(ret["offsets"]) # Convert back to native form of offsets, a JSON object
 
-class HighlightGroupSerializer(serializers.ModelSerializer):
-    # W3 Annotation Data Model properties
-#    def __init__(self, offsets=[], **kwargs):
-#        serializers.Serializer.__init__(self, **kwargs)
-#        target = OffsetField(offsets)
 
-
-    # Keep HighlightGroup metadata
-    offsets = JSONSerializerField()
-
-    class Meta:
-        model = HighlightGroup
-        fields = ('offsets', 'questions')
-
-class ArticleHighlightSerializer(serializers.ModelSerializer):
-    article = ArticleSerializer()
-    highlight = HighlightGroupSerializer()
-    class Meta:
-        model = ArticleHighlight
-        fields = ('article', 'highlight')
 
 class TopicSerializer(serializers.ModelSerializer):
         # A nested serializer for all the questions
@@ -152,13 +171,13 @@ class TopicSerializer(serializers.ModelSerializer):
 
     glossary = JSONSerializerField()
 
-    article_highlight = ArticleHighlightSerializer(many=True)
+    article_highlights = ArticleHighlightSerializer(many=True)
 
     class Meta:
         model = Topic
         fields = ('id', 'parent', 'name',
                   'order', 'glossary', 'instructions', 
-                  'related_questions', 'article_highlight')
+                  'related_questions', 'article_highlights')
 
 class RootTopicSerializer(serializers.ModelSerializer):
     glossary = JSONSerializerField()
