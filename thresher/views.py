@@ -5,16 +5,16 @@ from rest_framework.decorators import list_route, api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from models import Article, Topic, HighlightGroup, Client, Question, Answer, ArticleHighlight
+from models import Article, Topic, HighlightGroup, Project, Question, Answer, ArticleHighlight
 from serializers import (UserSerializer, ArticleSerializer, TopicSerializer, 
-                         HighlightGroupSerializer, ClientSerializer, QuestionSerializer,
+                         HighlightGroupSerializer, ProjectSerializer, QuestionSerializer,
                          ArticleHighlightSerializer, RootTopicSerializer, SubmittedAnswerSerializer)
 
 # Views for serving the API
 
-class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Client.objects.all()
-    serializer_class = ClientSerializer    
+class ProjectViewSet(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -123,7 +123,7 @@ def next_question(request, id, ans_id):
 
 # Register our viewsets with the router
 ROUTER = routers.DefaultRouter()
-ROUTER.register(r'clients', ClientViewSet)
+ROUTER.register(r'projects', ProjectViewSet)
 ROUTER.register(r'users', UserViewSet)
 ROUTER.register(r'articles', ArticleViewSet)
 ROUTER.register(r'topics', TopicViewSet)

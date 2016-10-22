@@ -1,13 +1,13 @@
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "thresher_backend.settings")
+
 import django
 django.setup()
+from django.conf import settings
 
 import argparse
 import json
-import os
 import fnmatch
-
-os.environ['DJANGO_SETTINGS_MODULE'] = 'thresher_backend.settings'
-from django.conf import settings
 
 from django.core.management import call_command
 from django.core.management.color import no_style
@@ -18,7 +18,7 @@ from django.core.exceptions import ValidationError
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 
-from thresher.models import (Article, Topic, HighlightGroup, 
+from thresher.models import (Project, Article, Topic, HighlightGroup,
                              ArticleHighlight, Question, Answer)
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
@@ -158,6 +158,12 @@ class TopicsSchemaParser(object):
                 answer.next_question = next_question
                 answer.save()
 
+def load_projects():
+    Project.objects.create(name="Deciding Force",
+                           instructions="This project analyzes media "
+                                        "descriptions of interactions "
+                                        "between police and protestors."
+    )
 
 def load_schema(schema):
     schema_name = schema['title']
@@ -279,6 +285,7 @@ def load_args():
     return parser.parse_args()
 
 if __name__ == '__main__':
+    load_projects()
     args = load_args()
     if args.schema_dir:
         load_schema_dir(args.schema_dir)

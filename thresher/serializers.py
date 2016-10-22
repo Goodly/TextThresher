@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from models import (Article, Topic, Question, Answer,
                     HighlightGroup, SubmittedAnswer,
-                    Client, ArticleHighlight, UserProfile)
+                    Project, ArticleHighlight, UserProfile)
 
 
 # Custom JSON field
@@ -24,11 +24,11 @@ class JSONSerializerField(serializers.Field):
 
 # Serializers define the API representation of the models.
 
-class ClientSerializer(serializers.ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Client
-        fields = ('name', 'topic')
+        model = Project
+        fields = ('name', 'instructions')
 
 class ArticleSerializer(serializers.ModelSerializer):
     annotators = JSONSerializerField()
