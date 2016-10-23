@@ -24,6 +24,8 @@ const mapStateToProps = state => {
 export class Quiz extends Component {
   constructor(props) {
     super(props);
+
+    this.props.fetchQuestion(8);
   }
   componentDidMount(){
 
