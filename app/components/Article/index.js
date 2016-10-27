@@ -41,12 +41,11 @@ const Article = React.createClass({
   render() {
     let article = this.props.article.article;
     var text = this.props.article.text;
-
+  
     let fetchingClass = this.props.article.isFetching ? 'is-fetching' : '';
     return (
       <div className={`article ${fetchingClass}`}>
         <div className='article__header-text'>
-          Please skim the text below and highlight words about the Topics listed in the margins.
         </div>
         <div ref={(ref) => this.articleRef = ref} id='article-container'>
           {text}

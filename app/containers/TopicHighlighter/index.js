@@ -7,11 +7,13 @@ import { connect } from 'react-redux';
 
 import * as articleActionCreators from 'actions/article';
 import * as topicsActionCreators from 'actions/topicPicker';
+import * as projectActionCreators from 'actions/Project';
 
-const assembledActionCreators = Object.assign({}, articleActionCreators, topicsActionCreators)
+const assembledActionCreators = Object.assign({}, articleActionCreators, topicsActionCreators, projectActionCreators)
 
 import Article from 'components/Article';
 import TopicPicker from 'components/TopicPicker';
+import Project from 'components/Project';
 
 import { styles } from './styles.scss';
 
@@ -38,6 +40,7 @@ export class TopicHighlighter extends Component {
   componentDidMount() {
     this.props.fetchArticle(this.props.routeParams.articleId);
     this.props.fetchTopics();
+    this.props.fetchProject();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -64,9 +67,10 @@ export class TopicHighlighter extends Component {
                                 transitionLeaveTimeout={500}>
         <div className={loadingClass}></div>
         <div className='topic-picker-wrapper'>
-          <TopicPicker topics={this.props.topics}/>
+          <TopicPicker topics={this.props.topics} />
         </div>
         <div className='article-wrapper'>
+            <Project />
             <ReactCSSTransitionsGroup transitionName='fade-between'
                                       transitionAppear
                                       transitionAppearTimeout={500}
