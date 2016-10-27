@@ -1,5 +1,4 @@
 import React from 'react';
-import { fetchTopic } from 'actions/article';
 import { connect } from 'react-redux';
 import { styles } from './styles.scss';
 import { activateTopic } from 'actions/topicPicker';
@@ -15,9 +14,30 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    currentTopicId: state.topicPicker.currentTopicId
+    currentTopicId: state.topicPicker.currentTopicId,
+    idDict: state.topicPicker.idDict
   };
 }
+
+const TopicInstruction = React.createClass({
+  displayName: 'Instruction',
+
+  render() {
+    var color = this.props.color;
+    var topicColor = {
+        borderTop: 'solid',
+        borderWidth: '10px',
+        borderColor: color,
+    };
+    return (
+      <div className="instructions" style={topicColor}>
+        <strong>Instructions: </strong>  
+         {this.props.instruction}
+      </div>
+      );
+  }
+
+});
 
 const TopicItem = React.createClass({
   displayName: 'TopicItem',
@@ -59,7 +79,6 @@ const TopicItem = React.createClass({
     return (
       <li key={topic.id}
           onClick={this.props.clickFunc}
-          title={topic.instructions}
           data-topic={topic.id}
           style={listElement}
       >
@@ -94,19 +113,26 @@ const TopicPicker = React.createClass({
                    currentTopicId={this.props.currentTopicId}
                    color={colors[index]}
                    height={100 / topic_array.length + '%'}
-                   clickFunc={this.activateTopic.bind(this, topic.id)}
-        />);
-    return (
-      <div className='topic-picker topic-picker--left topic-picker--open'>
-        <ul className='topic-picker__nav'>
-          {list}
-        </ul>
-        <div className='topic-picker__wrapper'>
-          <div className='topic-picker__pin-button topic-picker__pic-button--active'>
-            <i className='fa fa-thumb-tack fa-lg'></i>
-          </div>
+                   clickFunc={this.activateTopic.bind(this, topic.id)} />);
+    var full_inst = this.props.idDict ? this.props.idDict[this.props.currentTopicId][1].instructions : "";
+    var instructions = full_inst.length > 500 ? full_inst.substring(0,500) + "..." : full_inst;
+    var index = this.props.idDict ? this.props.idDict[this.props.currentTopicId][0]: 0;
 
+    return (
+      <div>
+        <div className='topic-picker topic-picker--left topic-picker--open'>
+          <ul className='topic-picker__nav'>
+            {list}
+          </ul>
+          <div className='topic-picker__wrapper'>
+            <div className='topic-picker__pin-button topic-picker__pic-button--active'>
+              <i className='fa fa-thumb-tack fa-lg'></i>
+            </div>
+          </div>
         </div>
+        
+        <TopicInstruction instruction={instructions} color={colors[index]}/>
+
       </div>
     );
   }

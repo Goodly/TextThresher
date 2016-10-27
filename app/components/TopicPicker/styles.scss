@@ -38,3 +38,16 @@ $topic-picker-nav-width: 25%;
     }
   }
 }
+
+.instructions {
+  padding: 1em;
+  font-size: 0.9em;
+  background-color: rgb(76,69,69);
+  position: fixed;
+  bottom: 0;
+  left: 260px;
+  right: 10px;
+  color: white;
+  border: 5px 0 0 0;
+}
+
