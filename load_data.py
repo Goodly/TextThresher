@@ -70,8 +70,6 @@ class TopicsSchemaParser(object):
             question_args['topic'] = topic
             # Store the answers for later
             answers = question_args.pop('answers')
-            # No type for Questions any more
-            question_args.pop('type')
             # Create the Question
             question = Question.objects.create(**question_args)
             # Load the Question's answers
