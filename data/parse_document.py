@@ -6,8 +6,6 @@ import sys
 from datetime import date
 from django.conf import settings
 
-import pdb
-
 DATA_FOLDER = os.path.join(settings.BASE_DIR, 'data')
 
 #SUCCESS_FOLDER = "DecidingForceArticles"
@@ -78,8 +76,6 @@ class ArticleParseError(Exception):
 def parse_document(path):
     with open(path, 'r') as f:
         raw_text = f.read()
-
-    # pdb.set_trace()
 
     # extract info from the file name
     article_number, city, state, periodical, periodical_code = parse_filename(path)

@@ -160,8 +160,8 @@ class TopicsSchemaParser(object):
 
 def load_projects():
     Project.objects.create(name="Deciding Force",
-                           instructions="This project analyzes media " + 
-                                        "descriptions of interactions " + 
+                           instructions="This project analyzes media " +
+                                        "descriptions of interactions " +
                                         "between police and protestors."
     )
 

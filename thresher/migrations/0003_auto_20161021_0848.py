@@ -35,8 +35,8 @@ class Migration(migrations.Migration):
         #     model_name='article',
         #     name='id',
         #     field=models.AutoField(auto_created=True, default=0, primary_key=True, serialize=False, verbose_name='ID'),
-        #     # Django asks me to create a default=0 in field, which is weird. 
-        #     # With this default Django will not be able to create auto field 
+        #     # Django asks me to create a default=0 in field, which is weird.
+        #     # With this default Django will not be able to create auto field
         #     # because of "multiple defaults specified"
         #     preserve_default=False,
         # ),
