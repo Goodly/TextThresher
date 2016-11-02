@@ -96,8 +96,8 @@ class Question(models.Model):
             ('tb', 'Textbox'),
             ('cl', 'Checklist')
     )
-    type = models.CharField(max_length=2,
-                            choices=QUESTION_TYPE_CHOICES)
+    question_type = models.CharField(max_length=2,
+                                     choices=QUESTION_TYPE_CHOICES)
 
     # Whether the question is a contingency one or not
     contingency = models.BooleanField(default=False)
@@ -107,11 +107,11 @@ class Question(models.Model):
                                      on_delete=models.CASCADE, null=True)
 
     class Meta:
-        unique_together = ("topic", "question_text", "type")
+        unique_together = ("topic", "question_text")
 
     def __unicode__(self):
         return "Question %d of type %s in topic %s" % (
-            self.question_id, self,type, self.topic.name)
+            self.id, self.question_type, self.topic.name)
 
 # Possible answers for a given question
 # NOTE: This does NOT represent submitted answers, only possible answers
