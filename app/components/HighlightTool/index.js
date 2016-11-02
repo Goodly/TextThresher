@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as highlightActionCreators from 'actions/highlight'
-//import './styles.scss';
+import './styles.scss';
 
 const assembledActionCreators = Object.assign({}, highlightActionCreators);
 
@@ -10,7 +10,7 @@ const mapStateToProps = state => {
   return {
     highlights: state.highlight.highlights,
     selectedHighlight: state.highlight.selectedHighlight
-    };
+  };
 }
 
 const HandleEnd = React.createClass({
@@ -164,14 +164,43 @@ const HandleStart = React.createClass({
   }
 });
 
-const HighlightModule = React.createClass({
-  displayName: 'HighlightModule',
+function getOffset(node, targetNode, result={done: false,
+                                             articleText: false,
+                                             offset: 0}) {
+  // Recursive algorithm - passed in result must not be mutated
+  result = Object.assign({}, result);
+  if (result.done === true) {
+    return result;
+  }
+  if (node === targetNode) {
+    result.done = true;
+    return result;
+  }
+  if (node.nodeName === "SPAN" && node.className === "articleText") {
+    result.articleText = true;
+  }
+  if (node.nodeName === "#text" && result.articleText === true) {
+    result.offset += node.nodeValue.length;
+  }
+
+  for (var i=0; i < node.childNodes.length; i++) {
+    result = getOffset(node.childNodes[i], targetNode, result);
+  }
+
+  if (node.nodeName === "SPAN" && node.className === "articleText") {
+    result.articleText = false;
+  }
+  return result;
+};
+
+const HighlightTool = React.createClass({
+  displayName: 'HighlightTool',
 
   propTypes: {
     text: React.PropTypes.string.isRequired,
     topics: React.PropTypes.array.isRequired,
     highlights: React.PropTypes.array.isRequired,
-    currentTopicId: React.PropTypes.string.isRequired,
+    currentTopicId: React.PropTypes.number.isRequired,
     selectedHighlight: React.PropTypes.array.isRequired,
     colors: React.PropTypes.array.isRequired,
   },
@@ -347,24 +376,6 @@ const HighlightModule = React.createClass({
     return 'rgba(' + Math.round(red) + ', ' + Math.round(green) + ', ' + Math.round(blue) + ', ' + opacity +')';
   },
 
-  getOffset: function(childNodes, targetNode) {
-    var offset = 0;
-    for (var i in childNodes) {
-      var childNode = childNodes[i];
-      if (childNode === targetNode) {
-        break;
-      } else {
-        if (childNode.textContent == null) {
-          break;
-        } else {
-          offset += childNode.textContent.length;
-        }
-      }
-    }
-    return offset;
-  },
-
-
   correctionStart: function(start) {
     var correction = 0;
     var ch = this.props.text[start];
@@ -409,8 +420,6 @@ const HighlightModule = React.createClass({
     return end + correction + edit;
   },
 
-
-
   handleClick: function() {
     var currentTopicId = this.props.currentTopicId;
     var selectionObj = window.getSelection();
@@ -419,13 +428,13 @@ const HighlightModule = React.createClass({
       var start = selectionObj.anchorOffset;
       var end = selectionObj.extentOffset;
       if (this.articleRef.childNodes.length > 1) {
-        start += this.getOffset(this.articleRef.childNodes,
-                                selectionObj.anchorNode.parentNode);
-        end += this.getOffset(this.articleRef.childNodes,
-                                selectionObj.extentNode.parentNode);
+        var anchorResult = getOffset(this.articleRef, selectionObj.anchorNode);
+        start += anchorResult.offset;
+        var extentResult = getOffset(this.articleRef, selectionObj.extentNode);
+        end += extentResult.offset;
       }
-      start = this.correctionStart(start);
-      end = this.correctionEnd(end);
+//      start = this.correctionStart(start);
+//      end = this.correctionEnd(end);
       console.log('TEST WORK');
       console.log(selectedText);
       var temp_text = this.props.text;
@@ -470,7 +479,6 @@ const HighlightModule = React.createClass({
 
   },
 
-
   handleSelect: function(source) {
     this.props.selectHighlight(source);
   },
@@ -485,7 +493,7 @@ const HighlightModule = React.createClass({
     if (l === 0) {
       tail = text;
     } else if (highlights[l - 1].end !== text.length) {
-      tail = <span>{text.substring(highlights[l - 1].end, text.length)}</span>;
+      tail = text.substring(highlights[l - 1].end, text.length);
     }
     return (
       <div onkeydown={this.handleKeyDown} ref={(ref) => this.articleRef = ref } onMouseUp={this.handleClick}>
@@ -513,23 +521,27 @@ const HighlightModule = React.createClass({
           if (topics.length > 0) {
             return (
               <span key={i}
-              source = {curHL.source}
-              onClick={this.handleSelect.bind(this, curHL.source)}
-              style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                source = {curHL.source}
+                onClick={this.handleSelect.bind(this, curHL.source)}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
               title={topics}>
                 <HandleStart
-                highlight={curHL.source}
-                color={this.mergeColors(curHL.topics, curHL.selected)}
-                caseNum={1}
-                caseMax={this.props.caseMax}
-                onClick={() => {this.props.changeCaseHighlight(highlight, plus_case)}}/>
+                  highlight={curHL.source}
+                  color={this.mergeColors(curHL.topics, curHL.selected)}
+                  caseNum={1}
+                  caseMax={this.props.caseMax}
+                  onClick={() => {this.props.changeCaseHighlight(highlight, plus_case)}}
+                />
+                <span className="articleText">
                   {text.substring(curHL.start, curHL.end)}
+                </span>
                 <HandleEnd
-                highlight={curHL.source}
-                color={this.mergeColors(curHL.topics, curHL.selected)}
-                caseNum={1}
-                caseMax={this.props.caseMax}
-                onClick={() => {this.props.changeCaseHighlight(highlight, minus_case)}}/>
+                  highlight={curHL.source}
+                  color={this.mergeColors(curHL.topics, curHL.selected)}
+                  caseNum={1}
+                  caseMax={this.props.caseMax}
+                  onClick={() => {this.props.changeCaseHighlight(highlight, minus_case)}}
+                />
               </span>
             );
             /*return (
@@ -544,16 +556,20 @@ const HighlightModule = React.createClass({
           } else {
             return (
               <span key={i}
-              source = {curHL.source}
-              onClick={this.handleSelect.bind(this, curHL.source)}
-              style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
-              title={topics}>
+                className="articleText"
+                source = {curHL.source}
+                onClick={this.handleSelect.bind(this, curHL.source)}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                title={topics}>
                 {text.substring(curHL.start, curHL.end)}
               </span>
             );
           }
         })}
-        { tail }
+
+        <span key="tail" className="articleText">
+          { tail }
+        </span>
       </div>
     );
   }
@@ -584,4 +600,4 @@ title={topics}>
 export default connect(
   mapStateToProps,
   dispatch => bindActionCreators(assembledActionCreators, dispatch)
-)(HighlightModule);
+)(HighlightTool);

@@ -10,7 +10,9 @@ function getNextArticle(articleId) {
 
 function getInitialState() {
   return {
-    article: {},
+    article: {
+      text: ""
+    },
     currentArticle: null,
     nextArticle: null
   };
@@ -29,7 +31,8 @@ export function article(state = initialState, action) {
       return {
         ...state,
         article: {
-          isFetching: true
+          isFetching: true,
+          text: ""
         },
         currentArticle: Number(action.articleId),
         nextArticle: nextArticleIndex

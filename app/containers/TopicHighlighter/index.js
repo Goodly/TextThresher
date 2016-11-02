@@ -75,13 +75,13 @@ export class TopicHighlighter extends Component {
                                       transitionAppearTimeout={500}
                                       transitionEnterTimeout={500}
                                       transitionLeaveTimeout={500}>
-            {<Article
-            article={article}
-            key={current_article}
-            topics={this.props.topics.results}
-            currentTopicId={this.props.currentTopicId}
-            postArticleHighlights={this.props.postArticleHighlights}
-            />}
+              {<Article
+                article={article}
+                key={current_article}
+                topics={this.props.topics}
+                currentTopicId={this.props.currentTopicId}
+                postArticleHighlights={this.props.postArticleHighlights}
+              />}
             </ReactCSSTransitionsGroup>
             <br/>
             <button><Link to={`/article/${this.props.nextArticle}`}>Fetch next Article</Link></button>
