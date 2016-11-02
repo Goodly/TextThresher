@@ -100,7 +100,7 @@ def parse_question(question, contingency, output):
     topic['questions'].append({
         'question_number': int(question_number),
         'question_text': question_text,
-        'type': question_type,
+        'question_type': question_type,
         'contingency': contingency,
         'answers': [],
     })
