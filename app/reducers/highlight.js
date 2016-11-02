@@ -1,9 +1,9 @@
-
 const initialState = Object.assign({
   highlights: [],
   selectedHighlight: [],
   caseMax: 1,
 });
+
 function mergeHighlights(list) {
   var newlist = [];
   var n = list.length;
@@ -25,10 +25,12 @@ function mergeHighlights(list) {
   }
   return newlist;
 }
+
 export function highlight(state = initialState, action) {
   switch (action.type) {
     case 'DESELECT_HIGHLIGHT':
     return Object.assign({}, state, {selectedHighlight:[]});
+
     case 'ADD_HIGHLIGHT':
       //console.log('ADD_HIGHLIGHT');
       //increment order of all old highlights by 1
@@ -89,6 +91,7 @@ export function highlight(state = initialState, action) {
         i += 1;
       }
       return Object.assign({}, state, { selectedHighlight: indices, highlights: new_highlights});
+
     case 'DELETE_HIGHLIGHT':
     //console.log('DELETE_HIGHLIGHT');
       /*Remove selected highlights in state.highlights using the

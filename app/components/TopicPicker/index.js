@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { styles } from './styles.scss';
 import { activateTopic } from 'actions/topicPicker';
 var Radium = require('radium');
+import { colors } from 'utils/colors';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -104,8 +105,6 @@ const TopicPicker = React.createClass({
   },
 
   render() {
-    var colors = ['rgb(241, 96, 97)', 'rgb(253, 212, 132)', 'rgb(175, 215, 146)', 'rgb(168, 210, 191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
-
     var topic_array = this.props.topics.results;
     var list = topic_array.map( (topic, index) =>
         <TopicItem key={topic.id}
