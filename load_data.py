@@ -260,8 +260,7 @@ def load_article(article):
             # Note that I used None for the user object in created_by field
             # because in our new design, researchers don't provide initial highlights,
             # so article_highlight actually should not be created here.
-            article_highlight = ArticleHighlight.objects.create(topic=topic,
-                                                                article=article_obj,
+            article_highlight = ArticleHighlight.objects.create(article=article_obj,
                                                                 created_by=USERPROFILE,
                                                                 highlight_source='HLTR')
 
@@ -271,11 +270,14 @@ def load_article(article):
             highlight = HighlightGroup.objects.create(offsets=json.dumps(offsets),
                                                       case_number=0,
                                                       highlight_text="placeholder",
+                                                      topic=topic,
                                                       article_highlight=article_highlight)
 
         except ValidationError as e:
             print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
             print e
+
+        print "article %s" % (article_obj.article_number)
 
 
 def load_schema_dir(dirpath):
@@ -305,5 +307,4 @@ if __name__ == '__main__':
     if args.schema_dir:
         load_schema_dir(args.schema_dir)
     if args.article_dir:
-        print 'loading article...'
         load_article_dir(args.article_dir)

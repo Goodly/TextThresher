@@ -51,14 +51,15 @@ class HighlightGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HighlightGroup
-        fields = ('id', 'offsets', 'case_number', 'highlight_text', 'submitted_answers')
+        fields = ('id', 'offsets', 'highlight_text', 'case_number',
+                  'topic', 'submitted_answers')
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
     highlights = HighlightGroupSerializer(many=True)
 
     class Meta:
         model = ArticleHighlight
-        fields = ('id', 'highlights', 'highlight_source')
+        fields = ('id', 'highlights', 'created_by', 'highlight_source')
 
 class ArticleSerializer(serializers.ModelSerializer):
     annotators = JSONSerializerField()
@@ -95,55 +96,23 @@ class QuestionSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     # Getting info from User model
     username = serializers.SerializerMethodField()
-    email = serializers.SerializerMethodField()
-    is_staff = serializers.SerializerMethodField()
-    password = serializers.SerializerMethodField()
 
     # Custom fields
     experience_score = serializers.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = serializers.DecimalField(max_digits=5, decimal_places=3)
     article_highlights = ArticleHighlightSerializer(many=True)
     submitted_answers = SubmittedAnswerSerializer(many=True)
-    
-
-    def restore_object(self, attrs, instance=None):
-        if instance: # Update
-            user = instance
-            user.username = attrs['username']
-            user.email = attrs['url']
-            user.is_staff = attrs['is_staff']
-            user.topic = None
-            user.experience_score = 0.0
-            user.accuracy_score = 0.0
-        else: # Creation
-            user = User(username=attrs['username'],
-                        email=attrs['email'],
-                        is_staff=attrs['is_staff'],
-                        is_active=True,
-                        is_superuser=False)
-
-        user.set_password(attrs['password'])
-        return user
 
     def get_username(self, obj):
         return obj.user.username
 
-    def get_email(self, obj):
-        return obj.user.email
-
-    def get_is_staff(self, obj):
-        return obj.user.is_staff
-
-    def get_password(self, obj):
-        return obj.user.password
-
     class Meta:
-        model = User
-        fields = ('id', 'username', 'email', 'is_staff', 'password', 
+        model = UserProfile
+        fields = ('id', 'username',
                   'experience_score', 'accuracy_score', 'article_highlights',
                   'submitted_answers')
 
-                             
+
 ## Custom fields for the serializers ##
 
 class OffsetField(serializers.Field):
@@ -176,7 +145,7 @@ class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = ('id', 'parent', 'name',
-                  'order', 'glossary', 'instructions', 
+                  'order', 'glossary', 'instructions',
                   'related_questions', 'article_highlights')
 
 class RootTopicSerializer(serializers.ModelSerializer):
