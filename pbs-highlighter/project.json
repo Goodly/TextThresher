@@ -1,0 +1,6 @@
+{
+    "name": "TextThresher Highlighter",
+    "short_name": "TextThresherHighlighter",
+    "description": "Highlight phrases in articles that relate to provided topics.",
+    "question": "Have you highlighted all the phrases that match the topics?"
+}
