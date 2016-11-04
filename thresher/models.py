@@ -70,7 +70,7 @@ class Topic(models.Model):
         super(Topic, self).save(*args, **kwargs)
 
     class Meta:
-        unique_together = ("parent", "order", "name")
+        unique_together = ("parent", "name")
 
     def __unicode__(self):
         if self.parent:
@@ -141,10 +141,17 @@ class HighlightGroup(models.Model):
 
     # The highlighted text (stored as JSON array of offset tuples)
     offsets = models.TextField()
-    # 
-    case_number = models.IntegerField()
+
     # Highlighted text
     highlight_text = models.TextField()
+
+    # User assigned case number for this text
+    case_number = models.IntegerField()
+
+    # The topic of this text
+    topic = models.ForeignKey(Topic, related_name="article_highlights",
+                              on_delete=models.CASCADE, null=True)
+
     # The Article highlight object it belongs to
     article_highlight = models.ForeignKey('ArticleHighlight', related_name="highlights",
                                           on_delete=models.CASCADE)
@@ -160,9 +167,6 @@ class HighlightGroup(models.Model):
 # A container class for an Article and its Highlight Group
 # that will be referenced by a topic
 class ArticleHighlight(models.Model):
-    topic = models.ForeignKey(Topic, related_name="article_highlights",
-                              on_delete=models.CASCADE)
-    # highlight = models.OneToOneField(HighlightGroup)
     article = models.ForeignKey(Article, related_name="highlight_groups", on_delete=models.CASCADE)
     created_by = models.ForeignKey(UserProfile, related_name="article_highlights",
                                    on_delete=models.CASCADE)
@@ -174,8 +178,8 @@ class ArticleHighlight(models.Model):
     highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES, max_length=4)
 
     def __unicode__(self):
-        return ("Highlights %s in Article %d") % (self.highlight.offsets, 
-                                                  self.article.article_number)
+        return ("Highlights in Article %d created by %s") % (self.article.article_number,
+                                                             created_by.user.username)
 
 # A submitted answer to a question
 class SubmittedAnswer(models.Model):
