@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import * as articleActionCreators from 'actions/article';
 import * as topicsActionCreators from 'actions/topicPicker';
-import * as projectActionCreators from 'actions/Project';
+import * as projectActionCreators from 'actions/project';
 
 const assembledActionCreators = Object.assign({}, articleActionCreators, topicsActionCreators, projectActionCreators)
 

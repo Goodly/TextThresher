@@ -1,7 +1,7 @@
 import { getIntOfLength } from 'utils/math';
 
 // #TODO: create endpoint to return these indices on the back-end
-const ARTICLE_INDEX_ARRAY = [0, 9, 11, 38, 53, 55, 202, 209, 236, 259];
+const ARTICLE_INDEX_ARRAY = [9, 11, 38, 53, 55, 202, 209, 236, 259];
 
 function getNextArticle(articleId) {
   ARTICLE_INDEX_ARRAY.splice(ARTICLE_INDEX_ARRAY.indexOf(articleId), 1);

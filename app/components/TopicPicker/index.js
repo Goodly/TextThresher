@@ -15,7 +15,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     currentTopicId: state.topicPicker.currentTopicId,
-    idDict: state.topicPicker.idDict
+    lookupTopicById: state.topicPicker.lookupTopicById
   };
 }
 
@@ -31,7 +31,7 @@ const TopicInstruction = React.createClass({
     };
     return (
       <div className="instructions" style={topicColor}>
-        <strong>Instructions: </strong>  
+        <strong>Instructions: </strong>
          {this.props.instruction}
       </div>
       );
@@ -114,9 +114,11 @@ const TopicPicker = React.createClass({
                    color={colors[index]}
                    height={100 / topic_array.length + '%'}
                    clickFunc={this.activateTopic.bind(this, topic.id)} />);
-    var full_inst = this.props.idDict ? this.props.idDict[this.props.currentTopicId][1].instructions : "";
+
+    var topicLookup = this.props.lookupTopicById[this.props.currentTopicId];
+    var index = topicLookup[0];
+    var full_inst = topicLookup[1].instructions;
     var instructions = full_inst.length > 500 ? full_inst.substring(0,500) + "..." : full_inst;
-    var index = this.props.idDict ? this.props.idDict[this.props.currentTopicId][0]: 0;
 
     return (
       <div>

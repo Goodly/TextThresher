@@ -2,16 +2,16 @@ const initialState = Object.assign({
   topics: {
     results: []
   },
-  currentTopicId: 0
+  currentTopicId: 0,
+  lookupTopicById: { '0': [0, { instructions: '' }] }
 }, {});
 
-function mapIdToIndex(array) {
-  var dic = {};
-  for (var i = 0; i < array.length; i++) {
-    var topic = array[i];
-    dic[topic.id] = [i, topic];
-  }
-  return dic;
+function indexTopicById(topicList) {
+  var lookup = {};
+  topicList.forEach( (topic, index) => {
+    lookup[topic.id] = [index, topic];
+  });
+  return lookup;
 }
 
 export function topicPicker(state = initialState, action) {
@@ -26,7 +26,7 @@ export function topicPicker(state = initialState, action) {
       ...state,
       topics: action.response,
       currentTopicId: (action.response.results.length > 0 ? action.response.results[0].id : 0),
-      idDict: mapIdToIndex(action.response.results)
+      lookupTopicById: indexTopicById(action.response.results)
     }
     default:
       return state;
