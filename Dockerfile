@@ -14,6 +14,6 @@ WORKDIR /home/thresher
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-CMD ["gunicorn", "-b", ":5000", "--error-logfile", "-", \
-                 "--access-logfile", "-", "thresher_backend.wsgi"]
+CMD ["gunicorn", "-b", ":5000", "-w", "10", "--error-logfile", "-", \
+                 "thresher_backend.wsgi"]
 
