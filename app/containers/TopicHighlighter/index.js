@@ -85,6 +85,7 @@ export class TopicHighlighter extends Component {
             </ReactCSSTransitionsGroup>
             <br/>
             <button><Link to={`/article/${this.props.nextArticle}`}>Fetch next Article</Link></button>
+            <div className="space"></div>
         </div>
       </ReactCSSTransitionsGroup>
     );
