@@ -80,7 +80,6 @@ class AnswerSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     # A nested serializer for all the answers (if any)
     answers = AnswerSerializer(many=True)
-    submitted_answers = SubmittedAnswerSerializer(many=True)
 
     class Meta:
         model = Question

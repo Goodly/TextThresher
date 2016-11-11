@@ -37,17 +37,17 @@ const Question = React.createClass({
     question: React.PropTypes.object.isRequired,
   },
 
-  mapToRadio: function(arr) {
+  mapToRadio: function(arr, controlname="controlgroup") {
     return (
       <form>
         { arr.map((elem, i) => 
           {
-            var colorText = elem.answer_id == this.props.answers.id ? COLOR_OPTIONS[i] : '';
+            var colorText = elem.id == this.props.answers.id ? COLOR_OPTIONS[i] : '';
             return (
               <div key={elem.id}
-                onChange={() => { this.props.selectAnswer(elem.answer_id, '', {}) }}
+                onChange={() => { this.props.selectAnswer(elem.id, '', {}) }}
                 style={{ "color": colorText }}>
-                <input type="radio" name="question" /> 
+                <input type="radio" name={controlname} />
                 { " " + elem.answer_content }
               </div>
             );
@@ -58,11 +58,11 @@ const Question = React.createClass({
     );
   },
 
-  mapToCheckbox: function(arr) {
+  mapToCheckbox: function(arr, controlname="controlgroup") {
   return (
       <form>
         { arr.map((elem, i) => {
-          let colorText = this.props.answers.checked[elem.answer_id] ? COLOR_OPTIONS[i] : '';
+          let colorText = this.props.answers.checked[elem.id] ? COLOR_OPTIONS[i] : '';
           let checked = Object.assign({}, this.props.answers.checked);
           return (
             <div key={elem.id}
@@ -73,9 +73,9 @@ const Question = React.createClass({
                   "backgroundColor": COLOR_OPTIONS[i] }} 
                   onClick={() => { this.props.setColor(COLOR_OPTIONS[i]) }} />
               <input type="checkbox" 
-                  name="question" 
-                  checked={ this.props.answers.checked[elem.answer_id] ? true : false }
-                  onChange={ () => { this.checkboxOnClick(checked, elem.answer_id) }} /> 
+                  name={controlname}
+                  checked={ this.props.answers.checked[elem.id] ? true : false }
+                  onChange={ () => { this.checkboxOnClick(checked, elem.id) }} />
               { " " + elem.answer_content }
             </div>
           );
@@ -95,8 +95,8 @@ const Question = React.createClass({
 
   dateTimeInput: function() {
     // TODO: once backend finalized, get only one answer ID from input (or none)
-    let answer_id = this.props.question.answers[0].answer_id;
-    var colorText = this.props.answers[answer_id] ? COLOR_OPTIONS[0] : '';
+    let id = this.props.question.answers[0].id;
+    var colorText = this.props.answers[id] ? COLOR_OPTIONS[0] : '';
     return (
       <form>
         <SingleDatePicker id={ this.props.question.question_id.toString() }/>
@@ -105,31 +105,31 @@ const Question = React.createClass({
     );
   },
 
-  textInput: function() {
+  textInput: function(controlname="textinput") {
     // TODO: once backend finalized, get only one answer ID from input (or none)
-    let answer_id = this.props.question.answers[0].answer_id;
-    const colorText = this.props.answers.id == answer_id ? COLOR_OPTIONS[0] : '';
+    let id = this.props.question.answers[0].id;
+    const colorText = this.props.answers.id == id ? COLOR_OPTIONS[0] : '';
     return (
       <form>
-        <input type="text" name="question" style={{ color: colorText }}
-            onChange={(event) => { this.props.selectAnswer(answer_id, event.target.value, {}) } }/>
+        <input type="text" name={controlname} style={{ color: colorText }}
+            onChange={(event) => { this.props.selectAnswer(id, event.target.value, {}) } }/>
         <input type="submit" value="Next" />
       </form>
     );
   },
 
   mapQuestionAnswers: function() {
-    switch (this.props.question.type) {
-      case 'radio':
+    switch (this.props.question.question_type) {
+      case 'RADIO':
         return this.mapToRadio(this.props.question.answers)
-      case 'checkbox':
+      case 'CHECKBOX':
         return this.mapToCheckbox(this.props.question.answers)
-      case 'datetime':
+      case 'DATETIME':
         return this.dateTimeInput();
-      case 'input':
+      case 'TEXT':
         return this.textInput();
       default:
-        console.log('unprovided answer type, should be: radio, input, checkbox, or datetime');
+        console.log('unsupported answer type, should be: RADIO, CHECKBOX, DATETIME or TEXT');
         return <div></div>
     }
   },
