@@ -13,6 +13,13 @@ MANDATORY_Q = '?'
 CONTINGENT_Q = '*'
 Dependency = namedtuple('Dependency', ['topic', 'question', 'answer', 'next_question'])
 
+QUESTION_TYPES = {
+    'mc': 'CHECKBOX',
+    'dt': 'DATETIME',
+    'tb': 'TEXT',
+    'cl': 'RADIO'
+}
+
 def is_answer(type_id):
     return type_id.isalpha() and len(type_id) == 1
 
@@ -100,7 +107,7 @@ def parse_question(question, contingency, output):
     topic['questions'].append({
         'question_number': int(question_number),
         'question_text': question_text,
-        'question_type': question_type,
+        'question_type': QUESTION_TYPES.get(question_type, question_type),
         'contingency': contingency,
         'answers': [],
     })

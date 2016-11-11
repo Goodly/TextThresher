@@ -91,12 +91,12 @@ class Question(models.Model):
 
     # Question type
     QUESTION_TYPE_CHOICES = (
-            ('mc', 'Multiple Choice'),
-            ('dt', 'Date Time'),
-            ('tb', 'Textbox'),
-            ('cl', 'Checklist')
+            ('RADIO', 'Single answer - radio buttons'),
+            ('CHECKBOX', 'Multiple answer - checkboxes'),
+            ('DATETIME', 'Date Time'),
+            ('TEXT', 'Text')
     )
-    question_type = models.CharField(max_length=2,
+    question_type = models.CharField(max_length=10,
                                      choices=QUESTION_TYPE_CHOICES)
 
     # Whether the question is a contingency one or not

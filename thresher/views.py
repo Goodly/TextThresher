@@ -82,7 +82,6 @@ def questions(request):
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
 
-@list_route
 @api_view(['GET'])
 def question(request, id):
     """
