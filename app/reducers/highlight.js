@@ -135,17 +135,6 @@ export function highlight(state = initialState, action) {
       }
       return Object.assign({}, state, {highlights: new_highlights, caseMax: caseMax});
 
-    /*case 'RESIZE_HIGHLIGHT':
-      var new_highlights = [];
-      for (var i = 0; i < state.highlights.length; i++) {
-        var highlight = state.highlight[i];
-        if (highlight.text.localeCompare(action.highlight.text) && highlight.top == action.highlight.top) { //equally may not work
-          highlight.start = action.start;
-          highlight.end = action.end;
-        }
-        new_highlights.push(highlight);
-      }
-      return Object.assign({}, state, {highlights: new_highlights});*/
     default:
       return state;
   }

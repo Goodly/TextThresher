@@ -544,15 +544,6 @@ const HighlightTool = React.createClass({
                 />
               </span>
             );
-            /*return (
-              <span key={i}
-              source = {curHL.source}
-              onClick={this.handleSelect.bind(this, curHL.source)}
-              style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
-              title={topics}>
-                {text.substring(curHL.start, curHL.end)}
-              </span>
-            );*/
           } else {
             return (
               <span key={i}
@@ -574,28 +565,6 @@ const HighlightTool = React.createClass({
     );
   }
 });
-/*
-
-<span key={i}
-source = {curHL.source}
-onClick={this.handleSelect.bind(this, curHL.source)}
-style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
-title={topics}>
-  <HandleStart
-  highlight={curHL.source}
-  color={this.mergeColors(curHL.topics, curHL.selected)}
-  caseNum={1}
-  caseMax={this.props.caseMax}>
-  </HandleStart>
-    {text.substring(curHL.start, curHL.end)}
-  <HandleEnd
-  highlight={curHL.source}
-  color={this.mergeColors(curHL.topics, curHL.selected)}
-  caseNum={1}
-  caseMax={this.props.caseMax}>
-  </HandleEnd>
-</span>
-*/
 
 export default connect(
   mapStateToProps,
