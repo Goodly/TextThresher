@@ -68,7 +68,7 @@ export default {
       {
         test: /\.js$/,
         include: path.join(__dirname, '../app'),
-        loaders: [] // configure eslint here?
+        loaders: [] // ['eslint-loader']
       }
     ],
     loaders: [
