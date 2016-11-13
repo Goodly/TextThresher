@@ -10,7 +10,7 @@ const WEBPACK_HOSTNAME = process.env.WEBPACK_HOSTNAME || 'localhost';
 const WEBPACK_PORT = parseInt(process.env.WEBPACK_PORT, 10) || 3001;
 const PUBLIC_PATH = `${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}/app/`;
 
-const bowerPath = path.join(__dirname, '../vendor/bower_components');
+const bowerPath = path.resolve(__dirname, '../vendor/bower_components');
 
 const PATHS = {
   app: path.join(__dirname, '../app'),
@@ -18,7 +18,7 @@ const PATHS = {
 };
 
 let resolveBowerPath = function(componentPath) {
-  return path.join(bowerPath, componentPath);
+  return path.resolve(bowerPath, componentPath);
 };
 
 export default {
@@ -59,10 +59,10 @@ export default {
       alias: {
         modernizr: resolveBowerPath('modernizr/modernizr.js'),
         bootstrap_sass: resolveBowerPath('bootstrap-sass/assets/stylesheets/_bootstrap.scss'),
-        jquery: resolveBowerPath('jquery/dist/jquery.js')
       },
       extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png'],
-      modulesDirectories: ['node_modules', 'web_modules', bowerPath, PATHS.app]
+      root: [PATHS.app, bowerPath],
+      modulesDirectories: ['node_modules', 'web_modules']
     },
     output: {
       path: __dirname,
@@ -99,7 +99,10 @@ export default {
         {
           test: /\.js$/,
           include: [/app/, /test/],
-          loaders: ['babel-loader']
+          loader: "babel-loader",
+          query: {
+            cacheDirectory: true
+          }
         }
       ]
     },
@@ -129,6 +132,6 @@ export default {
       new webpack.optimize.OccurenceOrderPlugin(),
 
     ],
-    noParse: [bowerPath, 'node_modules']
+    noParse: [new RegExp(bowerPath), /node_modules/]
   }
 };
