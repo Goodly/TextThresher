@@ -1,6 +1,6 @@
 'use strict';
 
-console.log('Building with dev.config.js');
+console.log('Building with dev.config.js\n');
 var webpack = require('webpack');
 
 const config = require('./base.config');

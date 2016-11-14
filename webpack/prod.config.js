@@ -9,10 +9,6 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 // TODO: pipe in stats
 // var writeStats = require('./utils/write-stats');
 
-// clean `dist` dir and copy in the `assets` dir
-require('./utils/clean-dist')();
-require('./utils/copy-to-dist')();
-
 const config = require('./base.config');
 
 config.plugins.push(

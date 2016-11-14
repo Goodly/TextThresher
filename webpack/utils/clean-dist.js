@@ -6,5 +6,5 @@ import path from 'path';
 export default () => {
   const DIST_PATH = path.resolve(__dirname, '../../dist/*');
   del.sync([DIST_PATH]);
-  console.log(`cleaned ${DIST_PATH} directory`);
+  console.log(`cleaned ${DIST_PATH}`);
 };

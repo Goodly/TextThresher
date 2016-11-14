@@ -10,6 +10,14 @@ const WEBPACK_HOSTNAME = process.env.WEBPACK_HOSTNAME || 'localhost';
 const WEBPACK_PORT = parseInt(process.env.WEBPACK_PORT, 10) || 3001;
 const PUBLIC_PATH = `${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}/`;
 
+if (process.env.WEBPACK === 'cleandist') {
+  // clean 'dist/' dir and copy files from the 'app/staticroot/' dir
+  require('./utils/clean-dist')();
+  require('./utils/copy-to-dist')();
+  // give webpack stats a blank line to work with
+  console.log('\n');
+};
+
 const PATHS = {
   app: path.resolve(__dirname, '../app'),
   build: path.resolve(__dirname, '../dist')
@@ -23,7 +31,7 @@ function resolveBowerPath(componentPath) {
 
 export default {
   devServer: {
-    contentBase: 'app',
+    contentBase: './app/staticroot',
     publicPath: PUBLIC_PATH,
     host: WEBPACK_LISTEN_IP,
     port: WEBPACK_PORT,
@@ -104,7 +112,7 @@ export default {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'TextThresher',
-      template: './app/assets/index_template.html',
+      template: './app/templates/index_template.html',
       chunks: ['app']
     }),
     new webpack.NoErrorsPlugin(),
