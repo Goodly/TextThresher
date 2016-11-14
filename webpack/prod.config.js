@@ -13,11 +13,6 @@ const config = require('./base.config');
 
 config.plugins.push(
 
-  // extract css
-  new ExtractTextPlugin('[name]-[chunkhash].css', {
-    allChunks: true
-  }),
-
   // set env
   new webpack.DefinePlugin({
     'process.env': {

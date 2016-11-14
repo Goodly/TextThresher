@@ -3,6 +3,8 @@
 import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import OnBuildPlugin from 'on-build-webpack';
+import child_process from 'child_process';
 
 const PROTOCOL = 'http';
 const WEBPACK_LISTEN_IP = process.env.WEBPACK_LISTEN_IP || 'localhost';
@@ -20,7 +22,8 @@ if (process.env.WEBPACK === 'cleandist') {
 
 const PATHS = {
   app: path.resolve(__dirname, '../app'),
-  build: path.resolve(__dirname, '../dist')
+  dist: path.resolve(__dirname, '../dist'),
+  highlighter: path.resolve(__dirname, '../pbs-highlighter')
 };
 
 const bowerPath = path.resolve(__dirname, '../vendor/bower_components');
@@ -53,6 +56,10 @@ export default {
       'babel-polyfill',
       './app/index'
     ],
+    highlighter: [
+      'babel-polyfill',
+      './app/highlighter'
+    ],
   },
   resolve: {
     alias: {
@@ -64,15 +71,14 @@ export default {
     modulesDirectories: ['node_modules', 'web_modules']
   },
   output: {
-    path: PATHS.build,
-    file: '[name]-[hash].js',
-    filename: '[name]-[hash].js',
-    chunkFilename: '[name]-[hash].js',
-    sourceMapFilename: "[name]-[hash].js.map",
+    path: PATHS.dist,
+    filename: '[name].bundle.js',
+    chunkFilename: '[id].chunk.js',
+    sourceMapFilename: "[name].js.map",
     publicPath: PUBLIC_PATH
   },
   module: {
-  preLoaders: [
+    preLoaders: [
       {
         test: /\.js$/,
         include: path.join(__dirname, '../app'),
@@ -113,7 +119,21 @@ export default {
     new HtmlWebpackPlugin({
       title: 'TextThresher',
       template: './app/templates/index_template.html',
-      chunks: ['app']
+      chunks: ['app'],
+      filename: 'index.html',
+    }),
+    new HtmlWebpackPlugin({
+      title: 'Highlight Tool',
+      template: './app/templates/pbs-highlighter.html',
+      chunks: ['highlighter'],
+      filename: '../pbs-highlighter/index.html'
+    }),
+    new OnBuildPlugin(function () {
+      let command = `cp ${PATHS.dist}/highlighter.bundle.js ${PATHS.highlighter}/bundle.js`;
+      console.log('\nCopying highlighter.bundle.js');
+      console.log(command);
+      child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
+      console.log('\n');
     }),
     new webpack.NoErrorsPlugin(),
     new webpack.optimize.DedupePlugin(),

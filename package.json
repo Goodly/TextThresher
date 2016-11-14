@@ -11,6 +11,7 @@
     "debug": "DEBUG=dev node --harmony ./webpack/dev-server.js",
     "serve": "webpack-dev-server --config webpack.config.js",
     "build": "NODE_ENV=development WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
+    "build:watch": "NODE_ENV=development WEBPACK=cleandist webpack --progress --stats --config webpack.config.js --watch",
     "deploy": "NODE_ENV=production WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive",
     "test:watch": "npm run test -- --watch"
@@ -61,6 +62,7 @@
     "mocha-webpack": "^0.6.0",
     "moment": "^2.15.2",
     "node-sass": "^3.0.0-beta.7",
+    "on-build-webpack": "^0.1.0",
     "postcss-loader": "^0.8.0",
     "radium": "^0.18.1",
     "raw-loader": "^0.5.1",
