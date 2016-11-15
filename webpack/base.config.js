@@ -122,12 +122,6 @@ export default {
       chunks: ['app'],
       filename: 'index.html',
     }),
-    new HtmlWebpackPlugin({
-      title: 'Highlight Tool',
-      template: './app/templates/pbs-highlighter.html',
-      chunks: ['highlighter'],
-      filename: '../pbs-highlighter/index.html'
-    }),
     new OnBuildPlugin(function () {
       let command = `cp ${PATHS.dist}/highlighter.bundle.js ${PATHS.highlighter}/bundle.js`;
       console.log('\nCopying highlighter.bundle.js');
