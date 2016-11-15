@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"><script type="text/javascript">window.NREUM||(NREUM={}),__nr_require=function(e,t,n){function r(n){if(!t[n]){var o=t[n]={exports:{}};e[n][0].call(o.exports,function(t){var o=e[n][1][t];return r(o||t)},o,o.exports)}return t[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({1:[function(e,t,n){function r(){}function o(e,t,n){return function(){return i(e,[(new Date).getTime()].concat(u(arguments)),t?null:this,n),t?void 0:this}}var i=e("handle"),a=e(2),u=e(3),c=e("ee").get("tracer"),f=NREUM;"undefined"==typeof window.newrelic&&(newrelic=f);var s=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit"],l="api-",p=l+"ixn-";a(s,function(e,t){f[t]=o(l+t,!0,"api")}),f.addPageAction=o(l+"addPageAction",!0),f.setCurrentRouteName=o(l+"routeName",!0),t.exports=newrelic,f.interaction=function(){return(new r).get()};var d=r.prototype={createTracer:function(e,t){var n={},r=this,o="function"==typeof t;return i(p+"tracer",[Date.now(),e,n],r),function(){if(c.emit((o?"":"no-")+"fn-start",[Date.now(),r,o],n),o)try{return t.apply(this,arguments)}finally{c.emit("fn-end",[Date.now()],n)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,t){d[t]=o(p+t)}),newrelic.noticeError=function(e){"string"==typeof e&&(e=new Error(e)),i("err",[e,(new Date).getTime()])}},{}],2:[function(e,t,n){function r(e,t){var n=[],r="",i=0;for(r in e)o.call(e,r)&&(n[i]=t(r,e[r]),i+=1);return n}var o=Object.prototype.hasOwnProperty;t.exports=r},{}],3:[function(e,t,n){function r(e,t,n){t||(t=0),"undefined"==typeof n&&(n=e?e.length:0);for(var r=-1,o=n-t||0,i=Array(o<0?0:o);++r<o;)i[r]=e[t+r];return i}t.exports=r},{}],ee:[function(e,t,n){function r(){}function o(e){function t(e){return e&&e instanceof r?e:e?c(e,u,i):i()}function n(n,r,o){if(!p.aborted){e&&e(n,r,o);for(var i=t(o),a=v(n),u=a.length,c=0;c<u;c++)a[c].apply(i,r);var f=s[w[n]];return f&&f.push([y,n,r,i]),i}}function d(e,t){b[e]=v(e).concat(t)}function v(e){return b[e]||[]}function g(e){return l[e]=l[e]||o(n)}function m(e,t){f(e,function(e,n){t=t||"feature",w[n]=t,t in s||(s[t]=[])})}var b={},w={},y={on:d,emit:n,get:g,listeners:v,context:t,buffer:m,abort:a,aborted:!1};return y}function i(){return new r}function a(){(s.api||s.feature)&&(p.aborted=!0,s=p.backlog={})}var u="nr@context",c=e("gos"),f=e(2),s={},l={},p=t.exports=o();p.backlog=s},{}],gos:[function(e,t,n){function r(e,t,n){if(o.call(e,t))return e[t];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,t,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return e[t]=r,r}var o=Object.prototype.hasOwnProperty;t.exports=r},{}],handle:[function(e,t,n){function r(e,t,n,r){o.buffer([e],r),o.emit(e,t,n)}var o=e("ee").get("handle");t.exports=r,r.ee=o},{}],id:[function(e,t,n){function r(e){var t=typeof e;return!e||"object"!==t&&"function"!==t?-1:e===window?0:a(e,i,function(){return o++})}var o=1,i="nr@id",a=e("gos");t.exports=r},{}],loader:[function(e,t,n){function r(){if(!h++){var e=y.info=NREUM.info,t=l.getElementsByTagName("script")[0];if(setTimeout(f.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&t))return f.abort();c(b,function(t,n){e[t]||(e[t]=n)}),u("mark",["onload",a()],null,"api");var n=l.createElement("script");n.src="https://"+e.agent,t.parentNode.insertBefore(n,t)}}function o(){"complete"===l.readyState&&i()}function i(){u("mark",["domContent",a()],null,"api")}function a(){return(new Date).getTime()}var u=e("handle"),c=e(2),f=e("ee"),s=window,l=s.document,p="addEventListener",d="attachEvent",v=s.XMLHttpRequest,g=v&&v.prototype;NREUM.o={ST:setTimeout,CT:clearTimeout,XHR:v,REQ:s.Request,EV:s.Event,PR:s.Promise,MO:s.MutationObserver},e(1);var m=""+location,b={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-998.min.js"},w=v&&g&&g[p]&&!/CriOS/.test(navigator.userAgent),y=t.exports={offset:a(),origin:m,features:{},xhrWrappable:w};l[p]?(l[p]("DOMContentLoaded",i,!1),s[p]("load",r,!1)):(l[d]("onreadystatechange",o),s[d]("onload",r)),u("mark",["firstbyte",a()],null,"api");var h=0},{}]},{},["loader"]);</script><script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","queueTime":0,"licenseKey":"b018e5f9c5","agent":"","transactionName":"ZFIAZ0IECxYCBUULCV0YJEZeBhEMDAgeEh9RWBFAUUsTDAYRHxIUXF0HUEQWXxECFVo9FkFSEVZeEQAX","applicationID":"2398033","errorBeacon":"bam.nr-data.net","applicationTime":33}</script>
+    
+    <title>crowdcrafting &middot; Project: TextThresher Highlighter &middot; Contribute</title>
+    
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Science affects all of us, science needs all of us">
+    <meta name="author" content="Scifabric">
+
+    
+    <!-- for Google -->
+    <meta name="description" content="Highlight phrases in articles that relate to provided topics. - Crowdcrafting" />
+    <meta name="keywords" content="citizenscience" />
+    <meta name="author" content="CrowdcraftingEn" />
+    <meta name="copyright" content="Crowdcrafting © 2015" />
+
+    <!-- for Facebook -->
+    <meta property="og:site_name" content="Crowdcrafting" />
+    <meta property="og:title" content="TextThresher Highlighter" />
+    <meta property="og:type" content="article" />
+    
+    <meta property="og:url" content="http://crowdcrafting.org/project/TextThresherHighlighter/" />
+    <meta property="og:description" content="Highlight phrases in articles that relate to provided topics." />
+    <meta property="article:published_time" content="2016-11-04T17:16:00.104888" />
+    <meta property="article:modified_time" content="2016-11-15T17:47:24.578438" />
+    <meta property="article:tag" content="citizenscience"/>
+    <meta property="article:tag" content="crowdsourcing"/>
+    <meta property="article:tag" content="crowdcrafting"/>
+    <meta property="article:tag" content="pybossa"/>
+    
+    <meta property="article:author" content="Norman Gilmore" />
+    
+
+    <!-- for Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="TextThresher Highlighter" />
+    <meta name="twitter:description" content="Highlight phrases in articles that relate to provided topics." />
+    <meta name="twitter:site" content="@Crowdcrafting" />
+    <meta name="twitter:creator" content="@Crowdcrafting" />
+    <meta name="twitter:url" content="http://crowdcrafting.org/project/TextThresherHighlighter/" />
+    
+    
+    <meta name="theme-color" content="#55b493">
+
+    <!-- Le styles -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,300,400,600,700,800' rel='stylesheet' type='text/css'>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/bootstrap-theme.css" rel="stylesheet" type="text/css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet" type="text/css">
+
+    <!-- Le fav and touch icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/static/img/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/static/img/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/img/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/img/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/img/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/img/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/img/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/static/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/static/img/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/static/img/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/static/img/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/static/img/manifest.json">
+    <link rel="mask-icon" href="/static/img/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/static/img/mstile-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600,600italic,200,200italic,300,700,700italic,900italic,900,300italic' rel='stylesheet' type='text/css'>
+
+    <!-- Le javascript -->
+    <script type="text/javascript" src="/static/vendor/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+    <script type="text/javascript" src="/static/vendor/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/modernizr.min.js"></script>
+
+    <!-- Google Custom Search -->
+    
+  </head>
+
+
+  <body class=apps>
+    <!-- Google Tag Manager or similar solutions -->
+    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K2LBMP"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K2LBMP');</script>
+
+    
+    <!-- checkpoint::logged-in::normangilmore -->
+    
+
+
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle menu-navbar" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu
+                </button>
+                <a class="navbar-brand" href="/"><img src="/static/img/crowdcrafting_scifabric.svg"></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav uppercase">
+                    <li  class="active" ><a href="/project/category/featured/">Discover</a></li>
+                    <!--<li ><a href="/pricing">Pricing</a></li>-->
+                    <li ><a href="/about">About</a></li>
+                </ul>
+                
+                
+                <ul class="nav navbar-nav navbar-right">
+    
+                    
+                    <li class="dropdown ">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">normangilmore <b class="caret"></b></a>
+                        <div class="divider"></div>
+                        <ul class="dropdown-menu">
+                            <li><a href="/account/normangilmore/">My Profile</a></li>
+                            <li><a href="/account/normangilmore/update">My Settings</a></li>
+                            
+                            <li><a href="/account/signout">Sign Out</a></li>
+                        </ul>
+                    </li>
+                    <li class="avatar hidden-xs" >
+                        <a class="avatar_img" href="/account/normangilmore/" style="font-size: 20px;" >
+                            
+                                <img id="smallAvatar" src="/static/" alt="N" class="img-circle" style="width:40px;">
+                            
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    <li>
+                         <p style="text-align:center;"><a href="/project/new" class="btn btn-default uppercase" role="button">Create your project</a></p>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<script type="text/javascript">
+    $('#smallAvatar').on('error', function(){
+        var altText = $(this).attr('alt');
+        var parent = $(this).parent();
+        parent.html(altText);
+        $(this).remove()
+    });
+</script>
+
+    <section>
+        
+
+
+        
+<link rel="stylesheet" href="/static/css/swiper.css">
+<script type="text/javascript" src="/static/js/vendor/swiper.jquery.js"></script>
+<script type="text/javascript" src="/static/js/vendor/magnifik.js"></script>
+<script type="text/javascript" src="/static/js/flashmessages.js"></script>
+<script>
+    Modernizr.load({
+            test: window.JSON,
+            nope: '/static/js/vendor/json2.min.js'
+            });
+</script>
+<script src="/static/js/pybossa/pybossa.js" type="text/javascript"></script>
+
+<div id="testing" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Project in testing mode</h4>
+      </div>
+      <div class="modal-body">
+          <p><strong>This project is in testing mode. Therefore, answers will be saved, but no results will be created for it.</strong></p>
+          <p>Once you are happy with the behavior, you can publish it from the project page.</p>
+          <p>When you decide to publish it, all the answers will be deleted so the project starts with a clean state.</p>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Got it</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="back-breadcrumb" class="container-fluid ">
+    <div class="row">
+        <div class="col-sm-6 col-md-6">
+            <a href="/project/TextThresherHighlighter/">« Back to  TextThresher Highlighter</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+        <div>
+Task Presenter Goes Here
+</div>
+<script>
+
+</script>
+        </div>
+    </div>
+    <div id='PYBOSSA_USER_LOCALE' hidden>
+    
+    en
+    
+    </div>
+</div>
+
+<script>
+    $("#testing").modal();
+</script>
+
+
+<script>
+function imgError(image) {
+    image.onerror = "";
+    image.src = "/static/img/placeholder.project.png";
+    if (arguments[1] === 'user') {
+        image.src = "/static/img/placeholder.user.png";
+    }
+    return true;
+}
+</script>
+
+
+    </section>
+
+    <footer role="contentinfo">
+    <!--<div class="container-fluid supported prefooter">
+        <h4 id="supported_by">Crowdcrafting.org is supported by</h4>
+        <ul>
+            <li class="col-md-3 col-sm-6  shuttleworth"><a href="http://shuttleworthfoundation.org/"><span>Shuttleworth Foundation</span></a></li>
+            <li class="col-md-3 col-sm-6 openknowledge"><a href="http://okfn.org/"><span>Open Knowledge Foundation</span></a></li>
+            <li class="col-md-3 col-sm-6 alfredpsloan"><a href="http://sloan.org/"><span>Alfred P. Sloan Foundation</span></a></li>
+            <li class="col-md-3 col-sm-6 cyberscience"><a href="http://citizencyberscience.net/"><span>Citizen Cyberscience Center</span></a></li>
+        </ul>
+</div>-->
+
+
+
+<div class="container-fluid crowdcrafting">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-offset-4 col-sm-4 col-md-offset-0 col-md-4 "> 
+                    <img alt="SciFabric Logo" class="footer-logo" src="/static/img/cc_white.svg">
+                    <p class="dev-and-host">Online assistance in performing tasks that require human cognition, knowledge or intelligence such as image classification, transcription, geocoding and more!</p>
+
+                </div>
+                <div class="col-sm-offset-2 col-sm-4 col-md-offset-0 col-md-2 col-lg-2">
+
+                    <p><strong>Resources</strong></p>
+                    <p><a href="http://docs.pybossa.com">Docs</a></p>
+                    <p><a href="/help/api">API</a></p>
+                    <p><a href="/help/terms-of-use">Terms of Use</a></p>
+                    <p><a href="/help/cookies-policy">Cookies Policy</a></p>
+                    <p><a href="/help/privacy">Privacy Policy</a></p>
+                    <p><a href="/account/">Community</a></p>
+                    <p><a href="/stats/">Stats</a></p>
+
+                </div>
+
+                <div class="col-sm-4 col-md-2 col-lg-2">
+
+                    <p><strong>Licenses</strong></p>
+                    <p><a href="/help/license">Overview</a></p>
+                    <p><a href="/help/license#projects">Projects</a></p>
+                    <p><a href="/help/license#data">Data</a></p>
+                    <p><a href="/help/license#content">Content</a></p>
+
+                </div>
+
+                <div class="col-sm-offset-2 col-sm-4 col-md-offset-0 col-md-2 col-lg-2">
+                    <p><strong>Social</strong></p>
+                    <p><a href="https://www.facebook.com/crowdcrafting/">Facebook</a></p>
+                    <p><a href="http://twitter.com/Crowdcrafting/">Twitter</a></p>
+                </div>
+
+
+
+        
+            </div>
+        </div>
+    </div> 
+
+
+<div class="container-fluid scifabric">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-offset-4 col-sm-4 col-md-offset-0 col-md-4 "> 
+                    <img alt="SciFabric Logo" class="footer-logo" src="/static/img/scifabric.svg">
+                    <p class="dev-and-host">Developing <a href="http://pybossa.com/">PyBossa</a><br> and hosting <a href="http://crowdcrafting.org/">Crowdcrafting</a><br> since 2011</p>
+                    <p>
+                    <a href="https://shuttleworthfoundation.org">
+                        <img class="logo_sf" src="/static/img/logo_sf.svg" width="279"></a>
+                    </p>
+
+
+                </div>
+                <div class="col-sm-offset-2 col-sm-4 col-md-offset-0 col-md-2 col-lg-2">
+
+                    <p><strong>Products</strong></p>
+                    <p><a href="http://pybossa.com">Pybossa</a></p>
+                    <p><a href="http://crowdcrafting.org">Crowdcrafting</a></p>
+
+                </div>
+
+                <div class="col-sm-4 col-md-2 col-lg-2">
+
+                    <p><strong>Services</strong></p>
+                    <p><a href="http://scifabric.com/crowdsourcing/pybossa-cloud-servers/">Crowdsourcing servers</a></p>
+                    <p><a href="http://scifabric.com/crowdsourcing/#education">Education</a></p>
+                    <p><a href="http://scifabric.com/crowdsourcing/training/">Training</a></p>
+                    <p><a href="http://scifabric.com/crowdsourcing/pybossa-cloud-servers/#support">Support</a></p>
+
+                </div>
+
+                <div class="col-sm-offset-2 col-sm-4 col-md-offset-0 col-md-2 col-lg-2">
+                    <p><strong>Company</strong></p>
+                    <p><a href="http://scifabric.com/success-stories/">Success stories</a></p>
+                    <p><a href="http://scifabric.com/team/">About us</a></p>
+                    <p><a href="http://scifabric.com/contact/">Contact</a></p>
+                    <p><a href="http://scifabric.com/press/">Press</a></p>
+                    <p><a href="http://scifabric.com/jobs/">Jobs</a></p>
+                </div>
+
+                <div class="col-sm-4 col-md-2 col-lg-2">
+
+                    <p><strong>Social</strong></p>
+                    <p><a href="http://scifabric.com/blog">Blog</a></p>
+                    <p><a href="https://www.facebook.com/scifabric/">Facebook</a></p>
+                    <p><a href="http://twitter.com/Scifabric/">Twitter</a></p>
+                    <p><a href="https://www.linkedin.com/company/scifabric">LinkedIn</a></p>
+                </div>
+
+            </div>
+        </div>
+    </div> 
+<script>
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+} 
+$( document ).ready(function() {
+        var lang = getCookie('language').toLowerCase();
+        if (lang != '') 
+            {
+            if (lang == 'es') { $("#languagelabel").text('Español');}
+            else { $("#languagelabel").text('English');}
+            }
+        else{
+        $("#languagelabel").text('Language');
+        }
+});
+
+    function setLanguage(lang) {
+        if (lang == 1) {
+             document.cookie="language=es;path=/";
+        }
+        else {
+             document.cookie="language=en;path=/";
+        }
+        location.reload();
+    }
+</script>
+    </footer>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Sign in to your account</h4>
+			</div>
+			<div class="modal-body row">
+				<div class="col-md-8 col-md-offset-2">
+					
+                    <form role="form" id="signin" method="post" action="/account/signin?next=">
+                        <input type="hidden" name="csrf_token" value="1479236391.06##99415941d923ec63f716fd093e4a95a91d475335" />
+						<div class="form-group">
+							<label for="exampleInputEmail1" class="sr-only">Email</label>
+							<input type="email" class="form-control" id="email" name="email" placeholder="email address">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1" class="sr-only">Password</label>
+							<input type="password" class="form-control" id="password" name="password" placeholder="password">
+						</div>
+						<div class="form-actions">
+							<p class="forgot-pass"><a href="/account/forgot-password" class="forgot-pass pull-left">Forgot password?</a></p>
+							<input type="submit" value="Sign in" class="btn btn-default btn-large pull-right" />
+						</div>
+					</form>
+				</div>
+				<div class="col-md-8 col-md-offset-2 ssnn">
+					<h4>or sign in/sign up through</h4>
+					<ul>
+						<li>
+							<a href="/twitter/" class="btn btn-secondary ssnn-twitter">Twitter</a>
+						</li>
+						<li>
+							<a href="/facebook/" class="btn btn-secondary ssnn-facebook">Facebook</a>
+						</li>
+						<li>
+							<a href="/google/" class="btn btn-secondary ssnn-google">Google</a>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-8 col-md-offset-2">
+					<p class="disclaimer">By click the Sign in button you are agreeing to<br /> <a href="/help/terms-of-use">the terms of use and data</a>.</p>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<p>Not registered? <a href="/account/register">Sign up for free now</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+    
+<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Share this project</h4>
+			</div>
+			<div class="modal-body row">
+				<div class="col-md-8 col-md-offset-2 share ssnn">
+					<h4>Help us spread the word</h4>
+					<ul>
+						<li>
+							<a href="javascript:window.open('https%3A%2F%2Ftwitter.com%2Fhome?status=http%3A%2F%2Fcrowdcrafting.org/project/TextThresherHighlighter/ ', '_blank', 'width=500,height=450');void(0);" class="btn btn-secondary ssnn-twitter">Share on Twitter</a>
+						</li>
+						<li>
+							<a href="javascript:window.open('http%3A%2F%2Fwww.facebook.com%2Fshare.php%3Fu%3Dhttp%3A%2F%2Fcrowdcrafting.org/project/TextThresherHighlighter/', '_blank', 'width=500,height=450');void(0);" class="btn btn-secondary ssnn-facebook">Share on Facebook</a>
+						</li>
+						<li>
+							<a href="javascript:window.open('https%3A%2F%2Fplus.google.com%2Fshare?url=http%3A%2F%2Fcrowdcrafting.org/project/TextThresherHighlighter/', '_blank', 'width=500,height=450');void(0);" class="btn btn-secondary ssnn-google">Share on Google</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script type="text/javascript" src="/static/vendor/scrollReveal.js"></script>
+    <script src="/static/vendor/wow.min.js"></script>
+    <script>
+        new WOW().init();
+
+        // Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent
+        window.cookieconsent_options = {"message":"Cookies help us to deliver our services. By using our services, you agree to our use of cookies.","dismiss":"Got it!","learnMore":"Learn More.","link":"/help/cookies-policy","theme":"dark-bottom"};
+        // Don't load cookie warning on Android webview
+        if (!(navigator.userAgent.indexOf("Chrome") != -1 && navigator.userAgent.indexOf("Version") != -1)) {
+            var fileref=document.createElement('script');
+            fileref.setAttribute("type","text/javascript");
+            fileref.setAttribute("src", "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js");
+            document.head.appendChild(fileref);
+        }
+    </script>
+
+  </body>
+</html>
