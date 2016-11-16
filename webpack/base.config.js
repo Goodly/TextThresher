@@ -126,7 +126,13 @@ export default {
       let command = `cp ${PATHS.dist}/highlighter.bundle.js ${PATHS.highlighter}/bundle.js`;
       console.log('\nCopying highlighter.bundle.js');
       console.log(command);
-      child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
+      try {
+        child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
+      } catch (err) {
+        console.log('\n******* BUILD FAILED. OUTPUT BUNDLE NOT FOUND.');
+        console.log(err.message);
+        console.log('*******');
+      };
       console.log('\n');
     }),
     new webpack.NoErrorsPlugin(),
