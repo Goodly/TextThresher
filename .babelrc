@@ -8,9 +8,4 @@
     "add-module-exports",
     "transform-decorators-legacy"
   ],
-  "env": {
-    "development": {
-      "presets": ["react-hmre"]
-    }
-  }
 }
