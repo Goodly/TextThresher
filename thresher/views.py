@@ -16,7 +16,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
-class UserProfileViewSet(viewsets.ModelViewSet):
+class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
