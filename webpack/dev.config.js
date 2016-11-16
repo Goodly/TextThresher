@@ -12,11 +12,6 @@ config.entry.app.unshift(
   'webpack/hot/only-dev-server'
 );
 
-const jsLoaderIndex = config.module.loaders
-  .findIndex(loader => String(loader.test) === String(/\.js$/));
-
-config.module.loaders[jsLoaderIndex].loaders.unshift('react-hot-loader');
-
 config.plugins.push(
   new webpack.HotModuleReplacementPlugin(),
   new webpack.DefinePlugin({
