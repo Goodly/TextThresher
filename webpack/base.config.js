@@ -74,7 +74,7 @@ export default {
     path: PATHS.dist,
     filename: '[name].bundle.js',
     chunkFilename: '[id].chunk.js',
-    sourceMapFilename: "[name].js.map",
+    sourceMapFilename: "[name].bundle.js.map",
     publicPath: PUBLIC_PATH
   },
   module: {
