@@ -17,3 +17,13 @@ export function activateTopic(topicId) {
     currentTopicId: topicId
   }
 }
+
+export function storeTopics(topics) {
+  return (dispatch) => {
+    dispatch({ type: 'FETCH_TOPICS_SUCCESS',
+               response: {
+                 results: topics
+               }
+            });
+  };
+}

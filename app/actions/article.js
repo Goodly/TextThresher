@@ -26,3 +26,11 @@ export function postArticleHighlights(highlightsString, articleId) {
       );
   };
 }
+
+export function storeArticle(article) {
+  return (dispatch) => {
+    dispatch({ type: 'FETCH_ARTICLE_SUCCESS',
+               response: article
+            });
+  };
+}
