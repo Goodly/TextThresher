@@ -1,0 +1,24 @@
+<script>
+function loadUserProgress() {
+  pybossa.userProgress('TextThresherHighlighter').done(function(data){
+    var pct = Math.round((data.done*100)/data.total);
+  });
+}
+
+pybossa.taskLoaded(function(task, deferred) {
+  if ( !$.isEmptyObject(task) ) {
+  }
+  else {
+    deferred.resolve(task);
+  }
+});
+
+pybossa.presentTask(function(task, deferred) {
+  if ( !$.isEmptyObject(task) ) {
+    loadUserProgress();
+  else {
+  }
+});
+
+pybossa.run('TextThresherHighlighter');
+</script>

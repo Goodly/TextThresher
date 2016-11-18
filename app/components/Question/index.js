@@ -1,6 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { SingleDatePicker } from 'react-dates';
+
+// react-dates has a dependency on react-portal which broke when
+// react/lib/CSSPropertyOperations moved to react-dom in react 15.4.0
+// Rather than hold back all the react libraries at 15.3.0, let's wait for
+// https://github.com/tajo/react-portal/pull/105 to be merged.
+// import { SingleDatePicker } from 'react-dates';
 import { answerSelected, colorSelected } from '../../actions/quiz';
 
 /* component styles */

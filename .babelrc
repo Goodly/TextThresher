@@ -2,15 +2,11 @@
   "presets": [
     "es2015",
     "react",
-    "stage-0"
+    "stage-3"
   ],
   "plugins": [
     "add-module-exports",
-    "transform-decorators-legacy"
+    "transform-decorators-legacy",
+    "react-hot-loader/babel"
   ],
-  "env": {
-    "development": {
-      "presets": ["react-hmre"]
-    }
-  }
 }

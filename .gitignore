@@ -1,10 +1,14 @@
 .tmp
-vendor/bower_components
-node_modules
+/vendor/bower_components/
+/node_modules/
+/dist/
+
+/pbs-highlighter/bundle.js
+/pbs-quiz/bundle.js
+
 testem.*.json
 tests.tap
 .DS_Store
-thresher/bin
 
 # emacs artifacts
 *~
@@ -25,6 +29,7 @@ thresher/bin
 /lib/
 pip-selfcheck.json
 __pycache__/
+/thresher/bin/
 
 # django artifacts
 staticfiles
