@@ -23,7 +23,7 @@ if (process.env.WEBPACK === 'cleandist') {
 const PATHS = {
   app: path.resolve(__dirname, '../app'),
   dist: path.resolve(__dirname, '../dist'),
-  highlighter: path.resolve(__dirname, '../pbs-highlighter')
+  highlight: path.resolve(__dirname, '../pbs-highlighter')
 };
 
 const bowerPath = path.resolve(__dirname, '../vendor/bower_components');
@@ -56,9 +56,9 @@ export default {
       'babel-polyfill',
       './app/index'
     ],
-    highlighter: [
+    highlight: [
       'babel-polyfill',
-      './app/highlighter'
+      './app/highlight'
     ],
   },
   resolve: {
@@ -123,17 +123,19 @@ export default {
       filename: 'index.html',
     }),
     new OnBuildPlugin(function () {
-      let command = `cp ${PATHS.dist}/highlighter.bundle.js ${PATHS.highlighter}/bundle.js`;
-      console.log('\nCopying highlighter.bundle.js');
-      console.log(command);
-      try {
-        child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
-      } catch (err) {
-        console.log('\n******* BUILD FAILED. OUTPUT BUNDLE NOT FOUND.');
-        console.log(err.message);
-        console.log('*******');
-      };
-      console.log('\n');
+      if (process.env.WEBPACK === 'cleandist') {
+        let command = `cp ${PATHS.dist}/highlight.bundle.js ${PATHS.highlight}/bundle.js`;
+        console.log('\nCopying highlight.bundle.js');
+        console.log(command);
+        try {
+          child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
+        } catch (err) {
+          console.log('\n******* BUILD FAILED. OUTPUT BUNDLE NOT FOUND.');
+          console.log(err.message);
+          console.log('*******');
+        };
+        console.log('\n');
+      }
     }),
     new webpack.NoErrorsPlugin(),
     new webpack.optimize.DedupePlugin(),
