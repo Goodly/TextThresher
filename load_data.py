@@ -277,7 +277,8 @@ def load_article(article):
             print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
             print e
 
-        print "article %s" % (article_obj.article_number)
+        print "article id %d numbered %s" % (article_obj.id,
+              article_obj.article_number)
 
 
 def load_schema_dir(dirpath):
