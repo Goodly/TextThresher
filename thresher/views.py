@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db.models import Prefetch
 
 from rest_framework import routers, viewsets
 from rest_framework.decorators import list_route, api_view
@@ -6,9 +7,11 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from models import Article, Topic, HighlightGroup, Project, Question, Answer, ArticleHighlight, UserProfile
-from serializers import (UserProfileSerializer, ArticleSerializer, TopicSerializer, 
-                         HighlightGroupSerializer, ProjectSerializer, QuestionSerializer,
-                         ArticleHighlightSerializer, RootTopicSerializer, SubmittedAnswerSerializer)
+from serializers import (UserProfileSerializer, ArticleSerializer,
+                         TopicSerializer, HighlightGroupSerializer,
+                         ProjectSerializer, QuestionSerializer,
+                         ArticleHighlightSerializer, RootTopicSerializer,
+                         SubmittedAnswerSerializer)
 
 # Views for serving the API
 
@@ -131,6 +134,61 @@ def highlighter_tasks(request):
                "project": ProjectSerializer(project, many=False).data,
                "topics": RootTopicSerializer(topics, many=True).data,
                "article": ArticleSerializer(article, many=False).data
+            })
+
+        return Response(taskList)
+
+@api_view(['GET'])
+def quiz_tasks(request):
+    """
+    /quiz_tasks
+
+    Provides tasks as an array of objects, where each object has
+    all the information to set up the quiz for a task:
+
+    1. the project description
+    2. the Topic
+    3. the article
+    4. the highlights for the Topic, per article
+    5. the questions and answers for this Topic
+    """
+    if request.method == 'GET':
+        taskList = []
+        project = Project.objects.get(name__exact="Deciding Force")
+
+        # Researcher interface will allow selecting topic.
+        topic = Topic.objects.get(name__exact="Protester")
+        hack2 = Topic.objects.get(name__exact="Event type")
+        questions = hack2.questions.all().prefetch_related("answers")
+
+        # Set up Prefetch that will attach just the highlights for
+        # this topic directly to each article result.
+        topicHighlights = (HighlightGroup.objects.filter(topic=topic)
+                           .order_by("case_number"))
+        fetchHighlights = Prefetch("users_highlights__highlights",
+                                   queryset=topicHighlights,
+                                   to_attr="highlightsForTopic")
+        # Currently selecting all articles highlighted with the topic
+        # Researcher interface will allow selecting subset of those articles
+        # We will also need ability to designate canonical approved highlights
+        # for a given article.
+        articles = (Article.objects
+                    .filter(users_highlights__highlights__topic=topic)
+                    .prefetch_related(fetchHighlights))
+        # Limit to 10 for development. Export all for production.
+        articles = articles.order_by("id")[:10]
+
+        for article in articles:
+            # Select just the highlights for this topic and article
+            highlights = topicHighlights.filter(article_highlight__article=article)
+            taskList.append({
+               "project": ProjectSerializer(project, many=False).data,
+               "topic": TopicSerializer(topic, many=False).data,
+               "article": ArticleSerializer(article, many=False).data,
+               # Get prefetch field "article.highlightsForTopic" to work
+               "highlights": HighlightGroupSerializer(
+                                 highlights, many=True).data,
+               "questions": QuestionSerializer(questions, many=True).data
             })
 
         return Response(taskList)
