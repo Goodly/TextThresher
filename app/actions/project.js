@@ -10,3 +10,13 @@ export function fetchProject() {
       );
   };
 }
+
+export function storeProject(project) {
+  return (dispatch) => {
+    dispatch({ type: 'FETCH_PROJECT_SUCCESS',
+               response: {
+                 results: [project]
+               }
+             });
+    }
+}

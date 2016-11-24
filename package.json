@@ -14,7 +14,8 @@
     "build:watch": "NODE_ENV=development WEBPACK=cleandist webpack --progress --stats --config webpack.config.js --watch",
     "deploy": "NODE_ENV=production WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "tasks:highlighter": "curl http://localhost:5000/api/highlighter_tasks/?format=json | python -m json.tool > pbs-highlighter/highlighter_tasks.json"
   },
   "author": "",
   "license": "MIT",

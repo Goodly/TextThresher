@@ -16,7 +16,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
-class UserProfileViewSet(viewsets.ModelViewSet):
+class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
@@ -105,6 +105,35 @@ def next_question(request, id, ans_num):
         next_question = answer.next_question
         serializer = QuestionSerializer(next_question, many=False)
         return Response(serializer.data)
+
+@api_view(['GET'])
+def highlighter_tasks(request):
+    """
+    /hightlight_tasks
+
+    Provides highlight_tasks as an array of objects, where each object has
+    all the information to set up the highlight_tool for a task:
+
+    1) the project description
+    2) the topics to use
+    3) the article to highlight
+    """
+    if request.method == 'GET':
+        taskList = []
+        project = Project.objects.get(name="Deciding Force")
+        topics = Topic.objects.filter(parent=None)
+        articles = Article.objects.filter(
+            id__in=[9, 11, 38, 53, 55, 202, 209, 236, 259]
+        ).order_by('id')
+
+        for article in articles:
+            taskList.append({
+               "project": ProjectSerializer(project, many=False).data,
+               "topics": RootTopicSerializer(topics, many=True).data,
+               "article": ArticleSerializer(article, many=False).data
+            })
+
+        return Response(taskList)
 
 # Register our viewsets with the router
 ROUTER = routers.DefaultRouter()

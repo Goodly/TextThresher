@@ -63,13 +63,12 @@ class ArticleHighlightSerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(serializers.ModelSerializer):
     annotators = JSONSerializerField()
-    highlight_groups = ArticleHighlightSerializer(many=True)
 
     class Meta:
         model = Article
         fields = ('id', 'article_number', 'text', 'date_published', 'city_published',
                   'state_published', 'periodical', 'periodical_code',
-                  'parse_version', 'annotators', 'highlight_groups')
+                  'parse_version', 'annotators')
 
 class AnswerSerializer(serializers.ModelSerializer):
 
