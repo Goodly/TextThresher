@@ -99,13 +99,15 @@ def parse_document(path):
         if tua_id not in tuas[tua_type]:
             tuas[tua_type][tua_id] = []
 
-        if (clean_text[tua_span[0]:tua_span[1]].strip().lower()
-            != tua_body.strip().lower()):
+        tua_text = clean_text[tua_span[0]:tua_span[1]].strip().lower()
+        if (tua_text != tua_body.strip().lower()):
             raise ArticleParseError(
                 "Reconstructed clean text didn't match TUA body!",
                 ArticleParseError.TEXT_ERROR)
 
-        tuas[tua_type][tua_id].append(tua_span)
+        tua_content = list(tua_span)
+        tua_content.append(tua_text)
+        tuas[tua_type][tua_id].append(tua_content)
 
     # If the only tua_type is 'Useless', this document is likely a duplicate.
     if len(tuas.keys()) == 1 and 'Useless' in tuas.keys():
@@ -115,7 +117,7 @@ def parse_document(path):
 
     # Warning: brackets left over are usually bad news.
     if '[' in clean_text or ']' in clean_text:
-        print "Possible Error:", article_number
+        print "Unparsed brackets left in article:", article_number
 #        raise ArticleParseError("Brackets remain in clean text!",
 #                                ArticleParseError.BRACKET_WARNING)
 
@@ -421,9 +423,12 @@ if __name__ == '__main__':
         ArticleParseError.BRACKET_WARNING: WARNING_FOLDER
     }
 
+    outfile = os.path.join(DATA_FOLDER, "articles.json")
     if len(sys.argv) > 1:
         data = []
         file_path = sys.argv[1]
+        file_name, ext = os.path.splitext(os.path.basename(file_path))
+        outfile = os.path.join(DATA_FOLDER, os.path.basename(file_name) + ".json")
         try:
             data.append(parse_document(file_path))
         except ArticleParseError as e:
@@ -435,4 +440,7 @@ if __name__ == '__main__':
     def dthandler(obj):
         if isinstance(obj, date):
             return obj.isoformat()
-    json.dump(data, open('data.txt', 'w'), default=dthandler)
+    json.dump(data, open(outfile, 'w'), default=dthandler,
+              sort_keys=True,
+              indent=4,
+              separators=(',', ': '))
