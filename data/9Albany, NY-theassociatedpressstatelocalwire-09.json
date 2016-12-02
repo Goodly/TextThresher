@@ -5,7 +5,7 @@
                 "SLG",
                 "MB"
             ],
-            "article_id": "9",
+            "article_number": "9",
             "city": "Albany",
             "date_published": "2011-12-22",
             "periodical": "theassociatedpressstatelocalwire",
@@ -19,25 +19,30 @@
                 "1": [
                     [
                         218,
-                        297
+                        297,
+                        "tents remain pitched at the occupy albany encampment on the first day of winter"
                     ],
                     [
                         310,
-                        376
+                        376,
+                        "protesters' permit to camp in the city's academy park is expiring."
                     ],
                     [
                         635,
-                        840
+                        840,
+                        "the city's chief lawyer told protesters in a letter almost three weeks ago they could stay until dec 22 under a permit limiting them to 30 tents. it included other conditions with which they have complied."
                     ],
                     [
                         377,
-                        486
+                        486,
+                        "city officials have allowed demonstrators to stay overnight in the park near new york's capitol since oct. 21"
                     ]
                 ],
                 "2": [
                     [
                         495,
-                        587
+                        587,
+                        "gov. andrew cuomo has had state police enforce an 11 p.m. curfew in adjacent lafayette park,"
                     ]
                 ]
             },
@@ -45,19 +50,22 @@
                 "1": [
                     [
                         377,
-                        486
+                        486,
+                        "city officials have allowed demonstrators to stay overnight in the park near new york's capitol since oct. 21"
                     ]
                 ],
                 "2": [
                     [
                         495,
-                        587
+                        587,
+                        "gov. andrew cuomo has had state police enforce an 11 p.m. curfew in adjacent lafayette park,"
                     ]
                 ],
                 "3": [
                     [
                         635,
-                        840
+                        840,
+                        "the city's chief lawyer told protesters in a letter almost three weeks ago they could stay until dec 22 under a permit limiting them to 30 tents. it included other conditions with which they have complied."
                     ]
                 ]
             },
@@ -65,7 +73,8 @@
                 "1": [
                     [
                         904,
-                        980
+                        980,
+                        "some protesters say they won't leave, with a rally planned thursday evening."
                     ]
                 ]
             },
@@ -73,7 +82,8 @@
                 "1": [
                     [
                         882,
-                        903
+                        903,
+                        "talks have continued."
                     ]
                 ]
             },
@@ -81,7 +91,8 @@
                 "1": [
                     [
                         841,
-                        881
+                        881,
+                        "officials say their concern is the cold."
                     ]
                 ]
             },
@@ -89,7 +100,8 @@
                 "1": [
                     [
                         572,
-                        587
+                        587,
+                        "lafayette park,"
                     ]
                 ]
             }
