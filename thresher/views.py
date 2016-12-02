@@ -158,11 +158,30 @@ def quiz_tasks(request):
 
         # Researcher interface will allow selecting topic.
         topic = Topic.objects.get(name__exact="Protester")
-        hack2 = Topic.objects.get(name__exact="Event type")
-        questions = hack2.questions.all().prefetch_related("answers")
 
-        # Set up Prefetch that will attach just the highlights for
-        # this topic directly to each article result.
+# WIP: getting all subtopics
+#       topictree = Topic.objects.raw("""
+#           WITH RECURSIVE subtopic(id, parent_id, name) AS (
+#               SELECT id, parent_id, name FROM thresher_topic WHERE id=%s
+#             UNION ALL
+#               SELECT t.id, t.parent_id, t.name
+#               FROM subtopic, thresher_topic t
+#               WHERE t.parent_id = subtopic.id
+#           )
+#           SELECT id, parent_id
+#           FROM subtopic LIMIT 100;
+#       """, [topic.id])
+
+        # replace this with recursive query above to find all
+        # children of Protester, not just hard coded "Event type"
+        topictree = (Topic.objects.filter(name__exact="Event type")
+                     .prefetch_related("questions__answers"))
+        questions = [ q for t in topictree for q in t.questions.all() ]
+
+        # Set up Prefetch that will cache just the highlights matching
+        # this topic to article.users_highlights[n].highlightsForTopic
+        # This approach uses only 3 SQL queries, instead of hitting the
+        # database once or twice for every article looped over.
         topicHighlights = (HighlightGroup.objects.filter(topic=topic)
                            .order_by("case_number"))
         fetchHighlights = Prefetch("users_highlights__highlights",
@@ -179,11 +198,19 @@ def quiz_tasks(request):
         articles = articles.order_by("id")[:10]
 
         for article in articles:
-            # Select just the highlights for this topic and article
-            highlights = topicHighlights.filter(article_highlight__article=article)
+            # Our prefetched highlightsForTopic is nested under
+            # the ArticleHightlight record, in HighlightGroup
+            # Not expecting more than one ArticleHighlight record
+            # but safest to code as if there could be more than one.
+            highlights = [ hg
+                           for ah in article.users_highlights.all()
+                           for hg in ah.highlightsForTopic
+                         ]
+
             taskList.append({
                "project": ProjectSerializer(project, many=False).data,
                "topic": TopicSerializer(topic, many=False).data,
+               "topictree": TopicSerializer(topictree, many=True).data,
                "article": ArticleSerializer(article, many=False).data,
                # Get prefetch field "article.highlightsForTopic" to work
                "highlights": HighlightGroupSerializer(
