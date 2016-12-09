@@ -12,14 +12,16 @@ class UserProfile(models.Model):
     accuracy_score = models.DecimalField(max_digits=5, decimal_places=3)
 
     def __unicode__(self):
-        return "User %s" % self.user
+        return "%s" % self.user.username
+
 
 class Project(models.Model):
     name = models.CharField(max_length=100)
     instructions = models.TextField()
 
     def __unicode__(self):
-        return "Project %d: %s" % (self.id, self.name)
+        return "id %d: %s" % (self.id, self.name)
+
 
 # Articles containing text for analysis
 class Article(models.Model):
@@ -39,15 +41,16 @@ class Article(models.Model):
     annotators = models.CharField(max_length=1000) # as a JSON list
 
     def __unicode__(self):
-        return "Article %d: %s, %s (%s)" % (
-            self.article_number, self.city_published, self.state_published,
-            self.periodical)
+        return "id %d: numbered %d, %s, %s (%s)" % (
+            self.id, self.article_number, self.city_published,
+            self.state_published, self.periodical)
+
 
 # Topics that are either parents of leaf topics, or leaf topics with questions.
 class Topic(models.Model):
     # an id of its parent topic
     parent = models.ForeignKey("self", related_name="subtopics",
-                               on_delete=models.CASCADE, null=True)
+                               on_delete=models.SET_NULL, null=True)
 
     # The name of the topic
     name = models.TextField()
@@ -74,8 +77,10 @@ class Topic(models.Model):
 
     def __unicode__(self):
         if self.parent:
-            return "Topic %s in Parent %s" % (self.name, self.parent.name)
-        return "Topic %s (no parent)" % (self.name)
+            return "id %d %s in Parent %s" % (self.id,
+                    self.name, self.parent.name)
+        return "id %d %s (no parent)" % (self.id, self.name)
+
 
 # Question
 class Question(models.Model):
@@ -83,7 +88,7 @@ class Question(models.Model):
     question_number = models.IntegerField()
 
     # The topic this question belongs to
-    topic = models.ForeignKey(Topic, related_name="related_questions", 
+    topic = models.ForeignKey(Topic, related_name="questions",
                               on_delete=models.CASCADE)
 
     # The question text
@@ -103,15 +108,17 @@ class Question(models.Model):
     contingency = models.BooleanField(default=False)
 
     # The default next question (for mandatory questions)
-    default_next = models.ForeignKey('self', related_name="next_default", 
-                                     on_delete=models.CASCADE, null=True)
+    default_next = models.ForeignKey("self",
+                                     related_name="next_default",
+                                     on_delete=models.SET_NULL, null=True)
 
     class Meta:
         unique_together = ("topic", "question_text")
 
     def __unicode__(self):
-        return "Question %d of type %s in topic %s" % (
-            self.id, self.question_type, self.topic.name)
+        return "id %d numbered %d type %s in topic %s" % (
+            self.id, self.question_number, self.question_type, self.topic.name)
+
 
 # Possible answers for a given question
 # NOTE: This does NOT represent submitted answers, only possible answers
@@ -120,21 +127,55 @@ class Answer(models.Model):
     answer_number = models.IntegerField()
 
     # The question to which this answer belongs
-    question = models.ForeignKey(Question, related_name="answers")
-    
+    question = models.ForeignKey(Question,
+                                 related_name="answers",
+                                 on_delete=models.CASCADE, null=True)
+
     # The text of the amswer
     answer_content = models.TextField()
 
     # The next question the answer is leading to
-    next_question = models.ForeignKey(Question, related_name="next_question", 
-                                      null=True)
+    next_question = models.ForeignKey(Question,
+                                      related_name="question_next",
+                                      on_delete=models.SET_NULL, null=True)
     class Meta:
         unique_together = ("answer_number", "question")
 
     def __unicode__(self):
-        return ("Answer %d for Question %s " 
-                "in Topic %s") % (self.answer_id, self.question.question_text, 
+        return ("id %d numbered %d Answer %s for Question %s "
+                "in Topic %s") % (self.id, self.answer_number,
+                                  self.answer_content,
+                                  self.question.question_text,
                                   self.question.topic.name)
+
+
+# A container class for an Article and its Highlight Group
+# that will be referenced by a topic
+class ArticleHighlight(models.Model):
+    article = models.ForeignKey(Article,
+                                related_name="users_highlights",
+                                on_delete=models.CASCADE)
+    created_by = models.ForeignKey(UserProfile, related_name="users_highlights",
+                                   on_delete=models.CASCADE)
+
+    # Source of the highlight
+    HIGHLIGHT_SOURCE_CHOICES = (
+        ('HLTR', 'Highlighter'),
+        ('QUIZ', 'Quiz'),
+    )
+    highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES,
+                                                max_length=4)
+
+    topics_identified = models.ManyToManyField(
+                        Topic,
+                        through='HighlightGroup',
+                        through_fields=('article_highlight', 'topic'))
+
+    def __unicode__(self):
+        return ("id %d for article id %d "
+                "by %s") % (self.id, self.article.id,
+                self.created_by.user.username)
+
 
 # A submitted highlight group
 class HighlightGroup(models.Model):
@@ -149,11 +190,12 @@ class HighlightGroup(models.Model):
     case_number = models.IntegerField()
 
     # The topic of this text
-    topic = models.ForeignKey(Topic, related_name="article_highlights",
-                              on_delete=models.CASCADE, null=True)
+    topic = models.ForeignKey(Topic, related_name="highlights",
+                              on_delete=models.PROTECT, null=True)
 
     # The Article highlight object it belongs to
-    article_highlight = models.ForeignKey('ArticleHighlight', related_name="highlights",
+    article_highlight = models.ForeignKey(ArticleHighlight,
+                                          related_name="highlights",
                                           on_delete=models.CASCADE)
 
     @property
@@ -164,28 +206,31 @@ class HighlightGroup(models.Model):
         answers = list(SubmittedAnswer.objects.filter(highlight_group=self))
         return answers
 
-# A container class for an Article and its Highlight Group
-# that will be referenced by a topic
-class ArticleHighlight(models.Model):
-    article = models.ForeignKey(Article, related_name="highlight_groups", on_delete=models.CASCADE)
-    created_by = models.ForeignKey(UserProfile, related_name="article_highlights",
-                                   on_delete=models.CASCADE)
-    # Source of the highlight
-    HIGHLIGHT_SOURCE_CHOICES = (
-        ('HLTR', 'Highlighter'), 
-        ('QUIZ', 'Quiz'),
-    )
-    highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES, max_length=4)
-
     def __unicode__(self):
-        return ("Highlights in Article %d created by %s") % (self.article.article_number,
-                                                             created_by.user.username)
+        return ("id %d article id %d "
+                "Topic %s and Case %d "
+                "created by %s") % (self.id,
+                 self.article_highlight.article.id,
+                 self.topic.name, self.case_number,
+                 self.article_highlight.created_by.user.username)
+
 
 # A submitted answer to a question
 class SubmittedAnswer(models.Model):
     # The highlight group this answer is part of
-    highlight_group = models.ForeignKey(HighlightGroup, related_name="submitted_answers")
-    question = models.ForeignKey(Question, related_name="submitted_answers")
-    user_submitted = models.ForeignKey(UserProfile, related_name="submitted_answers")
+    highlight_group = models.ForeignKey(HighlightGroup,
+                                        related_name="submitted_answers",
+                                        on_delete=models.CASCADE)
+
+    question = models.ForeignKey(Question,
+                                 related_name="submitted_answers",
+                                 on_delete=models.CASCADE)
+
+    user_submitted = models.ForeignKey(UserProfile,
+                                       related_name="submitted_answers",
+                                       on_delete=models.CASCADE)
     answer = models.TextField()
- 
+
+    def __unicode__(self):
+        return ("id %d question id %d user %s") % (self.id,
+                question.id, self.user_submitted.user.username)

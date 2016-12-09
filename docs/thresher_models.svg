@@ -245,9 +245,9 @@
 </g>
 <!-- thresher_models_Question&#45;&gt;thresher_models_Topic -->
 <g id="edge3" class="edge"><title>thresher_models_Question&#45;&gt;thresher_models_Topic</title>
-<path fill="none" stroke="black" d="M260.43,-429.93C275.07,-421.13 290.41,-412.79 305.5,-406 355.43,-383.54 414.36,-366.78 462.25,-355.4"/>
-<ellipse fill="black" stroke="black" cx="256.723" cy="-432.195" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="358.5" y="-409.1" font-family="Helvetica,sans-Serif" font-size="8.00">topic (related_questions)</text>
+<path fill="none" stroke="black" d="M281.42,-432.68C300.53,-423.21 320.41,-413.93 339.5,-406 378.97,-389.6 423.83,-374.61 462.25,-362.82"/>
+<ellipse fill="black" stroke="black" cx="277.718" cy="-434.531" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="375.5" y="-409.1" font-family="Helvetica,sans-Serif" font-size="8.00">topic (questions)</text>
 </g>
 <!-- thresher_models_Question&#45;&gt;thresher_models_Question -->
 <g id="edge4" class="edge"><title>thresher_models_Question&#45;&gt;thresher_models_Question</title>
@@ -302,10 +302,53 @@
 <g id="edge6" class="edge"><title>thresher_models_Answer&#45;&gt;thresher_models_Question</title>
 <path fill="none" stroke="black" d="M19.181,-591.1C16.654,-584.44 16.968,-577.36 21.5,-570 33.201,-551.01 51.263,-536.6 70.878,-525.72"/>
 <ellipse fill="black" stroke="black" cx="21.0836" cy="-594.645" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="85.5" y="-573.1" font-family="Helvetica,sans-Serif" font-size="8.00">next_question (next_question)</text>
+<text text-anchor="middle" x="85.5" y="-573.1" font-family="Helvetica,sans-Serif" font-size="8.00">next_question (question_next)</text>
+</g>
+<!-- thresher_models_ArticleHighlight -->
+<g id="node8" class="node"><title>thresher_models_ArticleHighlight</title>
+<polygon fill="palegoldenrod" stroke="none" points="768.5,-301 768.5,-371 952.5,-371 952.5,-301 768.5,-301"/>
+<polygon fill="#698b22" stroke="none" points="768.5,-353 768.5,-371 952.5,-371 952.5,-353 768.5,-353"/>
+<text text-anchor="start" x="813" y="-361.1" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="826" y="-361.1" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;ArticleHighlight &#160;&#160;&#160;</text>
+<text text-anchor="start" x="770.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="783.5" y="-345.6" font-family="Helvetica Bold" font-size="8.00">id</text>
+<text text-anchor="start" x="791.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="861.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="874.5" y="-345.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
+<text text-anchor="start" x="914.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="770.5" y="-332.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="783.5" y="-332.6" font-family="Helvetica Bold" font-size="8.00">article</text>
+<text text-anchor="start" x="809.5" y="-332.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="861.5" y="-332.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="874.5" y="-332.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="937.5" y="-332.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="770.5" y="-319.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="783.5" y="-319.6" font-family="Helvetica Bold" font-size="8.00">created_by</text>
+<text text-anchor="start" x="829.5" y="-319.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="861.5" y="-319.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="874.5" y="-319.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="937.5" y="-319.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="770.5" y="-306.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="783.5" y="-306.6" font-family="Helvetica " font-size="8.00">highlight_source</text>
+<text text-anchor="start" x="843.5" y="-306.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="861.5" y="-306.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="874.5" y="-306.6" font-family="Helvetica " font-size="8.00">CharField</text>
+<text text-anchor="start" x="908.5" y="-306.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+</g>
+<!-- thresher_models_ArticleHighlight&#45;&gt;thresher_models_UserProfile -->
+<g id="edge7" class="edge"><title>thresher_models_ArticleHighlight&#45;&gt;thresher_models_UserProfile</title>
+<path fill="none" stroke="black" d="M780.45,-293.13C763.59,-284.23 745.94,-274.85 729.5,-266 688.85,-244.12 643.56,-219.25 607.3,-199.21"/>
+<ellipse fill="black" stroke="black" cx="784.082" cy="-295.045" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="793" y="-259.1" font-family="Helvetica,sans-Serif" font-size="8.00">created_by (users_highlights)</text>
+</g>
+<!-- thresher_models_ArticleHighlight&#45;&gt;thresher_models_Article -->
+<g id="edge8" class="edge"><title>thresher_models_ArticleHighlight&#45;&gt;thresher_models_Article</title>
+<path fill="none" stroke="black" d="M860.5,-288.44C860.5,-272.93 860.5,-255.21 860.5,-238.01"/>
+<ellipse fill="black" stroke="black" cx="860.5" cy="-292.81" rx="4" ry="4"/>
+<text text-anchor="middle" x="913.5" y="-259.1" font-family="Helvetica,sans-Serif" font-size="8.00">article (users_highlights)</text>
 </g>
 <!-- thresher_models_HighlightGroup -->
-<g id="node8" class="node"><title>thresher_models_HighlightGroup</title>
+<g id="node9" class="node"><title>thresher_models_HighlightGroup</title>
 <polygon fill="palegoldenrod" stroke="none" points="521,-445 521,-541 712,-541 712,-445 521,-445"/>
 <polygon fill="#698b22" stroke="none" points="521.5,-523 521.5,-541 712.5,-541 712.5,-523 521.5,-523"/>
 <text text-anchor="start" x="570.5" y="-531.1" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
@@ -348,59 +391,16 @@
 <text text-anchor="start" x="666.5" y="-450.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
 </g>
 <!-- thresher_models_HighlightGroup&#45;&gt;thresher_models_Topic -->
-<g id="edge7" class="edge"><title>thresher_models_HighlightGroup&#45;&gt;thresher_models_Topic</title>
+<g id="edge9" class="edge"><title>thresher_models_HighlightGroup&#45;&gt;thresher_models_Topic</title>
 <path fill="none" stroke="black" d="M603.73,-432.77C601.09,-423.66 598.02,-414.48 594.5,-406 592.04,-400.08 589.15,-394.06 586.05,-388.17"/>
 <ellipse fill="black" stroke="black" cx="604.871" cy="-436.885" rx="4.00001" ry="4.00001"/>
-<text text-anchor="middle" x="648.5" y="-409.1" font-family="Helvetica,sans-Serif" font-size="8.00">topic (article_highlights)</text>
-</g>
-<!-- thresher_models_ArticleHighlight -->
-<g id="node9" class="node"><title>thresher_models_ArticleHighlight</title>
-<polygon fill="palegoldenrod" stroke="none" points="768.5,-301 768.5,-371 952.5,-371 952.5,-301 768.5,-301"/>
-<polygon fill="#698b22" stroke="none" points="768.5,-353 768.5,-371 952.5,-371 952.5,-353 768.5,-353"/>
-<text text-anchor="start" x="813" y="-361.1" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="826" y="-361.1" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;ArticleHighlight &#160;&#160;&#160;</text>
-<text text-anchor="start" x="770.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="783.5" y="-345.6" font-family="Helvetica Bold" font-size="8.00">id</text>
-<text text-anchor="start" x="791.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="861.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="874.5" y="-345.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
-<text text-anchor="start" x="914.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="770.5" y="-332.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="783.5" y="-332.6" font-family="Helvetica Bold" font-size="8.00">article</text>
-<text text-anchor="start" x="809.5" y="-332.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="861.5" y="-332.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="874.5" y="-332.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="937.5" y="-332.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="770.5" y="-319.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="783.5" y="-319.6" font-family="Helvetica Bold" font-size="8.00">created_by</text>
-<text text-anchor="start" x="829.5" y="-319.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="861.5" y="-319.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="874.5" y="-319.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="937.5" y="-319.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="770.5" y="-306.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="783.5" y="-306.6" font-family="Helvetica " font-size="8.00">highlight_source</text>
-<text text-anchor="start" x="843.5" y="-306.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="861.5" y="-306.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="874.5" y="-306.6" font-family="Helvetica " font-size="8.00">CharField</text>
-<text text-anchor="start" x="908.5" y="-306.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="middle" x="633" y="-409.1" font-family="Helvetica,sans-Serif" font-size="8.00">topic (highlights)</text>
 </g>
 <!-- thresher_models_HighlightGroup&#45;&gt;thresher_models_ArticleHighlight -->
-<g id="edge8" class="edge"><title>thresher_models_HighlightGroup&#45;&gt;thresher_models_ArticleHighlight</title>
+<g id="edge10" class="edge"><title>thresher_models_HighlightGroup&#45;&gt;thresher_models_ArticleHighlight</title>
 <path fill="none" stroke="black" d="M703.85,-436.51C735.89,-416.16 771.4,-393.6 800.5,-375.12"/>
 <ellipse fill="black" stroke="black" cx="700.446" cy="-438.674" rx="4.00002" ry="4.00002"/>
 <text text-anchor="middle" x="804.5" y="-409.1" font-family="Helvetica,sans-Serif" font-size="8.00">article_highlight (highlights)</text>
-</g>
-<!-- thresher_models_ArticleHighlight&#45;&gt;thresher_models_UserProfile -->
-<g id="edge9" class="edge"><title>thresher_models_ArticleHighlight&#45;&gt;thresher_models_UserProfile</title>
-<path fill="none" stroke="black" d="M779.8,-293.2C762.82,-284.29 745.04,-274.89 728.5,-266 687.84,-244.14 642.58,-219.16 606.44,-199.05"/>
-<ellipse fill="black" stroke="black" cx="783.485" cy="-295.127" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="792.5" y="-259.1" font-family="Helvetica,sans-Serif" font-size="8.00">created_by (article_highlights)</text>
-</g>
-<!-- thresher_models_ArticleHighlight&#45;&gt;thresher_models_Article -->
-<g id="edge10" class="edge"><title>thresher_models_ArticleHighlight&#45;&gt;thresher_models_Article</title>
-<path fill="none" stroke="black" d="M860.5,-288.44C860.5,-272.93 860.5,-255.21 860.5,-238.01"/>
-<ellipse fill="black" stroke="black" cx="860.5" cy="-292.81" rx="4" ry="4"/>
-<text text-anchor="middle" x="913.5" y="-259.1" font-family="Helvetica,sans-Serif" font-size="8.00">article (highlight_groups)</text>
 </g>
 <!-- thresher_models_SubmittedAnswer -->
 <g id="node10" class="node"><title>thresher_models_SubmittedAnswer</title>

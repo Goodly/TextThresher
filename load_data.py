@@ -235,9 +235,19 @@ def load_article(article):
         annotators=json.dumps(article['metadata']['annotators']),
     )
     article_obj.save()
+    print "article id %d numbered %s" % (article_obj.id,
+          article_obj.article_number)
+
+    # In future usage, the articles being imported will not be highlighted
+    # already and thus won't have 'annotators'.
+    # The field annotators on Article logically maps to the
+    # created_by field on ArticleHighlight, which represents a set of
+    # highlights one article created by one user.
+    article_highlight = ArticleHighlight.objects.create(article=article_obj,
+                                                        created_by=USERPROFILE,
+                                                        highlight_source='HLTR')
 
     for tua_type, tuas in article['tuas'].iteritems():
-        offsets = []
         try:
             topic = Topic.objects.filter(name=tua_type)[0]
             #analysis_type = (ANALYSIS_TYPES.get(tua_type) or
@@ -253,31 +263,19 @@ def load_article(article):
             print("made a dummy topic: %s" % tua_type)
 #           raise ValueError("No TUA type '" + tua_type +
 #                            "' registered. Have you loaded the schemas?")
+
         for tua_id, offset_list in tuas.iteritems():
-            offsets.extend(offset_list)
+            try:
+                highlight = HighlightGroup.objects.create(offsets=json.dumps(offset_list),
+                                                          case_number=tua_id,
+                                                          highlight_text="placeholder",
+                                                          topic=topic,
+                                                          article_highlight=article_highlight)
 
-        try:
-            # Note that I used None for the user object in created_by field
-            # because in our new design, researchers don't provide initial highlights,
-            # so article_highlight actually should not be created here.
-            article_highlight = ArticleHighlight.objects.create(article=article_obj,
-                                                                created_by=USERPROFILE,
-                                                                highlight_source='HLTR')
+            except ValidationError as e:
+                print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
+                print e
 
-            # Not sure what to put in case_number. Use 0 here as a placeholder.
-            # Note that we don't get highlight_text from parse_document.py, so
-            # use "placeholder" here as a placeholder.
-            highlight = HighlightGroup.objects.create(offsets=json.dumps(offsets),
-                                                      case_number=0,
-                                                      highlight_text="placeholder",
-                                                      topic=topic,
-                                                      article_highlight=article_highlight)
-
-        except ValidationError as e:
-            print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
-            print e
-
-        print "article %s" % (article_obj.article_number)
 
 
 def load_schema_dir(dirpath):

@@ -1,0 +1,110 @@
+[
+    {
+        "metadata": {
+            "annotators": [
+                "SLG",
+                "MB"
+            ],
+            "article_number": "9",
+            "city": "Albany",
+            "date_published": "2011-12-22",
+            "periodical": "theassociatedpressstatelocalwire",
+            "periodical_code": "09",
+            "state": "NY",
+            "version": "23"
+        },
+        "text": "3 of 36 DOCUMENTS\nThe Associated Press State & Local Wire\nDecember 22, 2011 Thursday 5:59 PM GMT\nTents still up at Occupy Albany at winter deadline\nSECTION: STATE AND REGIONAL\nLENGTH: 126 words\nDATELINE: ALBANY N.Y.\n \nTents remain pitched at the Occupy Albany encampment on the first day of winter even as the protesters' permit to camp in the city's Academy Park is expiring.\nCity officials have allowed demonstrators to stay overnight in the park near New York's Capitol since Oct. 21 even as Gov. Andrew Cuomo has had state police enforce an 11 p.m. curfew in adjacent Lafayette Park, where more than 130 people have been arrested.\nThe city's chief lawyer told protesters in a letter almost three weeks ago they could stay until Dec 22 under a permit limiting them to 30 tents. It included other conditions with which they have complied. Officials say their concern is the cold. Talks have continued.\nSome protesters say they won't leave, with a rally planned Thursday evening.\n \nLOAD-DATE: December 23, 2011\nLANGUAGE: ENGLISH\nPUBLICATION-TYPE: Newswire\nCopyright 2011 Associated Press\nAll Rights Reserved",
+        "tuas": {
+            "Camp": {
+                "1": [
+                    [
+                        218,
+                        297,
+                        "tents remain pitched at the occupy albany encampment on the first day of winter"
+                    ],
+                    [
+                        310,
+                        376,
+                        "protesters' permit to camp in the city's academy park is expiring."
+                    ],
+                    [
+                        635,
+                        840,
+                        "the city's chief lawyer told protesters in a letter almost three weeks ago they could stay until dec 22 under a permit limiting them to 30 tents. it included other conditions with which they have complied."
+                    ],
+                    [
+                        377,
+                        486,
+                        "city officials have allowed demonstrators to stay overnight in the park near new york's capitol since oct. 21"
+                    ]
+                ],
+                "2": [
+                    [
+                        495,
+                        587,
+                        "gov. andrew cuomo has had state police enforce an 11 p.m. curfew in adjacent lafayette park,"
+                    ]
+                ]
+            },
+            "Government": {
+                "1": [
+                    [
+                        377,
+                        486,
+                        "city officials have allowed demonstrators to stay overnight in the park near new york's capitol since oct. 21"
+                    ]
+                ],
+                "2": [
+                    [
+                        495,
+                        587,
+                        "gov. andrew cuomo has had state police enforce an 11 p.m. curfew in adjacent lafayette park,"
+                    ]
+                ],
+                "3": [
+                    [
+                        635,
+                        840,
+                        "the city's chief lawyer told protesters in a letter almost three weeks ago they could stay until dec 22 under a permit limiting them to 30 tents. it included other conditions with which they have complied."
+                    ]
+                ]
+            },
+            "Info": {
+                "1": [
+                    [
+                        904,
+                        980,
+                        "some protesters say they won't leave, with a rally planned thursday evening."
+                    ]
+                ]
+            },
+            "Legal_Action": {
+                "1": [
+                    [
+                        882,
+                        903,
+                        "talks have continued."
+                    ]
+                ]
+            },
+            "Strategy": {
+                "1": [
+                    [
+                        841,
+                        881,
+                        "officials say their concern is the cold."
+                    ]
+                ]
+            },
+            "ToBe": {
+                "1": [
+                    [
+                        572,
+                        587,
+                        "lafayette park,"
+                    ]
+                ]
+            }
+        }
+    }
+]

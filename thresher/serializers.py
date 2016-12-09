@@ -134,17 +134,15 @@ class OffsetField(serializers.Field):
 
 class TopicSerializer(serializers.ModelSerializer):
         # A nested serializer for all the questions
-    related_questions = QuestionSerializer(many=True)
+    questions = QuestionSerializer(many=True)
 
     glossary = JSONSerializerField()
-
-    article_highlights = ArticleHighlightSerializer(many=True)
 
     class Meta:
         model = Topic
         fields = ('id', 'parent', 'name',
                   'order', 'glossary', 'instructions',
-                  'related_questions', 'article_highlights')
+                  'questions')
 
 class RootTopicSerializer(serializers.ModelSerializer):
     glossary = JSONSerializerField()

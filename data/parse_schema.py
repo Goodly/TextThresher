@@ -14,10 +14,10 @@ CONTINGENT_Q = '*'
 Dependency = namedtuple('Dependency', ['topic', 'question', 'answer', 'next_question'])
 
 QUESTION_TYPES = {
-    'mc': 'CHECKBOX',
+    'mc': 'RADIO',
     'dt': 'DATETIME',
     'tb': 'TEXT',
-    'cl': 'RADIO'
+    'cl': 'CHECKBOX'
 }
 
 def is_answer(type_id):

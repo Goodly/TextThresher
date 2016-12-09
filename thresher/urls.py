@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^topics/(?P<id>[0-9]+)/children$', views.child_topics),
     url(r'^topics/(?P<id>[0-9]+)$', views.topic),
     url(r'^highlighter_tasks/$', views.highlighter_tasks),
+    url(r'^quiz_tasks/$', views.quiz_tasks),
 ]
