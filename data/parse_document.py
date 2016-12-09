@@ -4,9 +4,9 @@ import os
 import re
 import sys
 from datetime import date
-from django.conf import settings
 
-DATA_FOLDER = os.path.join(settings.BASE_DIR, 'data')
+# This file is in the data folder.
+DATA_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
 #SUCCESS_FOLDER = "DecidingForceArticles"
 ARTICLE_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceArticles")
