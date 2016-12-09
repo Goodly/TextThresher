@@ -15,7 +15,8 @@
     "deploy": "NODE_ENV=production WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive",
     "test:watch": "npm run test -- --watch",
-    "tasks:highlighter": "curl http://localhost:5000/api/highlighter_tasks/?format=json | python -m json.tool > pbs-highlighter/highlighter_tasks.json"
+    "tasks:highlighter": "curl http://localhost:5000/api/highlighter_tasks/?format=json | python -m json.tool > pbs-highlighter/highlighter_tasks.json",
+    "tasks:quiz": "curl http://localhost:5000/api/quiz_tasks/?format=json | python -m json.tool > pbs-quiz/quiz_tasks.json"
   },
   "author": "",
   "license": "MIT",
