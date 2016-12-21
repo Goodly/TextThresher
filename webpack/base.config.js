@@ -23,18 +23,19 @@ if (process.env.WEBPACK === 'cleandist') {
 const PATHS = {
   app: path.resolve(__dirname, '../app'),
   dist: path.resolve(__dirname, '../dist'),
-  highlight: path.resolve(__dirname, '../pbs-highlighter')
+  highlight: path.resolve(__dirname, '../pbs-highlighter'),
+  staticRoot: path.resolve(__dirname, '../app/staticroot'),
+  vendorPath: path.resolve(__dirname, '../vendor'),
+  bowerPath: path.resolve(__dirname, '../vendor/bower_components')
 };
 
-const bowerPath = path.resolve(__dirname, '../vendor/bower_components');
-
 function resolveBowerPath(componentPath) {
-  return path.resolve(bowerPath, componentPath);
+  return path.resolve(PATHS.bowerPath, componentPath);
 };
 
 export default {
   devServer: {
-    contentBase: './app/staticroot',
+    contentBase: [PATHS.staticRoot, PATHS.vendorPath],
     publicPath: PUBLIC_PATH,
     host: WEBPACK_LISTEN_IP,
     port: WEBPACK_PORT,
@@ -64,11 +65,10 @@ export default {
   resolve: {
     alias: {
       modernizr: resolveBowerPath('modernizr/modernizr.js'),
-      bootstrap_sass: resolveBowerPath('bootstrap-sass/assets/stylesheets/_bootstrap.scss'),
     },
-    extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png'],
-    root: [PATHS.app, bowerPath],
-    modulesDirectories: ['node_modules', 'web_modules']
+    root: [PATHS.app, PATHS.bowerPath],
+    modulesDirectories: ['node_modules', 'web_modules'],
+    extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png']
   },
   output: {
     path: PATHS.dist,
@@ -141,5 +141,5 @@ export default {
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin()
   ],
-  noParse: [new RegExp(bowerPath), /node_modules/]
+  noParse: [/node_modules/, new RegExp(PATHS.bowerPath)]
 };
