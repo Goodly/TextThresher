@@ -5,6 +5,7 @@ from rest_framework import routers, viewsets
 from rest_framework.decorators import list_route, api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.generics import GenericAPIView
 
 from models import Article, Topic, HighlightGroup, Project, Question, Answer, ArticleHighlight, UserProfile
 from serializers import (UserProfileSerializer, ArticleSerializer,
@@ -109,34 +110,77 @@ def next_question(request, id, ans_num):
         serializer = QuestionSerializer(next_question, many=False)
         return Response(serializer.data)
 
-@api_view(['GET'])
-def highlighter_tasks(request):
-    """
-    /hightlight_tasks
+class HighlightTasks(GenericAPIView):
+    # GenericAPIView assists by providing the pagination settings
+    # and helpful pagination API
 
-    Provides highlight_tasks as an array of objects, where each object has
+    """
+    /highlighter_tasks2
+
+    Provides highlight tasks as an array of objects, where each object has
     all the information to set up the highlight_tool for a task:
 
-    1) the project description
-    2) the topics to use
-    3) the article to highlight
+    1. the project description
+    2. the topics to use
+    3. the article to highlight
+
+    This endpoint is paginated for use without Pybossa in the loop.
     """
-    if request.method == 'GET':
-        taskList = []
+    queryset = Article.objects.all()
+
+    def get(self, request, *args, **kwargs):
+
+        # Pagination code is derived from rest_framework.mixins.ListModelMixin
+        # and rest_framework.generics.GenericAPIView:get_serializer
         project = Project.objects.get(name="Deciding Force")
         topics = Topic.objects.filter(parent=None)
-        articles = Article.objects.filter(
-            id__in=[9, 11, 38, 53, 55, 202, 209, 236, 259]
-        ).order_by('id')
 
-        for article in articles:
-            taskList.append({
-               "project": ProjectSerializer(project, many=False).data,
-               "topics": RootTopicSerializer(topics, many=True).data,
-               "article": ArticleSerializer(article, many=False).data
-            })
+        articles = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(articles)
+        if page is not None:
+            tasks = self.collectTaskList(page, project, topics)
+            return self.get_paginated_response(tasks)
 
-        return Response(taskList)
+        tasks = self.collectTaskList(articles, project, topics)
+        return Response(tasks)
+
+    def collectTaskList(self, articles, project, topics):
+        # next line processes features like ?format=json
+        kwargs = {'context': self.get_serializer_context()}
+
+        project_data = ProjectSerializer(project, many=False, **kwargs).data
+        topics_data = RootTopicSerializer(topics, many=True, **kwargs).data
+        return [{ "project": project_data,
+                  "topics": topics_data,
+                  "article":
+                      ArticleSerializer(article, many=False, **kwargs).data
+               } for article in articles ]
+
+
+class HighlightTasksNoPage(HighlightTasks):
+    """
+    /highlighter_tasks
+
+    Provides highlight tasks as an array of objects, where each object has
+    all the information to set up the highlight_tool for a task:
+
+    1. the project description
+    2. the topics to use
+    3. the article to highlight
+
+    This endpoint is **not paginated**, as it will be used for bulk export
+    to Pybossa.
+    """
+
+    pagination_class = None
+
+# This shows how to do additional filtering if needed...
+#    def get_queryset(self):
+#        articles = super(HighlightTasksNoPage, self).get_queryset()
+#        return articles.filter(
+#            id__in=[9, 11, 38, 53, 55, 202, 209, 236, 259]
+#        ).order_by('id')
+
 
 @api_view(['GET'])
 def quiz_tasks(request):
