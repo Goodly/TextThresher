@@ -1,25 +1,41 @@
 @import 'app/styles/_mixins.scss';
 @import 'app/styles/_variables.scss';
 
+.topic-picker-wrapper {
+  padding-left: 0 !important;
+}
+
+.article-wrapper {
+  margin: 2em 1em 2em 275px;
+}
+
+.loading {
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  background-color: rgba(30, 30, 30, 0.3);
+}
+
+.space {
+  height: 100px;
+}
+
 .article {
   @include newspaper;
   transition: opacity $transition-slow;
   margin-bottom: 10px;
   line-height: 2.2;
 
-  &.is-fetching {
-    border: 2px dotted black; //TODO: REMOVE THESE TEMP STYLES
-    opacity: 0.5;
-  }
-
   .article__header-text {
     padding: 10px;
     margin-bottom: 10px;
   }
-  
+
   #article-container {
     padding: 1em;
     border: 1px solid black;
   }
-
 }

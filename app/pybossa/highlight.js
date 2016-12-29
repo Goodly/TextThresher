@@ -1,18 +1,31 @@
 'use strict';
 
-export default function pybossaHighlight(storeArticle, storeProject, storeTopics) {
-  function getProjectName() {
-    // Assuming an URL like this:
-    // http://crowdcrafting.org/project/TextThresherHighlighter/task/1532993
-    var urlpath = window.location.pathname;
-    var elements = urlpath.split('/');
-    if (elements.length >= 3 && elements[1] === 'project') {
-      return elements[2];
-    } else {
-      return 'TextThresherHighlighter';
-    }
-  }
+// PybossaJS docs at http://pybossajs.readthedocs.io/en/latest/library.html
 
+// Key thing to understand is that runPybossaTasks is only run once
+// per task queue, NOT once per task.
+// However, runPybossaTask configures callback functions that run once
+// per task.
+// So functions provided to loadUserProgress, taskLoaded and presentTask
+// retain access to the redux actions they need to update application
+// state as part of their closure.
+
+function getProjectName() {
+  // Assuming an URL like this:
+  // http://crowdcrafting.org/project/TextThresherHighlighter/task/1532993
+  var urlpath = window.location.pathname;
+  var elements = urlpath.split('/');
+  if (elements.length >= 3 && elements[1] === 'project') {
+    return elements[2];
+  } else {
+    return 'TextThresherHighlighter';
+  }
+}
+
+export default function runPybossaTasks(storeArticle,
+                                        storeProject,
+                                        storeTopics,
+                                        storeSave) {
   function loadUserProgress() {
     pybossa.userProgress(getProjectName()).done(function(data){
       // Dispatch this info to the redux store for display
@@ -39,34 +52,23 @@ export default function pybossaHighlight(storeArticle, storeProject, storeTopics
       storeTopics(task.info.topics);
       storeArticle(task.info.article);
 
-      var onSaveAndNext = function () {
-        // obtain answer from redux store
-        var highlights = [
-                           { articleHighlight: task.article.id,
-                             case_number: 1,
-                             offsets: [[10,18],[30,38]],
-                             highlightText: ["New York", "Brooklyn"]
-                           },
-                           { articleHighlight: task.article.id,
-                             case_number: 2,
-                             offsets: [[60,68],[70,78]],
-                             highlightText: ["Bay Area", "East Bay"]
-                           }
-                         ];
+      function onSaveAndNext(highlights) {
         pybossa.saveTask(task.id, highlights).done(function() {
           deferred.resolve(task);
         });
       };
+      // This is the tricky part. Each time we load a new task into
+      // the store, we also provide this callback that the UI button
+      // can use to call the function above to save the data and trigger
+      // loading the next task with the deferred.resolve(task) call.
+      storeSave(onSaveAndNext);
     } else {
       // Displatch to store saying we are done with tasks
       // storeTasksDone() #TODO
-      // Nothing more to fetch
-      return () => {};
+      storeSave(null);
     }
   });
 
+  // pybossa.setEndpoint('http://server/pybossa');
   pybossa.run(getProjectName());
-
-  // TODO: return saveAndNext action
-  return () => {};
 }

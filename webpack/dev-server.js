@@ -25,7 +25,7 @@ var devServer = new WebpackDevServer(compiler, config.devServer);
 
 devServer.listen(config.devServer.port, config.devServer.host, function () {
   console.log('server available at:'.underline.red);
-  console.log(`${config.devServer.publicPath}#/article/0`.underline.yellow);
-  console.log(`${config.devServer.publicPath}#/quiz/0`.underline.green);
+  console.log(`${config.devServer.publicPath}#/highlighter`.underline.yellow);
+  console.log(`${config.devServer.publicPath}#/quiz`.underline.green);
 });
 
