@@ -5,14 +5,16 @@ import { quiz } from './quiz';
 import { project } from './project.js';
 import { highlight } from './highlight';
 import { highlightTasks } from './highlightTasks';
+import { quizTasks } from './quizTasks';
 
 const rootReducer = combineReducers({
   article,
   topicPicker,
-  quiz,
   project,
   highlight,
-  highlightTasks
+  highlightTasks,
+  quiz,
+  quizTasks
 });
 
 export default rootReducer;

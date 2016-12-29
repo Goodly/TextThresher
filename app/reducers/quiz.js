@@ -39,6 +39,11 @@ export function quiz(state = initialState, action) {
         ...state,
         highlighter_color: action.color
       }
+    case 'POST_QUIZ_CALLBACK':
+      return {
+        ...state,
+        saveAndNext: action.saveAndNext
+      }
     default:
       return state;
   }
