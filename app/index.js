@@ -3,10 +3,6 @@ import { render } from 'react-dom';
 import { Router, hashHistory } from 'react-router';
 import Routes from 'routes';
 
-let elem = document.createElement('div');
-elem.id = ('react-root');
-document.body.appendChild(elem);
-
 render(
   <Router
     history={ hashHistory }
