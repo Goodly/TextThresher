@@ -1,0 +1,788 @@
+title: City 
+
+1 City/state action
+2 City/state law
+3 Impact on city/state resources
+4 City council meeting
+5 City/state communication or oversight 
+ 
+1.01 mc What kind of action is described in the highlighted text?
+1.01.01 An enforcement order from a city/state official
+1.01.02 City/state over-enforcement of an established law or code
+1.01.03 City/state under-enforcement of an established law or code
+1.01.04 A warning from a city/state official
+1.01.05 A formal statement from a city/state official 
+1.01.06 A camp inspection conducted by a city/state official
+1.01.07 A park/plaza cleaning conducted by a city/state official
+1.01.08 Confiscation or destruction of protester property by a city/state official
+1.01.09 City/state official participating in an Occupy event
+1.01.10 A city/state official refusing or granting protesters a basic need
+1.02 mc What type of enforcement order did the city/state official issue?
+1.02.01 Park/plaza curfew 
+1.02.02 Informal dispersal order 
+1.02.03 Formal eviction notice 
+1.02.04 Prohibition of tents/structures 
+1.02.05 Other 
+1.03 cl Which of the following information does the text provide about the time of the curfew?
+1.03.01 Exact start time
+1.03.02 Approximate start time
+1.03.03 Exact end time
+1.03.04 Approximate end time
+1.03.05 Information not given
+1.04 tm Exactly when does the curfew start?
+1.05 mc Approximately when does the curfew start? 
+1.05.01 Predawn (12am-6am)
+1.05.02 Morning (6am-12pm)
+1.05.03 Midday (12pm-3pm)
+1.05.04 Afternoon (3pm-6pm)
+1.05.05 Evening (6pm-9pm)
+1.05.06 Night (9pm-12am)
+1.06 tm Exactly when does the curfew end?
+1.07 mc Approximately when does the curfew end?
+1.07.01 Predawn (12am-6am)
+1.07.02 Morning (6am-12pm)
+1.07.03 Midday (12pm-3pm)
+1.07.04 Afternoon (3pm-6pm)
+1.07.05 Evening (6pm-9pm)
+1.07.06 Night (9pm-12am) 
+1.08 mc Which of the following information does the text provide about the date the enforcement order goes into effect?
+1.08.01 Exact date
+1.08.02 Approximate date
+1.08.03 Information not given
+1.09 dd Exactly what date does the enforcement order go into effect?
+1.10 mc Approximately what date does the enforcement order go into effect?
+1.10.01 "Immediately," "the same day": Less than 1 day
+1.10.02 "Within a day," "a couple days": 1-2 days
+1.10.03 "Half a week," "a few days": 3-5 days
+1.10.04 "About a week": 6-8 days
+1.10.05 "More than a week": 9-12 days
+1.10.06 "About two weeks": 13-15 days
+1.10.07 "More than two weeks": 16 or more days
+1.11 mc Which of the following information does the text provide about the time the enforcement order goes into effect?
+1.11.01 Exact time
+1.11.02 Approximate time
+1.11.03 Information not given
+1.12 tm Exactly what time does the enforcement order go into effect?
+1.13 mc Approximately what time does the enforcement order go into effect?
+1.13.01 Predawn (12am-6am)
+1.13.02 Morning (6am-12pm)
+1.13.03 Midday (12pm-3pm)
+1.13.04 Afternoon (3pm-6pm)
+1.13.05 Evening (6pm-9pm)
+1.13.06 Night (9pm-12am)
+1.14 cl How did the city/state official notify protesters of the enforcement order?
+1.14.01 Formal news conference
+1.14.02 Informal interview with news or other media
+1.14.03 Open letter or email
+1.14.04 Direct letter or email
+1.14.05 Post on city/state website
+1.14.06 In person
+1.14.07 Facebook or twitter post
+1.14.08 Other
+1.15 mc What type of order did the city/state official over-enforce?
+1.15.01 Park/plaza curfew
+1.15.02 Informal dispersal order
+1.15.03 Formal eviction notice
+1.15.04 Overnight camping
+1.15.05 Prohibition of tents/structures
+1.15.06 Other
+1.16 cl How did the city/state official notify protesters of the over-enforcement?
+1.16.01 Formal news conference
+1.16.02 Informal interview with news or other media
+1.16.03 Open letter or email
+1.16.04 Direct letter or email
+1.16.05 Post on city/state website
+1.16.06 In person
+1.16.07 Facebook or twitter post
+1.16.08 Other
+1.17 mc What type of order did the city/state official under-enforce?
+1.17.01 Park/plaza curfew
+1.17.02 Informal dispersal order
+1.17.03 Formal eviction notice
+1.17.04 Overnight camping
+1.17.05 Prohibition of tents/structures
+1.17.06 Other
+1.18 cl How did the city/state official notify protesters of the under-enforcement?
+1.18.01 Formal news conference
+1.18.02 Informal interview with news or other media
+1.18.03 Open letter or email
+1.18.04 Direct letter or email
+1.18.05 Post on city/state website
+1.18.06 In person
+1.18.07 Facebook or twitter post
+1.18.08 Other
+1.19 mc What type of warning did the city/state official send to protesters?
+1.19.01 Park/plaza curfew 
+1.19.02 Informal dispersal warning
+1.19.03 Threat of eviction 
+1.19.04 Against overnight camping
+1.19.05 Against tents/structures
+1.19.06 Safety/sanitation
+1.19.07 Other
+1.20 cl Which of the following information does the text provide about the time of the curfew?
+1.20.01 Exact start time
+1.20.02 Approximate start time
+1.20.03 Exact end time
+1.20.04 Approximate end time
+1.20.05 Information not given
+1.21 tm Exactly when does the curfew start?
+1.22 mc Approximately when does the curfew start? 
+1.22.01 Predawn (12am-6am)
+1.22.02 Morning (6am-12pm)
+1.22.03 Midday (12pm-3pm)
+1.22.04 Afternoon (3pm-6pm)
+1.22.05 Evening (6pm-9pm)
+1.22.06 Night (9pm-12am)
+1.23 tm Exactly when does the curfew end?
+1.24 mc Approximately when does the curfew end?
+1.24.01 Predawn (12am-6am)
+1.24.02 Morning (6am-12pm)
+1.24.03 Midday (12pm-3pm)
+1.24.04 Afternoon (3pm-6pm)
+1.24.05 Evening (6pm-9pm)
+1.24.06 Night (9pm-12am)
+1.25 cl How did the city/state official notify protesters of the warning?
+1.25.01 Formal news conference
+1.25.02 Informal interview with news or other media
+1.25.03 Open letter or email
+1.25.04 Direct letter or email
+1.25.05 Post on city/state website
+1.25.06 In person
+1.25.07 Facebook or twitter post
+1.25.08 Other
+1.26 cl How was the official statement announced?
+1.26.01 Formal news conference
+1.26.02 Informal interview with news or other media
+1.26.03 Open letter or email
+1.26.04 Direct letter or email
+1.26.05 Post on city/state website
+1.26.06 In person
+1.26.07 Other
+1.27 mc What kind of inspection was conducted?
+1.27.01 Fire
+1.27.02 Safety
+1.27.03 Sanitation
+1.27.04 Other
+1.28 mc Was the park/plaza cleaning a repeated or a single action?
+1.28.01 Repeated action
+1.28.02 Single action
+1.29 mc Which of the following information does the text provide about the frequency of the park/plaza cleaning?
+1.29.01 Exact frequency
+1.29.02 Approximate frequency
+1.29.03 Information not given
+1.30 dd Exactly how frequently did the park/plaza cleaning occur?
+1.31 mc Approximately how frequently did the park/plaza cleaning occur?
+1.31.01 Daily
+1.31.02 Two to four times per week
+1.31.03 Once per week
+1.31.04 Once every two weeks
+1.31.05 Once per month
+1.31.06 Other
+1.32 cl Which of the following information does the text provide?
+1.32.01 Confiscation of protester property
+1.32.02 Destruction of protester property
+1.33 cl What items did the city/state confiscate?
+1.33.01 Tents
+1.33.02 Non-tent sleeping materials (e.g., sleeping bags, blankets, etc.)
+1.33.03 Tables
+1.33.04 Electrical equipment
+1.33.05 Personal property (e.g., clothing, backpacks, cell phones, wallets)
+1.33.06 Other
+1.34 mc Were the protesters given the option to retrieve the confiscated items?
+1.34.01 Yes
+1.34.02 No
+1.34.03 Information not given
+1.35 mc At what location were the confiscated items available for retrieval?
+1.35.01 City/state department
+1.35.02 Police department
+1.35.03 Other
+1.36 mc Which of the following information does the text provide about the date the confiscated items were available for retrieval?
+1.36.01 Exact date 
+1.36.02 Approximate date
+1.36.03 Information not given
+1.37 tm Exactly when were the confiscated items available for retrieval?
+1.38 mc Approximately when were the confiscated items available for retrieval?
+1.38.01 Same day
+1.38.02 Following day
+1.38.03 By end of week
+1.38.04 By end of two weeks
+1.38.05 Other
+1.39 cl What items did the city/state destroy?
+1.39.01 Tents
+1.39.02 Non-tent sleeping materials (e.g., sleeping bags, blankets, etc.)
+1.39.03 Tables
+1.39.04 Electrical equipment
+1.39.05 Personal property (e.g., clothing, backpacks, cell phones, wallets)
+1.39.06 Other
+1.40 cl Which of the following does the text discuss? 
+1.40.01 City/state officer participating in a distinct protest event (e.g., march, rally, demonstration)
+1.40.02 City/state officer participating in ongoing camp activities (e.g., general assembly meeting, overnight camping)
+1.41 cl What kind of ongoing camp activity did the city/state officer participate in?
+1.41.01 Overnight camp visit
+1.41.02 Daytime camp visit
+1.41.03 General assembly meeting
+1.41.04 Other
+1.42 mc Which of the following does the text discuss?
+1.42.01 City/state authority granting protesters access to a basic need
+1.42.02 City/state authority refusing protesters access to a basic need
+1.43 cl What kind of basic need did the city/state authority grant protesters?
+1.43.01 Restrooms and/or other sanitation services
+1.43.02 Water
+1.43.03 Heat
+1.43.04 Electricity
+1.43.05 Other
+1.44 cl What kind of basic need did the city/state authority refuse protesters?
+1.44.01 Restrooms and/or other sanitation services
+1.44.02 Water
+1.44.03 Heat
+1.44.04 Electricity
+1.44.05 Other
+1.45 cl What type of actors were involved in the action described in the highlighted text?
+1.45.01 Governor
+1.45.02 Mayor
+1.45.03 Assistant to the mayor
+1.45.04 City manager
+1.45.05 Assistant city manager
+1.45.06 City administrator
+1.45.07 City council member
+1.45.08 Attorney general
+1.45.09 City attorney
+1.45.10 City parks and recreation officer
+1.45.11 Other
+1.46 cl Which of the following information does the text provide about the time of the action?
+1.46.01 Exact start time
+1.46.02 Approximate start time
+1.46.03 Exact end time
+1.46.04 Approximate end time
+1.46.05 Information not given
+1.47 tm Exactly what time did the action start?
+1.48 mc Approximately what time did the action start?
+1.48.01 Predawn (12am-6am)
+1.48.02 Morning (6am-12pm)
+1.48.03 Midday (12pm-3pm)
+1.48.04 Afternoon (3pm-6pm)
+1.48.05 Evening (6pm-9pm)
+1.48.06 Night (9pm-12am)
+1.49 tm Exactly what time did the action end?
+1.50 mc Approximately what time did the action end? 
+1.50.01 Predawn (12am-6am)
+1.50.02 Morning (6am-12pm)
+1.50.03 Midday (12pm-3pm)
+1.50.04 Afternoon (3pm-6pm)
+1.50.05 Evening (6pm-9pm)
+1.50.06 Night (9pm-12am)
+
+if 1.01.01, then 1.02
+if 1.02.01, then 1.03
+if 1.03.01, then 1.04
+if 1.03.02, then 1.05
+if 1.03.03, then 1.06
+if 1.03.04, then 1.07
+if 1.01.01, then 1.08
+if 1.08.01, then 1.09
+if 1.08.02, then 1.10
+if 1.01.01, then 1.11
+if 1.11.01, then 1.12
+if 1.11.02, then 1.13
+if 1.01.01, then 1.14
+if 1.01.02, then 1.15
+if 1.01.02, then 1.16
+if 1.01.03, then 1.17
+if 1.01.03, then 1.18
+if 1.01.04, then 1.19
+if 1.19.01, then 1.20
+if 1.20.01, then 1.21
+if 1.20.02, then 1.22
+if 1.20.03, then 1.23
+if 1.20.04, then 1.24
+if 1.01.04, then 1.25
+if 1.01.05, then 1.26
+if 1.01.06, then 1.27
+if 1.01.07, then 1.28
+if 1.28.01, then 1.29
+if 1.29.01, then 1.30
+if 1.29.02, then 1.31
+if 1.01.08, then 1.32
+if 1.32.01, then 1.33
+if 1.32.01, then 1.34
+if 1.34.01, then 1.35
+if 1.34.01, then 1.36
+if 1.36.01, then 1.37
+if 1.36.02, then 1.38
+if 1.32.02, then 1.39
+if 1.01.09, then 1.40
+if 1.40.02, then 1.41
+if 1.01.10, then 1.42
+if 1.42.01, then 1.43
+if 1.42.02, then 1.44
+if 1.01.any, then 1.45
+if 1.01.any, then 1.46
+if 1.46.01, then 1.47
+if 1.46.02, then 1.48
+if 1.46.03, then 1.49
+if 1.46.04, then 1.50       
+
+
+2.01 cl What kind of ordinance, code, or law does the text discuss?
+2.01.01 City ordinance, code, or law 
+2.01.02 State ordinance, code, or law
+2.02 mc What is the subject of the ordinance, code, or law?
+2.02.01 Overnight camping
+2.02.02 Park curfew
+2.02.03 Tents and semi-permanent structures
+2.02.04 Safety/sanitation
+2.02.05 Personal property
+2.02.06 Sidewalks
+2.02.07 Other
+2.03 cl Where is overnight camping restricted?
+2.03.01 Park
+2.03.02 Plaza and/or plaza steps
+2.03.03 City hall and/or City hall steps
+2.03.04 Sidewalk
+2.03.05 Other
+2.04 mc Which of the following information does the text provide about the time of the curfew?
+2.04.01 Exact start time
+2.04.02 Approximate start time
+2.04.03 Exact end time
+2.04.04 Approximate end time
+2.04.05 Information not given
+2.05 tm Exactly when does the curfew start?
+2.06 mc Approximately when does the curfew start? 
+2.06.01 Predawn (12am-6am)
+2.06.02 Morning (6am-12pm)
+2.06.03 Midday (12pm-3pm)
+2.06.04 Afternoon (3pm-6pm)
+2.06.05 Evening (6pm-9pm)
+2.06.06 Night (9pm-12am)
+2.07 tm Exactly when does the curfew end?
+2.08 mc Approximately when does the curfew end?
+2.08.01 Predawn (12am-6am)
+2.08.02 Morning (6am-12pm)
+2.08.03 Midday (12pm-3pm)
+2.08.04 Afternoon (3pm-6pm)
+2.08.05 Evening (6pm-9pm)
+2.08.06 Night (9pm-12am)
+2.09 mc Are tents and semi-permanent structures allowed?
+2.09.01 Yes
+2.09.02 Only if permitted
+2.09.03 No
+2.10 mc Is the city ordinance, code, or law a new or existing rule?
+2.10.01 New 
+2.10.02 Existing
+
+if 2.01.any, then 2.02
+if 2.02.01, then 2.03
+if 2.02.02, then 2.04
+if 2.04.01, then 2.05
+if 2.04.02, then 2.06
+if 2.04.03, then 2.07
+if 2.04.04, then 2.08
+if 2.02.03, then 2.09
+if 2.01.any, then 2.10
+
+
+3.01 cl Which of the following information does the text discuss?
+3.01.01 A cost incurred by the city from managing the local Occupy protest
+3.01.02 A disrupted city function due to an Occupy event
+3.02 cl What kind of cost/s does the text describe?
+3.02.01 Damage to park/plaza
+3.02.02 Damage to local businesses
+3.02.03 Extra/overtime city personnel
+3.02.04 Extra/overtime police personnel
+3.03 tx Please indicate the numerical value of the associated cost.
+3.04 mc Does the cost refer to a specific event/incident or an extended period of time?
+3.04.01 Specific event/incident
+3.04.02 Extended period of time
+3.05 mc What kind of specific event/incident does the cost refer to?
+3.05.01 Protester-initiated event
+3.05.02 Police-initiated event
+3.05.03 City action
+3.05.04 Other
+3.06 mc Which of the following information does the text provide about the time period that the cost refers to?
+3.06.01 Exact time period
+3.06.02 Approximate time period
+3.06.03 Information not given
+3.07 tm Exactly what time period does the cost refer to?
+3.08 mc Approximately what time period does the cost refer to?
+3.08.02 "About a day," "a couple days": 1-2 days
+3.08.03 "Half a week," "a few days": 3-5 days
+3.08.04 "About a week": 6-10 days
+3.08.05 "More than a week," "About two weeks": 11-15 days
+3.08.07 "More than two weeks," "Less than a month": 16-30 days
+3.08.01 "About a month," "a little over a month": 31 or more days
+3.09 mc Who estimated the cost?
+3.09.01 City/state government
+3.09.02 Police
+3.09.03 Protesters
+3.09.04 Media outlet
+3.09.05 Other
+3.10 cl What kind of disrupted city function does the text refer to?
+3.10.01 Road/s closed
+3.10.02 Bus/es rerouted
+3.10.03 Business/es closed
+3.10.04 City council meeting/s canceled
+3.10.05 Other
+3.11 mc Which of the following information does the text provide about how long the disruption lasted?
+3.11.01 Exact time
+3.11.02 Approximate time
+3.11.03 Information not given
+3.12 tm Exactly how long did the disruption last?
+3.13 mc Approximately how long did the disruption last?
+3.13.01 Less than 15 minutes
+3.13.02 “Under half an hour”: 16-30 minutes
+3.13.03 “Over half an hour”: 31-60 minutes
+3.13.04 “A few hours”: 1-2 hours
+3.13.05 “More than a few hours”: 3-5 hours
+3.13.06 “Over 6 hours”: 6-11 hours
+3.13.07 “Half a day”: 12-15 hours
+3.13.08 “A full day”: 16-24 hours
+3.13.09 “Overnight” or “More than 1 day”: 24 or more hours
+
+if 3.01.01, then 3.02
+if 3.02.any, then 3.03
+if 3.01.01, then 3.04
+if 3.04.01, then 3.05
+if 3.04.02, then 3.06
+if 3.06.01, then 3.07
+if 3.06.02, then 3.08
+if 3.01.01, then 3.09
+if 3.01.02, then 3.10
+if 3.01.02, then 3.11
+if 3.11.01, then 3.12
+if 3.11.02, then 3.13
+
+
+4.01 cl What type of actors were present at the city council meeting?
+4.01.01 Governor
+4.01.02 Mayor
+4.01.03 Assistant to the mayor
+4.01.04 City manager
+4.01.05 Assistant city manager
+4.01.06 City administrator
+4.01.07 City council member
+4.01.08 Attorney general
+4.01.09 City attorney
+4.01.10 City parks and recreation officer
+4.01.11 Other
+4.02 tx What was the actor's name?
+4.03 cl Which of the following information does the text provide about the time of the city council meeting?
+4.03.01 Exact start time
+4.03.02 Approximate start time
+4.03.03 Exact end time
+4.03.04 Approximate end time
+4.03.05 Information not given
+4.04 tm Exactly what time did the city council meeting start?
+4.05 mc Approximately what time did the city council meeting start?
+4.05.01 Predawn (12am-6am)
+4.05.02 Morning (6am-12pm)
+4.05.03 Midday (12pm-3pm)
+4.05.04 Afternoon (3pm-6pm)
+4.05.05 Evening (6pm-9pm)
+4.05.06 Night (9pm-12am)
+4.06 tm Exactly what time did the city council meeting end?
+4.07 mc Approximately what time did the city council meeting end? 
+4.07.01 Predawn (12am-6am)
+4.07.02 Morning (6am-12pm)
+4.07.03 Midday (12pm-3pm)
+4.07.04 Afternoon (3pm-6pm)
+4.07.05 Evening (6pm-9pm)
+4.07.06 Night (9pm-12am)
+4.08 cl What issues were discussed at the city council meeting?
+4.08.01 Potential new ordinance
+4.08.02 Strategies for managing the protest
+4.08.03 Strategies for ending the protest
+4.08.04 Other
+4.09 mc Was the issue put to a vote?
+4.09.01 Yes
+4.09.02 No
+4.10 mc Did the vote pass?
+4.10.01 Yes
+4.10.02 No
+4.11 mc Were there any protesters present at the city council meeting? 
+4.11.01 Yes
+4.11.02 No
+4.12 Which of the following information does the text provide about the number of protesters present at the city council meeting?
+4.12.01 Exact number 
+4.12.02 Approximate number 
+4.12.03 Information not given
+4.13 tx Exactly how many protesters were present? 
+4.14 mc Approximately how many protesters were present?
+4.14.01 "A few," "a handful," "a small group": 2-5
+4.14.02 "Several," "a group”: 6-10
+4.14.03 "A dozen (or so)”: 11-20
+4.14.04 "A small crowd," "a couple dozen”: 21-35
+4.14.05 "A crowd”: 36-75
+4.14.06 "A large crowd," "a hundred or so”: 76-150
+4.14.07 "A mass," "hundreds": 151-500
+4.14.08 "Several hundred”: 501-850
+4.14.09 "About a thousand": 851-1,300
+4.14.10 “Thousands,” “a few thousand”: 1,301-4,500
+4.14.11 "Several thousand": 4,501-8,500
+4.14.12 "Around ten thousand": 8,501-12,000
+4.14.13 "Well over ten thousand": 12,001-20,000
+4.14.14 "Tens of thousands": 20,001-90,000
+4.14.15 “Hundreds of thousands”: 100,000 or more
+
+if 4.01.any, then 4.02
+if 4.03.01, then 4.04
+if 4.03.02, then 4.05
+if 4.03.03, then 4.06
+if 4.03.04, then 4.07
+if 4.09.01, then 4.10
+if 4.11.01, then 4.12
+if 4.12.01, then 4.13
+if 4.12.02, then 4.14
+
+
+5.01 cl Which of the following information does the text provide about intra-city/state interactions?
+5.01.01 City/state officer communicating with city/state/police
+5.01.02 City/state officer overseeing actions of city/state/police
+5.02 dd The text refers to a ____ official communicating with the ____.
+5.02.01 City government / city government
+5.02.02 City government / state government
+5.02.03 City government / police
+5.02.04 State government / city government
+5.02.05 State government / state government
+5.02.06 State government / police
+5.03 mc What kind of communication did the city government official have with the city government?
+5.04 mc What kind of communication did the city government official have with the state government?
+5.05 mc What kind of communication did the city government official have with the police?
+5.05.01 Consultation with police officer/s 
+5.05.02 Reassignment of police officer/s and/or their responsibilities
+5.06 mc What kind of communication did the city government official have with the city government?
+5.07 mc What kind of communication did the city government official have with the state government?
+5.08 mc What kind of communication did the city government official have with the police?
+5.08.01 Consultation with police officer/s 
+5.08.02 Reassignment of police officer/s and/or their responsibilities
+5.09 cl Which city government actor/s initiated the communication?
+5.09.01 Mayor
+5.09.02 Assistant to the mayor
+5.09.03 City manager
+5.09.04 Assistant city manager
+5.09.05 City administrator
+5.09.06 City council member
+5.09.07 District attorney
+5.09.08 City attorney
+5.09.09 City parks and recreation officer
+5.09.10 City public health officer
+5.09.11 Other
+5.10 cl Which state government actor/s initiated the communication?
+5.10.01 Governor
+5.10.02 Assistant to governor
+5.10.03 Lieutenant governor
+5.10.04 Attorney general
+5.10.05 Secretary of state
+5.10.06 State controller
+5.10.07 Other
+5.11 cl Which city government actor/s did the city government official/s communicate with?
+5.11.01 Mayor
+5.11.02 Assistant to the mayor
+5.11.03 City manager
+5.11.04 Assistant city manager
+5.11.05 City administrator
+5.11.06 City council member
+5.11.07 District attorney
+5.11.08 City attorney
+5.11.09 City parks and recreation officer
+5.11.10 City public health officer
+5.11.11 Other
+5.12 cl Which state government actor/s did the city government official/s communicate with?
+5.12.01 Governor
+5.12.02 Assistant to governor
+5.12.03 Lieutenant governor
+5.12.04 Attorney general
+5.12.05 Secretary of state
+5.12.06 State controller
+5.12.07 Other
+5.13 cl Which police actor/s did the city government official/s communicate with?
+5.13.01 Police chief
+5.13.02 Sheriff
+5.13.03 Assistant police chief
+5.13.04 Police captain
+5.13.05 Police lieutenant
+5.13.06 Police sergeant
+5.13.07 Police officer
+5.13.08 Police spokesperson
+5.13.09 Other
+5.14 cl Which city government actor/s did the state government official/s communicate with?
+5.14.01 Mayor
+5.14.02 Assistant to the mayor
+5.14.03 City manager
+5.14.04 Assistant city manager
+5.14.05 City administrator
+5.14.06 City council member
+5.14.07 District attorney
+5.14.08 City attorney
+5.14.09 City parks and recreation officer
+5.14.10 City public health officer
+5.14.11 Other
+5.15 cl Which state government actor/s did the state government official/s communicate with?
+5.15.01 Governor
+5.15.02 Assistant to governor
+5.15.03 Lieutenant governor
+5.15.04 Attorney general
+5.15.05 Secretary of state
+5.15.06 State controller
+5.15.07 Other
+5.16 cl Which police actor/s did the state government official/s communicate with?
+5.16.01 Police chief
+5.16.02 Sheriff
+5.16.03 Assistant police chief
+5.16.04 Police captain
+5.16.05 Police lieutenant
+5.16.06 Police sergeant
+5.16.07 Police officer
+5.16.08 Police spokesperson
+5.16.09 Other
+5.17 dd The text refers to a ____ officer overseeing the actions of the ____.
+5.17.01 City government / city government
+5.17.02 City government / state government
+5.17.03 City government / police
+5.17.04 State government / city government
+5.17.05 State government / state government
+5.17.06 State government / police
+5.18 mc What kind of oversight did the city government official have over the city government?
+5.19 mc What kind of oversight did the city government official have over the state government?
+5.20 mc What kind of oversight did the city government official have over the police?
+5.20.01 Consultation with police officer/s
+5.20.02 Reassignment of police officer/s and/or their responsibilities
+5.21 mc What kind of oversight did the state government official have over the city government?
+5.22 mc What kind of oversight did the state government official have over the state government?
+5.23 mc What kind of oversight did the state government official have over the police?
+5.23.01 Consultation with police officer/s 
+5.23.02 Reassignment of police officer/s and/or their responsibilities
+5.24 cl Which city government actor/s initiated the oversight?
+5.24.01 Mayor
+5.24.02 Assistant to the mayor
+5.24.03 City manager
+5.24.04 Assistant city manager
+5.24.05 City administrator
+5.24.06 City council member
+5.24.07 District attorney
+5.24.08 City attorney
+5.24.09 City parks and recreation officer
+5.24.10 City public health officer
+5.24.11 Other
+5.25 cl Which state government actor/s initiated the oversight?
+5.25.01 Governor
+5.25.02 Assistant to governor
+5.25.03 Lieutenant governor
+5.25.04 Attorney general
+5.25.05 Secretary of state
+5.25.06 State controller
+5.25.07 Other
+5.26 cl Which city government actor/s did the city government official/s oversee?
+5.26.01 Mayor
+5.26.02 Assistant to the mayor
+5.26.03 City manager
+5.26.04 Assistant city manager
+5.26.05 City administrator
+5.26.06 City council member
+5.26.07 District attorney
+5.26.08 City attorney
+5.26.09 City parks and recreation officer
+5.26.10 City public health officer
+5.26.11 Other
+5.27 cl Which state government actor/s did the city government official/s oversee?
+5.27.01 Governor
+5.27.02 Assistant to governor
+5.27.03 Lieutenant governor
+5.27.04 Attorney general
+5.27.05 Secretary of state
+5.27.06 State controller
+5.27.07 Other
+5.28 cl Which police actor/s did the city government official/s oversee?
+5.28.01 Police chief
+5.28.02 Sheriff
+5.28.03 Assistant police chief
+5.28.04 Police captain
+5.28.05 Police lieutenant
+5.28.06 Police sergeant
+5.28.07 Police officer
+5.28.08 Police spokesperson
+5.28.09 Other
+5.29 cl Which city government actor/s did the state government official/s oversee?
+5.29.01 Mayor
+5.29.02 Assistant to the mayor
+5.29.03 City manager
+5.29.04 Assistant city manager
+5.29.05 City administrator
+5.29.06 City council member
+5.29.07 District attorney
+5.29.08 City attorney
+5.29.09 City parks and recreation officer
+5.29.10 City public health officer
+5.29.11 Other
+5.30 cl Which state government actor/s did the state government official/s oversee?
+5.30.01 Governor
+5.30.02 Assistant to governor
+5.30.03 Lieutenant governor
+5.30.04 Attorney general
+5.30.05 Secretary of state
+5.30.06 State controller
+5.30.07 Other
+5.31 cl Which police actor/s did the state government official/s oversee?
+5.31.01 Police chief
+5.31.02 Assistant police chief
+5.31.03 Police captain
+5.31.04 Police lieutenant
+5.31.05 Police sergeant
+5.31.06 Police officer
+5.31.08 Police spokesperson
+5.31.09 Other
+
+if 5.01.01, then 5.02
+if 5.01.02, then 5.17
+if 5.02.01, then 5.03
+if 5.02.01, then 5.09
+if 5.02.01, then 5.11
+if 5.02.02, then 5.04
+if 5.02.02, then 5.09
+if 5.02.02, then 5.12
+if 5.02.03, then 5.05
+if 5.02.03, then 5.09
+if 5.02.03, then 5.13
+if 5.02.04, then 5.06
+if 5.02.04, then 5.10
+if 5.02.04, then 5.14
+if 5.02.05, then 5.07
+if 5.02.05, then 5.10
+if 5.02.05, then 5.15
+if 5.02.06, then 5.08
+if 5.02.06, then 5.10
+if 5.02.06, then 5.16
+if 5.17.01, then 5.18
+if 5.17.01, then 5.24
+if 5.17.01, then 5.26
+if 5.17.02, then 5.19
+if 5.17.02, then 5.24
+if 5.17.02, then 5.27
+if 5.17.03, then 5.20
+if 5.17.03, then 5.24
+if 5.17.03, then 5.28
+if 5.17.04, then 5.21
+if 5.17.04, then 5.25
+if 5.17.04, then 5.29
+if 5.17.05, then 5.22
+if 5.17.05, then 5.25
+if 5.17.05, then 5.30
+if 5.17.06, then 5.23
+if 5.17.06, then 5.25
+if 5.17.06, then 5.31
+
+
+Instructions: The highlighted text gives information about a civilian government during the Occupy movement. We need your help to categorize this information. Please read the highlighted text and use the checklist to select which of the following categories of information are relevant to the highlighted text. Upon selecting a category, a bin will appear at the bottom of your screen with further questions pertaining to that category. You may check and uncheck categories at any point in the process.
+ 
+Please answer the following questions pertaining to the categories of information you selected in the above checkbox. You may check and uncheck categories at any point in the process. After you answer a given question, press "Next." When you are finished answering all the questions within a bin, please press "Continue." You may press "Back" at any point within each category. Once you have completed all bins, you will be asked to review your answers. When you are certain you have answered all questions in all bins correctly, press "Submit."
+
+ 
+Basic Need  - n. a good or resource necessary to sustain an individual's physical wellbeing. Examples include: water, food, heat, electricity, and clothing.
+Code  - n. a collection of written laws gathered together, usually covering specific subject matter.  
+Dispersal order - n. a notice from a city/state official requesting protesters to leave the area in which they are currently protesting.
+Eviction order - n. an order from a city/state official demanding that protesters leave the area in which they are currently protesting or face arrest and/or criminal trespassing charges.
+Law - n. 1) any system of regulations to govern the conduct of the people of a community, society or nation, in response to the need for regularity, consistency and justice based upon collective human experience. 2) n. a statute, ordinance or regulation enacted by the legislative branch of a government and signed into law, or in some nations created by decree without any democratic process. 
+Ordinance - n. a statute enacted by a city or town. 
+Over-enforcement  - n. a city/state official chose to enforce an order that they sometimes do not enforce 
+Regulation  - n. rules and administrative codes issued by governmental agencies at all levels, municipal, county, state and federal.  
+Semi-Permanent structure  - n. any makeshift structure not secured to the ground.   
+Under-enforcement - n. a city/state official chose not to enforce an order that they often do enforce foldable lunch tables, large tarps, wooden crates, etc.
