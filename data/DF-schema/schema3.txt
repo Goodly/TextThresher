@@ -1,0 +1,604 @@
+title: Camp
+
+1 Camp Setting and Composition: Size, crowd composition, permit information, visibility
+2 Camp Organization and Issues: Leadership, facilities, and resources; problems and difficulties  
+3 Camp Community Impact and Social Media: Community and individual opinions about camp, donations made to the camp, social media/internet presence
+4 Camp Statements: Speech acts by members of the camp
+5 Camp Meetings: General assembly information and activity        
+
+1.01 cl Which of the following does the text discuss? Select all that apply:
+1.01.01 The number of people and/or the size of the crowd at the camp
+1.01.02 Demographics or descriptions of the crowd at the camp
+1.01.03 The number of tents at the camp
+1.01.04 Information about the camp's legal standing (formal permits, informal permission from the city government, camp conditions/requirements to be in good standing with city) 
+1.01.05 The camp's visibility to the rest of the public  
+1.02 mc Which of the following information does the text give about the number of people who camp overnight?
+1.02.01 The exact number
+1.02.02 An estimate or approximate number
+1.02.03 Changes in the number of people camping overnight over time
+1.02.04 Information not given
+1.03 tx Exactly how many people camp overnight?
+1.04 dd Approximately how many people camp overnight?
+1.04.01 "A few," "a handful," "a small group": 2-5
+1.04.02 "Several," "a group”: 6-11
+1.04.03 "A dozen (or so)”: 12-19
+1.04.04 "A small crowd," "a couple dozen”: 20-34
+1.04.05 "A crowd”: 35-75
+1.04.06 "A large crowd," "a hundred or so”: 76-150
+1.04.07 "A mass," "hundreds": 151-500
+1.04.08 "Several hundred”: 501-850
+1.04.09 "About a thousand": 851-1,300
+1.04.10 “Thousands,” “a few thousand”: 1,301-4,500
+1.04.11 "Several thousand": 4,501-8,500
+1.04.12 "Around ten thousand": 8,501-12,000
+1.04.13 "Well over ten thousand": 12,001-17,000
+1.04.14 "Tens of thousands": 17,001-30,000
+1.04.15 30,000 or more
+1.05 mc Who estimated the number of people camping overnight?
+1.05.01 Media
+1.05.02 Police
+1.05.03 City official
+1.05.04 Protester
+1.05.05 Independent
+1.05.06 Information not given
+1.05.07 Other
+1.06 mc How did the number of people camping overnight change between the most recent night and the night before it?
+1.06.01 Increased; exact number provided by text
+1.06.02 Increased; exact number not provided by text
+1.06.03 Decreased; exact number provided by text
+1.06.04 Decreased; exact number not provided by text
+1.06.05 Information not given
+1.07 tx Exactly how many more people camped overnight?
+1.08 dd Approximately how many more people camped overnight?
+1.08.01 "A few," "a handful," "a small group": 2-5
+1.08.02 "Several," "a group”: 6-11
+1.08.03 "A dozen (or so)”: 12-19
+1.08.04 "A small crowd," "a couple dozen”: 20-34
+1.08.05 "A crowd”: 35-75
+1.08.06 "A large crowd," "a hundred or so”: 76-150
+1.08.07 "A mass," "hundreds": 151-500
+1.08.08 "Several hundred”: 501-850
+1.08.09 "About a thousand": 851-1,300
+1.08.10 “Thousands,” “a few thousand”: 1,301-4,500
+1.08.11 "Several thousand": 4,501-8,500
+1.08.12 "Around ten thousand": 8,501-12,000
+1.08.13 "Well over ten thousand": 12,001-17,000
+1.08.14 "Tens of thousands": 17,001-30,000
+1.08.15 30,000 or more
+1.09 tx Exactly how many fewer people camped overnight?
+1.10 dd Approximately how many fewer people camped overnight?
+1.10.01 "A few," "a handful," "a small group": 2-5
+1.10.02 "Several," "a group”: 6-11
+1.10.03 "A dozen (or so)”: 12-19
+1.10.04 "A small crowd," "a couple dozen”: 20-34
+1.10.05 "A crowd”: 35-75
+1.10.06 "A large crowd," "a hundred or so”: 76-150
+1.10.07 "A mass," "hundreds": 151-500
+1.10.08 "Several hundred”: 501-850
+1.10.09 "About a thousand": 851-1,300
+1.10.10 “Thousands,” “a few thousand”: 1,301-4,500
+1.10.11 "Several thousand": 4,501-8,500
+1.10.12 "Around ten thousand": 8,501-12,000
+1.10.13 "Well over ten thousand": 12,001-17,000
+1.10.14 "Tens of thousands": 17,001-30,000
+1.10.15 30,000 or more
+1.11 mc How is the number of people camping overnight generally changing over time?
+1.11.01 Decreasing significantly (ex. "the camp is diminishing," "the crowd is disappearing")
+1.11.02 Decreasing slightly (ex. "fewer campers are staying overnight," "a few campers have left the camp")
+1.11.03 Little or no change, (ex. "there are consistently about 25-30 campers," "the camp maintains about 50 campers throughout the week")
+1.11.04 Increasing slightly (ex. "more people are joining the camp," "the camp is attracting new members as protests continue")
+1.11.05 Increasing significantly (ex. "the camp has doubled in size," "new campers are flooding the camp and setting up tents")
+1.11.06 Fluctuating (increasing and decreasing over a span of multiple days, ex. "the camp is full some nights, and nearly empty on others")
+1.11.07 Information not given
+1.12 mc Which of the following information does the text give about the number of tents set up at the camp? How many tents are set up at the camp? 
+1.12.01 The exact number
+1.12.02 An estimate or approximate number
+1.12.03 Changes in the number of tents over time
+1.13 tx Exactly how many tents are set up at the camp?
+1.14 dd Approximately how many tents are set up at the camp?
+1.14.01 "A few," "a handful," "a small group," 1-5
+1.14.02 "Over five tents," "between five and ten tents," "almost a dozen tents," 6-10
+1.14.03 "More than ten tents," "about a dozen tents," "more than a dozen tents," 11-20
+1.14.04 "Roughly two dozen tents," "almost 50 tents," 21-39
+1.14.05 "Over 50 tents," "dozens of tents," 40-69
+1.14.06 "Almost a hundred tents," 70-99
+1.14.07 "Over 100 tents," 100-149
+1.14.08 "Almost 200 tents," 150-199
+1.14.09 "Hundreds of tents," "several hundred tents," 200 or more
+1.15 mc Who estimated the number of tents set up at the camp?
+1.15.01 Media
+1.15.02 Police
+1.15.03 City official
+1.15.04 Protester 
+1.15.05 Independent
+1.15.06 Information not given
+1.15.07 Other
+1.16 mc How did the number of tents change between the most recent night and the night before it?
+1.16.01 Increased; exact number provided by text
+1.16.02 Increased; exact number not provided by text
+1.16.03 Decreased; exact number provided by text
+1.16.04 Decreased; exact number not provided by text
+1.16.05 Information not given
+1.17 tx Exactly how many more tents were set up at the camp?
+1.18 dd Approximately how many more tents were set up at the camp?
+1.18.01 A few," "a handful," "a small group," 1-5
+1.18.02 "Over five tents," "between five and ten tents," "almost a dozen tents," 6-10
+1.18.03 "More than ten tents," "about a dozen tents," "more than a dozen tents," 11-20
+1.18.04 "Roughly two dozen tents," "almost 50 tents," 21-39
+1.18.05 "Over 50 tents," "dozens of tents," 40-69
+1.18.06 "Almost a hundred tents," 70-99
+1.18.07 "Over 100 tents," 100-149
+1.18.08 "Almost 200 tents," 150-199
+1.18.09 "Hundreds of tents," "several hundred tents," 200 or more
+1.19 tx Exactly how many fewer tents were set up at the camp?
+1.20 dd Approximately how many fewer tents were set up at the camp?
+1.20.01 A few," "a handful," "a small group," 1-5
+1.20.02 "Over five tents," "between five and ten tents," "almost a dozen tents," 6-10
+1.20.03 "More than ten tents," "about a dozen tents," "more than a dozen tents," 11-20
+1.20.04 "Roughly two dozen tents," "almost 50 tents," 21-39
+1.20.05 "Over 50 tents," "dozens of tents," 40-69
+1.20.06 "Almost a hundred tents," 70-99
+1.20.07 "Over 100 tents," 100-149
+1.20.08 "Almost 200 tents," 150-199
+1.20.09 "Hundreds of tents," "several hundred tents," 200 or more
+1.21 mc How is the number of tents at the camp generally changing over time?
+1.21.01 Decreasing significantly (ex. "the tents are disappearing," "most tents were removed from the camp")
+1.21.02 Decreasing slightly (ex. "some tents were removed," "campers dismantled a few tents")
+1.21.03 Little or no change, (ex. "there are consistently about 5-10 tents," "the camp maintains about 20 small tents throughout the week")
+1.21.04 Increasing slightly (ex. "protesters set up a few more tents," "a handful of tents popped up overnight")
+1.21.05 Increasing significantly (ex. "the camp has doubled in size," "new campers are flooding the camp and setting up tents")
+1.21.06 Fluctuating (increasing and decreasing over a span of multiple days, ex. "the number of tents changes from day to day")
+1.21.07 Information not given
+1.22 mc Is this camp allowed by the city?
+1.22.01 Yes
+1.22.02 No
+1.22.03 Information not given
+1.23 mc Does the camp have an official permit from the city?
+1.23.01 Yes
+1.23.02 No
+1.23.03 Information not given
+1.24 tm Please list the start date and time for the camp permit.
+1.25 tm Please list the end date and time for the camp permit.
+1.26 cl Which of the following are conditions of the camp permit? Select all that apply:
+1.26.01 Tents and other semi-permanent structures cannot be present
+1.26.02 Protesters and/or tents must remain in a certain area at night
+1.26.03 Cannot block sidewalks, walkways, roads, etc.
+1.26.04 Cannot prevent citizens from using park comfortably
+1.26.05 Park hour/curfew requirements (ex. no overnight camping)
+1.26.06 Safety requirements (regarding fires, violence, etc.)
+1.26.07 Sanitation requirements (restrooms, health practices, etc.)
+1.26.08 Must undergo repeated inspections and/or clean-ups
+1.26.09 Must remain in contact with city government
+1.26.10 Other
+1.27 mc Is the city government and/or police informally allowing the camp?
+1.27.01 Yes
+1.27.02 No
+1.27.03 Information not given
+1.28 How visible is this camp to the rest of the public? Please highlight all parts of the text that mention the visibility of the camp's location.
+1.29 cl Who is present at the camp? Select all demographic groups that apply:
+1.29.01 Anarchists
+1.29.02 Homeless people
+1.29.03 Union members
+1.29.04 Reinforcement campers from other cities
+1.29.05 Religious leaders or communities
+1.29.06 African-American people
+1.29.07 Hispanic/Latino people
+1.29.08 People under the age of 30
+1.29.09 Children
+1.29.10 Women
+1.29.11 Celebrities 
+
+if 1.01.01, then 1.02
+if 1.02.01, then 1.03
+if 1.02.02, then 1.04
+if 1.02.03, then 1.06
+if 1.02.03, then 1.11 
+if 1.04.any, then 1.05
+if 1.06.01, then 1.07
+if 1.06.02, then 1.08
+if 1.06.03, then 1.09
+if 1.06.04, then 1.10 
+if 1.06.05, then 1.11
+if 1.01.02, then 1.29
+if 1.01.03, then 1.12
+if 1.12.01, then 1.13
+if 1.12.02, then 1.14
+if 1.12.03, then 1.16
+if 1.14.any, then 1.15
+if 1.16.01, then 1.17
+if 1.16.02, then 1.18
+if 1.16.03, then 1.19
+if 1.16.04, then 1.20
+if 1.01.04, then 1.22
+if 1.01.05, then 1.28 
+
+2.01 cl Which of the following does the text discuss? Select all that apply:
+2.01.01 Camp leadership and operation structure (formal or informal leaders, leadership groups, camp rules or codes of conduct, designated liaisons between the camp and the city, etc.) 
+2.01.02 Camp committees, teams, working groups, services, and/or facilities (groups of camp members working together on a specific aspect of the local movement such as a media committee or security team; facilities or services provided to people at the camp, often located in designated tents)
+2.01.03 Camp resources (utilities available at the camp for living purposes, such as heating or electricity) 
+2.01.04 Problems and difficulties encountered at the camp (issues with health/sanitation/safety/security, disagreements about the camp’s strategies/tactics, unstable camp location, etc.)
+2.02 mc What is the leadership structure of the local camp and/or movement? Select the best fit from the following:
+2.02.01 No leader
+2.02.02 Informal leadership by multiple individuals
+2.02.03 Formal leadership by multiple individuals 
+2.02.04 Formal elected or appointed leader
+2.02.05 Information insufficient or not given
+2.02.06 Other
+2.03 mc Does the camp have a liaison to the city and/or police? (Please highlight both the title and the name of each liaison selected.)
+2.03.01 No liaison mentioned
+2.03.02 Liaison mentioned, but not named
+2.03.03 Liaison(s) mentioned and named
+2.04 mc Does the camp have either rules or regulations that campers must follow, or an official code of behavioral conduct?
+2.04.01 Yes
+2.04.02 No
+2.04.03 Information not given
+2.05 cl Which of the following rules/regulations are included in the camp’s code of behavioral conduct?
+2.05.01 Code of conduct mentioned, but rules/regulations are not described
+2.05.02 Keep camp clean
+2.05.03 No children allowed to camp
+2.05.04 No smoking cigarettes
+2.05.05 No alcohol
+2.05.06 No drugs
+2.05.07 No theft
+2.05.08 No weapons/ammunition
+2.05.09 No violence/fighting (verbal or physical)
+2.05.10 No loud noises (yelling, music, etc) during the day
+2.05.11 Quiet hours enforced at night
+2.05.12 Other
+2.06 cl What committees, teams, working groups, services, and/or facilities have formed within the camp? Select all that apply:
+2.06.01 Food/kitchen
+2.06.02 Legal services, lawyers
+2.06.03 Security/camp safety 
+2.06.04 Health/medical
+2.06.05 Sanitation/clean-up
+2.06.06 Media/social media/public outreach
+2.06.07 Education/information/libraries/teach-ins
+2.06.08 Technology
+2.06.09 Drug harm reduction centers/needle exchanges
+2.06.10 Meditation/relaxation
+2.06.11 Other
+2.06.12 Information not given
+2.07 cl What resources are present at the camp? Select all that apply:
+2.07.01 Electricity
+2.07.02 Heat
+2.07.03 Water
+2.07.04 Restroom
+2.07.05 Internet/wi-fi
+2.07.06 Other
+2.08 cl What kind of problems or difficulties are present at the camp? Select all that apply:
+2.08.01 Health, sanitation (ex. illness, disease, drug use, extreme weather, death, lack of water or electricity)
+2.08.02 Safety, security (ex. crime, violence, children sleeping at camp, mental health disturbances)
+2.08.03 Arguments or major disagreements about camp's strategies, tactics, or direction (can result in members being evicted)
+2.08.04 Location instability (ex. no camp location exists, having to relocate the camp at nighttime/for community events, etc.)
+2.09 cl What health and sanitation issues are present at the camp? Select all that apply: 
+2.09.01 Illness and/or disease
+2.09.02 Use of marijuana
+2.09.03 Use of drugs other than marijuana
+2.09.04 No water
+2.09.05 No electricity
+2.09.06 Insufficient or no restrooms, using ground as restroom
+2.09.07 Death (murder, suicide, other/cause unknown) 
+2.09.08 Other 
+2.09.09 Information insufficient or not given
+2.10 cl What safety and security issues are present at the camp? Select all that apply:
+2.10.01 Fire hazards
+2.10.02 Aggressive panhandling
+2.10.03 Mental health disturbances
+2.10.04 Children sleeping at the camp
+2.10.05 Verbal aggression or violence NOT about disagreements of the camp's strategies or direction
+2.10.06 Physical aggression or violence NOT about disagreements of the camp's strategies or direction
+2.10.07 Specific threat of violence
+2.10.08 Sexual assault
+2.10.09 Weapons and/or ammunition
+2.10.10 Eviction of dangerous camp members
+2.10.11 Other
+2.10.12 Information insufficient or not given
+2.11 cl What disagreements or major arguments are present at the camp? Select all that apply: 
+2.11.01 Nonviolent disagreements about the camp's direction, strategies, and/or tactics
+2.11.02 Verbal aggression or violence about disagreements of the camp's strategies or direction
+2.11.03 Physical fights (without weapons) about disagreements of the camp's strategies or direction
+2.11.04 Physical fights (with weapons) about disagreements of the camp's strategies or direction
+2.11.05 Eviction of particular member(s)
+2.11.06 Other
+2.11.07 Information insufficient or not given
+2.12 cl What location instability is the camp experiencing? Select all that apply:
+2.12.01 Movement does not have any camp location
+2.12.02 Must dismantle tents and/or other camp structures at night
+2.12.03 Must move camp at night (ex. to sidewalk or other location)
+2.12.04 Potential eviction or move due to planned community event in camp location
+2.12.05 Other
+2.12.06 Information insufficient or not given
+
+if 2.01.01, then 2.02
+if 2.01.01, then 2.03
+if 2.01.01, then 2.04
+if 2.04.01, then 2.05
+if 2.01.02, then 2.06
+if 2.01.03, then 2.07
+if 2.01.04, then 2.08
+if 2.08.01, then 2.09
+if 2.08.02, then 2.10
+if 2.08.03, then 2.11
+if 2.08.04, then 2.12
+
+3.01 cl Which of the following does the text discuss? Select all that apply:
+3.01.01 Community and individual opinions about camp
+3.01.02 Donations made to the camp
+3.01.03 The camp's social media/internet presence (ex. evidence of Facebook/Twitter/Instagram/webpages)
+3.02 mc Whose opinion is this? (Please highlight both the title and the name of each party.)
+3.02.01 Individual affiliated with the camp/movement (ex. protesters/campers)
+3.02.02 Individual not affiliated with the camp/movement (ex. citizens, local business owners)
+3.02.03 Multiple individuals not affiliated with the camp/movement
+3.02.04 Community group that is not Occupy
+3.02.05 General community/public
+3.02.06 Celebrity or politician
+3.02.07 Other
+3.03 mc What feeling does this opinion express toward the local Occupy camp? Choose from the following:
+3.03.01 Very negative, oppositional
+3.03.02 Slightly negative, unsupportive
+3.03.03 Neutral
+3.03.04 Slightly positive, supportive
+3.03.05 Very positive, enthusiastic
+3.04 mc Does this opinion indicate a complaint about the camp or its members?
+3.04.01 Yes
+3.04.02 No
+3.05 cl Which of the following complaints are being made about the camp? Select all that apply:
+3.05.01 Camp is too loud
+3.05.02 Camp is dirty, unsightly, an eyesore
+3.05.03 Camp is attracting criminals, drugs, and/or violence
+3.05.04 Camp disturbs local businesses
+3.05.05 Protesters are lazy ("hippies") and should get jobs
+3.05.06 Camp/movement lacks focus or has no clear goal
+3.05.07 Other
+3.06 mc Does this opinion discuss positive aspects of the camp?
+3.06.01 Yes
+3.06.02 No
+3.07 cl Which of the following positive aspects are discussed about the camp? Select all that apply:
+3.07.01 Camp is quiet, peaceful
+3.07.02 Camp is clean
+3.07.03 Camp/movement improves community
+3.07.04 Protesters are respectful, welcoming to community members
+3.07.05 Protesters are admirable citizens, good role models
+3.07.06 Other
+3.08 mc Who donated goods and/or services to the camp? (Please highlight both the title and the name of each donor.)
+3.08.01 Individual or family
+3.08.02 Local business
+3.08.03 Community group that is not Occupy (ex. labor unions, churches)
+3.08.04 Another Occupy camp
+3.08.05 Celebrity or politician
+3.08.06 Other
+3.09 cl What goods and/or services were donated? Select all that apply:
+3.09.01 Food, drinks
+3.09.02 Clothing, blankets, sleeping bags, pillows
+3.09.03 Camp supplies (tents, canopies, tarps, tables, cots, etc.)
+3.09.04 Firewood
+3.09.05 Heaters
+3.09.06 Power source, generators
+3.09.07 Offer of restrooms/showers 
+3.09.08 Money
+3.09.09 Other
+3.09.10 Information not given
+3.10 cl What social media or other internet platforms does the camp use? Select from the following:
+3.10.01 Facebook profile, page, or group
+3.10.02 Twitter account or hashtag
+3.10.03 Instagram account or hashtag
+3.10.04 Official blog, website, etc.
+3.11 mc Does the text discuss how many friends, likes, or members that the camp's Facebook account has? 
+3.11.01 Yes
+3.11.02 No
+3.12 tx How many friends, likes, or members does the Facebook account have? Copy/paste the exact number or estimate from the text.
+3.13 mc Does the text discuss how many followers that the camp's Twitter account has?
+3.13.01 Yes
+3.13.02 No
+3.14 tx How many followers does the camp's Twitter account have? Copy/paste the exact number or estimate from the text.
+3.15 mc Does the text discuss how many followers that the camp's Instagram account has?   
+3.15.01 Yes
+3.15.02 No 
+3.16 tx How many followers does the camp's Instagram account have? Copy/paste the exact number or estimate from the text.
+3.17 tx What is the name of the camp's blog or website? Copy/paste the name.
+
+if 3.01.01, then 3.02
+if 3.01.01, then 3.03
+if 3.01.01, then 3.04
+if 3.04.01, then 3.05
+if 3.06.01, then 3.07
+if 3.01.02, then 3.08
+if 3.01.02, then 3.09
+if 3.01.03, then 3.10
+if 3.10.01, then 3.11
+if 3.11.01, then 3.12
+if 3.10.02, then 3.13
+if 3.13.01, then 3.14
+if 3.10.03, then 3.16
+if 3.10.04, then 3.17
+
+4.01 mc What kind of official statement is this?
+4.01.01 Speaking at a press conference
+4.01.02 Informal interview with news media
+4.01.03 Writing an open letter, email, op-ed, or press release to the media and/or public 
+4.01.04 Social media and/or internet posting
+4.01.05 Other
+4.01.06 Information not given
+4.02 cl What is the title or role of the speaker? Select all that apply: (Please highlight both the title and the name of each actor selected.)
+4.02.01 Protester
+4.02.02 Official spokesperson
+4.02.03 Other
+4.02.04 Information not given 
+4.03 mc Which of the following information does the text give about when the statement was made? 
+4.03.01 The exact time
+4.03.02 An approximate time
+4.03.03 Information not given
+4.04 tm When exactly was the statement made?
+4.05 mc Approximately when was the statement made? 
+4.05.01 Pre-dawn (12am-6am)
+4.05.02 Morning (6am-12pm)
+4.05.03 Mid-day (12pm-3pm)
+4.05.04 Afternoon (3pm-6pm)
+4.05.05 Evening (6pm-9pm)
+4.05.06 Night (9pm-12am)
+
+If 4.03.01, then 4.04
+If 4.03.02, then 4.05
+
+5.01 mc Which of the following does the text discuss?
+5.01.01 Information about GA meetings in general
+5.01.02 Information about a specific general assembly meeting
+5.02 cl Which of the following categories does the text discuss? Select all that apply:
+5.02.01 Frequency of general assemblies
+5.02.02 Typical attendance at general assemblies
+5.02.03 How the attendnace at general assemblies changes over time
+5.03 mc How frequently are general assemblies held?
+5.03.01 More than once daily
+5.03.02 Once daily
+5.03.03 Once every other day (2-3 times a week)
+5.03.04 Once weekly
+5.03.05 Less than once weekly
+5.03.06 Information not given
+5.04 mc Which of the following does the text discuss?
+5.04.01 The exact number of people who usually attend general assemblies
+5.04.02 An estimate or approximate number of people who usually attend general assemblies
+5.05 tx Exactly how many people usually attend general assemblies?
+5.06 dd Approximately how many people usually attend general assemblies?
+5.06.01 "A few," "a handful," "a small group": 2-5
+5.06.02 "Several," "a group”: 6-11
+5.06.03 "A dozen (or so)”: 12-19
+5.06.04 "A small crowd," "a couple dozen”: 20-34
+5.06.05 "A crowd”: 35-75
+5.06.06 "A large crowd," "a hundred or so”: 76-150
+5.06.07 "A mass," "hundreds": 151-500
+5.06.08 "Several hundred”: 501-850
+5.06.09 "About a thousand": 851-1,300
+5.06.10 “Thousands,” “a few thousand”: 1,301-4,500
+5.06.11 "Several thousand": 4,501-8,500
+5.06.12 "Around ten thousand": 8,501-12,000
+5.06.13 "Well over ten thousand": 12,001-17,000
+5.06.14 "Tens of thousands": 17,001-30,000
+5.06.15 30,000 or more
+5.07 mc How is the number of people attending general assemblies generally changing over time?
+5.07.01 Decreasing significantly
+5.07.02 Decreasing slightly
+5.07.03 Little or no change 
+5.07.04 Increasing slightly
+5.07.05 Increasing significantly
+5.07.06 Fluctuating (increasing and decreasing over a span of multiple days)
+5.08 mc Which of the following information does the text give about when this general assembly was held?
+5.08.01 The exact number
+5.08.02 An estimate or approximate number
+5.08.03 Information not given
+5.09 tm When exactly was the general assembly held?
+5.10 mc Approximately when was the general assembly held?
+5.10.01 Pre-dawn (12am-6am)
+5.10.02 Morning (6am-12pm)
+5.10.03 Mid-day (12pm-3pm)
+5.10.04 Afternoon (3pm-6pm)
+5.10.05 Evening (6pm-9pm)
+5.10.06 Night (9pm-12am)
+5.11 mc Where did this general assembly meeting take place? Choose one of the following:
+5.11.01 Prospective camp location (for meetings held before a camp has been established)
+5.11.02 Occupy camp (the most common location for general assembly meetings -- often at a park, plaza, or city hall)
+5.11.03 Public space NOT at a camp (ex. cafe, restaurant)
+5.11.04 Private residence 
+5.11.05 Other
+5.11.06 Information not given
+5.12 cl Which of the following categories does the highlighted text discuss? Select all that apply: 
+5.12.01 The number of people in attendance at a specific general assembly
+5.12.02 Issues discussed and/or voted on during a specific general assembly 
+5.13 mc Which of the following information does the text give about the number of people who attended this general assembly?
+5.13.01 The exact number
+5.13.02 An estimate or approximate number
+5.13.03 Information not given
+5.14 tx Exactly how many people were in attendance?
+5.15 dd Approximately how many people were in attendance?
+5.15.01 "A few," "a handful," "a small group": 2-5
+5.15.02 "Several," "a group”: 6-11
+5.15.03 "A dozen (or so)”: 12-19
+5.15.04 "A small crowd," "a couple dozen”: 20-34
+5.15.05 "A crowd”: 35-75
+5.15.06 "A large crowd," "a hundred or so”: 76-150
+5.15.07 "A mass," "hundreds": 151-500
+5.15.08 "Several hundred”: 501-850
+5.15.09 "About a thousand": 851-1,300
+5.15.10 “Thousands,” “a few thousand”: 1,301-4,500
+5.15.11 "Several thousand": 4,501-8,500
+5.15.12 "Around ten thousand": 8,501-12,000
+5.15.13 "Well over ten thousand": 12,001-17,000
+5.15.14 "Tens of thousands": 17,001-30,000
+5.15.15 30,000 or more
+5.16 mc Does the text discuss how the number of people in attendance changed from this general assembly and the one before it?
+5.16.01 Yes
+5.16.02 No
+5.17 mc Does the text give an exact number when discussing the change in attendance?
+5.17.01 Yes, and attendance increased
+5.17.02 Yes, and attendanced decreased
+5.17.03 No
+5.18 tx Exactly how many more people attended this general assembly than the one before it?
+5.19 tx Exactly how many fewer people attended this general assembly than the one before it?
+5.20 mc Does the text provide an estimate or other description of how the number of people in attendance changed?
+5.20.01 Yes
+5.20.02 No
+5.21 mc How did the number of people attending the general assembly change between this general assembly and the most recent general assembly before it?
+5.21.01 Attendance increased significantly
+5.21.02 Attendance increased slightly
+5.21.03 Little or no change in attendance
+5.21.04 Attendance decreased slightly
+5.21.05 Attendance decreased significantly
+5.21.06 Information not given
+5.22 cl What topics were discussed at the general assembly meeting? Select all that apply:
+5.22.01 Elect leaders, officials, and/or representatives 
+5.22.02 Create a list of camp demands 
+5.22.03 Create a list of camp rules
+5.22.04 Make an official statement
+5.22.05 Hold event (ex. move camp, establish a camp in a different location, hold a march/parade/demonstration, etc.)
+5.22.06 Other
+5.22.07 Information not given
+5.23 mc Was this issue voted on? 
+5.23.01 Yes
+5.23.02 No
+5.23.03 Information not given
+5.24 mc Did the vote pass? 
+5.24.01 Yes
+5.24.02 No
+5.24.03 Information not given
+5.25 mc Did the issue pass without a formal vote?
+5.25.01 Yes
+5.25.02 No
+5.25.03 Information not given
+
+if 5.01.01, then 5.02
+if 5.02.01, then 5.03
+if 5.02.02, then 5.04
+if 5.02.03, then 5.07
+if 5.04.01, then 5.05
+if 5.04.02, then 5.06 
+if 5.01.02, then 5.08
+if 5.08.01, then 5.09
+if 5.08.02, then 5.10
+if 5.12.01, then 5.13
+if 5.13.01, then 5.14
+if 5.13.02, then 5.15
+if 5.12.02, then 5.22
+if 5.16.01, then 5.17
+if 5.17.01, then 5.18
+if 5.17.02, then 5.19
+if 5.17.03, then 5.20
+if 5.20.01, then 5.21
+if 5.22.01, then 5.23
+if 5.22.02, then 5.23
+if 5.22.03, then 5.23
+if 5.22.04, then 5.23
+if 5.22.05, then 5.23
+if 5.22.06, then 5.23
+if 5.23.01, then 5.24
+if 5.23.02, then 5.25
+
+Instructions: We need your help to figure out details about an Occupy campsite. Please answer the following questions about the highlighted text.
+
+glossary: allowed: see "permit." Whether formally permitted or not, certain actions may be informally tolerated by the city government and/or police; this is usually demonstrated by intentional non-enforcement of local codes and laws, which may or may not be announced directly to the protesters. Examples: "Despite having several anti-camping and park curfew ordinances, the city has announced that they will not take action to remove the Occupy campers or their tents."; "The camp does not have an official permit to exist on park grounds, but the city is allowing the camp to stay as long as it remains clean and quiet."
+
+glossary: general assembly: also known as "GAs," "assemblies," and "camp meetings." Meetings held by Occupy camps during which protesters may discuss the camp's goals, strategies, difficulties, and/or other topics related to the Occupy movement. General assembly meetings usually occur at an Occupy campsite, but may also be held in different parts of a city (such as a park, restaurant, or house). Typically, general assembly meetings follow certain codes of conduct, such as obtaining 80% consensus on votes, wiggling fingers to show approval, and using the crowd's voices to repeat and amplify a single speaker, but these practices vary across camps.  
+
+glossary: liaison: a person who acts as a point of communication between the protesters and another party, which usually involves the city government and/or police. May be a formal or informal position held by one or more people at a camp.
+
+glossary: location instability: condition resulting from factors that prevent a camp from being able to remain in a particular place over time. Often, location instability is caused by city ordinances that prevent staying at a camp overnight, which often results in campers relocating or dismantling their camp every night; it may also be caused by other factors, such as conflicting community events in the camp location, or a lack of campers who are willing to stay at the camp overnight. 
+
+glossary: panhandling: the act of begging for money, food, shelter, or other goods and services. As many Occupy camps either house or are located near homeless people, aggressive panhandling may pose a threat to the safety of the protesters.

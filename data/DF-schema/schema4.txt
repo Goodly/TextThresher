@@ -1,0 +1,406 @@
+title: Police
+
+1 Event type
+2 Event setting and composition (location, attendance and crowd composition/demographics, police gear/tactics, time/duration)
+3 Arrests/injuries
+
+1.01.01 dd What type of event is described in the highlighted text?
+  1.01.01 Raid of camp
+  1.01.02 Showdown at the camp
+  1.01.03 Warnings or threats at the camp or through the media
+  1.01.04 Surveillance of camp
+  1.01.05 Surveillance of individual protest organizers away from the camp
+  1.01.06 Arrests of protest organizers away from any protest-initiated event or camp
+  1.01.07 Undercover infiltration of a camp
+  1.01.08 Undercover infiltration of other protester activities
+  1.01.09 Propaganda campaign against Occupy
+  1.01.10 “Snatch ‘n’ grab” arrests at camp – arrest of individual people (especially key organizers, at the camp, with or without a warrant)
+  1.01.11 Space-taking (i.e. establishing of perimeter barricades or fences or lines of police for          containment or strategic incapacitation purposes)
+  1.01.12 Statement (to public and/or Occupy) of refusal to enforce an eviction order or permit expiration or some other law coming from city
+  1.01.13 Notable non-event (e.g. intentional non-enforcement – everyone is expecting police to do one thing, then they don't do it) 
+  1.01.14 Official statement from police chief, or high-level officer or official spokesperson 
+  1.01.15 Other
+1.02 cl  Which of the following occurred during the raid? Select all that apply:
+  1.02.01 Some tents/structures were dismantled
+  1.02.02 All tents/structures were dismantled
+  1.02.03 Protesters were evicted from the camp
+  1.02.04 City workers assisted in park cleanup
+  1.02.05 Other
+1.03 mc What warning or threat was issued by police?
+  1.03.01 Protesters must leave the camp by a certain date
+  1.03.02 If protesters do not comply with police/city requests (ex. get a permit for the camp, repair health/safety concerns, etc.), they will be evicted
+  1.03.03 Other
+1.04 mc Where did the police make warnings/threats?
+  1.04.01 In person, at the camp
+  1.04.02 Through a letter or email sent/delivered to the camp
+  1.04.03 During a meeting with members of the camp 
+  1.04.04 Through social media (Facebook, Twitter, blog/website etc.)
+  1.04.05 Through the media (through interviews, press conferences, official statements, etc) 
+  1.04.06 Other
+1.05 cl Which of the following surveillance tactics did police use at the camp? Select all that apply: 
+  1.05.01 Walking through the camp, watching camp activity (ex. general assembly meetings, voting, organizing)
+  1.05.02 Videotaping or taking photos of protesters and/or camp 
+  1.05.03 Driving past the camp
+  1.05.04 Watching the camp from a parked car
+1.06 mc Who did the police use surveillance against?
+  1.06.01 Protester(s), not camp leaders or organizers 
+  1.06.02 Protest/camp leader and/or organizer
+  1.06.03 Other
+1.07 cl Where did the police's propoganda campaign take place? Select all that apply:
+  1.07.01 Social media (Facebook, Twitter, blog/website, etc)
+  1.07.02 Media (through interviews, press releases, press conferences, etc.)
+1.08 cl What kind of space-taking tactics did the police use?
+  1.08.01 Fencing or barricading areas (ex. buildings, walkways, streets) to block access by protesters; and/or creating a designated protest zone where campers are allowed to protest
+  1.08.02 Forming skirmish lines
+  1.08.03 Other
+1.09 cl What event was expected, but not carried out by the police? Select all that apply:
+  1.09.01 Issuing an eviction order to protesters
+  1.09.02 Performing arrests at the camp
+  1.09.03 Raiding the camp and/or enforcing eviction deadlines made by the city or police (ex. dismantling/removing tents and structures, evicting protesters)
+  1.09.04 Other
+1.10 mc What kind of official statement is this?
+  1.10.01 Speaking at a press conference
+  1.10.02 Informal interview with news media
+  1.10.03 Writing an open letter, email, op-ed, or press release to the media and/or public 
+  1.10.04 Social media and/or internet posting
+  1.10.05 Other
+  1.10.06 Information not given
+1.11 cl What is the title or role of the speaker? Select all that apply: (Please highlight both the title and the name of each actor selected.)
+  1.11.01 Police Chief, Commissioner, Superintendent, or Sheriff
+    Assistant Police Chief, Commissioner, Superintendent, or Sheriff
+    Deputy Chief, Commissioner, or Superintendent
+  1.11.02 Commander or Inspector
+  1.11.03 Colonel
+  1.11.04 Major
+  1.11.05 Captain
+  1.11.06 Lieutenant
+  1.11.07 Sergeant
+  1.11.08 Officer
+  1.11.09 Official spokesperson, media correspondent
+1.12 mc Which of the following information does the text give about when the statement was made? 
+  1.12.01 The exact time
+  1.12.02 An approximate time
+  1.12.03 Information not given
+1.13 tm When exactly was the statement made?
+1.14 mc Approximately when was the statement made? 
+  1.14.01 Pre-dawn (12am-6am)
+  1.14.02 Morning (6am-12pm)
+  1.14.03 Mid-day (12pm-3pm)
+  1.14.04 Afternoon (3pm-6pm)
+  1.14.05 Evening (6pm-9pm)
+  1.14.06 Night (9pm-12am)
+  
+if 1.01.01, then 1.02
+if 1.1.03, then 1.03
+if 1.01.04, then 1.04
+if 1.01.05, then 1.05
+if 1.01.09, then 1.06
+if 1.01.11, then 1.07
+if 1.01.13, then 1.08
+if 1.01.14, then 1.09
+if 1.09.any, then 1.10
+if 1.09.any, then 1.11
+if 1.11.01, then 1.12
+if 1.11.02, then 1.12
+
+2.01 mc Which of the following information does the text give about the event's location?
+  2.01.01 The exact location or address
+  2.01.02 An approximate location, or clues about where the event took place (e.g. "the small group of protesters marched down Market Street)
+  2.01.03 Information not given
+2.02 tx Exactly where did the event take place? 
+2.03 tx Approximately where did the event take place? Please highlight the text that gives clues about the approximate location of this event. 
+2.04 mc Which of the following information does the text give about the number of police at the event?
+  2.04.01 The exact number
+  2.04.02 An estimate or approximate number
+  2.04.03 Information not given
+2.05 tx Exactly how many police were in attendance?
+2.06 dd Approximately how many police were in attendance?
+  2.06.01 "A few," "a handful," "a small group": 2-5
+  2.06.02 "Several," "a group”: 6-11
+  2.06.03 "A dozen (or so)”: 12-19
+  2.06.04 "A small crowd," "a couple dozen”: 20-34
+  2.06.05 "A crowd”: 35-75
+  2.06.06 "A large crowd," "a hundred or so”: 76-150
+  2.06.07 "A mass," "hundreds": 151-500
+  2.06.08 "Several hundred”: 501-850
+  2.06.09 "About a thousand": 851-1,300
+  2.06.10 “Thousands,” “a few thousand”: 1,301-4,500
+  2.06.11 "Several thousand": 4,501-8,500
+  2.06.12 "Around ten thousand": 8,501-12,000
+  2.06.13 "Well over ten thousand": 12,001-17,000
+  2.06.14 "Tens of thousands": 17,001-30,000
+  2.06.15 30,000 or more
+2.07 Who estimated the number of police in attendance?
+  2.07.01 Media
+  2.07.02 Police
+  2.07.03 City official
+  2.07.04 Protester
+  2.07.05 Independent
+  2.07.06 Other
+  2.07.07 Information not given
+2.08 mc Which of the following information does the text give about the number of protesters at the event?
+  2.08.01 The exact number
+  2.08.02 An estimate or approximate number
+  2.08.03 Information not given 
+2.09 tx Exactly how many protesters were in attendance?
+2.10 dd Approximately how many protesters were in attendance?
+  2.10.01 "A few," "a handful," "a small group": 2-5
+  2.10.02 "Several," "a group”: 6-11
+  2.10.03 "A dozen (or so)”: 12-19
+  2.10.04 "A small crowd," "a couple dozen”: 20-34
+  2.10.05 "A crowd”: 35-75
+  2.10.06 "A large crowd," "a hundred or so”: 76-150
+  2.10.07 "A mass," "hundreds": 151-500
+  2.10.08 "Several hundred”: 501-850
+  2.10.09 "About a thousand": 851-1,300
+  2.10.10 “Thousands,” “a few thousand”: 1,301-4,500
+  2.10.11 "Several thousand": 4,501-8,500
+  2.10.12 "Around ten thousand": 8,501-12,000
+  2.10.13 "Well over ten thousand": 12,001-17,000
+  2.10.14 "Tens of thousands": 17,001-30,000
+  2.10.15 30,000 or more
+2.11 mc Who estimated the number of protesters in attendance?
+  2.11.01 Media
+  2.11.02 Police
+  2.11.03 City official
+  2.11.04 Protester
+  2.11.05 Independent
+  2.11.06 Information not given
+  2.11.07 Other
+2.12 cl Which of the following information does the text give about the composition of the crowd at the event?
+  2.12.01 Identity groups of attendees (ex. anarchists, homeless, race/ethnicity, religion, women/children, celebrities)
+  2.12.02 Economic class of attendees (ex. low-class, the 99%, middle-class, upper-class)
+  2.12.03 Ages of attendees
+  2.12.04 Education levels of attendees
+  2.12.05 Jobs/occupation titles of attendees
+2.13 cl Which of the following groups and identities were present at the event?
+  2.13.01 Anarchists
+  2.13.02 Homeless people
+  2.13.03 Union members
+  2.13.04 Reinforcement campers from other cities
+  2.13.05 Religious leaders or communities
+  2.13.06 Occupy the Hood protesters
+  2.13.07 Other groups allied with Occupy
+  2.13.08 African-American people
+  2.13.09 Hispanic/Latino/Chicano people
+  2.13.10 Asian-American/Pacific Islander people
+  2.13.11 Native American people
+  2.13.12 People under the age of 30
+  2.13.13 Children
+  2.13.14 Women
+  2.13.15 Celebrities 
+  2.13.16 Information not given
+2.14 cl Which of the following economic class groups were present at the event?   
+  2.14.01 A wide variety of classes
+  2.14.02 Working/Lower (less than $24,999)
+  2.14.03 Lower-Middle ($25,000-$49,999)
+  2.14.04 Middle ($50,000-$74,999)
+  2.14.05 Upper-Middle ($75,000-$99,999)
+  2.14.06 Upper ($100,000+)
+  2.14.07 The 1% ($250,000+)
+  2.14.08 Information not given
+2.15 cl Which of the following age groups were present at the event?
+  2.15.01 A wide variety of ages
+  2.15.02 Under 18 
+  2.15.03 18-25 
+  2.15.04 26-34 
+  2.15.05 35-44
+  2.15.06 45-64
+  2.15.07 65+
+  2.15.08 Information not given
+2.16 cl Which of the following educational attainment groups were present at the event?   
+  2.16.01 People with a wide variety of educational attainment levels
+  2.16.02 Less than high school diploma
+  2.16.03 High school diploma/GED
+  2.16.04 Some college (2 years or fewer)
+  2.16.05 College degree (B.A., B.S., trade school, technical school)
+  2.16.06 Master's degree
+  2.16.07 PhD 
+  2.16.08 Information not given
+2.17 cl Which of the following job titles/occupations are held by people who attended the event?
+  2.17.01 People with a wide variety of job titles/occupations
+  2.17.02 Unemployed
+  2.17.03 Teacher, professor
+  2.17.04 Business worker
+  2.17.05 Factory worker
+  2.17.06 Caretaker
+  2.17.07 Farmer
+  %***add attributes -- talk to Betty***
+2.18 mc Does the text discuss characteristics of police equipment or tactics during the event (ex. riot gear, horses, skirmish lines)?
+  2.18.01 Yes
+  2.18.02 No
+2.19 cl Which of the following gear and/or tactics did the police use during this event? Select all that apply:
+  2.19.01 Shields
+  2.19.02 Batons
+  2.19.03 Body Armor
+  2.19.04 Riot Gear (including some combination of the above)
+  2.19.05 Horses
+  2.19.06 Urban Assault Vehicles
+  2.19.07 Tear gas
+  2.19.08 Rubber Bullets
+  2.19.09 Beanbag Rounds
+  2.19.10 Pepper Spray
+  2.19.11 Skirmish lines
+  2.19.12 Motorcycles
+  2.19.13 Squad cars near or within protester crowds
+  2.19.14 Other
+2.20 mc Which of the following information does the text give about when the event occurred? 
+  2.20.01 The exact start time
+  2.20.02 An approximate start time
+  2.20.03 The exact end time
+  2.20.04 An approximate end time
+  2.20.05 The duration (the length of time the event lasted after it began)
+  2.20.06 Information not given
+2.21 tm When exactly did the event begin?
+2.22 mc Approximately when did the event begin? 
+  2.22.01 Pre-dawn (12am-6am)
+  2.22.02 Morning (6am-12pm)
+  2.22.03 Mid-day (12pm-3pm)
+  2.22.04 Afternoon (3pm-6pm)
+  2.22.05 Evening (6pm-9pm)
+  2.22.06 Night (9pm-12am)
+2.23 tm When exactly did the event end?
+2.24 mc Approximately when did the event end?
+  2.24.01 Pre-dawn (12am-6am)
+  2.24.02 Morning (6am-12pm)
+  2.24.03 Mid-day (12pm-3pm)
+  2.24.04 Afternoon (3pm-6pm)
+  2.24.05 Evening (6pm-9pm)
+  2.24.06 Night (9pm-12am)
+2.25 mc Approximately how long did the event last?
+  %2.25.01 ***will add attributes***
+ 
+if 2.01.01, then 2.02
+if 2.01.02, then 2.03
+if 2.04.01, then 2.05
+if 2.04.02, then 2.06
+if 2.06.any, then 2.07
+if 2.08.01, then 2.09
+if 2.08.02, then 2.10
+if 2.10.any, then 2.11
+if 2.12.01, then 2.13
+if 2.12.02, then 2.14
+if 2.12.03, then 2.15 
+if 2.12.04, then 2.16
+if 2.12.05, then 2.17
+if 2.18.01, then 2.19
+if 2.20.01, then 2.21
+if 2.20.02, then 2.22
+if 2.20.03, then 2.23
+if 2.20.04, then 2.24
+if 2.20.05, then 2.25
+ 
+3.01 mc Which of the following information does the text give about arrests that occurred during the event?
+  3.01.01 The exact number
+  3.01.02 An estimate or approximate number
+  3.01.03 Information not given
+3.02 tx Exactly how many arrests occurred during the event? (If the text specifically states, "no arrests were made," then type in the number 0)
+3.03 mc Approximately how many arrests occurred?
+  3.03.01 1-5
+  3.03.02 6-10
+  3.03.03 11-25
+  3.03.04 26-50
+  3.03.05 51-100
+  3.03.06 101+
+3.04 cl Who was arrested?
+  3.04.01 Protesters
+  3.04.02 Counterprotesters
+  3.04.03 Protesters from other cities
+  3.04.04 Independent
+  3.04.05 News reporters
+  3.04.06 City official
+  3.04.07 Other
+3.05 mc Which of the following information does the text give about when the arrests occurred?
+  3.05.01 The exact time
+  3.05.02 An approximate time
+  3.05.03 Information not given
+3.06 tm Exactly when did the arrests occur?
+3.07 tx If no specific time is given, please highlight any words giving clues about what time the arrests occurred (e.g. "hours after police warned protesters to leave the area")
+3.08 mc Which of the following information does the text give about the number of police injured during the event?
+  3.08.01 The exact number
+  3.08.02 An estimate or approximate number
+  3.08.03 Information not given
+3.09 tx Exactly how many police were injured during the event? (If the text specifically states, "no injuries occurred," then type in the number 0)
+3.10 mc Approximately how many police were injured during the event?
+  3.10.01 1-5 
+  3.10.02 6-10
+  3.10.03 11-25
+  3.10.04 26-50
+  3.10.05 51+
+3.11 mc Which of the following information does the text give about when the police were injured?
+  3.11.01 The exact time
+  3.11.02 An approximate time
+  3.11.03 Information not given
+3.12 tm Exactly when were the police injured? 
+3.13 tx If no specific time is given, please highlight any words giving clues about what time the injuries occurred (e.g. "hours after police warned protesters to leave the area")
+3.14 mc Which of the following information does the text give about the number of protesters injured during the event?
+  3.14.01 The exact number
+  3.14.02 An estimate or approximate number
+  3.14.03 Information not given
+3.15 tx Exactly how many protesters were injured during the event? (If the text specifically states, "no injuries occurred," then type in the number 0)
+3.16 mc Approximately how many protesters were injured during the event?
+  3.16.01 1-5 
+  3.16.02 6-10
+  3.16.03 11-25
+  3.16.04 26-50
+  3.16.05 51+
+3.17 mc Which of the following information does the text give about when the protesters were injured?
+  3.17.01 The exact time
+  3.17.02 An approximate time
+  3.17.03 Information not given
+3.18 tm Exactly when were the protesters injured? 
+3.19 tx If no specific time is given, please highlight any words giving clues about what time the injuries occurred (e.g. "hours after police warned protesters to leave the area")
+ 
+if 3.01.01, then 3.02
+if 3.01.02, then 3.03
+if 3.03.any, then 3.04
+if 3.05.01, then 3.06
+if 3.05.02, then 3.07
+if 3.08.01, then 3.09
+if 3.08.02, then 3.10
+if 3.11.01, then 3.12
+if 3.11.02, then 3.13
+if 3.14.01, then 3.15
+if 3.14.02, then 3.16
+if 3.17.01, then 3.18
+if 3.17.02, then 3.19
+ 
+instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below.
+ 
+glossary: anarchists: sometimes referred to as the “black block” – protesters who see themselves aligned with the occupy movement and often engage in acts of destruction, vandalism and provocation of police
+
+glossary: arrests of protest organizers: police arrest individual organizers at their home, place of business or at any other site away from camp. Arrest does not occur during a protester march, demonstration, blocking action, etc.
+
+glossary: barricade: police set up barricades or fences to prevent protesters from accessing particular buildings, walkways or streets
+
+glossary: counterprotesters: people who are protesting against the occupy movement
+
+glossary: independent: citizen or other person not affiliated with the camp, media, police, or city
+
+glossary: notable non-event: police do not do what others including protesters, city officials and/or media expect them to do (ex. Campers prepare for a police raid and the police do not show up.)
+
+glossary: propaganda campaign against Occupy: police use a predefined set of talking points (whether true or false) to sway public opinion against the occupy movement. This may be done through traditional media or social media sites such as Twitter, Facebook, etc.
+
+glossary: protest zone: police create space where protesters are allowed and expected to engage in their protest activities
+
+glossary: raid: police show up at camp in large numbers relative to the number of campers with the intention of driving campers out, removing tents and structures, and returning the site to its pre-occupy state.
+
+glossary: riot gear: any combination of handheld shields, helmets, face shields, batons, or body armor.
+
+glossary: showdown: police show up without an obvious intention to raid but with large numbers relative to the number of campers. Police make demand on campers that they know the campers don’t want to agree to. Setting up a tense situation which may evolve into a raid situation.
+
+glossary: skirmish line: police establish lines of officers (often in riot gear) to prevent protesters from accessing particular buildings walkways or streets
+
+glossary: snatch 'n' grab arrests: police target individuals for arrest, especially key organizers, at the camp or during a protester-initiated march, demonstration, or blocking action, etc.
+
+glossary: space-taking: see "barricade," "skirmish lines," "protest zone." Police presence that creates physical boundaries or other obstacles that restrict where protesters may protest; establishing of perimeter barricades or fences or lines of police for containment or strategic incapacitation purposes
+
+glossary: statement: Police chief, high-level officer or official spokesperson gives a statement to the press through spoken word or writing. Includes press releases, opinion, editorials, open letters, blog posts, interviews
+
+glossary: surveillance of camp: police use video or smaller number of officers to watch over camp activities or general assemblies.
+
+glossary: surveillance of individual: police use video or smaller number of officers to watch individual protest organizers at their home, place of business or any other site away from camp.
+
+glossary: undercover infiltration: police send an undercover officer/s to pose as camp participants in general assemblies, camp activities, protester marches, demonstration or blocking activities
+
+glossary: warnings/threats: police inform campers about impending enforcement of curfew orders with intention of coercing a change in behavior
