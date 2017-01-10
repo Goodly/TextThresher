@@ -4,7 +4,7 @@ import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 
 import { colors } from 'utils/colors';
 import HighlightTool from 'components/HighlightTool';
-import TopicPicker from 'components/TopicPicker';
+import { TopicPicker, TopicInstruction }  from 'components/TopicPicker';
 import Project from 'components/Project';
 
 import { styles } from './styles.scss';
@@ -34,19 +34,18 @@ export class TopicHighlighter extends Component {
                                 transitionEnterTimeout={500}
                                 transitionLeaveTimeout={500}>
         <div className={loadingClass}></div>
-        <div className='topic-picker-wrapper'>
-          <TopicPicker topics={this.props.topics} />
-        </div>
+
         <div className='article-wrapper'>
-            <Project />
+            <div className='topic-picker-wrapper'>
+              <TopicPicker topics={this.props.topics} />
+            </div>
             <ReactCSSTransitionsGroup transitionName='fade-between'
                                       transitionAppear
                                       transitionAppearTimeout={500}
                                       transitionEnterTimeout={500}
                                       transitionLeaveTimeout={500}>
               <div className="article" key={this.props.article.articleId}>
-                <div className='article__header-text'>
-                </div>
+                <Project />
                 <div id='article-container'>
                   <HighlightTool
                     text={this.props.article.text}
@@ -55,11 +54,14 @@ export class TopicHighlighter extends Component {
                     currentTopicId={this.props.currentTopicId}
                   />
                 </div>
+                <button onClick={this.onSaveAndNext}>Save and Next</button>
               </div>
             </ReactCSSTransitionsGroup>
             <br/>
-            <button onClick={this.onSaveAndNext}>Save and Next</button>
-            <div className="space"></div>
+            <div style={{'height':'100%', 'position': 'relative'}}>
+              <TopicInstruction topics={this.props.topics}/>
+            </div>
+
         </div>
       </ReactCSSTransitionsGroup>
     );
