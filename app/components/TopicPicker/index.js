@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { styles } from './styles.scss';
 import { activateTopic } from 'actions/topicPicker';
@@ -20,25 +20,82 @@ const mapStateToProps = state => {
   };
 }
 
-const TopicInstruction = React.createClass({
-  displayName: 'Instruction',
+export class TopicInstructionComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.handleScroll = this.handleScroll.bind(this);
+  }
 
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll() {
+    var footer = document.querySelector('footer');
+
+    function getRectTop(el){
+      var rect = el.getBoundingClientRect();
+      return rect.top;
+    };
+    
+    if((getRectTop(footer) < window.innerHeight)) {
+      this.instrEl.style.position = 'absolute';
+    } else {
+      this.instrEl.style.position = 'fixed'; // restore when you scroll up
+    };
+  }
   render() {
-    var color = this.props.color;
+    var topicLookup = this.props.lookupTopicById[this.props.currentTopicId];
+    var index = topicLookup[0];
+    var full_inst = topicLookup[1].instructions;
+    var instructions = full_inst.length > 500 ? full_inst.substring(0,500) + "..." : full_inst;
+
+
+    // var color = this.props.color;
     var topicColor = {
         borderTop: 'solid',
         borderWidth: '10px',
-        borderColor: color,
+        borderColor: colors[index],
     };
     return (
-      <div className="instructions" style={topicColor}>
+      <div className="instructions"
+        style={topicColor}
+        ref={(input) => { this.instrEl = input; }}> 
         <strong>Instructions: </strong>
-         {this.props.instruction}
+         {instructions}
       </div>
       );
   }
+};
 
-});
+export let TopicInstruction = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Radium(TopicInstructionComponent));
+
+// const TopicInstruction = React.createClass({
+//   displayName: 'Instruction',
+
+//   render() {
+//     var color = this.props.color;
+//     var topicColor = {
+//         borderTop: 'solid',
+//         borderWidth: '10px',
+//         borderColor: color,
+//     };
+//     return (
+//       <div className="instructions" style={topicColor}>
+//         <strong>Instructions: </strong>
+//          {this.props.instruction}
+//       </div>
+//       );
+//   }
+
+// });
 
 const TopicItem = React.createClass({
   displayName: 'TopicItem',
@@ -91,7 +148,7 @@ const TopicItem = React.createClass({
   }
 });
 
-const TopicPicker = React.createClass({
+const TopicPickerComponent = React.createClass({
   displayName: 'TopicPicker',
 
   propTypes: {
@@ -131,15 +188,12 @@ const TopicPicker = React.createClass({
             </div>
           </div>
         </div>
-        
-        <TopicInstruction instruction={instructions} color={colors[index]}/>
-
       </div>
     );
   }
 });
 
-export default connect(
+export let TopicPicker = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Radium(TopicPicker));
+)(Radium(TopicPickerComponent));

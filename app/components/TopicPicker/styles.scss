@@ -4,7 +4,7 @@
 $topic-picker-nav-width: 25%;
 
 .topic-picker {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   z-index: 3;
@@ -17,13 +17,13 @@ $topic-picker-nav-width: 25%;
   .topic-picker__header {
     background-color: $offwhite;
     padding: 1em;
+    max-height: 200px;
   }
 
   ul.topic-picker__nav {
     display: flex;
     flex-direction: column;
     padding: 0;
-    height: 90%;
     li {
       color: $offwhite;
       padding: 1em 2em;
@@ -45,9 +45,10 @@ $topic-picker-nav-width: 25%;
   background-color: rgb(76,69,69);
   position: fixed;
   bottom: 0;
-  left: 260px;
-  right: 10px;
+  left: 250px;
+  right: 0px;
   color: white;
   border: 5px 0 0 0;
+  z-index: 9999;
 }
 
