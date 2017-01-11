@@ -1,0 +1,48 @@
+@import 'app/styles/_variables.scss';
+
+.quiz {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 150px;
+
+  &__next {
+    margin-top: 20px;
+    float: right;
+    font-family: $font-ui;
+    font-weight: bold;
+    color: $offblack;
+
+    &[disabled] {
+      color: $offwhite;
+    }
+  }
+
+  &__question {
+    .quiz__context {
+      font-size: 14pt;
+      span {
+        color: #CCC;
+      }
+
+      .highlighted {
+        color: #333;
+        font-style: italic;
+      }
+    }
+
+  }
+}
+
+.prompt {
+  position: relative;
+  opacity: 0;
+  //top: 50px;
+  left: 30%;
+  margin-top: 25px;
+  text-align: center;
+  transition: opacity 1s ease;
+  &.active {
+    opacity: 1;
+  }
+
+}
