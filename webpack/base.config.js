@@ -120,6 +120,7 @@ export default {
       title: 'TextThresher',
       template: './app/templates/index_template.html',
       chunks: ['app'],
+      chunksSortMode: 'dependency',
       filename: 'index.html',
     }),
     new OnBuildPlugin(function () {
@@ -138,7 +139,7 @@ export default {
       }
     }),
     new webpack.NoErrorsPlugin(),
-    new webpack.optimize.DedupePlugin(),
+//  new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin()
   ],
   noParse: [/node_modules/, new RegExp(PATHS.bowerPath)]
