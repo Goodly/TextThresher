@@ -3,7 +3,7 @@ import { Route } from 'react-router';
 
 import App from 'containers/App';
 import { MockHighlighter } from 'containers/HighlighterTasks';
-import { MockQuiz } from 'containers/Quiz';
+import { MockQuiz } from 'containers/QuizTasks';
 
 export default (
   <Route path='/' component={App}>
