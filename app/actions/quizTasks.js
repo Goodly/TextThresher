@@ -50,7 +50,7 @@ function presentTask(dispatch, getState) {
     dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
     dispatch({type: 'CURRENT_QUIZ_TASK', taskId});
     dispatch({type: 'FETCH_QUESTION_SUCCESS',
-              action: {response: task.questions[0]}});
+              response: task.questions[1]});
 
     function onSaveAndNext(highlights) {
       // dispatch save highight action which will return a promise, so

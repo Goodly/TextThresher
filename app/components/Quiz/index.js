@@ -24,7 +24,7 @@ export class Quiz extends Component {
 
   render() {
     return (
-      <div>
+      <div className="quiz">
         <Question question={this.props.question}/>
         <button onClick={this.onSaveAndNext}>Save and Next</button>
       </div>

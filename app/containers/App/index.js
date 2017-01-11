@@ -5,7 +5,7 @@ import configureStore from 'store/appStore.js';
 const store = configureStore();
 
 /* global styles for app */
-import './styles/app.scss';
+import './styles.scss';
 
 export default React.createClass({
   displayName: 'App',

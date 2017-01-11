@@ -54,7 +54,6 @@ const Question = React.createClass({
             );
           }) 
         }
-        <input type="submit" value="Next" />
       </form>
     );
   },
