@@ -1,5 +1,5 @@
 import { storeProject } from 'actions/project';
-import { storeSaveAndNext } from 'actions/quiz';
+import { storeQuestion, storeSaveAndNext } from 'actions/quiz';
 
 import { normalize, Schema, arrayOf } from 'normalizr';
 
@@ -45,12 +45,12 @@ function presentTask(dispatch, getState) {
     const taskId = taskQueue.shift();
     const task = taskDB[taskId];
     dispatch(storeProject(task.project));
+    // Hard-code a particular question to show to get this working
+    dispatch(storeQuestion(task.questions[1]));
     // Dispatch an action to clear any prior answers
     // dispatch(XXXX);
     dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
     dispatch({type: 'CURRENT_QUIZ_TASK', taskId});
-    dispatch({type: 'FETCH_QUESTION_SUCCESS',
-              response: task.questions[1]});
 
     function onSaveAndNext(highlights) {
       // dispatch save highight action which will return a promise, so

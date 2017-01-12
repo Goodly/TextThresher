@@ -1,3 +1,10 @@
+export function storeQuestion(question) {
+  return {
+    type: 'FETCH_QUESTION_SUCCESS',
+    response: question
+  };
+}
+
 export function answerSelected(id, text, checked) {
   return {
     type: 'ANSWER_SELECTED',
