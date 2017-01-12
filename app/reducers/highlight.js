@@ -4,7 +4,95 @@ const initialState = Object.assign({
   caseMax: 1,
 });
 
-function mergeHighlights(list) {
+/*
+TODO:
+- compare two highlights
+- see if they overlap at all
+- if they are of the same topic, then add them together
+- DELETE the two origin highlights
+
+*/
+
+function overlap(h1, h2) {
+  if (h1.start <= h2.start && h1.end >= h2.end) {
+    return true;
+  } else if (h1.start <= h2.start && h1.end <= h2.end && h1.end > h2.start) {
+    return true;
+  } else if (h2.start <= h1.start && h2.end <= h1.end && h2.end > h3.start) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function merge(h1, h2, text) {
+  if (h1.start <= h2.start && h1.end >= h2.end) {
+    var h = {
+      "caseNum": h1.caseNum,
+      "end": h1.end,
+      "start": h1.start,
+      "text": h1.text,
+      "topic": h1.topic
+    }
+    return h;
+  } else if (h1.start <= h2.start && h1.end <= h2.end) {
+    var h = {
+      "caseNum": h1.caseNum,
+      "end": h2.end,
+      "start": h1.start,
+      "text": text.slice(h1.start, h2.end),
+      "topic": h1.topic
+    }
+    return h;
+  } else if (h2.start <= h1.start && h2.end <= h1.end) {
+    var h = {
+      "caseNum": h1.caseNum,
+      "end": h2.end,
+      "start": h1.start,
+      "text": text.slice(h2.start, h1.end),
+      "topic": h1.topic
+    }
+    return h;
+  } else {
+    return h1;
+  }
+}
+
+function mergeHighlights(highlights, text) {
+  var merged = [];
+  var current = highlights[0];
+  var i = 1;
+  var added = false;
+  while (i < highlights.length) {
+    var compare = highlights[i];
+    //var topic = compare.topic === current.topic;
+    if (overlap(current, compare)) {
+      current = merge(current, compare, text);
+      i += 1;
+    } else {
+      merged.push(current);
+      var one = i+1 < highlights.length;
+      var two = i+2 < highlights.length;
+      if (one && two) {
+        i += 1;
+        current = highlights[i];
+        i += 1;
+        continue;
+      } else if (one) {
+        i += 1;
+        current = highlights[i];
+        i += 1;
+      } else {
+        i += 1;
+      }
+    }
+  }
+  merged.push(current);
+  return merged;
+}
+
+
+/*function mergeHighlights(list, text) {
   var newlist = [];
   var n = list.length;
   for (var i = 0; i < n;) {
@@ -24,7 +112,7 @@ function mergeHighlights(list) {
     newlist.push(newrange);
   }
   return newlist;
-}
+}*/
 
 export function highlight(state = initialState, action) {
   switch (action.type) {
@@ -32,13 +120,11 @@ export function highlight(state = initialState, action) {
     return Object.assign({}, state, {selectedHighlight:[]});
 
     case 'ADD_HIGHLIGHT':
-      //console.log('ADD_HIGHLIGHT');
-      //increment order of all old highlights by 1
+    console.log(state)
+    console.log(action)
+    console.log("ADD High")
       var new_state = [];
       for (var i = 0; i < state.highlights.length; i++) {
-        //var highlight = state.highlights[i];
-        //highlight.order += 1;
-        //new_state.push(highlight);
         state.highlights[i].order += 1;
       }
       var newHighlights = state.highlights.concat(
@@ -59,7 +145,7 @@ export function highlight(state = initialState, action) {
         }
       });
       return Object.assign({}, state,
-                           { highlights: mergeHighlights(newHighlights) });
+                           { highlights: mergeHighlights(newHighlights, action.text) });
     case 'SELECT_HIGHLIGHT':
     //console.log('SELECT_HIGHLIGHT');
       /*Add start-end indices of clicked span to selectedHighlights
@@ -138,4 +224,11 @@ export function highlight(state = initialState, action) {
     default:
       return state;
   }
+}
+
+module.exports = {
+  overlap,
+  merge,
+  mergeHighlights,
+  highlight
 }

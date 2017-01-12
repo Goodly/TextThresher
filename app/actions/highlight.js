@@ -7,8 +7,8 @@ export const RESIZE_HIGHLIGHT = 'CHANGE_HIGHLIGHT';
 export const CHANGE_CASE_HIGHLIGHT = 'CHANGE_CASE_HIGHLIGHT';
 
 
-export function addHighlight(start, end, selectedText, currentTopic, order) {
-  return { type: ADD_HIGHLIGHT, selection: {start, end, selectedText, currentTopic, order} };
+export function addHighlight(start, end, selectedText, currentTopic, text) {
+  return { type: ADD_HIGHLIGHT, selection: {start, end, selectedText, currentTopic}, text: text };
 }
 
 export function deleteHighlight(source) {
@@ -28,5 +28,6 @@ export function deselectHighlight() {
 }*/
 
 export function changeCaseHighlight(highlight, case_num) {
+  console.log("Change case")
   return {type: CHANGE_CASE_HIGHLIGHT, highlight: highlight, caseNum: case_num}
 }

@@ -1,0 +1,74 @@
+.start-arrow-up {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 15px solid;
+  right: -10px;
+  bottom: -40px;
+  cursor: pointer;
+}
+.start-arrow-down {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid;
+  top: -5px;
+  right: -10px;
+  font-size: 12;
+  cursor: pointer;
+}
+.start-arrow-up-icon {
+  position: absolute;
+  bottom: -22px;
+  left: -3px;
+  color: white;
+  font-size: 13px;
+}
+.start-arrow-down-icon {
+  position: absolute;
+  top: -27px;
+  left: -4.5px;
+  color: white;
+  font-size: 16px;
+}
+.end-arrow-up {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 15px solid;
+  bottom: -40px;
+  right: -10px;
+  cursor: pointer;
+}
+.end-arrow-down {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid;
+  top: -5px;
+  right: -10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.end-arrow-up-icon {
+  position: absolute;
+  bottom: -22px;
+  left: -2px;
+  color: white;
+  font-size: 13px;
+}
+.end-arrow-down-icon {
+  position: absolute;
+  top: -24px;
+  left: -2.5px;
+  color: white;
+  font-size: 13px;
+}
