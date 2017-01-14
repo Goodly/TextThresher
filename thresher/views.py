@@ -255,12 +255,10 @@ def quiz_tasks(request):
 
             taskList.append({
                "project": ProjectSerializer(project, many=False).data,
-               "topic": TopicSerializer(topic, many=False).data,
                "topictree": TopicSerializer(topictree, many=True).data,
                "article": ArticleSerializer(article, many=False).data,
                "highlights": HighlightGroupSerializer(
                                  highlights, many=True).data,
-               "questions": QuestionSerializer(questions, many=True).data
             })
 
         return Response(taskList)
