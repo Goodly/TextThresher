@@ -7,11 +7,11 @@ const initialState = Object.assign({
     checked: {},
     text: ''
   },
-  highlighter_color: null
+  highlighter_color: null,
+  saveAndNext: null
 }, {});
 
 export function quiz(state = initialState, action) {
-  console.log(action);
   switch(action.type) {
     case 'FETCH_QUESTION':
       return {
@@ -24,7 +24,7 @@ export function quiz(state = initialState, action) {
       return {
         ...state,
         question: action.response
-    }
+      }
     case 'ANSWER_SELECTED':
       return {
           ...state,

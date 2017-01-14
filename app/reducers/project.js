@@ -1,6 +1,6 @@
 const initialState = Object.assign({
   name : "",
-  instruction : ""
+  instructions : ""
 }, {});
 
 

@@ -24,6 +24,7 @@ const PATHS = {
   app: path.resolve(__dirname, '../app'),
   dist: path.resolve(__dirname, '../dist'),
   highlight: path.resolve(__dirname, '../pbs-highlighter'),
+  quiz: path.resolve(__dirname, '../pbs-quiz'),
   staticRoot: path.resolve(__dirname, '../app/staticroot'),
   vendorPath: path.resolve(__dirname, '../vendor'),
   bowerPath: path.resolve(__dirname, '../vendor/bower_components')
@@ -31,6 +32,18 @@ const PATHS = {
 
 function resolveBowerPath(componentPath) {
   return path.resolve(PATHS.bowerPath, componentPath);
+};
+
+function execCmd(command) {
+  console.log('\n');
+  console.log(command);
+  try {
+    child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
+  } catch (err) {
+    console.log('\n******* BUILD FAILED');
+    console.log(err.message);
+    console.log('*******');
+  };
 };
 
 export default {
@@ -60,6 +73,10 @@ export default {
     highlight: [
       'babel-polyfill',
       './app/highlight'
+    ],
+    quiz: [
+      'babel-polyfill',
+      './app/quiz'
     ],
   },
   resolve: {
@@ -125,16 +142,8 @@ export default {
     }),
     new OnBuildPlugin(function () {
       if (process.env.WEBPACK === 'cleandist') {
-        let command = `cp ${PATHS.dist}/highlight.bundle.js ${PATHS.highlight}/bundle.js`;
-        console.log('\nCopying highlight.bundle.js');
-        console.log(command);
-        try {
-          child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
-        } catch (err) {
-          console.log('\n******* BUILD FAILED. OUTPUT BUNDLE NOT FOUND.');
-          console.log(err.message);
-          console.log('*******');
-        };
+        execCmd(`cp ${PATHS.dist}/highlight.bundle.js ${PATHS.highlight}/bundle.js`);
+        execCmd(`cp ${PATHS.dist}/quiz.bundle.js ${PATHS.quiz}/bundle.js`);
         console.log('\n');
       }
     }),

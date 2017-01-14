@@ -1,0 +1,12 @@
+.question-block {
+  display: block;
+  border-top: .25em solid black;
+  border-bottom: .25em solid black;
+  .question-block__text {
+    font-size: 1em;
+    padding: 10px;
+    border-bottom: .25em solid black;
+    margin: 10px 0;
+    font-style: italic;
+  }
+}

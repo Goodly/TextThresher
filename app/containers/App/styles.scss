@@ -1,0 +1,13 @@
+// GLOBAL STYLES
+
+@import 'app/styles/_variables.scss';
+@import 'app/styles/_fade.scss';
+
+body {
+  font-size: 16px;
+}
+
+// Move below Crowdcrafting fixed header
+#react-root {
+  margin-top: 69px;
+}
