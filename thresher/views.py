@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db.models import Prefetch
+from django.db.models import prefetch_related_objects
 
 from rest_framework import routers, viewsets
 from rest_framework.decorators import list_route, api_view
@@ -215,6 +216,7 @@ def quiz_tasks(request):
 #           SELECT id, parent_id
 #           FROM subtopic LIMIT 100;
 #       """, [topic.id])
+#       prefetch_related_objects(topictree, "questions__answers")
 
         # replace this with recursive query above to find all
         # children of Protester, not just hard coded "Event type"
@@ -256,7 +258,6 @@ def quiz_tasks(request):
                "topic": TopicSerializer(topic, many=False).data,
                "topictree": TopicSerializer(topictree, many=True).data,
                "article": ArticleSerializer(article, many=False).data,
-               # Get prefetch field "article.highlightsForTopic" to work
                "highlights": HighlightGroupSerializer(
                                  highlights, many=True).data,
                "questions": QuestionSerializer(questions, many=True).data
