@@ -52,8 +52,8 @@ export default function runPybossaTasks(storeArticle,
       storeTopics(task.info.topics);
       storeArticle(task.info.article);
 
-      function onSaveAndNext(answers) {
-        pybossa.saveTask(task.id, answers).done(function() {
+      function onSaveAndNext(highlights) {
+        pybossa.saveTask(task.id, highlights).done(function() {
           deferred.resolve(task);
         });
       };
