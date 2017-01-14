@@ -188,25 +188,25 @@ def collectQuizTasks(
     ):
     taskList = []
 
-# WIP: getting all subtopics
-#       topictree = Topic.objects.raw("""
-#           WITH RECURSIVE subtopic(id, parent_id, name) AS (
-#               SELECT id, parent_id, name FROM thresher_topic WHERE id=%s
-#             UNION ALL
-#               SELECT t.id, t.parent_id, t.name
-#               FROM subtopic, thresher_topic t
-#               WHERE t.parent_id = subtopic.id
-#           )
-#           SELECT id, parent_id
-#           FROM subtopic LIMIT 100;
-#       """, [topic.id])
-#       prefetch_related_objects(topictree, "questions__answers")
-
-    # replace this with recursive query above to find all
-    # children of Protester, not just hard coded "Event type"
-    topictree = (Topic.objects.filter(name__exact="Event type")
-                 .prefetch_related("questions__answers"))
-    questions = [ q for t in topictree for q in t.questions.all() ]
+    topicQuery = Topic.objects.raw("""
+        WITH RECURSIVE subtopic(id, parent_id, name, "order",
+                                glossary, instructions)
+        AS (
+            SELECT id, parent_id, name, "order",
+                   glossary, instructions
+            FROM thresher_topic WHERE id=%s
+          UNION ALL
+            SELECT t.id, t.parent_id, t.name, t.order,
+                   t.glossary, t.instructions
+            FROM subtopic, thresher_topic t
+            WHERE t.parent_id = subtopic.id
+        )
+        SELECT id, parent_id, name, "order", glossary, instructions
+        FROM subtopic ORDER BY "order" LIMIT 500;
+    """, [topic.id])
+    # Force query to execute and generate Topic models array
+    topictree = topicQuery[:]
+    prefetch_related_objects(topictree, "questions__answers")
 
     # Set up Prefetch that will cache just the highlights matching
     # this topic to article.users_highlights[n].highlightsForTopic
@@ -223,9 +223,11 @@ def collectQuizTasks(
     articles = (Article.objects
                 .filter(users_highlights__highlights__topic=topic)
                 .prefetch_related(fetchHighlights))
-    # Limit to 10 for development. Export all for production.
+    # Export 10 for development (Add endpoint to export all for production.)
     articles = articles.order_by("id")[:10]
 
+    # With the prefetching config above, the loops below will
+    # be hitting caches.
     for article in articles:
         # Our prefetched highlightsForTopic is nested under
         # the ArticleHightlight record, in HighlightGroup
@@ -234,7 +236,7 @@ def collectQuizTasks(
         highlights = [ hg
                        for ah in article.users_highlights.all()
                        for hg in ah.highlightsForTopic
-                     ]
+        ]
 
         taskList.append({
            "project": ProjectSerializer(project, many=False).data,
