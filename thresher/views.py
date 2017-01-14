@@ -240,6 +240,7 @@ def collectQuizTasks(
 
         taskList.append({
            "project": ProjectSerializer(project, many=False).data,
+           "topTopicId": topic.id,
            "topictree": TopicSerializer(topictree, many=True).data,
            "article": ArticleSerializer(article, many=False).data,
            "highlights": HighlightGroupSerializer(
