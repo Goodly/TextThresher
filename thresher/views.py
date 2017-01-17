@@ -210,9 +210,8 @@ def collectQuizTasks(
 
     # Set up Prefetch that will cache just the highlights matching
     # this topic to article.users_highlights[n].highlightsForTopic
-    # Prefetching uses one query per table, instead of per
-    # record.
-    # database once or twice for every article looped over.
+    # Prefetching uses one query per related table to populate caches.
+    # This helps us avoid per row queries when looping over rows.
     topicHighlights = (HighlightGroup.objects.filter(topic=topic)
                        .order_by("case_number")
                        .prefetch_related("submitted_answers"))
