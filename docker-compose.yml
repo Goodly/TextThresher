@@ -2,8 +2,8 @@ version: '2'
 services:
   thresher_api:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./docker
+      dockerfile: ./txthrshr/Dockerfile
     ports:
       - "5000:5000"
     volumes:
