@@ -28,7 +28,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('name', 'instructions')
+        fields = ('id', 'name', 'instructions')
 
 class SubmittedAnswerSerializer(serializers.ModelSerializer):
 

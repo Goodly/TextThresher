@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db.models import Prefetch
+from django.db.models import prefetch_related_objects
 
 from rest_framework import routers, viewsets
 from rest_framework.decorators import list_route, api_view
@@ -181,6 +182,71 @@ class HighlightTasksNoPage(HighlightTasks):
 #            id__in=[9, 11, 38, 53, 55, 202, 209, 236, 259]
 #        ).order_by('id')
 
+def collectQuizTasks(
+        topic = Topic.objects.get(name__exact="Protester"),
+        project = Project.objects.get(name__exact="Deciding Force")
+    ):
+    taskList = []
+
+    topicQuery = Topic.objects.raw("""
+        WITH RECURSIVE subtopic(id, parent_id, name, "order",
+                                glossary, instructions)
+        AS (
+            SELECT id, parent_id, name, "order",
+                   glossary, instructions
+            FROM thresher_topic WHERE id=%s
+          UNION ALL
+            SELECT t.id, t.parent_id, t.name, t.order,
+                   t.glossary, t.instructions
+            FROM subtopic, thresher_topic t
+            WHERE t.parent_id = subtopic.id
+        )
+        SELECT id, parent_id, name, "order", glossary, instructions
+        FROM subtopic ORDER BY "order" LIMIT 500;
+    """, [topic.id])
+    # Force query to execute and generate Topic models array
+    topictree = topicQuery[:]
+    prefetch_related_objects(topictree, "questions__answers")
+
+    # Set up Prefetch that will cache just the highlights matching
+    # this topic to article.users_highlights[n].highlightsForTopic
+    # Prefetching uses one query per related table to populate caches.
+    # This helps us avoid per row queries when looping over rows.
+    topicHighlights = (HighlightGroup.objects.filter(topic=topic)
+                       .order_by("case_number")
+                       .prefetch_related("submitted_answers"))
+    fetchHighlights = Prefetch("users_highlights__highlights",
+                               queryset=topicHighlights,
+                               to_attr="highlightsForTopic")
+    # Select all articles highlighted with the topic
+    articles = (Article.objects
+                .filter(users_highlights__highlights__topic=topic)
+                .prefetch_related(fetchHighlights))
+    # Export 10 for development (Add endpoint to export all for production.)
+    articles = articles.order_by("id")[:10]
+
+    # With the prefetching config above, the loops below will
+    # be hitting caches.
+    for article in articles:
+        # Our prefetched highlightsForTopic is nested under
+        # the ArticleHightlight record, in HighlightGroup
+        # Not expecting more than one ArticleHighlight record
+        # but safest to code as if there could be more than one.
+        highlights = [ hg
+                       for ah in article.users_highlights.all()
+                       for hg in ah.highlightsForTopic
+        ]
+
+        taskList.append({
+           "project": ProjectSerializer(project, many=False).data,
+           "topTopicId": topic.id,
+           "topictree": TopicSerializer(topictree, many=True).data,
+           "article": ArticleSerializer(article, many=False).data,
+           "highlights": HighlightGroupSerializer(
+                             highlights, many=True).data,
+        })
+
+    return taskList
 
 @api_view(['GET'])
 def quiz_tasks(request):
@@ -197,71 +263,7 @@ def quiz_tasks(request):
     5. the questions and answers for this Topic
     """
     if request.method == 'GET':
-        taskList = []
-        project = Project.objects.get(name__exact="Deciding Force")
-
-        # Researcher interface will allow selecting topic.
-        topic = Topic.objects.get(name__exact="Protester")
-
-# WIP: getting all subtopics
-#       topictree = Topic.objects.raw("""
-#           WITH RECURSIVE subtopic(id, parent_id, name) AS (
-#               SELECT id, parent_id, name FROM thresher_topic WHERE id=%s
-#             UNION ALL
-#               SELECT t.id, t.parent_id, t.name
-#               FROM subtopic, thresher_topic t
-#               WHERE t.parent_id = subtopic.id
-#           )
-#           SELECT id, parent_id
-#           FROM subtopic LIMIT 100;
-#       """, [topic.id])
-
-        # replace this with recursive query above to find all
-        # children of Protester, not just hard coded "Event type"
-        topictree = (Topic.objects.filter(name__exact="Event type")
-                     .prefetch_related("questions__answers"))
-        questions = [ q for t in topictree for q in t.questions.all() ]
-
-        # Set up Prefetch that will cache just the highlights matching
-        # this topic to article.users_highlights[n].highlightsForTopic
-        # This approach uses only 3 SQL queries, instead of hitting the
-        # database once or twice for every article looped over.
-        topicHighlights = (HighlightGroup.objects.filter(topic=topic)
-                           .order_by("case_number"))
-        fetchHighlights = Prefetch("users_highlights__highlights",
-                                   queryset=topicHighlights,
-                                   to_attr="highlightsForTopic")
-        # Currently selecting all articles highlighted with the topic
-        # Researcher interface will allow selecting subset of those articles
-        # We will also need ability to designate canonical approved highlights
-        # for a given article.
-        articles = (Article.objects
-                    .filter(users_highlights__highlights__topic=topic)
-                    .prefetch_related(fetchHighlights))
-        # Limit to 10 for development. Export all for production.
-        articles = articles.order_by("id")[:10]
-
-        for article in articles:
-            # Our prefetched highlightsForTopic is nested under
-            # the ArticleHightlight record, in HighlightGroup
-            # Not expecting more than one ArticleHighlight record
-            # but safest to code as if there could be more than one.
-            highlights = [ hg
-                           for ah in article.users_highlights.all()
-                           for hg in ah.highlightsForTopic
-                         ]
-
-            taskList.append({
-               "project": ProjectSerializer(project, many=False).data,
-               "topic": TopicSerializer(topic, many=False).data,
-               "topictree": TopicSerializer(topictree, many=True).data,
-               "article": ArticleSerializer(article, many=False).data,
-               # Get prefetch field "article.highlightsForTopic" to work
-               "highlights": HighlightGroupSerializer(
-                                 highlights, many=True).data,
-               "questions": QuestionSerializer(questions, many=True).data
-            })
-
+        taskList = collectQuizTasks()
         return Response(taskList)
 
 # Register our viewsets with the router
