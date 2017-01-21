@@ -19,3 +19,8 @@ services:
       - POSTGRES_PASSWORD=
 #    - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_DB=thresher
+
+  pybossa:
+    build:
+      context: ./docker
+      dockerfile: ./pybossa/Dockerfile
