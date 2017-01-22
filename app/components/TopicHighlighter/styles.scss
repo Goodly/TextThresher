@@ -1,14 +1,15 @@
 @import 'app/styles/_mixins.scss';
 @import 'app/styles/_variables.scss';
 
-.article-wrapper {
-  height: 100%
+.topic-highlighter-wrapper {
+  position: relative;
+  // TopicInstructions will be positioned absolute inside this padding.
+  padding-bottom: 100px;
 }
 
 .topic-picker-wrapper {
   position: fixed;
-  top: 69px;
-  padding-left: 0 !important;
+  top: $pybossa-header-height;
 }
 
 .loading {
@@ -21,14 +22,10 @@
   background-color: rgba(30, 30, 30, 0.3);
 }
 
-.space {
-  height: 100px;
-}
-
 .article {
   @include newspaper;
   transition: opacity $transition-slow;
-  margin: 6em 1em 2em 275px;
+  margin: 6em 1em 0em 275px;
   line-height: 2.2;
 
   .article__header-text {

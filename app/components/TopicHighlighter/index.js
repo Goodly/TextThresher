@@ -9,9 +9,68 @@ import Project from 'components/Project';
 
 import { styles } from './styles.scss';
 
+var scrollStyles = {
+  'topicFixed': {
+    position: 'fixed',
+    top: '70px',
+    bottom: 'auto'
+  },
+  'topicAbsolute': {
+    position: 'absolute',
+    top: 'auto',
+    bottom: '0px'
+  },
+  'instrFixed': {
+    position: 'fixed'
+  },
+  'instrAbsolute': {
+    position: 'absolute'
+  }
+};
+
 export class TopicHighlighter extends Component {
   constructor(props) {
     super(props);
+    this.handleScroll = this.handleScroll.bind(this);
+    this.state = {
+      instrStyle: scrollStyles.instrFixed,
+      topicStyle: scrollStyles.topicFixed
+    };
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  // The idea here is to handle all the dynamic layout in this
+  // component, rather than jamming code specific to this layout
+  // down into the called components.
+  handleScroll() {
+    let navbar = document.querySelector('nav.navbar');
+    let footer = document.querySelector('footer');
+    let topicPicker = document.querySelector('.topic-picker-wrapper');
+    let getRect = (el) => el.getBoundingClientRect();
+    let footerTop = getRect(footer).top;
+
+    // Check if topic picker should start scrolling
+    if (footerTop - 1 < getRect(topicPicker).bottom) {
+      this.setState({ topicStyle: scrollStyles.topicAbsolute});
+    };
+    // Check if topic picker should stop scrolling
+    if (getRect(topicPicker).top > getRect(navbar).height) {
+      this.setState({ topicStyle: scrollStyles.topicFixed});
+    };
+
+    // Check if instructions block should start scrolling up
+    if (footerTop < window.innerHeight) {
+      this.setState({ instrStyle: scrollStyles.instrAbsolute });
+    } else {
+      this.setState({ instrStyle: scrollStyles.instrFixed });
+    };
   }
 
   // Babel plugin transform-class-properties allows us to use
@@ -35,10 +94,11 @@ export class TopicHighlighter extends Component {
                                 transitionLeaveTimeout={500}>
         <div className={loadingClass}></div>
 
-        <div className='article-wrapper'>
-            <div className='topic-picker-wrapper'>
-              <TopicPicker topics={this.props.topics} />
-            </div>
+        <div className='topic-highlighter-wrapper'>
+            <TopicPicker
+              topics={this.props.topics}
+              topicStyle={this.state.topicStyle}
+            />
             <ReactCSSTransitionsGroup transitionName='fade-between'
                                       transitionAppear
                                       transitionAppearTimeout={500}
@@ -57,11 +117,7 @@ export class TopicHighlighter extends Component {
                 <button onClick={this.onSaveAndNext}>Save and Next</button>
               </div>
             </ReactCSSTransitionsGroup>
-            <br/>
-            <div style={{'height':'100%', 'position': 'relative'}}>
-              <TopicInstruction topics={this.props.topics}/>
-            </div>
-
+            <TopicInstruction instrStyle={this.state.instrStyle} />
         </div>
       </ReactCSSTransitionsGroup>
     );

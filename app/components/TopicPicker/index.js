@@ -20,34 +20,11 @@ const mapStateToProps = state => {
   };
 }
 
-export class TopicInstructionComponent extends Component {
+class TopicInstructionComponent extends Component {
   constructor(props) {
     super(props);
-    this.handleScroll = this.handleScroll.bind(this);
   }
 
-  componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-  }
-
-  handleScroll() {
-    var footer = document.querySelector('footer');
-
-    function getRectTop(el){
-      var rect = el.getBoundingClientRect();
-      return rect.top;
-    };
-    
-    if((getRectTop(footer) < window.innerHeight)) {
-      this.instrEl.style.position = 'absolute';
-    } else {
-      this.instrEl.style.position = 'fixed'; // restore when you scroll up
-    };
-  }
   render() {
     var topicLookup = this.props.lookupTopicById[this.props.currentTopicId];
     var index = topicLookup[0];
@@ -55,16 +32,14 @@ export class TopicInstructionComponent extends Component {
     var instructions = full_inst.length > 500 ? full_inst.substring(0,500) + "..." : full_inst;
 
 
-    // var color = this.props.color;
-    var topicColor = {
+    var styles = {
         borderTop: 'solid',
         borderWidth: '10px',
         borderColor: colors[index],
     };
     return (
       <div className="instructions"
-        style={topicColor}
-        ref={(input) => { this.instrEl = input; }}> 
+        style={[styles, this.props.instrStyle]}>
         <strong>Instructions: </strong>
          {instructions}
       </div>
@@ -72,30 +47,14 @@ export class TopicInstructionComponent extends Component {
   }
 };
 
+TopicInstructionComponent.propTypes = {
+  instrStyle: React.PropTypes.object.isRequired
+};
+
 export let TopicInstruction = connect(
   mapStateToProps,
   mapDispatchToProps
 )(Radium(TopicInstructionComponent));
-
-// const TopicInstruction = React.createClass({
-//   displayName: 'Instruction',
-
-//   render() {
-//     var color = this.props.color;
-//     var topicColor = {
-//         borderTop: 'solid',
-//         borderWidth: '10px',
-//         borderColor: color,
-//     };
-//     return (
-//       <div className="instructions" style={topicColor}>
-//         <strong>Instructions: </strong>
-//          {this.props.instruction}
-//       </div>
-//       );
-//   }
-
-// });
 
 const TopicItem = React.createClass({
   displayName: 'TopicItem',
@@ -153,6 +112,7 @@ const TopicPickerComponent = React.createClass({
 
   propTypes: {
     topics: React.PropTypes.object.isRequired,
+    topicStyle: React.PropTypes.object.isRequired,
     currentTopicId: React.PropTypes.number.isRequired,
     onActivateTopic: React.PropTypes.func.isRequired,
   },
@@ -177,16 +137,11 @@ const TopicPickerComponent = React.createClass({
     var instructions = full_inst.length > 500 ? full_inst.substring(0,500) + "..." : full_inst;
 
     return (
-      <div>
-        <div className='topic-picker topic-picker--left topic-picker--open'>
+      <div className='topic-picker-wrapper' style={this.props.topicStyle}>
+        <div className='topic-picker'>
           <ul className='topic-picker__nav'>
             {list}
           </ul>
-          <div className='topic-picker__wrapper'>
-            <div className='topic-picker__pin-button topic-picker__pic-button--active'>
-              <i className='fa fa-thumb-tack fa-lg'></i>
-            </div>
-          </div>
         </div>
       </div>
     );

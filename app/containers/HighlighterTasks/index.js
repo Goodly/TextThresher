@@ -39,6 +39,7 @@ export class MockHighlighter extends TopicHighlighter {
   }
 
   componentDidMount() {
+    super.componentDidMount();
     this.props.fetchHighlightTasks();
   }
 };
@@ -53,6 +54,7 @@ export class RealHighlighter extends TopicHighlighter {
   }
 
   componentDidMount() {
+    super.componentDidMount();
     runPybossaTasks(this.props.storeArticle,
                     this.props.storeProject,
                     this.props.storeTopics,
