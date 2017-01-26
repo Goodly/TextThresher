@@ -1,0 +1,12 @@
+[uwsgi]
+socket = /tmp/pybossa.sock
+chmod-socket = 666
+chdir = {{pybossa_path}}
+pythonpath = .
+virtualenv = {{virtualenv_path}}
+module = run:app
+cpu-affinity = 1
+processes = 2
+threads = 2
+stats = /tmp/pybossa-stats.sock
+buffer-size = 65535

@@ -1,5 +1,9 @@
 FROM ubuntu:14.04.5
 ENV PYTHONUNBUFFERED 1
+ENV TERM xterm
+
+# helpful aliases
+COPY bashrc_to_docker /root/.bashrc
 
 # ARG vars exist only during build
 ARG DEBIAN_FRONTEND=noninteractive
@@ -18,15 +22,12 @@ RUN apt-get install -y --no-install-recommends \
         python-setuptools python-pip \
         libjpeg-dev swig \
         dbus libdbus-1-dev libdbus-glib-1-dev \
-        postgresql postgresql-server-dev-all libpq-dev python-psycopg2 \
-        redis-server
+        postgresql-client postgresql-server-dev-all libpq-dev python-psycopg2 \
+        redis-server nginx
 
 RUN apt-add-repository ppa:ansible/ansible
 RUN apt-get update -q && apt-get install -y --no-install-recommends \
         ansible
-
-# Development conveniences, especially setting TERM=xterm
-COPY bashrc_to_docker /root/.bashrc
 
 # Borrowed script to install LANG=en_US.UTF-8 LC_CTYPE=en_US.UTF-8
 WORKDIR /bd_build
@@ -39,7 +40,10 @@ RUN ansible-playbook playbook.yml -i ansible_hosts -c local
 
 RUN rm -rf /var/lib/apt/lists/*
 
+# most useful dir to end up in after "docker-compose exec pybossa bash"
+WORKDIR /home/pybossa
+
 EXPOSE 5000
 CMD ["/usr/local/bin/supervisord", \
      "--nodaemon", \
-     "--configuration=/etc/supervisord.conf"]
+     "--configuration=/etc/supervisor/supervisord.conf"]

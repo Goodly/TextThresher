@@ -1,12 +1,13 @@
 ---
 # Installation steps for every Ubuntu 14.04
 - hosts: all
-  sudo: yes
   vars:
     pybossa_user: "pybossa"
-    vagrant_home: "/home/pybossa"
+    pybossa_home: "/home/pybossa"
     pybossa_path: "/home/pybossa/repo"
-    virtualenv_path: "/home/pybossa/pybossa-env"
+    virtualenv_path: "/home/pybossa/env"
+    html_path: "/home/pybossa/html"
+    ansible_build_path: "/ansible_build"
     redis_host: "127.0.0.1"
     redis_port: "6379"
     schedule_interval: "60"
@@ -23,7 +24,7 @@
     - name: Create Pybossa user
       user: name={{pybossa_user}}
             group={{pybossa_user}}
-            home={{vagrant_home}}
+            home={{pybossa_home}}
 
     - name: Create Pybossa repo directory
       file: path={{pybossa_path}}
@@ -33,6 +34,12 @@
 
     - name: Create pybossa-env directory
       file: path={{virtualenv_path}}
+            state=directory
+            owner={{pybossa_user}}
+            group={{pybossa_user}}
+
+    - name: Create static html root
+      file: path={{html_path}}
             state=directory
             owner={{pybossa_user}}
             group={{pybossa_user}}
@@ -64,104 +71,84 @@
         - libdbus-1-dev
         - libdbus-glib-1-dev
 
-    - name: install PostgreSQL
+    - name: install PostgreSQL client
       apt: name={{item}} state=latest
       with_items:
-        - postgresql
+        - postgresql-client
         - postgresql-server-dev-all
         - libpq-dev
         - python-psycopg2
 
-    - name: start PostgreSQL service
-      service: name=postgresql state=started
-
     - name: install Redis
       apt: name=redis-server state=latest
 
-    - name: start Redis service
-      service: name=redis-server state=started
-
     - name: Clone git repo
-      sudo_user: "{{pybossa_user}}"
+      become: true
+      become_user: "{{pybossa_user}}"
       git:  repo=https://github.com/Scifabric/pybossa.git
             dest={{pybossa_path}} accept_hostkey=yes
             remote=origin version=master
 
-    - name: install Redis Sentinel
-      copy: src={{pybossa_path}}/contrib/redis/redis-sentinel dest=/etc/init.d/redis-sentinel owner=root group=root mode=755
+# Changed to contrib/redis-supervisor/redis.conf nodaemon version
+    - name: copy Redis no daemon config
+      copy: src={{pybossa_path}}/contrib/redis-supervisor/redis.conf
+            dest=/etc/redis/redis.conf
+            owner=redis group=redis mode="0644"
 
-    - name: copy Sentinel config
-      copy: src={{pybossa_path}}/contrib/redis/sentinel.conf dest=/etc/redis/sentinel.conf owner=redis group=redis mode=644
-
-    - name: start Sentinel and enable it at boot
-      service: name=redis-sentinel state=started enabled=yes
+# Changed to contrib/redis-supervisor/sentinel.conf nodaemon version
+    - name: copy Sentinel no daemon config
+      copy: src={{pybossa_path}}/contrib/redis-supervisor/sentinel.conf
+            dest=/etc/redis/sentinel.conf
+            owner=redis group=redis mode="0644"
 
     - name: "upgrade pip itself"
-      sudo_user: "{{pybossa_user}}"
+      become: true
+      become_user: "{{pybossa_user}}"
       pip: name=pip state=latest chdir={{pybossa_path}} virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
 
     - name: "install PyBossa virtualenv packages, can take some time..."
-      sudo_user: "{{pybossa_user}}"
+      become: true
+      become_user: "{{pybossa_user}}"
       pip: chdir={{pybossa_path}} requirements={{pybossa_path}}/requirements.txt virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
+
+    - name: Install uwsgi
+      become: true
+      become_user: "{{pybossa_user}}"
+      pip: name=uwsgi state=latest chdir={{pybossa_path}} virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
 
     - name: check alembic.ini existing
       stat: path={{pybossa_path}}/alembic.ini
       register: check_alembic
 
     - name: copy alembic template when not existing
-      command: cp -p {{pybossa_path}}/alembic.ini.template {{pybossa_path}}/alembic.ini
+      copy: src={{pybossa_path}}/alembic.ini.template
+            dest={{pybossa_path}}/alembic.ini
+            mode="640" owner={{pybossa_user}} group={{pybossa_user}}
       when: not check_alembic.stat.exists
+
+    - name: Put db connection string into alembic.ini
+      replace: regexp="^sqlalchemy.url.*$"
+               replace="sqlalchemy.url = postgresql://pybossa:tester@db/pybossa"
+               dest={{pybossa_path}}/alembic.ini
 
     - name: check settings_local.py existing
       stat: path={{pybossa_path}}/settings_local.py
       register: check_settings
 
     - name: copy settings_local template when not existing
-      command: cp -p {{pybossa_path}}/settings_local.py.tmpl {{pybossa_path}}/settings_local.py
+      copy: src={{pybossa_path}}/settings_local.py.tmpl
+            dest={{pybossa_path}}/settings_local.py
+            mode="640" owner={{pybossa_user}} group={{pybossa_user}}
       when: not check_settings.stat.exists
 
-    # http://stackoverflow.com/a/16783253
-    # psql -lqt | cut -d \| -f 1 | grep -w <db_name>
-    - name: check if pybossa DB already existing
-      sudo_user: postgres
-      shell: "psql -lqt | cut -d \\| -f 1 | grep -w pybossa"
-      register: pybossa_db_exists
-      changed_when: False
-      failed_when: not (pybossa_db_exists.rc == 0 or pybossa_db_exists.rc == 1)
+    - name: Put db connection string into settings_local.py
+      replace: regexp="^SQLALCHEMY_DATABASE_URI.*$"
+               replace="SQLALCHEMY_DATABASE_URI = 'postgresql://pybossa:tester@db/pybossa'"
+               dest={{pybossa_path}}/settings_local.py
 
-    - name: create DB user pybossa
-      sudo_user: postgres
-      postgresql_user: name=pybossa password=tester role_attr_flags=CREATEDB,NOSUPERUSER
-
-    - name: create PyBossa DB
-      sudo_user: postgres
-      postgresql_db: name=pybossa
-                     owner=pybossa
-                     encoding='UTF-8'
-                     lc_collate='en_US.UTF-8'
-                     lc_ctype='en_US.UTF-8'
-                     template='template0'
-
-    # Populate DB (create tables) only when not existing.
-    - name: populate PyBossa DB
-      sudo_user: "{{pybossa_user}}"
-      command: "{{virtualenv_path}}/bin/python cli.py db_create"
-      args:
-        chdir: "{{pybossa_path}}"
-      when: pybossa_db_exists.rc != 0
-
-    - name: create PyBossa DB test user
-      sudo_user: postgres
-      postgresql_user: name=rtester password=rtester role_attr_flags=CREATEDB,NOSUPERUSER
-
-    - name: create PyBossa Test DB
-      sudo_user: postgres
-      postgresql_db: name=pybossa_test
-                     owner=rtester
-                     encoding='UTF-8'
-                     lc_collate='en_US.UTF-8'
-                     lc_ctype='en_US.UTF-8'
-                     template='template0'
+# Note: Databases and database users are configured to be installed by Dockerfile
+# It is not convenient to configure a database in Docker since the database
+# isn't running yet.
 
     - name: install Supervisor
       pip: name=supervisor
@@ -170,17 +157,68 @@
       file: path=/etc/supervisor/conf.d
             state=directory
 
+    - name: Create /var/log/supervisor directory
+      file: path=/var/log/supervisor
+            state=directory
+
+    - name: Create handy link to /var/log/supervisor
+      file: src=/var/log/supervisor
+            path={{pybossa_home}}/log
+            state=link
+            owner={{pybossa_user}}
+            group={{pybossa_user}}
+
+    - name: Install supervisor.conf
+      copy: src={{ansible_build_path}}/supervisord.conf
+            dest=/etc/supervisor/supervisord.conf
+            mode="640" owner=root group=root
+
+    - name: redis-server supervisor conf
+      copy: src={{pybossa_path}}/contrib/supervisor/redis-server.conf
+            dest=/etc/supervisor/conf.d/redis-server.conf
+            mode="640" owner=root group=root
+
+    - name: redis-sentinel supervisor conf
+      copy: src={{pybossa_path}}/contrib/supervisor/redis-sentinel.conf
+            dest=/etc/supervisor/conf.d/redis-sentinel.conf
+            mode="640" owner=root group=root
+
+    - name: Install nginx.conf for supervisor
+      template: src={{ansible_build_path}}/nginx.conf.template
+                dest=/etc/supervisor/conf.d/nginx.conf
+                mode="640" owner=root group=root
+
+    - name: Install pybossa.conf for supervisor
+      template: src={{ansible_build_path}}/pybossa.conf.template
+                dest=/etc/supervisor/conf.d/pybossa.conf
+                mode="640" owner=root group=root
+
+    - name: Install pybossa.ini for uwsgi
+      template: src={{ansible_build_path}}/pybossa.ini.template
+                dest={{pybossa_path}}/pybossa.ini
+                mode="640" owner=pybossa group=pybossa
+
+    - name: Install pybossa.conf for NGINX
+      template: src={{ansible_build_path}}/pybossa.nginx
+                dest=/etc/nginx/sites-available/default
+                mode="640" owner=root group=root
+
     - name: copy rq-worker config
-      template: src=templates/rq-worker.conf.j2 dest=/etc/supervisor/conf.d/rq-worker.conf owner=root group=root
+      template: src={{pybossa_path}}/provisioning/templates/rq-worker.conf.j2
+                dest=/etc/supervisor/conf.d/rq-worker.conf
+                mode="640" owner=root group=root
 
     - name: copy rq-scheduler config
-      template: src=templates/rq-scheduler.conf.j2 dest=/etc/supervisor/conf.d/rq-scheduler.conf owner=root group=root
+      template: src={{pybossa_path}}/provisioning/templates/rq-scheduler.conf.j2
+                dest=/etc/supervisor/conf.d/rq-scheduler.conf
+                mode="640" owner=root group=root
 
     # activate virtualenv always in .bashrc
     - name: virtualenv usage by default on bash login
-      sudo_user: "{{pybossa_user}}"
+      become: true
+      become_user: "{{pybossa_user}}"
       lineinfile:
-        dest={{vagrant_home}}/.bashrc
+        dest={{pybossa_home}}/.bashrc
         line=". {{virtualenv_path}}/bin/activate"
         state=present
         insertafter=EOF
@@ -188,7 +226,7 @@
 
     - name: go to repo directory on bash login
       lineinfile:
-        dest={{vagrant_home}}/.bashrc
+        dest={{pybossa_home}}/.bashrc
         line= "cd {{pybossa_path}}"
         state=present
         insertafter=EOF

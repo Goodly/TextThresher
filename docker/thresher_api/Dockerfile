@@ -1,5 +1,12 @@
 FROM python:2.7-slim
 ENV PYTHONUNBUFFERED 1
+ENV TERM xterm
+
+# helpful aliases
+COPY bashrc_to_docker /root/.bashrc
+
+# ARG vars exist only during build
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -q && apt-get install -q -y \
         gcc \
@@ -12,11 +19,8 @@ RUN rm -rf /var/lib/apt/lists/*
 EXPOSE 5000
 
 WORKDIR /home/build
-COPY ./txthrshr/requirements.txt .
+COPY ./thresher_api/requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
-
-# Development conveniences, especially setting TERM=xterm
-COPY bashrc_to_docker /root/.bashrc
 
 # ipython for development - not (currently) needed for production
 RUN pip install ipython
