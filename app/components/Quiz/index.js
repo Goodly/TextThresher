@@ -11,7 +11,8 @@ export class Quiz extends Component {
   }
 
   static propTypes = {
-    question: React.PropTypes.object,
+    taskQueue: React.PropTypes.array,
+    currTask: React.PropTypes.object,
     onSaveAndNext: React.PropTypes.func
   }
 
@@ -23,9 +24,16 @@ export class Quiz extends Component {
   }
 
   render() {
+    var questionList = [];
+    var topictree = this.props.currTask ? this.props.currTask.topictree : [];
+    for(var i = 0; i < topictree.length; i++) {
+      questionList = questionList.concat(topictree[i].questions);
+    }
     return (
       <div className="quiz">
-        <Question question={this.props.question}/>
+        { questionList.map((elem) => {
+          return <Question question={elem} key={elem.id} />;
+        }) }
         <button onClick={this.onSaveAndNext}>Save and Next</button>
       </div>
     )

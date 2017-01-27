@@ -15,7 +15,6 @@ const COLOR_OPTIONS = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00',
 
 const mapStateToProps = state => {
   return {
-    question: state.quiz.question,
     answers: state.quiz.answer_selected
   };
 }
@@ -94,21 +93,17 @@ const Question = React.createClass({
   },
 
   dateTimeInput: function() {
-    // TODO: once backend finalized, get only one answer ID from input (or none)
-    let id = this.props.question.answers[0].id;
     var colorText = this.props.answers[id] ? COLOR_OPTIONS[0] : '';
     return (
       <form>
-        <SingleDatePicker id={ this.props.question.question_id.toString() }/>
+        <SingleDatePicker id={ this.props.question.id.toString() }/>
         <input type="submit" value="Next" />
       </form>
     );
   },
 
   textInput: function(controlname="textinput") {
-    // TODO: once backend finalized, get only one answer ID from input (or none)
-    let id = this.props.question.answers[0].id;
-    const colorText = this.props.answers.id == id ? COLOR_OPTIONS[0] : '';
+    const colorText = this.props.answers.id == this.props.question.id ? COLOR_OPTIONS[0] : '';
     return (
       <form>
         <input type="text" name={controlname} style={{ color: colorText }}
@@ -136,11 +131,11 @@ const Question = React.createClass({
 
   render() {
     // TODO: use actual question type fetched from the backend
-    this.props.question.type = 'checkbox';
 
-    const mapped_answers = this.props.question.isFetching ? <div></div> : this.mapQuestionAnswers();
+    const mapped_answers = this.props.question ? this.mapQuestionAnswers() :  <div></div> ;
     return (
       <div className={`${styles}`}>
+        <div> {this.props.question.question_number} </div>
         {this.props.question.question_text}
         { mapped_answers }
       </div>
