@@ -182,10 +182,7 @@ class HighlightTasksNoPage(HighlightTasks):
 #            id__in=[9, 11, 38, 53, 55, 202, 209, 236, 259]
 #        ).order_by('id')
 
-def collectQuizTasks(
-        topic = Topic.objects.get(name__exact="Protester"),
-        project = Project.objects.get(name__exact="Deciding Force")
-    ):
+def collectQuizTasks(topic=None, project=None):
     taskList = []
 
     topicQuery = Topic.objects.raw("""
@@ -263,7 +260,10 @@ def quiz_tasks(request):
     5. the questions and answers for this Topic
     """
     if request.method == 'GET':
-        taskList = collectQuizTasks()
+        taskList = collectQuizTasks(
+            topic = Topic.objects.get(name__exact="Protester"),
+            project = Project.objects.get(name__exact="Deciding Force")
+        )
         return Response(taskList)
 
 # Register our viewsets with the router
