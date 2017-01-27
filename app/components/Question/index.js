@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { SingleDatePicker } from 'react-dates';
-import { answerSelected, colorSelected } from '../../actions/quiz';
+import { answerSelected, answerRemoved, colorSelected } from '../../actions/quiz';
 
 /* component styles */
 import { styles } from './styles.scss';
@@ -13,20 +13,36 @@ const COLOR_OPTIONS = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00',
           '#b3de69','#fccde5','#d9d9d9','#bc80bd','#ccebc5',
           '#ffed6f'];
 
+const TYPES = {
+  RADIO: 'RADIO',
+  CHECKBOX: 'CHECKBOX',
+  DATETIME: 'DATETIME',
+  TEXT: 'TEXT'
+};
+
 const mapStateToProps = state => {
+  var answers = {};
+  var color = {};
+  if(state.quiz) {
+    answers = state.quiz.answer_selected;
+    color = state.quiz.highlighter_color;
+  }
   return {
-    question: state.quiz.question,
-    answers: state.quiz.answer_selected
+    answers,
+    color
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    selectAnswer: (id, text, checked) => {
-      dispatch(answerSelected(id, text, checked))
+    selectAnswer: (type, q_id, a_id, text) => {
+      dispatch(answerSelected(type, q_id, a_id, text))
     },
-    setColor: (color) => {
-      dispatch(colorSelected(color))
+    removeAnswer: (type, q_id, a_id) => {
+      dispatch(answerRemoved(type, q_id, a_id))
+    },
+    setColor: (q_id, a_id, color) => {
+      dispatch(colorSelected(q_id, a_id, color))
     } 
   };
 }
@@ -38,18 +54,41 @@ const Question = React.createClass({
     question: React.PropTypes.object.isRequired,
   },
 
+  checkInArray: function(elem) {
+    var answer_list = this.props.answers[this.props.question.id];
+    answer_list = answer_list ? answer_list: [];
+    for(var i = 0; i < answer_list.length; i++) {
+      if(answer_list[i].answer_id == elem) {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  radioOnClick: function(ans_id, text, color) {
+    this.props.setColor(this.props.question.id, ans_id, color);
+    this.props.selectAnswer(TYPES.RADIO, this.props.question.id, ans_id, text);
+  },
+
   mapToRadio: function(arr, controlname="controlgroup") {
     return (
       <form>
         { arr.map((elem, i) => 
           {
-            var colorText = elem.id == this.props.answers.id ? COLOR_OPTIONS[i] : '';
+            var colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
+            var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+            if(this.props.color && this.props.color.answer_id == elem.id) {
+              style["border"] = "2px solid black";
+            } 
             return (
               <div key={elem.id}
-                onChange={() => { this.props.selectAnswer(elem.id, '', {}) }}
                 style={{ "color": colorText }}>
-                <input type="radio" name={controlname} />
+                <div style={ style } 
+                    onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
+                <input type="radio" name={controlname} 
+                  onChange={ () => { this.radioOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
                 { " " + elem.answer_content }
+                <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
               </div>
             );
           }) 
@@ -59,74 +98,78 @@ const Question = React.createClass({
   },
 
   mapToCheckbox: function(arr, controlname="controlgroup") {
-  return (
+    return (
       <form>
         { arr.map((elem, i) => {
-          let colorText = this.props.answers.checked[elem.id] ? COLOR_OPTIONS[i] : '';
-          let checked = Object.assign({}, this.props.answers.checked);
+          let colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
+          var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+          if(this.props.color && this.props.color.answer_id == elem.id) {
+            style["border"] = "2px solid black";
+          } 
           return (
             <div key={elem.id}
               style={{ "color": colorText }}>
-              <div style={{ "display": "inline-block", 
-                  "width": 30, 
-                  "height": 30, 
-                  "backgroundColor": COLOR_OPTIONS[i] }} 
-                  onClick={() => { this.props.setColor(COLOR_OPTIONS[i]) }} />
+              <div style={ style } 
+                  onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
               <input type="checkbox" 
                   name={controlname}
-                  checked={ this.props.answers.checked[elem.id] ? true : false }
-                  onChange={ () => { this.checkboxOnClick(checked, elem.id) }} />
+                  checked={ this.checkInArray(elem.id) }
+                  onChange={ () => { this.checkboxOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
               { " " + elem.answer_content }
+              <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
             </div>
           );
         })}
-        <input type="submit" value="Next" />
       </form>
     );
   },
 
-  checkboxOnClick: function(dict, ans_id) {
-    if(!(ans_id in dict)) {
-      dict[ans_id] = false;
+  checkboxOnClick: function(ans_id, text, color) {
+    if(this.checkInArray(ans_id)) {
+      this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id);
+      if(this.props.color && this.props.color.answer_id == ans_id) {
+        this.props.setColor(-1, -1, '');
+      }
+    } else {
+      this.props.setColor(this.props.question.id, ans_id, color);
+      this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id, text);
     }
-    dict[ans_id] = !dict[ans_id];
-    this.props.selectAnswer(ans_id, '', dict);
   },
 
   dateTimeInput: function() {
-    // TODO: once backend finalized, get only one answer ID from input (or none)
-    let id = this.props.question.answers[0].id;
-    var colorText = this.props.answers[id] ? COLOR_OPTIONS[0] : '';
+    var colorText = COLOR_OPTIONS[0];
     return (
       <form>
-        <SingleDatePicker id={ this.props.question.question_id.toString() }/>
-        <input type="submit" value="Next" />
+        <SingleDatePicker id={ this.props.question.id.toString() }/>
       </form>
     );
   },
 
   textInput: function(controlname="textinput") {
-    // TODO: once backend finalized, get only one answer ID from input (or none)
-    let id = this.props.question.answers[0].id;
-    const colorText = this.props.answers.id == id ? COLOR_OPTIONS[0] : '';
+    var colorText = COLOR_OPTIONS[0];
+    var str = this.props.answers[this.props.question.id] ? this.props.answers[this.props.question.id][0].text : '';
     return (
       <form>
         <input type="text" name={controlname} style={{ color: colorText }}
-            onChange={(event) => { this.props.selectAnswer(id, event.target.value, {}) } }/>
-        <input type="submit" value="Next" />
+            value={str}
+            onChange={(event) => { this.props.selectAnswer(TYPES.TEXT, this.props.question.id, 0, event.target.value) } }/>
       </form>
     );
   },
 
   mapQuestionAnswers: function() {
+    if(this.props.question.id == 1) {
+      return this.mapToCheckbox(this.props.question.answers);
+    }
+    var answer_list = this.props.question.answers.sort((a, b) => { return a.id - b.id; });
     switch (this.props.question.question_type) {
-      case 'RADIO':
-        return this.mapToRadio(this.props.question.answers)
-      case 'CHECKBOX':
-        return this.mapToCheckbox(this.props.question.answers)
-      case 'DATETIME':
+      case TYPES.RADIO:
+        return this.mapToRadio(answer_list)
+      case TYPES.CHECKBOX:
+        return this.mapToCheckbox(answer_list)
+      case TYPES.DATETIME:
         return this.dateTimeInput();
-      case 'TEXT':
+      case TYPES.TEXT:
         return this.textInput();
       default:
         console.log('unsupported answer type, should be: RADIO, CHECKBOX, DATETIME or TEXT');
@@ -136,11 +179,11 @@ const Question = React.createClass({
 
   render() {
     // TODO: use actual question type fetched from the backend
-    this.props.question.type = 'checkbox';
-
-    const mapped_answers = this.props.question.isFetching ? <div></div> : this.mapQuestionAnswers();
+    const mapped_answers = this.props.question ? this.mapQuestionAnswers() :  <div></div> ;
     return (
       <div className={`${styles}`}>
+        <div> {this.props.question.question_number} </div>
+        <span style={{ "fontSize": "80%", "color": "red" }}> { this.props.question.id } </span>
         {this.props.question.question_text}
         { mapped_answers }
       </div>
