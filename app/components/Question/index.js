@@ -142,9 +142,6 @@ const Question = React.createClass({
   },
 
   mapQuestionAnswers: function() {
-    if(this.props.question.id == 1) {
-      return this.dateTimeInput();
-    }
     switch (this.props.question.question_type) {
       case TYPES.RADIO:
         return this.mapToRadio(this.props.question.answers)
@@ -162,7 +159,6 @@ const Question = React.createClass({
 
   render() {
     // TODO: use actual question type fetched from the backend
-
     const mapped_answers = this.props.question ? this.mapQuestionAnswers() :  <div></div> ;
     return (
       <div className={`${styles}`}>
