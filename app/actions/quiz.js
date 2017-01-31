@@ -5,13 +5,23 @@ export function storeQuestion(question) {
   };
 }
 
-export function answerSelected(id, text, checked) {
+export function answerSelected(question_type, question_id, answer_id, text) {
   return {
     type: 'ANSWER_SELECTED',
-    id,
-    text,
-    checked
+    question_type,
+    question_id,
+    answer_id,
+    text
   };
+}
+
+export function answerRemoved(question_type, question_id, answer_id) {
+  return {
+    type: 'ANSWER_REMOVED',
+    question_type,
+    question_id,
+    answer_id
+  }
 }
 
 export function colorSelected(color) {
