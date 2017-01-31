@@ -151,5 +151,10 @@ export default {
 //  new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin()
   ],
-  noParse: [/node_modules/, new RegExp(PATHS.bowerPath)]
+  noParse: [/node_modules/, new RegExp(PATHS.bowerPath)],
+  externals: {
+    'react/addons': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true
+  }
 };
