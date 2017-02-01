@@ -22,11 +22,14 @@ const TYPES = {
 
 const mapStateToProps = state => {
   var answers = {};
+  var color = {};
   if(state.quiz) {
     answers = state.quiz.answer_selected;
+    color = state.quiz.highlighter_color;
   }
   return {
-    answers
+    answers,
+    color
   };
 }
 
@@ -38,8 +41,8 @@ const mapDispatchToProps = dispatch => {
     removeAnswer: (type, q_id, a_id) => {
       dispatch(answerRemoved(type, q_id, a_id))
     },
-    setColor: (color) => {
-      dispatch(colorSelected(color))
+    setColor: (q_id, a_id, color) => {
+      dispatch(colorSelected(q_id, a_id, color))
     } 
   };
 }
@@ -62,22 +65,28 @@ const Question = React.createClass({
     return false;
   },
 
+  radioOnClick: function(ans_id, text, color) {
+    this.props.setColor(this.props.question.id, ans_id, color);
+    this.props.selectAnswer(TYPES.RADIO, this.props.question.id, ans_id, text);
+  },
+
   mapToRadio: function(arr, controlname="controlgroup") {
     return (
       <form>
         { arr.map((elem, i) => 
           {
             var colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
+            var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+            if(this.props.color && this.props.color.answer_id == elem.id) {
+              style["border"] = "2px solid black";
+            } 
             return (
               <div key={elem.id}
-                onChange={() => { this.props.selectAnswer(TYPES.RADIO, this.props.question.id, elem.id, '') }}
                 style={{ "color": colorText }}>
-                <div style={{ "display": "inline-block", 
-                    "width": 30, 
-                    "height": 30, 
-                    "backgroundColor": COLOR_OPTIONS[i] }} 
-                    onClick={() => { this.props.setColor(COLOR_OPTIONS[i]) }} />
-                <input type="radio" name={controlname} />
+                <div style={ style } 
+                    onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
+                <input type="radio" name={controlname} 
+                  onChange={ () => { this.radioOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
                 { " " + elem.answer_content }
               </div>
             );
@@ -88,22 +97,23 @@ const Question = React.createClass({
   },
 
   mapToCheckbox: function(arr, controlname="controlgroup") {
-  return (
+    return (
       <form>
         { arr.map((elem, i) => {
           let colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
+          var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+          if(this.props.color && this.props.color.answer_id == elem.id) {
+            style["border"] = "2px solid black";
+          } 
           return (
             <div key={elem.id}
               style={{ "color": colorText }}>
-              <div style={{ "display": "inline-block", 
-                  "width": 30, 
-                  "height": 30, 
-                  "backgroundColor": COLOR_OPTIONS[i] }} 
-                  onClick={() => { this.props.setColor(COLOR_OPTIONS[i]) }} />
+              <div style={ style } 
+                  onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
               <input type="checkbox" 
                   name={controlname}
                   checked={ this.checkInArray(elem.id) }
-                  onChange={ () => { this.checkboxOnClick(elem.id) }} />
+                  onChange={ () => { this.checkboxOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
               { " " + elem.answer_content }
             </div>
           );
@@ -112,11 +122,15 @@ const Question = React.createClass({
     );
   },
 
-  checkboxOnClick: function(ans_id) {
+  checkboxOnClick: function(ans_id, text, color) {
     if(this.checkInArray(ans_id)) {
       this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id);
+      if(this.props.color && this.props.color.answer_id == ans_id) {
+        this.props.setColor(-1, -1, '');
+      }
     } else {
-      this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id, '');
+      this.props.setColor(this.props.question.id, ans_id, color);
+      this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id, text);
     }
   },
 
@@ -142,6 +156,9 @@ const Question = React.createClass({
   },
 
   mapQuestionAnswers: function() {
+    if(this.props.question.id == 1) {
+      return this.mapToCheckbox(this.props.question.answers);
+    }
     switch (this.props.question.question_type) {
       case TYPES.RADIO:
         return this.mapToRadio(this.props.question.answers)

@@ -3,7 +3,7 @@ const initialState = Object.assign({
     isFetching: true
   },
   answer_selected: {},
-  highlighter_color: null,
+  highlighter_color: {},
   saveAndNext: null
 }, {});
 
@@ -58,10 +58,10 @@ export function quiz(state = initialState, action) {
       }
       return state;
     case 'COLOR_SELECTED':
-      console.log('color is now ', action.color);
+      var assign_dict = { question_id: action.question_id, answer_id: action.answer_id, color: action.color };
       return {
         ...state,
-        highlighter_color: action.color
+        highlighter_color: assign_dict
       }
     case 'POST_QUIZ_CALLBACK':
       return {
