@@ -13,7 +13,7 @@
     "build": "NODE_ENV=development WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
     "build:watch": "NODE_ENV=development WEBPACK=cleandist webpack --progress --stats --config webpack.config.js --watch",
     "deploy": "NODE_ENV=production WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
-    "test": "jest",
+    "test": "node --harmony_proxies node_modules/.bin/jest",
     "test:watch": "npm run test -- --watch",
     "tasks:highlighter": "curl http://localhost:5000/api/highlighter_tasks/?format=json | python -m json.tool > pbs-highlighter/highlighter_tasks.json",
     "tasks:quiz": "curl http://localhost:5000/api/quiz_tasks/?format=json | python -m json.tool > pbs-quiz/quiz_tasks.json"
@@ -58,6 +58,7 @@
     "file-loader": "^0.9.0",
     "fs-extra": "^1.0.0",
     "html-webpack-plugin": "^2.22.0",
+    "identity-obj-proxy": "^3.0.0",
     "immutable": "^3.8.1",
     "imports-loader": "^0.6.3",
     "jest": "^18.1.0",
@@ -90,5 +91,18 @@
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "jest": {
+    "modulePaths": [
+      "<rootDir>/app",
+      "<rootDir>/vendor/bower_components"
+    ],
+    "moduleFileExtensions": ["", ".js", ".scss", ".hbs", ".tmpl", ".svg", ".woff", ".eot", ".svg", ".png"],
+    "moduleDirectories": ["node_modules", "web_modules"],
+    "moduleNameMapper": {
+      "^modernizr$": "<rootDir>/vendor/bower_components/modernizr/modernizr.js",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|scss)$": "identity-obj-proxy"
+    }
+  }
 }

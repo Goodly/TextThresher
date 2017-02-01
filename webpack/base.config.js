@@ -85,7 +85,7 @@ export default {
     },
     root: [PATHS.app, PATHS.bowerPath],
     modulesDirectories: ['node_modules', 'web_modules'],
-    extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png']
+    extensions: ['', '.js', '.scss', '.hbs', '.tmpl', '.svg', '.woff', '.eot', '.svg', '.png']
   },
   output: {
     path: PATHS.dist,
