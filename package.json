@@ -93,11 +93,12 @@
   },
   "dependencies": {},
   "jest": {
+    "verbose": true,
     "modulePaths": [
       "<rootDir>/app",
       "<rootDir>/vendor/bower_components"
     ],
-    "moduleFileExtensions": ["", ".js", ".scss", ".hbs", ".tmpl", ".svg", ".woff", ".eot", ".svg", ".png"],
+    "moduleFileExtensions": ["", "js", "jsx"],
     "moduleDirectories": ["node_modules", "web_modules"],
     "moduleNameMapper": {
       "^modernizr$": "<rootDir>/vendor/bower_components/modernizr/modernizr.js",
