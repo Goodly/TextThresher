@@ -1,0 +1,11 @@
+[program:nginx]
+command=/usr/sbin/nginx
+directory={{html_path}}
+autostart=true
+autorestart=true
+user=root
+log_stdout=true
+log_stderr=true
+logfile=/var/log/supervisor/nginx-supervisor.log
+logfile_maxbytes=10MB
+logfile_backups=2

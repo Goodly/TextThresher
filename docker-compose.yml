@@ -1,21 +1,36 @@
 version: '2'
 services:
   thresher_api:
+    # python:2.7-slim installs postgres 9.4 client
+    depends_on:
+      - db
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./docker
+      dockerfile: ./thresher_api/Dockerfile
     ports:
       - "5000:5000"
     volumes:
       - .:/home/thresher
 
+  pybossa:
+    # ubuntu:14.04 installs postgres 9.4 client
+    depends_on:
+      - db
+    build:
+      context: ./docker
+      dockerfile: ./pybossa/Dockerfile
+    ports:
+      - "3002:80"
+
   db:
-    # use the same postgres version that python:2.7-slim uses
-    image: postgres:9.4
+    # postgres:9.4
+    build:
+      context: ./docker
+      dockerfile: ./db/Dockerfile
 #   volumes:
 #    - ./_postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=zz
       - POSTGRES_PASSWORD=
-#    - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_DB=thresher
+#    - PGDATA=/var/lib/postgresql/data/pgdata

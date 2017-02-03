@@ -1,7 +1,14 @@
 FROM python:2.7-slim
 ENV PYTHONUNBUFFERED 1
+ENV TERM xterm
 
-RUN apt-get update && apt-get install -y \
+# helpful aliases
+COPY bashrc_to_docker /root/.bashrc
+
+# ARG vars exist only during build
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -q && apt-get install -q -y \
         gcc \
         gettext \
         postgresql-client libpq-dev \
@@ -11,16 +18,13 @@ RUN rm -rf /var/lib/apt/lists/*
 
 EXPOSE 5000
 
-
-WORKDIR /home/thresher
-COPY requirements.txt .
+WORKDIR /home/build
+COPY ./thresher_api/requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
-
-# Development conveniences, especially setting TERM=xterm
-COPY bashrc_to_docker /root/.bashrc
 
 # ipython for development - not (currently) needed for production
 RUN pip install ipython
 
+WORKDIR /home/thresher
 CMD ["gunicorn", "-b", ":5000", "-w", "10", "--error-logfile", "-", \
                  "thresher_backend.wsgi"]

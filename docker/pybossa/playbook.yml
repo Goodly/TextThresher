@@ -1,0 +1,241 @@
+---
+# Installation steps for every Ubuntu 14.04
+- hosts: all
+  vars:
+    pybossa_user: "pybossa"
+    pybossa_home: "/home/pybossa"
+    pybossa_path: "/home/pybossa/repo"
+    virtualenv_path: "/home/pybossa/env"
+    html_path: "/home/pybossa/html"
+    ansible_build_path: "/ansible_build"
+    redis_host: "127.0.0.1"
+    redis_port: "6379"
+    schedule_interval: "60"
+  tasks:
+    - name: Check Ubuntu 14.04 running
+      assert:
+        that:
+          - ansible_distribution == 'Ubuntu'
+          - ansible_distribution_release == 'trusty'
+
+    - name: Create Pybossa group
+      group: name={{pybossa_user}}
+
+    - name: Create Pybossa user
+      user: name={{pybossa_user}}
+            group={{pybossa_user}}
+            home={{pybossa_home}}
+
+    - name: Create Pybossa repo directory
+      file: path={{pybossa_path}}
+            state=directory
+            owner={{pybossa_user}}
+            group={{pybossa_user}}
+
+    - name: Create pybossa-env directory
+      file: path={{virtualenv_path}}
+            state=directory
+            owner={{pybossa_user}}
+            group={{pybossa_user}}
+
+    - name: Create static html root
+      file: path={{html_path}}
+            state=directory
+            owner={{pybossa_user}}
+            group={{pybossa_user}}
+
+    - name: update apt cache
+      apt: update_cache=yes
+
+    - name: install git
+      apt: name=git-core state=latest
+
+    - name: install Python
+      apt: name={{item}} state=latest
+      with_items:
+        - python
+        - python-dev
+        - python-virtualenv
+        - python-setuptools
+        - python-pip
+
+    - name: install PyBossa build requirements
+      apt: name={{item}} state=latest
+      with_items:
+        - build-essential
+        - libjpeg-dev
+        - libssl-dev
+        - swig
+        - libffi-dev
+        - dbus
+        - libdbus-1-dev
+        - libdbus-glib-1-dev
+
+    - name: install PostgreSQL client
+      apt: name={{item}} state=latest
+      with_items:
+        - postgresql-client
+        - postgresql-server-dev-all
+        - libpq-dev
+        - python-psycopg2
+
+    - name: install Redis
+      apt: name=redis-server state=latest
+
+    - name: Clone git repo
+      become: true
+      become_user: "{{pybossa_user}}"
+      git:  repo=https://github.com/Scifabric/pybossa.git
+            dest={{pybossa_path}} accept_hostkey=yes
+            remote=origin version=master
+
+# Changed to contrib/redis-supervisor/redis.conf nodaemon version
+    - name: copy Redis no daemon config
+      copy: src={{pybossa_path}}/contrib/redis-supervisor/redis.conf
+            dest=/etc/redis/redis.conf
+            owner=redis group=redis mode="0644"
+
+# Changed to contrib/redis-supervisor/sentinel.conf nodaemon version
+    - name: copy Sentinel no daemon config
+      copy: src={{pybossa_path}}/contrib/redis-supervisor/sentinel.conf
+            dest=/etc/redis/sentinel.conf
+            owner=redis group=redis mode="0644"
+
+    - name: "upgrade pip itself"
+      become: true
+      become_user: "{{pybossa_user}}"
+      pip: name=pip state=latest chdir={{pybossa_path}} virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
+
+    - name: "install PyBossa virtualenv packages, can take some time..."
+      become: true
+      become_user: "{{pybossa_user}}"
+      pip: chdir={{pybossa_path}} requirements={{pybossa_path}}/requirements.txt virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
+
+    - name: Install uwsgi
+      become: true
+      become_user: "{{pybossa_user}}"
+      pip: name=uwsgi state=latest chdir={{pybossa_path}} virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
+
+    - name: check alembic.ini existing
+      stat: path={{pybossa_path}}/alembic.ini
+      register: check_alembic
+
+    - name: copy alembic template when not existing
+      copy: src={{pybossa_path}}/alembic.ini.template
+            dest={{pybossa_path}}/alembic.ini
+            mode="0640" owner={{pybossa_user}} group={{pybossa_user}}
+      when: not check_alembic.stat.exists
+
+    - name: Put db connection string into alembic.ini
+      replace: regexp="^sqlalchemy.url.*$"
+               replace="sqlalchemy.url = postgresql://pybossa:tester@db/pybossa"
+               dest={{pybossa_path}}/alembic.ini
+
+    - name: check settings_local.py existing
+      stat: path={{pybossa_path}}/settings_local.py
+      register: check_settings
+
+    - name: copy settings_local template when not existing
+      copy: src={{pybossa_path}}/settings_local.py.tmpl
+            dest={{pybossa_path}}/settings_local.py
+            mode="0640" owner={{pybossa_user}} group={{pybossa_user}}
+      when: not check_settings.stat.exists
+
+    - name: Put db connection string into settings_local.py
+      replace: regexp="^SQLALCHEMY_DATABASE_URI.*$"
+               replace="SQLALCHEMY_DATABASE_URI = 'postgresql://pybossa:tester@db/pybossa'"
+               dest={{pybossa_path}}/settings_local.py
+
+# Note: Databases and database users are configured to be installed by Dockerfile
+# It is not convenient to configure a database in Docker since the database
+# isn't running yet.
+
+    - name: install Supervisor
+      pip: name=supervisor
+
+    - name: Create /etc/supervisor directory
+      file: path=/etc/supervisor/conf.d
+            state=directory
+
+    - name: Create /var/log/supervisor directory
+      file: path=/var/log/supervisor
+            state=directory
+
+    - name: Create handy link to /var/log/supervisor
+      file: src=/var/log/supervisor
+            path={{pybossa_home}}/log
+            state=link
+            owner={{pybossa_user}}
+            group={{pybossa_user}}
+
+    - name: Install supervisor.conf
+      copy: src={{ansible_build_path}}/supervisord.conf
+            dest=/etc/supervisor/supervisord.conf
+            mode="0640" owner=root group=root
+
+    - name: redis-server supervisor conf
+      copy: src={{pybossa_path}}/contrib/supervisor/redis-server.conf
+            dest=/etc/supervisor/conf.d/redis-server.conf
+            mode="0640" owner=root group=root
+
+    - name: redis-sentinel supervisor conf
+      copy: src={{pybossa_path}}/contrib/supervisor/redis-sentinel.conf
+            dest=/etc/supervisor/conf.d/redis-sentinel.conf
+            mode="0640" owner=root group=root
+
+    - name: copy rq-worker config
+      template: src={{pybossa_path}}/provisioning/templates/rq-worker.conf.j2
+                dest=/etc/supervisor/conf.d/rq-worker.conf
+                mode="0640" owner=root group=root
+
+    - name: copy rq-scheduler config
+      template: src={{pybossa_path}}/provisioning/templates/rq-scheduler.conf.j2
+                dest=/etc/supervisor/conf.d/rq-scheduler.conf
+                mode="0640" owner=root group=root
+
+    - name: Install nginx.conf for supervisor
+      template: src={{ansible_build_path}}/nginx.conf.template
+                dest=/etc/supervisor/conf.d/nginx.conf
+                mode="0640" owner=root group=root
+
+    - name: Install pybossa.conf for supervisor
+      template: src={{ansible_build_path}}/pybossa.conf.template
+                dest=/etc/supervisor/conf.d/pybossa.conf
+                mode="0640" owner=root group=root
+
+    - name: Install pybossa.ini for uwsgi
+      template: src={{ansible_build_path}}/pybossa.ini.template
+                dest={{pybossa_path}}/pybossa.ini
+                mode="0640" owner=pybossa group=pybossa
+
+    - name: Configure Nginx to not daemonize
+      lineinfile:
+        dest=/etc/nginx/nginx.conf
+        line="daemon off;"
+        state=present
+        insertbefore=BOF
+
+    - name: Install pybossa.conf for NGINX
+      template: src={{ansible_build_path}}/pybossa.nginx
+                dest=/etc/nginx/sites-available/default
+                mode="0640" owner=root group=root
+
+    # activate virtualenv always in .bashrc
+    - name: virtualenv usage by default on bash login
+      become: true
+      become_user: "{{pybossa_user}}"
+      lineinfile:
+        dest={{pybossa_home}}/.bashrc
+        line=". {{virtualenv_path}}/bin/activate"
+        state=present
+        insertafter=EOF
+        create=yes
+
+    - name: go to repo directory on bash login
+      become: true
+      become_user: "{{pybossa_user}}"
+      lineinfile:
+        dest={{pybossa_home}}/.bashrc
+        line="cd {{pybossa_path}}"
+        state=present
+        insertafter=EOF

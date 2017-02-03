@@ -54,7 +54,7 @@ class TopicsSchemaParser(object):
     def load_answers(self, answers, question):
         """
         Creates the answers instances for a given question.
-        answers: A list of answers 
+        answers: A list of answers
         question: The question that answers belongs to
         """
         # find the corresponding topic and question ids
@@ -100,14 +100,14 @@ class TopicsSchemaParser(object):
 
     def load_next_question(self):
         """
-        Loads all mandatory next_questions to Answer objects. 
-        If an answer does not point to another question, that 
-        signals the end. Also populates each mandatory question 
+        Loads all mandatory next_questions to Answer objects.
+        If an answer does not point to another question, that
+        signals the end. Also populates each mandatory question
         with a default next question.
         """
         topics = Topic.objects.filter(parent=self.topic_obj)
         for topic in topics:
-            questions = Question.objects.filter(topic=topic, 
+            questions = Question.objects.filter(topic=topic,
                                                 contingency=False) \
                                         .order_by('question_number')
             for i in range(len(questions) - 1):
@@ -135,7 +135,7 @@ class TopicsSchemaParser(object):
         topics = Topic.objects.filter(parent=self.topic_obj)
         for dep in self.dep:
             topic = topics.filter(order=dep.topic)
-            question = Question.objects.filter(topic=topic, 
+            question = Question.objects.filter(topic=topic,
                                                question_number=dep.question)[0]
             answers = Answer.objects.filter(
                 question=question)
@@ -143,7 +143,7 @@ class TopicsSchemaParser(object):
                 topic=topic, question_number=dep.next_question)[0]
             next_question_answers = Answer.objects.filter(
                 question=next_question)
-            
+
             next_question.default_next = question.default_next
             next_question.save()
 
@@ -202,7 +202,7 @@ def load_schema(schema):
     print "loading schema:", schema_name
 
     # Load the topics, questions and answers of the schema
-    schema_parser = TopicsSchemaParser(topic_obj=schema_obj, 
+    schema_parser = TopicsSchemaParser(topic_obj=schema_obj,
                                        schema=schema['topics'],
                                        dependencies=schema['dependencies'])
     schema_parser.load_topics()
