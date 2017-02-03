@@ -107,7 +107,10 @@ export default {
         test: /\.json$/,
         loader: 'json'
       },
-
+      {
+        test: /\.css$/,
+        loaders: [ 'style-loader', 'css-loader' ]
+      },
       {
         test: /\.scss$/,
         loader: 'style!css?sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap'
