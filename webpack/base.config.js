@@ -85,7 +85,7 @@ export default {
     },
     root: [PATHS.app, PATHS.bowerPath],
     modulesDirectories: ['node_modules', 'web_modules'],
-    extensions: ['', '.js', '.scss', 'hbs', 'tmpl', 'svg', 'woff', 'eot', 'svg', 'png']
+    extensions: ['', '.js', '.jsx']
   },
   output: {
     path: PATHS.dist,
@@ -151,5 +151,11 @@ export default {
 //  new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin()
   ],
-  noParse: [/node_modules/, new RegExp(PATHS.bowerPath)]
+  noParse: [/node_modules/, new RegExp(PATHS.bowerPath)],
+  externals: {
+    'cheerio': 'window',
+    'react/addons': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true
+  }
 };
