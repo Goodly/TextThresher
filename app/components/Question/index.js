@@ -153,9 +153,8 @@ const Question = React.createClass({
           id={ this.props.question.id.toString() }
           date={this.state.date}
           focused={this.state.focused}
-          onDateChange={(date) => { this.setState({ date }); }}
-          onFocusChange={({ focused }) => { this.setState({ focused }); }}
-        />
+          onDateChange={(date) => { this.setState({ date }); this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, 0, date); }}
+          onFocusChange={({ focused }) => { this.setState({ focused }); }} />
       </form>
     );
   },
@@ -175,6 +174,8 @@ const Question = React.createClass({
   mapQuestionAnswers: function() {
     if(this.props.question.id == 1) {
       return this.mapToCheckbox(this.props.question.answers);
+    } else if(this.props.question.id == 2) {
+      return this.dateTimeInput();
     }
     var answer_list = this.props.question.answers.sort((a, b) => { return a.id - b.id; });
     switch (this.props.question.question_type) {

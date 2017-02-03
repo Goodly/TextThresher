@@ -8,6 +8,7 @@ const initialState = Object.assign({
 }, {});
 
 export function quiz(state = initialState, action) {
+  console.log(action);
   switch(action.type) {
     case 'FETCH_QUESTION':
       return {
@@ -29,7 +30,6 @@ export function quiz(state = initialState, action) {
         question_type: action.question_type,
         text: action.text,
       };
-      console.log(new_ans);
       if(temp[action.question_id] && action.question_type == 'CHECKBOX') {
           temp[action.question_id].push(new_ans);
       } else{
