@@ -32,10 +32,10 @@ export class Quiz extends Component {
       </div>);
   }
 
-  mapTopic(topic) {
+  generateSubQuestion(topic) {
     var answer_list = [];
     for(var i = 1; i < topic.length; i++) {
-      var temp_answer = { id: -i, answer_number: 1, answer_content: topic[i].name, next_question: null};
+      var temp_answer = { id: -1 - i, answer_number: 1, answer_content: topic[i].name, next_question: null};
       answer_list.push(temp_answer);
     }
     var sub_question = {
@@ -45,6 +45,11 @@ export class Quiz extends Component {
       question_text: 'Which of these subtopics are in the highlighted text?',
       answers: answer_list
     };
+    return sub_question;
+  }
+
+  mapTopic(topic) {
+    var sub_question = this.generateSubQuestion(topic);
 
     return topic.map((elem, i) => {
       const question = i == 0 ? <Question question={sub_question} id={sub_question.id} /> : <div></div>;
@@ -62,19 +67,33 @@ export class Quiz extends Component {
     });
   }
 
+  mapHighlights(highlights) {
+    return highlights.map((elem, i) => {
+      return (
+        <div key={i}>
+          <div style={{ "fontWeight": "700"}}> { 'Highlight ' + i } </div>
+          <div> { elem[2] } </div>
+        </div>
+      );
+    });
+  }
+
   render() {
     var topictree = this.props.currTask ? this.props.currTask.topictree : [];
     var new_topictree = [];
     for(var i = 0; i < topictree.length; i++) {
-      if(topictree[i].id == this.props.currTask.topicTopicId) {
+      if(topictree[i].id == this.props.currTask.topTopicId) {
         new_topictree.unshift(topictree[i]);
       } else {
         new_topictree.push(topictree[i]);
       }
     }
 
+    var highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
+
     return (
       <div className="quiz">
+        <div> { this.mapHighlights(highlights) }</div> 
         { this.mapTopic(new_topictree) }
         <button onClick={this.onSaveAndNext}>Save and Next</button>
       </div>
