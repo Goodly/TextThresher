@@ -2,10 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { SingleDatePicker } from 'react-dates';
+import moment from 'moment';
 import { answerSelected, answerRemoved, colorSelected } from '../../actions/quiz';
 
 /* component styles */
 import { styles } from './styles.scss';
+import 'react-dates/lib/css/_datepicker.css';
 
 const COLOR_OPTIONS = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00',
           '#ffff33','#a65628','#f781bf','#999999','#8dd3c7',
@@ -49,6 +51,13 @@ const mapDispatchToProps = dispatch => {
 
 const Question = React.createClass({
   displayname: 'Question',
+
+  getInitialState () {
+    return {
+      date: moment(),
+      focused: false
+    };
+  },
 
   propTypes: {
     question: React.PropTypes.object.isRequired,
@@ -140,7 +149,13 @@ const Question = React.createClass({
     var colorText = COLOR_OPTIONS[0];
     return (
       <form>
-        <SingleDatePicker id={ this.props.question.id.toString() }/>
+        <SingleDatePicker
+          id={ this.props.question.id.toString() }
+          date={this.state.date}
+          focused={this.state.focused}
+          onDateChange={(date) => { this.setState({ date }); }}
+          onFocusChange={({ focused }) => { this.setState({ focused }); }}
+        />
       </form>
     );
   },
