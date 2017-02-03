@@ -33,7 +33,21 @@ export class Quiz extends Component {
   }
 
   mapTopic(topic) {
-    return topic.map((elem) => {
+    var answer_list = [];
+    for(var i = 1; i < topic.length; i++) {
+      var temp_answer = { id: -i, answer_number: 1, answer_content: topic[i].name, next_question: null};
+      answer_list.push(temp_answer);
+    }
+    var sub_question = {
+      id: -1,
+      question_number: 0,
+      question_type: 'CHECKBOX',
+      question_text: 'Which of these subtopics are in the highlighted text?',
+      answers: answer_list
+    };
+
+    return topic.map((elem, i) => {
+      const question = i == 0 ? <Question question={sub_question} id={sub_question.id} /> : <div></div>;
       return (
         <div key={elem.id} style={{
           "border": "2px solid black",
@@ -41,7 +55,8 @@ export class Quiz extends Component {
           "margin": "15px"
         }}>
           <div> {elem.name} </div>
-          { this.mapQuestion(elem.questions) }
+          { question }
+          { this.mapQuestion(elem.questions.sort((a, b) => { return a.id - b.id; })) }
         </div>
       );
     });
@@ -49,9 +64,18 @@ export class Quiz extends Component {
 
   render() {
     var topictree = this.props.currTask ? this.props.currTask.topictree : [];
+    var new_topictree = [];
+    for(var i = 0; i < topictree.length; i++) {
+      if(topictree[i].id == this.props.currTask.topicTopicId) {
+        new_topictree.unshift(topictree[i]);
+      } else {
+        new_topictree.push(topictree[i]);
+      }
+    }
+
     return (
       <div className="quiz">
-        { this.mapTopic(topictree) }
+        { this.mapTopic(new_topictree) }
         <button onClick={this.onSaveAndNext}>Save and Next</button>
       </div>
     )

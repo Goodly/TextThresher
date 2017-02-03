@@ -88,6 +88,7 @@ const Question = React.createClass({
                 <input type="radio" name={controlname} 
                   onChange={ () => { this.radioOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
                 { " " + elem.answer_content }
+                <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
               </div>
             );
           }) 
@@ -115,6 +116,7 @@ const Question = React.createClass({
                   checked={ this.checkInArray(elem.id) }
                   onChange={ () => { this.checkboxOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
               { " " + elem.answer_content }
+              <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
             </div>
           );
         })}
@@ -159,11 +161,12 @@ const Question = React.createClass({
     if(this.props.question.id == 1) {
       return this.mapToCheckbox(this.props.question.answers);
     }
+    var answer_list = this.props.question.answers.sort((a, b) => { return a.id - b.id; });
     switch (this.props.question.question_type) {
       case TYPES.RADIO:
-        return this.mapToRadio(this.props.question.answers)
+        return this.mapToRadio(answer_list)
       case TYPES.CHECKBOX:
-        return this.mapToCheckbox(this.props.question.answers)
+        return this.mapToCheckbox(answer_list)
       case TYPES.DATETIME:
         return this.dateTimeInput();
       case TYPES.TEXT:
@@ -180,6 +183,7 @@ const Question = React.createClass({
     return (
       <div className={`${styles}`}>
         <div> {this.props.question.question_number} </div>
+        <span style={{ "fontSize": "80%", "color": "red" }}> { this.props.question.id } </span>
         {this.props.question.question_text}
         { mapped_answers }
       </div>
