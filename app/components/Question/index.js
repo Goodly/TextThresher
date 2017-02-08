@@ -151,6 +151,7 @@ const Question = React.createClass({
       <form>
         <SingleDatePicker
           id={ this.props.question.id.toString() }
+          isOutsideRange={ () => {} }
           date={this.state.date}
           focused={this.state.focused}
           onDateChange={(date) => { this.setState({ date }); this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, 0, date); }}
