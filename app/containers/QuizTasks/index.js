@@ -17,6 +17,29 @@ const assembledActionCreators = Object.assign(
   taskActionCreators
 );
 
+function initQueue(currTask) {
+  var topictree = currTask.topictree;
+  var topic = [];
+  for(var i = 0; i < topictree.length; i++) {
+    if(topictree[i].id == currTask.topTopicId) {
+      topic.unshift(topictree[i]);
+    } else {
+      topic.push(topictree[i]);
+    }
+  }
+  var to_return = [];
+  to_return.push(-1);
+  for(var i = 0; i < topic.length; i++) {
+    var questions = topic[i].questions.sort((a, b) => { return a.id - b.id; });
+    var to_append = [];
+    for(var i = 0; i < questions.length; i++) {
+      to_append.push(questions[i].id);
+    }
+    to_return = to_return.concat(to_append);
+  }
+  return to_return;
+}
+
 const mapStateToProps = state => {
   var taskQueue = null;
   var currTask = null;
@@ -25,10 +48,16 @@ const mapStateToProps = state => {
     var taskNum = state.quizTasks.taskDatabase.result[0];
     currTask = state.quizTasks.taskDatabase.entities.tasks[taskNum];
   }
+  var queue = state.quiz.queue;
+  if(currTask && state.quiz.queue.length == 0) {
+    queue = initQueue(currTask);
+  }
   return {
     saveAndNext: state.quiz.saveAndNext,
     taskQueue,
-    currTask
+    currTask,
+    queue,
+    question_id: state.quiz.curr_question_id
   };
 }
 

@@ -1,3 +1,17 @@
+export function updateQueue(question) {
+  return {
+    type: 'UPDATE_QUEUE', 
+    question
+  };
+}
+
+export function activeQuestion(q_id) {
+  return {
+    type: 'UPDATE_ACTIVE_QUESTION',
+    q_id
+  };
+}
+
 export function storeQuestion(question) {
   return {
     type: 'FETCH_QUESTION_SUCCESS',
