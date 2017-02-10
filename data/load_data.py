@@ -22,7 +22,8 @@ from data.legacy.parse_schema import parse_schema as old_parse_schema
 from thresher.models import (Project, Article, Topic, HighlightGroup,
                              ArticleHighlight, Question, Answer,
                              UserProfile)
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User=get_user_model()
 
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
