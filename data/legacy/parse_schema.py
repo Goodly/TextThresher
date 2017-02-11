@@ -8,6 +8,15 @@ GLOSSARY_ID = 'glossary:'
 DEPENDENCY_ID = 'if'
 DEPENDENCY_TARGET = 'then'
 
+QUESTION_TYPES = {'mc' : 'RADIO',
+                  'cl' : 'CHECKBOX',
+                  'dttm' : 'DATETIME',
+                  'dt' : 'DATE',
+                  'tb' : 'TEXT',
+                  'tm' : 'TIME',
+                  'dd' : 'RADIO',
+                  'tx' : 'TEXT'}   # The last three are legacy formats
+
 def parse_schema(schema_file=IN_FILE):
     parsed_schema = {}
     with open(schema_file, 'r') as f:
@@ -73,6 +82,8 @@ def parse_question_entry(entry_id, data, output):
         question_id = type_bits[1]
         topic = [t for t in output['topics'] if t['id'] == topic_id][0]
         question_type, question_text = data.split(None, 1)
+        if question_type in QUESTION_TYPES:
+            question_type = QUESTION_TYPES[question_type]
         topic['questions'].append({
             'id': question_id,
             'text': question_text,

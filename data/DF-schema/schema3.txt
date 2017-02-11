@@ -174,7 +174,7 @@ title: Camp
 1.27.01 Yes
 1.27.02 No
 1.27.03 Information not given
-1.28 How visible is this camp to the rest of the public? Please highlight all parts of the text that mention the visibility of the camp's location.
+1.28 tb How visible is this camp to the rest of the public? Please highlight all parts of the text that mention the visibility of the camp's location.
 1.29 cl Who is present at the camp? Select all demographic groups that apply:
 1.29.01 Anarchists
 1.29.02 Homeless people

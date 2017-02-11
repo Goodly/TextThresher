@@ -6,18 +6,18 @@ title: Protester
 4 Permit
 5 Community response
  
-1.01.01 dd What type of event is described in the highlighted text?
-1.01.02 March/Parade
-1.01.03 Rally/Demonstration
-1.01.04 Strike
-1.01.05 Blocking Action
-1.01.06 Establishing a Camp
-1.01.07 Moving a camp to a new location
-1.01.08 Disrupting an on-going event of the perceived 1%
-1.01.09 Divestment Action
-1.01.10 Voluntary Dissolution of a camp
-1.01.11 Strategic Violence
-1.01.12 Strategic Sabotage
+1.01 dd What type of event is described in the highlighted text?
+1.01.01 March/Parade
+1.01.02 Rally/Demonstration
+1.01.03 Strike
+1.01.04 Blocking Action
+1.01.05 Establishing a Camp
+1.01.06 Moving a camp to a new location
+1.01.07 Disrupting an on-going event of the perceived 1%
+1.01.08 Divestment Action
+1.01.09 Voluntary Dissolution of a camp
+1.01.10 Strategic Violence
+1.01.11 Strategic Sabotage
 1.02 mc What did the crowd block?
 1.02.01 Sidewalk 
 1.02.02 Street 
@@ -352,7 +352,7 @@ if 3.17.02, then 3.19
 4.02.03 The exact expiration 
 4.02.04 An approximate expiration
 4.02.05 Information not given
-4.03 dt tm Exactly when did the event permit start?
+4.03 dttm Exactly when did the event permit start?
 4.04 mc Approximately when did the event permit start?
 4.04.01 Pre-dawn (12am-6am)
 4.04.02 Morning (6am-12pm)
@@ -360,7 +360,7 @@ if 3.17.02, then 3.19
 4.04.04 Afternoon (3pm-6pm)
 4.04.05 Evening (6pm-9pm)
 4.04.06 Night (9pm-12am)
-4.05 dt tm Exactly when did the event permit expire?
+4.05 dttm Exactly when did the event permit expire?
 4.06 mc Approximately when did the event permit expire?
 4.06.01 Pre-dawn (12am-6am)
 4.06.02 Morning (6am-12pm)
