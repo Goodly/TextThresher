@@ -26,9 +26,6 @@ from django.contrib.auth.models import User
 
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
-USER = User.objects.create(username="researcher")
-USER.save()
-USERPROFILE = UserProfile.objects.create(user=USER, experience_score=0.0, accuracy_score=0.0)
 
 class TopicsSchemaParser(object):
     """
@@ -163,12 +160,19 @@ class TopicsSchemaParser(object):
                 answer.next_question = next_question
                 answer.save()
 
-def load_projects():
-    Project.objects.create(name="Deciding Force",
-                           instructions="This project analyzes media " +
-                                        "descriptions of interactions " +
-                                        "between police and protestors."
+def init_user_project():
+    default_user = User.objects.get_or_create(username="researcher")[0]
+    created_by = UserProfile.objects.get_or_create(
+        user=default_user,
+        defaults = {"experience_score": 0.0, "accuracy_score": 0.0}
+    )[0]
+    project =  Project.objects.get_or_create(
+        name="Deciding Force",
+        instructions="This project analyzes media " +
+            "descriptions of interactions " +
+            "between police and protestors."
     )
+    return created_by
 
 def load_schema(schema):
     import pdb
@@ -210,7 +214,7 @@ def load_schema(schema):
                                        dependencies=schema['dependencies'])
     schema_parser.load_topics()
 
-def load_article(article):
+def load_article(article, created_by):
     new_id = int(article['metadata']['article_number'])
 
     try: # Catch duplicate article ids and assign new ids.
@@ -247,7 +251,7 @@ def load_article(article):
     # created_by field on ArticleHighlight, which represents a set of
     # highlights one article created by one user.
     article_highlight = ArticleHighlight.objects.create(article=article_obj,
-                                                        created_by=USERPROFILE,
+                                                        created_by=created_by,
                                                         highlight_source='HLTR')
 
     for tua_type, tuas in article['tuas'].iteritems():
@@ -286,11 +290,11 @@ def load_schema_dir(dirpath):
     for schema_file in schema_files:
         load_schema(parse_schema(os.path.join(dirpath, schema_file)))
 
-def load_article_dir(dirpath):
+def load_article_dir(dirpath, created_by):
     for article_file in os.listdir(dirpath):
         if os.path.splitext(article_file)[1] != '.txt':
             continue
-        load_article(parse_document(os.path.join(dirpath, article_file)))
+        load_article(parse_document(os.path.join(dirpath, article_file)), created_by)
 
 def load_old_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
@@ -316,7 +320,7 @@ def load_args():
     return parser.parse_args()
 
 if __name__ == '__main__':
-    load_projects()
+    created_by = init_user_project()
     args = load_args()
     if args.schema_dir:
         load_schema_dir(args.schema_dir)
@@ -325,5 +329,4 @@ if __name__ == '__main__':
         load_old_schema_dir(args.old_schema_dir)
         print "Finished loading schemas"
     if args.article_dir:
-        load_article_dir(args.article_dir)
-    
+        load_article_dir(args.article_dir, created_by)
