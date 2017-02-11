@@ -501,7 +501,7 @@ if 3.11.02, then 3.13
 4.11 mc Were there any protesters present at the city council meeting? 
 4.11.01 Yes
 4.11.02 No
-4.12 Which of the following information does the text provide about the number of protesters present at the city council meeting?
+4.12 mc Which of the following information does the text provide about the number of protesters present at the city council meeting?
 4.12.01 Exact number 
 4.12.02 Approximate number 
 4.12.03 Information not given

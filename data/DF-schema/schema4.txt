@@ -4,7 +4,7 @@ title: Police
 2 Event setting and composition (location, attendance and crowd composition/demographics, police gear/tactics, time/duration)
 3 Arrests/injuries
 
-1.01.01 dd What type of event is described in the highlighted text?
+1.01 dd What type of event is described in the highlighted text?
   1.01.01 Raid of camp
   1.01.02 Showdown at the camp
   1.01.03 Warnings or threats at the camp or through the media
@@ -130,7 +130,7 @@ if 1.11.02, then 1.12
   2.06.13 "Well over ten thousand": 12,001-17,000
   2.06.14 "Tens of thousands": 17,001-30,000
   2.06.15 30,000 or more
-2.07 Who estimated the number of police in attendance?
+2.07 mc Who estimated the number of police in attendance?
   2.07.01 Media
   2.07.02 Police
   2.07.03 City official
@@ -225,7 +225,6 @@ if 1.11.02, then 1.12
   2.17.05 Factory worker
   2.17.06 Caretaker
   2.17.07 Farmer
-  %***add attributes -- talk to Betty***
 2.18 mc Does the text discuss characteristics of police equipment or tactics during the event (ex. riot gear, horses, skirmish lines)?
   2.18.01 Yes
   2.18.02 No
@@ -268,7 +267,7 @@ if 1.11.02, then 1.12
   2.24.05 Evening (6pm-9pm)
   2.24.06 Night (9pm-12am)
 2.25 mc Approximately how long did the event last?
-  %2.25.01 ***will add attributes***
+  2.25.01 dummy attributes
  
 if 2.01.01, then 2.02
 if 2.01.02, then 2.03

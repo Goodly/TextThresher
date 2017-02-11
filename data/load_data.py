@@ -17,6 +17,7 @@ from django.core.exceptions import ValidationError
 
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
+from data.legacy.parse_schema import parse_schema as old_parse_schema
 
 from thresher.models import (Project, Article, Topic, HighlightGroup,
                              ArticleHighlight, Question, Answer,
@@ -170,6 +171,8 @@ def load_projects():
     )
 
 def load_schema(schema):
+    import pdb
+    pdb.set_trace()
     schema_name = schema['title']
     schema_parent = schema['parent']
     if schema_parent:
@@ -289,11 +292,24 @@ def load_article_dir(dirpath):
             continue
         load_article(parse_document(os.path.join(dirpath, article_file)))
 
+def load_old_schema_dir(dirpath):
+    schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
+    for schema_file in schema_files:
+        load_schema(old_parse_schema(os.path.join(dirpath, schema_file)))
+
+# To load old schemas:
+# python load_data.py --old-schema-dir=data/DF-schema --article-dir=data/sample/article
+# docker-compose run thresher_api 
+# append the above line to the front to run it in init_docker.sh
+
 def load_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-s', '--schema-dir',
         help='The directory holding raw schema files for the TUA types')
+    parser.add_argument(
+        '-o', '--old-schema-dir',
+        help='The directory holding old schema files')
     parser.add_argument(
         '-d', '--article-dir',
         help='The directory holding raw article files for the TUA types')
@@ -304,5 +320,10 @@ if __name__ == '__main__':
     args = load_args()
     if args.schema_dir:
         load_schema_dir(args.schema_dir)
+    if args.old_schema_dir:
+        print "Loading Old Schemas"
+        load_old_schema_dir(args.old_schema_dir)
+        print "Finished loading schemas"
     if args.article_dir:
         load_article_dir(args.article_dir)
+    
