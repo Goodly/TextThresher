@@ -61,7 +61,7 @@ export default function runPybossaTasks(storeQuizTask,
     } else {
       // Displatch to store saying we are done with tasks
       // storeTasksDone() #TODO
-      storeSave(null);
+      storeSaveAndNext( ()=>{} );
     }
   });
 

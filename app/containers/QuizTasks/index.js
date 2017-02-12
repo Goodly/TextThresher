@@ -20,7 +20,8 @@ const assembledActionCreators = {
 const mapStateToProps = state => {
   return {
     currTask: state.quiz.currTask,
-    saveAndNext: state.quiz.saveAndNext
+    saveAndNext: state.quiz.saveAndNext,
+    answer_selected: state.quiz.answer_selected
   };
 }
 

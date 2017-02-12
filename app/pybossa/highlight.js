@@ -65,7 +65,7 @@ export default function runPybossaTasks(storeArticle,
     } else {
       // Displatch to store saying we are done with tasks
       // storeTasksDone() #TODO
-      storeSave(null);
+      storeSave( ()=> {} );
     }
   });
 

@@ -50,7 +50,7 @@ function presentTask(dispatch, getState) {
     dispatch(storeProject(task.project));
     dispatch(storeQuizTask(task));
 
-    function onSaveAndNext(highlights) {
+    function onSaveAndNext(answers) {
       // TODO: dispatch save quiz answers which will return a promise, so
       // promise.then( call this ) to load next task
       // or better, deep copy answers and don't wait to show next task
