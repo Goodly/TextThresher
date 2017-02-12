@@ -20,7 +20,7 @@ function getProjectName() {
   }
 }
 
-export default function runPybossaTasks(storeQuestion,
+export default function runPybossaTasks(storeQuizTask,
                                         storeProject,
                                         storeSaveAndNext) {
   function loadUserProgress() {
@@ -46,8 +46,7 @@ export default function runPybossaTasks(storeQuestion,
       loadUserProgress();
       // Update redux store with info
       storeProject(task.info.project);
-      // Hard code a question to get this working
-      storeQuestion(task.info.questions[1]);
+      storeQuizTask(task.info);
 
       function onSaveAndNext(answers) {
         pybossa.saveTask(task.id, answers).done(function() {

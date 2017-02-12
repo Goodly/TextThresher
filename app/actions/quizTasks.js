@@ -71,12 +71,11 @@ export function runNextTask() {
   return (dispatch, getState) => presentTask(dispatch, getState);
 }
 
-export function fetchQuizTasks(pageParam) {
+export function fetchQuizTasks() {
   return (dispatch, getState) => {
     dispatch({type: 'FETCH_QUIZ_TASKS'});
     let host = "http://localhost:5000";
-    let pageParam = pageParam ? pageParam : '';
-    return fetch(host + `/api/quiz_tasks/?format=json${pageParam}`)
+    return fetch(host + `/api/quiz_tasks/?format=json`)
       .then(response => response.json())
       .then(
         pagedTasks => {
