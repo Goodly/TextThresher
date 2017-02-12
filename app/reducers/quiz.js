@@ -17,10 +17,10 @@ export function quiz(state = initialState, action) {
           isFetching: true
         }
       }
-    case 'FETCH_QUESTION_SUCCESS':
+    case 'FETCH_TASK_SUCCESS':
       return {
         ...state,
-        question: action.response
+        currTask: action.task
       }
     case 'ANSWER_SELECTED':
       var temp = Object.assign({}, state.answer_selected);

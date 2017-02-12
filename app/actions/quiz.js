@@ -1,7 +1,7 @@
-export function storeQuestion(question) {
+export function storeQuizTask(task) {
   return {
-    type: 'FETCH_QUESTION_SUCCESS',
-    response: question
+    type: 'FETCH_TASK_SUCCESS',
+    task,
   };
 }
 

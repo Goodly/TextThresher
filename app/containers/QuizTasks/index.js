@@ -18,17 +18,9 @@ const assembledActionCreators = Object.assign(
 );
 
 const mapStateToProps = state => {
-  var taskQueue = null;
-  var currTask = null;
-  if(state.quizTasks.taskDatabase.entities && state.quizTasks.taskDatabase.result && state.quizTasks.taskQueue) {
-    taskQueue = state.quizTasks.taskQueue;
-    var taskNum = state.quizTasks.taskDatabase.result[0];
-    currTask = state.quizTasks.taskDatabase.entities.tasks[taskNum];
-  }
   return {
-    saveAndNext: state.quiz.saveAndNext,
-    taskQueue,
-    currTask
+    currTask: state.quiz.currTask,
+    saveAndNext: state.quiz.saveAndNext
   };
 }
 

@@ -11,7 +11,6 @@ export class Quiz extends Component {
   }
 
   static propTypes = {
-    taskQueue: React.PropTypes.array,
     currTask: React.PropTypes.object,
     onSaveAndNext: React.PropTypes.func
   }
