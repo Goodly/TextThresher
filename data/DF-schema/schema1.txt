@@ -134,13 +134,13 @@ if 1.03.any, then 1.04
 2.12.06 Reinforcement campers from other cities
 2.12.07 Religious leaders or communities
 2.12.08 Occupy the Hood protesters
-2.12.07 Other groups allied with Occupy
-2.12.09 Celebrities 
-2.12.10 Black/African-American 
-2.12.11 Hispanic/Latino/Chicano 
-2.12.12 Asian-American/Pacific Islander 
-2.12.13 Native American
-2.12.14 Information not given
+2.12.09 Other groups allied with Occupy
+2.12.10 Celebrities 
+2.12.11 Black/African-American 
+2.12.12 Hispanic/Latino/Chicano 
+2.12.13 Asian-American/Pacific Islander 
+2.12.14 Native American
+2.12.15 Information not given
 2.13 cl Which of the following economic class groups were in attendance?  
 2.13.01 A wide variety of classes
 2.13.02 Working/Lower (less than $24,999)

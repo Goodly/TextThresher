@@ -119,22 +119,22 @@ title: City
 1.19.05 Against tents/structures
 1.19.06 Safety/sanitation
 1.19.07 Other
-1.20 cl Which of the following information does the text provide about the time of the curfew?
+1.20 cl Which of the following information does the text provide about the time of the curfew (This is a duplicate question)?
 1.20.01 Exact start time
 1.20.02 Approximate start time
 1.20.03 Exact end time
 1.20.04 Approximate end time
 1.20.05 Information not given
-1.21 tm Exactly when does the curfew start?
-1.22 mc Approximately when does the curfew start? 
+1.21 tm Exactly when does the curfew start (This is a duplicate question)?
+1.22 mc Approximately when does the curfew start (This is a duplicate question)? 
 1.22.01 Predawn (12am-6am)
 1.22.02 Morning (6am-12pm)
 1.22.03 Midday (12pm-3pm)
 1.22.04 Afternoon (3pm-6pm)
 1.22.05 Evening (6pm-9pm)
 1.22.06 Night (9pm-12am)
-1.23 tm Exactly when does the curfew end?
-1.24 mc Approximately when does the curfew end?
+1.23 tm Exactly when does the curfew end (This is a duplicate question)?
+1.24 mc Approximately when does the curfew end (This is a duplicate question)?
 1.24.01 Predawn (12am-6am)
 1.24.02 Morning (6am-12pm)
 1.24.03 Midday (12pm-3pm)
@@ -222,7 +222,7 @@ title: City
 1.41.02 Daytime camp visit
 1.41.03 General assembly meeting
 1.41.04 Other
-1.42 mc Which of the following does the text discuss?
+1.42 mc Which of the following does the text discuss (This is duplicate)?
 1.42.01 City/state authority granting protesters access to a basic need
 1.42.02 City/state authority refusing protesters access to a basic need
 1.43 cl What kind of basic need did the city/state authority grant protesters?
@@ -549,9 +549,9 @@ if 4.12.02, then 4.14
 5.05 mc What kind of communication did the city government official have with the police?
 5.05.01 Consultation with police officer/s 
 5.05.02 Reassignment of police officer/s and/or their responsibilities
-5.06 mc What kind of communication did the city government official have with the city government?
-5.07 mc What kind of communication did the city government official have with the state government?
-5.08 mc What kind of communication did the city government official have with the police?
+5.06 mc What kind of communication did the city government official have with the city government (duplicated)?
+5.07 mc What kind of communication did the city government official have with the state government (duplicated)?
+5.08 mc What kind of communication did the city government official have with the police (duplicated)?
 5.08.01 Consultation with police officer/s 
 5.08.02 Reassignment of police officer/s and/or their responsibilities
 5.09 cl Which city government actor/s initiated the communication?

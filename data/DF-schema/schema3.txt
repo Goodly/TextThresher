@@ -454,7 +454,7 @@ If 4.03.02, then 4.05
 5.03.04 Once weekly
 5.03.05 Less than once weekly
 5.03.06 Information not given
-5.04 mc Which of the following does the text discuss?
+5.04 mc Which of the following does the text discuss (duplicated)?
 5.04.01 The exact number of people who usually attend general assemblies
 5.04.02 An estimate or approximate number of people who usually attend general assemblies
 5.05 tx Exactly how many people usually attend general assemblies?
