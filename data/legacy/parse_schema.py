@@ -1,4 +1,5 @@
 import argparse
+from collections import namedtuple
 
 IN_FILE = 'old-schema1.txt'
 
@@ -17,8 +18,18 @@ QUESTION_TYPES = {'mc' : 'RADIO',
                   'dd' : 'RADIO',
                   'tx' : 'TEXT'}   # The last three are legacy formats
 
+Dependency = namedtuple('Dependency', 
+    ['topic', 'question', 'answer', 'next_question'])
+
+def load_defaults(output):
+    output['parent'] = ''
+    output['topics'] = []
+    output['glossary'] = {}
+    output['dependencies'] = []
+
 def parse_schema(schema_file=IN_FILE):
     parsed_schema = {}
+    load_defaults(parsed_schema)
     with open(schema_file, 'r') as f:
         for line in f:
             raw_line = line.strip()
@@ -55,11 +66,39 @@ def parse_glossary(glossary_entry, output):
     output['glossary'][term.strip()] = definition.strip()
 
 def parse_dependency(dependency, output):
-    if 'dependencies' not in output:
-        output['dependencies'] = []
-    source, target = dependency.split(DEPENDENCY_TARGET, 1)
-    output['dependencies'].append((source.strip().strip(','),
-                                 target.strip()))
+    
+    splitted_dependency = dependency.split(', ')
+    source_phrase = splitted_dependency[0]
+    target_phrase = splitted_dependency[1].split(' ')[1]
+    source_topic_id, source_question_id, source_answer_id = (
+        source_phrase.split('.'))
+    target_question = target_phrase.split('.')[1]
+
+    source_topic_id = int(source_topic_id)
+    source_question_id = int(source_question_id)
+    target_question = int(target_question)
+
+    # Handle the case "any" seperately
+    if source_answer_id == "any":
+        topic = [t for t in output['topics'] 
+                 if int(t['id']) == source_topic_id][0]
+        question = [q for q in topic['questions'] 
+                    if int(q['question_number']) == source_question_id][0]
+        for answer in question['answers']:
+            new_source_answer_id = int(answer['answer_number'])
+            output['dependencies'].append(Dependency(source_topic_id, 
+                                                     source_question_id, 
+                                                     new_source_answer_id, 
+                                                     target_question))
+
+    else:
+        source_answer_id = int(source_answer_id)
+
+        output['dependencies'].append(Dependency(source_topic_id, 
+                                                 source_question_id, 
+                                                 source_answer_id, 
+                                                 target_question))
+
 
 def parse_question_entry(entry_id, data, output):
     type_bits = entry_id.split('.')
@@ -85,18 +124,18 @@ def parse_question_entry(entry_id, data, output):
         if question_type in QUESTION_TYPES:
             question_type = QUESTION_TYPES[question_type]
         topic['questions'].append({
-            'id': question_id,
-            'text': question_text,
-            'type': question_type,
+            'question_number': question_id,
+            'question_text': question_text,
+            'question_type': question_type,
             'answers': [],
         })
     else:
         topic_id, question_id, answer_id = type_bits
         topic = [t for t in output['topics'] if t['id'] == topic_id][0]
-        question = [q for q in topic['questions'] if q['id'] == question_id][0]
+        question = [q for q in topic['questions'] if q['question_number'] == question_id][0]
         question['answers'].append({
-            'id': answer_id,
-            'text': data,
+            'answer_number': answer_id,
+            'answer_content': data,
         })
 
 def print_data(output):

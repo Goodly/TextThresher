@@ -348,7 +348,7 @@ if 2.20.05, then 2.25
   3.17.02 An approximate time
   3.17.03 Information not given
 3.18 tm Exactly when were the protesters injured? 
-3.19 tx If no specific time is given, please highlight any words giving clues about what time the injuries occurred (e.g. "hours after police warned protesters to leave the area")
+3.19 tx If no specific time is given, please highlight any words giving clues about what time the injuries occurred (e.g. "hours after police warned protesters to leave the area") (duplicated)
  
 if 3.01.01, then 3.02
 if 3.01.02, then 3.03

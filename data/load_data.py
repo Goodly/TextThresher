@@ -175,12 +175,14 @@ def init_user_project():
     return created_by
 
 def load_schema(schema):
-    import pdb
-    pdb.set_trace()
     schema_name = schema['title']
-    schema_parent = schema['parent']
-    if schema_parent:
-        parent = Topic.objects.get(name=schema_parent)
+    # old schemas don't have a 'parent' for schemas
+    if 'parent' in schema:
+        schema_parent = schema['parent']
+        if schema_parent:
+            parent = Topic.objects.get(name=schema_parent)
+        else:
+            parent = None
     else:
         parent = None
     schema_obj = Topic.objects.create(
