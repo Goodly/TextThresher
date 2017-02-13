@@ -1,5 +1,5 @@
 import { storeProject } from 'actions/project';
-import { storeQuestion, storeSaveAndNext } from 'actions/quiz';
+import { storeQuizTask, storeSaveAndNext } from 'actions/quiz';
 
 import { normalize, Schema, arrayOf } from 'normalizr';
 
@@ -44,22 +44,20 @@ function presentTask(dispatch, getState) {
   if (taskQueue.length > 0) {
     const taskId = taskQueue.shift();
     const task = taskDB[taskId];
-    dispatch(storeProject(task.project));
-    // Hard-code a particular question to show to get this working
-    // dispatch(storeQuestion(task.questions[1]));
-    // Dispatch an action to clear any prior answers
+    // TODO: Dispatch an action to clear any prior answers
     // dispatch(XXXX);
     dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
-    dispatch({type: 'CURRENT_QUIZ_TASK', taskId});
+    dispatch(storeProject(task.project));
+    dispatch(storeQuizTask(task));
 
-    function onSaveAndNext(highlights) {
-      // dispatch save highight action which will return a promise, so
+    function onSaveAndNext(answers) {
+      // TODO: dispatch save quiz answers which will return a promise, so
       // promise.then( call this ) to load next task
-      // or better, deep copy highlights and don't wait to show next task
+      // or better, deep copy answers and don't wait to show next task
       presentTask(dispatch, getState);
     }
     // Tricky part: We have loaded the task, now we also provide the
-    // callback that the U button can use to save the data and trigger
+    // callback that the UI button can use to save the data and trigger
     // loading the next task.
     dispatch(storeSaveAndNext(onSaveAndNext));
   } else {
@@ -73,12 +71,11 @@ export function runNextTask() {
   return (dispatch, getState) => presentTask(dispatch, getState);
 }
 
-export function fetchQuizTasks(pageParam) {
+export function fetchQuizTasks() {
   return (dispatch, getState) => {
     dispatch({type: 'FETCH_QUIZ_TASKS'});
     let host = "http://localhost:5000";
-    let pageParam = pageParam ? pageParam : '';
-    return fetch(host + `/api/quiz_tasks/?format=json${pageParam}`)
+    return fetch(host + `/api/quiz_tasks/?format=json`)
       .then(response => response.json())
       .then(
         pagedTasks => {

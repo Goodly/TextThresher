@@ -11,16 +11,16 @@ export class Quiz extends Component {
   }
 
   static propTypes = {
-    taskQueue: React.PropTypes.array,
     currTask: React.PropTypes.object,
-    onSaveAndNext: React.PropTypes.func
+    onSaveAndNext: React.PropTypes.func,
+    answer_selected: React.PropTypes.object
   }
 
   // Babel plugin transform-class-properties allows us to use
   // ES2016 property initializer syntax. So the arrow function
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
-    this.props.saveAndNext(this.props.answers ? this.props.answers : {});
+    this.props.saveAndNext(this.props.answer_selected);
   }
 
   mapQuestion(questions) {
