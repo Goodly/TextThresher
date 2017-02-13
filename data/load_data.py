@@ -304,9 +304,7 @@ def load_old_schema_dir(dirpath):
         load_schema(old_parse_schema(os.path.join(dirpath, schema_file)))
 
 # To load old schemas:
-# python load_data.py --old-schema-dir=data/DF-schema --article-dir=data/sample/article
-# docker-compose run thresher_api 
-# append the above line to the front to run it in init_docker.sh
+# PYTHONPATH=/home/thresher python data/load_data.py -o data/DF-schema/
 
 def load_args():
     parser = argparse.ArgumentParser()
