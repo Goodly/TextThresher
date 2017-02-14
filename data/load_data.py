@@ -161,7 +161,7 @@ class TopicsSchemaParser(object):
                 answer.save()
 
 def init_user_project():
-    default_user = User.objects.get_or_create(username="researcher")[0]
+    default_user = User.objects.get_or_create(username="nick")[0]
     created_by = UserProfile.objects.get_or_create(
         user=default_user,
         defaults = {"experience_score": 0.0, "accuracy_score": 0.0}
