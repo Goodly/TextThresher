@@ -13,7 +13,8 @@ export class Quiz extends Component {
   static propTypes = {
     currTask: React.PropTypes.object,
     onSaveAndNext: React.PropTypes.func,
-    answer_selected: React.PropTypes.object
+    answer_selected: React.PropTypes.object,
+    queue: React.PropTypes.array
   }
 
   // Babel plugin transform-class-properties allows us to use
@@ -26,8 +27,24 @@ export class Quiz extends Component {
   mapQuestion(questions) {
     return (
       <div> 
-        {questions.map((elem) => {
-          return <Question question={elem} key={elem.id} />;
+        {questions.map((elem, i) => {
+          var hidden = this.props.question_id == elem.id ? { "border": "2px solid blue", "padding": "10px" } : {};
+          var hidden_text = this.props.question_id == elem.id ? 'selected question' : '';
+          var next_id = i < questions.length - 1 ? questions[i + 1].id : elem.id;
+          var prev_id = i > 0 ? questions[i - 1].id : -1;
+          for(var i = 0; i < this.props.queue.length; i++) {
+            if(elem.id == this.props.queue[i]) {
+              return (
+                <div key={elem.id} style={hidden}>
+                  <div style={{ "color": "blue" }}> { hidden_text } </div>
+                  <Question question={elem} /> 
+                  <button type="button" onClick={() => {this.props.activeQuestion(prev_id) }}> { "Prev" }</button>
+                  <button type="button" onClick={() => { this.props.activeQuestion(next_id) }}>{ "Next" }</button>
+                </div>
+              );
+            }
+          }
+          return <div key={elem.id}></div>;
         })} 
       </div>);
   }
@@ -52,7 +69,24 @@ export class Quiz extends Component {
     var sub_question = this.generateSubQuestion(topic);
 
     return topic.map((elem, i) => {
-      const question = i == 0 ? <Question question={sub_question} id={sub_question.id} /> : <div></div>;
+      var next_id = -1;
+      for(var k = 0; k < topic.length; k++) {
+        if(topic[k].questions.length > 0) {
+          next_id = topic[k].questions[0].id;
+          break;
+        }
+      }
+      var hidden = this.props.question_id == -1 ? { "border": "2px solid blue", "padding": "10px" } : {};
+      var hidden_text = this.props.question_id == -1 ? 'selected question' : '';
+      var format_question = (
+        <div key={elem.id} style={ hidden }>
+          <div style={{ "color": "blue" }}> { hidden_text } </div>
+          <Question question={sub_question} />
+          <button type="butotn" onClick={() => { this.props.activeQuestion(-1)}}> { "Prev" }</button>
+          <button type="button" onClick={() => { this.props.activeQuestion(next_id)}}> { "Next" } </button>
+        </div>
+      );  
+      const question = i == 0 ? format_question : <div></div>;
       return (
         <div key={elem.id} style={{
           "border": "2px solid black",
@@ -79,6 +113,7 @@ export class Quiz extends Component {
   }
 
   render() {
+
     var topictree = this.props.currTask ? this.props.currTask.topictree : [];
     var new_topictree = [];
     for(var i = 0; i < topictree.length; i++) {

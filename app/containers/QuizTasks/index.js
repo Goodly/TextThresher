@@ -3,27 +3,28 @@ import { connect } from 'react-redux';
 
 import { Quiz } from 'components/Quiz';
 import { storeProject } from 'actions/project';
-import { storeQuizTask, storeSaveAndNext } from 'actions/quiz';
+import * as quizActions from 'actions/quiz';
 
 // Actions for MockQuiz
 import { fetchQuizTasks } from 'actions/quizTasks';
 // API for RealQuiz
 import runPybossaTasks from 'pybossa/quiz';
 
-const assembledActionCreators = {
-  storeProject,
-  storeQuizTask,
-  storeSaveAndNext,
-  fetchQuizTasks,
-};
+const assembledActionCreators = Object.assign(
+  { storeProject },
+  { fetchQuizTasks },
+  quizActions,
+);
 
 const mapStateToProps = state => {
   return {
     currTask: state.quiz.currTask,
-    saveAndNext: state.quiz.saveAndNext,
-    answer_selected: state.quiz.answer_selected
-  };
-}
+    queue: state.quiz.queue,
+    question_id: state.quiz.curr_question_id,
+    answer_selected: state.quiz.answer_selected,
+    saveAndNext: state.quiz.saveAndNext
+  }
+};
 
 @connect (
   mapStateToProps,

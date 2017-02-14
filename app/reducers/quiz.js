@@ -1,7 +1,7 @@
 const initialState = Object.assign({
-  question: {
-    isFetching: true
-  },
+  currTask: null,
+  queue: [],
+  curr_question_id: -1,
   answer_selected: {},
   highlighter_color: {},
   saveAndNext: null
@@ -62,6 +62,18 @@ export function quiz(state = initialState, action) {
       return {
         ...state,
         highlighter_color: assign_dict
+      }
+    case 'UPDATE_QUEUE':
+      var new_queue = Object.assign([], state.queue);
+      new_queue = new_queue.concat(action.question);
+      return {
+        ...state,
+        queue: new_queue
+      }
+    case 'UPDATE_ACTIVE_QUESTION':
+      return {
+        ...state,
+        curr_question_id: action.q_id
       }
     case 'POST_QUIZ_CALLBACK':
       return {

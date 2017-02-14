@@ -1,3 +1,10 @@
+export function activeQuestion(q_id) {
+  return {
+    type: 'UPDATE_ACTIVE_QUESTION',
+    q_id
+  };
+}
+
 export function storeQuizTask(task) {
   return {
     type: 'FETCH_TASK_SUCCESS',
