@@ -1,7 +1,5 @@
 const initialState = Object.assign({
-  question: {
-    isFetching: true
-  },
+  currTask: null,
   queue: [],
   curr_question_id: -1,
   answer_selected: {},

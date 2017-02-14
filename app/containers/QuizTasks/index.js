@@ -16,41 +16,13 @@ const assembledActionCreators = Object.assign(
   quizActions,
 );
 
-function initQueue(currTask) {
-  var topictree = currTask.topictree;
-  var topic = [];
-  for(var i = 0; i < topictree.length; i++) {
-    if(topictree[i].id == currTask.topTopicId) {
-      topic.unshift(topictree[i]);
-    } else {
-      topic.push(topictree[i]);
-    }
-  }
-  var to_return = [];
-  to_return.push(-1);
-  for(var i = 0; i < topic.length; i++) {
-    var questions = topic[i].questions.sort((a, b) => { return a.id - b.id; });
-    var to_append = [];
-    for(var i = 0; i < questions.length; i++) {
-      to_append.push(questions[i].id);
-    }
-    to_return = to_return.concat(to_append);
-  }
-  return to_return;
-};
-
 const mapStateToProps = state => {
-  let queue = state.quiz.queue;
-  // TODO: Find a better place to do this, in an action or the reducer
-  if(state.quiz.currTask && state.quiz.queue.length == 0) {
-    queue = initQueue(state.quiz.currTask);
-  }
   return {
     currTask: state.quiz.currTask,
-    saveAndNext: state.quiz.saveAndNext,
+    queue: state.quiz.queue,
+    question_id: state.quiz.curr_question_id,
     answer_selected: state.quiz.answer_selected,
-    queue,
-    question_id: state.quiz.curr_question_id
+    saveAndNext: state.quiz.saveAndNext
   }
 };
 

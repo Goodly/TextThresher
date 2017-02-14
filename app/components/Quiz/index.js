@@ -31,12 +31,14 @@ export class Quiz extends Component {
           var hidden = this.props.question_id == elem.id ? { "border": "2px solid blue", "padding": "10px" } : {};
           var hidden_text = this.props.question_id == elem.id ? 'selected question' : '';
           var next_id = i < questions.length - 1 ? questions[i + 1].id : elem.id;
+          var prev_id = i > 0 ? questions[i - 1].id : -1;
           for(var i = 0; i < this.props.queue.length; i++) {
             if(elem.id == this.props.queue[i]) {
               return (
                 <div key={elem.id} style={hidden}>
                   <div style={{ "color": "blue" }}> { hidden_text } </div>
                   <Question question={elem} /> 
+                  <button type="button" onClick={() => {this.props.activeQuestion(prev_id) }}> { "Prev" }</button>
                   <button type="button" onClick={() => { this.props.activeQuestion(next_id) }}>{ "Next" }</button>
                 </div>
               );
@@ -80,6 +82,7 @@ export class Quiz extends Component {
         <div key={elem.id} style={ hidden }>
           <div style={{ "color": "blue" }}> { hidden_text } </div>
           <Question question={sub_question} />
+          <button type="butotn" onClick={() => { this.props.activeQuestion(-1)}}> { "Prev" }</button>
           <button type="button" onClick={() => { this.props.activeQuestion(next_id)}}> { "Next" } </button>
         </div>
       );  
