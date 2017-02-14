@@ -10,6 +10,7 @@ class UserProfile(models.Model):
     # Metadata
     experience_score = models.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = models.DecimalField(max_digits=5, decimal_places=3)
+    pybossa_url = models.URLField(default="")
     # UUID format is 36 chars including hyphens
     pybossa_api_key = models.CharField(max_length=36, default="")
 
