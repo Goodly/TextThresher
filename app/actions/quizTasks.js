@@ -6,6 +6,30 @@ import { normalize, Schema, arrayOf } from 'normalizr';
 let taskSchema = new Schema('tasks');
 let taskList = arrayOf(taskSchema);
 
+// helper function to initialize queue
+function initQueue(currTask) {
+  var topictree = currTask.topictree;
+  var topic = [];
+  for(var i = 0; i < topictree.length; i++) {
+    if(topictree[i].id == currTask.topTopicId) {
+      topic.unshift(topictree[i]);
+    } else {
+      topic.push(topictree[i]);
+    }
+  }
+  var to_return = [];
+  to_return.push(-1);
+  for(var i = 0; i < topic.length; i++) {
+    var questions = topic[i].questions.sort((a, b) => { return a.id - b.id; });
+    var to_append = [];
+    for(var j = 0; j < questions.length; j++) {
+      to_append.push(questions[j].id);
+    }
+    to_return = to_return.concat(to_append);
+  }
+  return to_return;
+}
+
 function storeTasks(dispatch, pagedTasks) {
   // Actually, the paged quiz endpoint isn't ready yet, this is already a task list
   // Until back-end returns task ids, provide a temporary unique id
@@ -49,6 +73,7 @@ function presentTask(dispatch, getState) {
     // dispatch(storeQuestion(task.questions[1]));
     // Dispatch an action to clear any prior answers
     // dispatch(XXXX);
+    dispatch({type: 'UPDATE_QUEUE', question: initQueue(taskDB[taskId])});
     dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
     dispatch({type: 'CURRENT_QUIZ_TASK', taskId});
 
@@ -89,3 +114,4 @@ export function fetchQuizTasks(pageParam) {
       )
   };
 }
+
