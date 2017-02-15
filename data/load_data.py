@@ -22,7 +22,8 @@ from data.legacy.parse_schema import parse_schema as old_parse_schema
 from thresher.models import (Project, Article, Topic, HighlightGroup,
                              ArticleHighlight, Question, Answer,
                              UserProfile)
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User=get_user_model()
 
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
@@ -161,7 +162,7 @@ class TopicsSchemaParser(object):
                 answer.save()
 
 def init_user_project():
-    default_user = User.objects.get_or_create(username="researcher")[0]
+    default_user = User.objects.get_or_create(username="nick")[0]
     created_by = UserProfile.objects.get_or_create(
         user=default_user,
         defaults = {"experience_score": 0.0, "accuracy_score": 0.0}

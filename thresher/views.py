@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from django.contrib.auth.models import User
 from django.db.models import Prefetch
 from django.db.models import prefetch_related_objects

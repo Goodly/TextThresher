@@ -10,13 +10,18 @@ class UserProfile(models.Model):
     # Metadata
     experience_score = models.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = models.DecimalField(max_digits=5, decimal_places=3)
+    pybossa_url = models.URLField(default="")
+    # UUID format is 36 chars including hyphens
+    pybossa_api_key = models.CharField(max_length=36, default="")
 
     def __unicode__(self):
         return "%s" % self.user.username
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=100)
+    # max_length from Pybossa db
+    name = models.CharField(max_length=255)
+    short_name = models.CharField(max_length=255)
     instructions = models.TextField()
 
     def __unicode__(self):
