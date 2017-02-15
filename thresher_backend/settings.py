@@ -145,3 +145,34 @@ if os.environ.get("DATABASE_URL"):
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
+
+import os
+
+verbose = ( "[%(asctime)s] %(levelname)s "
+            "[%(name)s:%(lineno)s] %(message)s" )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': verbose,
+            'datefmt': "% Y-% b-% d %H:% M:% S"
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        '': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}

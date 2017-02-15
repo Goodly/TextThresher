@@ -27,4 +27,5 @@ RUN pip install ipython
 
 WORKDIR /home/thresher
 CMD ["gunicorn", "-b", ":5000", "-w", "10", "--error-logfile", "-", \
-                 "thresher_backend.wsgi"]
+     "--access-logfile", "-", "--reload", \
+     "thresher_backend.wsgi"]
