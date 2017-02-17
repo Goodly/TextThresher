@@ -76,7 +76,9 @@ class ArticleParseError(Exception):
 def parse_document(path):
     with open(path, 'r') as f:
         raw_text = f.read()
+    return parse_article(raw_text, path)
 
+def parse_article(raw_text, path):
     # extract info from the file name
     article_number, city, state, periodical, periodical_code = parse_filename(path)
 
