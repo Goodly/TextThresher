@@ -1,0 +1,12 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block content %}
+<h1>Upload Form</h1>
+  <form enctype="multipart/form-data"
+    action="{% url 'researcher_upload_articles' %}"
+    method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload file</button>
+  </form>
+{% endblock %}
+

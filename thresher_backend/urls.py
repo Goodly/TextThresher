@@ -10,6 +10,7 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include('thresher.urls')),
+    url(r'^researcher/', include('researcher.urls')),
     url(r'^auth/', include('rest_framework.urls',
                            namespace='rest_framework')),
 ]

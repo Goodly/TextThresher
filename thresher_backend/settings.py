@@ -54,6 +54,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'rest_framework',
     'thresher',
+    'researcher',
 )
 
 MIDDLEWARE = (
@@ -176,3 +177,6 @@ LOGGING = {
         },
     },
 }
+
+FILE_UPLOAD_DIRECTORY_PERMISSIONS=0o644
+FILE_UPLOAD_PERMISSIONS=0o640
