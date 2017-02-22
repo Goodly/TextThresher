@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import 'text-highlighter/src/TextHighlighter';
 
 import { styles } from './styles.scss';
 
