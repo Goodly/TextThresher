@@ -9,6 +9,7 @@ django.setup()
 from django.conf import settings
 
 from django.contrib.auth.models import User, Permission, Group
+from thresher.models import UserProfile
 
 permissions = [
     u'add_answer',
@@ -38,7 +39,11 @@ permissions = [
 ]
 
 def createSuperUser():
-    User.objects.create_superuser('norman', 'norman@example.com', 'bidsatdoe')
+    u = User.objects.create_superuser('norman', 'norman@example.com', 'bidsatdoe')
+    profile = UserProfile.objects.get_or_create(
+        user=u,
+        defaults = {"experience_score": 0.0, "accuracy_score": 0.0}
+    )[0]
 
 def createThresherGroup():
     permlist = Permission.objects.filter(codename__in=permissions)
@@ -53,6 +58,11 @@ def createNick(groups=[]):
     u.is_staff = True
     u.groups = groups
     u.save()
+    profile = UserProfile.objects.get_or_create(
+        user=u,
+        defaults = {"experience_score": 0.0, "accuracy_score": 0.0}
+    )[0]
+
 
 if __name__ == '__main__':
     createSuperUser()
