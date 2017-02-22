@@ -15,6 +15,7 @@ from django.db import connections, DEFAULT_DB_ALIAS, models
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
 
+from data import init_defaults
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 from data.legacy.parse_schema import parse_schema as old_parse_schema
@@ -160,20 +161,6 @@ class TopicsSchemaParser(object):
             for answer in answers:
                 answer.next_question = next_question
                 answer.save()
-
-def init_user_project():
-    default_user = User.objects.get_or_create(username="nick")[0]
-    created_by = UserProfile.objects.get_or_create(
-        user=default_user,
-        defaults = {"experience_score": 0.0, "accuracy_score": 0.0}
-    )[0]
-    project =  Project.objects.get_or_create(
-        name="Deciding Force",
-        instructions="This project analyzes media " +
-            "descriptions of interactions " +
-            "between police and protestors."
-    )
-    return created_by
 
 def load_schema(schema):
     schema_name = schema['title']
@@ -321,7 +308,10 @@ def load_args():
     return parser.parse_args()
 
 if __name__ == '__main__':
-    created_by = init_user_project()
+    init_defaults.createSuperUser()
+    init_defaults.createDecidingForce()
+    researchers = init_defaults.createThresherGroup()
+    created_by = init_defaults.createNick(groups=[researchers])
     args = load_args()
     if args.schema_dir:
         load_schema_dir(args.schema_dir)
