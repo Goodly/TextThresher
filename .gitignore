@@ -3,9 +3,6 @@
 /node_modules/
 /dist/
 
-/pbs-highlighter/bundle.js
-/pbs-quiz/bundle.js
-
 testem.*.json
 tests.tap
 .DS_Store

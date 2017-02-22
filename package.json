@@ -38,7 +38,8 @@
     "babel-preset-stage-3": "^6.17.0",
     "babel-register": "^6.16.3",
     "babel-require": "^1.0.1",
-    "babel-runtime": "^6.3.19",
+    "babel-runtime": "^6.23.0",
+    "caniuse-db": "^1.0.30000624",
     "colors": "^1.1.2",
     "css-loader": "^0.26.0",
     "csswring": "^5.1.0",
@@ -89,6 +90,7 @@
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.5",
     "webpack": "^1.12.2",
+    "webpack-core": "^0.6.9",
     "webpack-dev-server": "^1.12.0"
   },
   "dependencies": {},
@@ -98,8 +100,15 @@
       "<rootDir>/app",
       "<rootDir>/vendor/bower_components"
     ],
-    "moduleFileExtensions": ["", "js", "jsx"],
-    "moduleDirectories": ["node_modules", "web_modules"],
+    "moduleFileExtensions": [
+      "",
+      "js",
+      "jsx"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "web_modules"
+    ],
     "moduleNameMapper": {
       "^modernizr$": "<rootDir>/vendor/bower_components/modernizr/modernizr.js",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",

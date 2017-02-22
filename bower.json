@@ -3,6 +3,5 @@
   "dependencies": {
     "bootstrap": "~3.3.5",
     "modernizr": "~2.8.3",
-    "text-highlighter": "git@github.com:Goodly/texthighlighter.git#^1.2.0"
   }
 }
