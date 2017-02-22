@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'django_rq',
     'thresher',
     'researcher',
 )
@@ -180,3 +181,14 @@ LOGGING = {
 
 FILE_UPLOAD_DIRECTORY_PERMISSIONS=0o644
 FILE_UPLOAD_PERMISSIONS=0o640
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'django_rq',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
+}
+
+#RQ_EXCEPTION_HANDLERS = ['path.to.my.handler'] # If you need custom exception handlers
