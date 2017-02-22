@@ -49,10 +49,10 @@ def createSuperUser(username="norman", email="norman@example.com", password="bid
         u = User.objects.create_superuser(username, email, password)
         profile = UserProfile.objects.get_or_create(
             user=u,
-            defaults = {"experience_score": 0.0, "accuracy_score": 0.0}
+            defaults = {"experience_score": 0.5, "accuracy_score": 0.9}
         )[0]
         logger.info("Created superuser %s, password '%s'." % (username, password))
-    return u
+    return u.userprofile
 
 def createThresherGroup():
     (researchers, created) = Group.objects.get_or_create(name="Researchers")
@@ -74,7 +74,7 @@ def createNick(username="nick", email="nick@example.com", password="bidsatdoe", 
         u.save()
         profile = UserProfile.objects.get_or_create(
             user=u,
-            defaults = {"experience_score": 0.0, "accuracy_score": 0.0}
+            defaults = {"experience_score": 0.98, "accuracy_score": 0.99}
         )[0]
         logger.info("Created researcher '%s', password '%s'." % (username, password))
     return u.userprofile
