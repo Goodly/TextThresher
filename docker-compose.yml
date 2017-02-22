@@ -4,6 +4,7 @@ services:
     # python:2.7-slim installs postgres 9.4 client
     depends_on:
       - db
+      - django_rq
     build:
       context: ./docker
       dockerfile: ./thresher_api/Dockerfile
@@ -11,6 +12,9 @@ services:
       - "5000:5000"
     volumes:
       - .:/home/thresher
+
+  django_rq:
+    image: redis:3.2.8
 
   pybossa:
     # ubuntu:14.04 installs postgres 9.4 client
