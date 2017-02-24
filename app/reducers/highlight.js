@@ -1,19 +1,14 @@
+import merge from '../components/HighlightTool/merge';
+import overlap from '../components/HighlightTool/overlap';
+
+
 const initialState = Object.assign({
   highlights: [],
   selectedHighlight: [],
   caseMax: 1,
 });
 
-/*
-TODO:
-- compare two highlights
-- see if they overlap at all
-- if they are of the same topic, then add them together
-- DELETE the two origin highlights
-
-*/
-
-function overlap(h1, h2) {
+/*function overlap(h1, h2) {
   if (h1.start <= h2.start && h1.end >= h2.end) {
     return true;
   } else if (h1.start <= h2.start && h1.end <= h2.end && h1.end > h2.start) {
@@ -26,7 +21,9 @@ function overlap(h1, h2) {
 }
 
 function merge(h1, h2, text) {
-  if (h1.start <= h2.start && h1.end >= h2.end) {
+  if (h1.topic != h2.topic) {
+    throw "merge method error: topic not equal";
+  } else if (h1.start <= h2.start && h1.end >= h2.end) {
     var h = {
       "caseNum": h1.caseNum,
       "end": h1.end,
@@ -35,7 +32,16 @@ function merge(h1, h2, text) {
       "topic": h1.topic
     }
     return h;
-  } else if (h1.start <= h2.start && h1.end <= h2.end) {
+  } else if (h2.start <= h1.start && h2.end >= h1.end) {
+    var h = {
+      "caseNum": h1.caseNum,
+      "end": h1.end,
+      "start": h1.start,
+      "text": h1.text,
+      "topic": h1.topic
+    }
+    return h;
+  } else if (h1.start <= h2.start && h1.end <= h2.end && h1.end >= h2.start) {
     var h = {
       "caseNum": h1.caseNum,
       "end": h2.end,
@@ -44,7 +50,7 @@ function merge(h1, h2, text) {
       "topic": h1.topic
     }
     return h;
-  } else if (h2.start <= h1.start && h2.end <= h1.end) {
+  } else if (h2.start <= h1.start && h2.end <= h1.end && h2.end >= h2.start) {
     var h = {
       "caseNum": h1.caseNum,
       "end": h2.end,
@@ -56,7 +62,7 @@ function merge(h1, h2, text) {
   } else {
     return h1;
   }
-}
+}*/
 
 function mergeHighlights(highlights, text) {
   var merged = [];

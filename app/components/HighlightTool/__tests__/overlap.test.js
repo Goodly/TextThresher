@@ -1,32 +1,21 @@
-//import overlap from '../../../reducers/highlight';
-//const reducer = require('../../../reducers/highlight');
+import overlap from '../overlap';
+import {mock_highlights} from '../mocks/mock_highlights';
+var article = mock_highlights.article;
+var h1 = mock_highlights.highlights.h1;
+var h2 = mock_highlights.highlights.h2;
+var h3 = mock_highlights.highlights.h3;
+var h5 = mock_highlights.highlights.h5;
+var h6 = mock_highlights.highlights.h6;
 
-function overlap(h1, h2) {
-  if (h1.start <= h2.start && h1.end >= h2.end) {
-    return true;
-  } else if (h1.start <= h2.start && h1.end <= h2.end) {
-    return true;
-  } else if (h2.start <= h1.start && h2.end <= h1.end) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-var h1 = {
-  "caseNum": 1,
-  "end": 169,
-  "start": 149,
-  "text": "Brandishing homemade",
-  "topic": 1
-}
-var h2 = {
-  "caseNum": 1,
-  "end": 175,
-  "start": 161,
-  "text": "homemade signs",
-  "topic": 1
-}
-test('Takes in two highlights and tells whether they overlap or not', () => {
+test('(Overlap: Case 1, Test 1) h1 overlaps h2', () => {
   expect(overlap(h1, h2)).toBe(true);
+});
+test('(Overlap: Case 2, Test 1) h2 overlaps h1', () => {
+  expect(overlap(h2, h1)).toBe(true);
+});
+test('(Overlap: Case 3, Test 1) h1 does not overlap h2', () => {
+  expect(overlap(h5, h6)).toBe(false);
+});
+test('(Overlap: Case 4, Test 1) h1 overlaps h2 but is not the same topic', () => {
+  expect(overlap(h3, h6)).toBe(false);
 });

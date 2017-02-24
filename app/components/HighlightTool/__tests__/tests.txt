@@ -1,21 +1,56 @@
 
 Methods:
+  TODO:
+  Currently:
+  - 14 functions total, have 17 cases with 21 tests for 4 functions. 3 look pretty stable, 1 has issues but testing is helping a tremendous amount
+  -------- input test --------
+  1. Finish merge (round one complete)
+  2. Finish overlap (round one complete)
+  3. Finish mergeHighlights (P1 today)
+  4. Finish breakHighlights (round one complete)
+  5. Finish processHighlights (P1 today)
+  6. Finish mergeColors (P3 today)
+  ------- event testing -------
+  7. handleSelect (P3)
+  8. handleClick (P3)
+  9. handleKeyDown (P3)
+  10. getOffset (P1)
+  ------- action testing ------
+  11. SELECT
+  12. DESELECT
+  13. ADD (P2)
+  14. DELETE
+
+
   Tool:
   1. getOffset (Regular)
+    - event dependent
   2. parseHighlights (Regular)
+    - input dependent
   3. processHighlights (Display)
+    - input dependent
   4. mergeColors (Regular)
+    - input dependent
   5. wordCorrection (Display)
+    - input dependent
   6. handleClick (Display)
+    - event
   7. handleKeyDown (Display)
+    - event
   8. handleSelect (Display)
+    - event
 
   Reducer:
   9. mergeHighlights (Display and Regular)
+    - input
   10. DESELECT_HIGHLIGHT (Display)
   11. ADD_HIGHLIGHT (Display)
   12. SELECT_HIGHLIGHT (Display)
   13. DELETE_HIGHLIGHT (Display)
+  14. overlap
+    - input
+  15. merge
+    - input
 
 REGULAR TESTS:
   mergeHighlights:

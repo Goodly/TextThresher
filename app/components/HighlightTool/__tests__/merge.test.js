@@ -1,59 +1,40 @@
-var article = "Occupy Wall Street supporters gather in Albany                                ↵November 05, 2011 7:30 am↵By Steve Lathrop, Albany Democrat-Herald↵↵↵↵Brandishing homemade signs and waving at passing  cars, more than 60 people supporting the Occupy Wall Street movement lined up  in downtown Albany late Friday afternoon to deliver their message.↵About five counter-demonstrators were also on hand with signs asking for relief of their tax burden and occasionally debating with individuals from the larger group.↵The demonstration was peaceful and larger than Edith Orner, one of the organizers, expected.↵“I thought we would get 50 so this is good,” she said.↵One of those on hand was Nancy Rose-Chism of Albany.↵“A lot of people here are retired, or unemployed or students,” she said, “but I’m not any of those. I wanted to lend my voice to taking back our money and our government.”↵Rose-Chism said she was looking for a way to be a part of the growing movement and turned to the Internet.↵“I searched for an Occupy Albany site and found this,” she said. “I’m one of the 99 percent.”↵So she made her own sign and joined the rally.↵According to Orner, many people found out about the demonstration the same way. She said the idea got started among a small group of people who meet once a week. About a week ago they decided to do something in support of the Occupy movements.↵“We just said let’s get on that and we put something together as quickly as we could,” Orner said.↵That meant placing posters around Albany, and using social networking, emails and the telephone.↵It seemed to work. By 5 p.m. the crowd had swelled to almost 70.↵Those at the rally lined up on all four corners of Fourth and Ellsworth showing their signs to passing traffic and pedestrians. Orner said the idea was to demonstrate for about an hour.↵“Our concern is what’s going on with the economy,” she said. “We don’t want to reduce the deficit on the backs of those who need (the money) most.”↵Rose-Chism said she wanted to be part of something that was trying to make things better for the majority of the people.↵“I believe this is what most of the people want,” she said.↵No plans for additional demonstrations are in the works now, but that could change.↵“We may have a follow-up discussion of some sort,” Orner said. “We want to be part of doing what we can for the greater good.”↵http://democratherald.com/news/local/occupy-wall-street-supporters-gather-in-albany/article_9cae0258-0743-11e1-bc5f-001cc4c002e0.html";
+import merge from '../merge';
+import {mock_highlights} from '../mocks/mock_highlights';
+var article = mock_highlights.article;
+var h1 = mock_highlights.highlights.h1;
+var h2 = mock_highlights.highlights.h2;
+var h3 = mock_highlights.highlights.h3;
+var h4 = mock_highlights.highlights.h4;
+var h5 = mock_highlights.highlights.h5;
+var h6 = mock_highlights.highlights.h6;
+console.log(h3.topic == h6.topic)
+console.log(h3.topic == h4.topic)
 
-function merge(h1, h2, text) {
-  if (h1.start <= h2.start && h1.end >= h2.end) {
-    var h = {
-      "caseNum": h1.caseNum,
-      "end": h1.end,
-      "start": h1.start,
-      "text": h1.text,
-      "topic": h1.topic
-    }
-    return h;
-  } else if (h1.start <= h2.start && h1.end <= h2.end) {
-    var h = {
-      "caseNum": h1.caseNum,
-      "end": h2.end,
-      "start": h1.start,
-      "text": text.slice(h1.start, h2.end),
-      "topic": h1.topic
-    }
-    return h;
-  } else if (h2.start <= h1.start && h2.end <= h1.end) {
-    var h = {
-      "caseNum": h1.caseNum,
-      "end": h2.end,
-      "start": h1.start,
-      "text": text.slice(h2.start, h1.end),
-      "topic": h1.topic
-    }
-    return h;
-  } else {
-    return h1;
-  }
-}
+/*
+5 cases:
+1. h1 "engulfs" h2
+2. h2 "engulfs" h1
+3. h1 left-overlaps h2
+4. h2 left-overlaps h1
+5. no overlaps, throw error
+6. not same topic, throw error
+*/
 
-var h1 = {
-  "caseNum": 1,
-  "end": 169,
-  "start": 149,
-  "text": "Brandishing homemade",
-  "topic": 1
-}
-var h2 = {
-  "caseNum": 1,
-  "end": 175,
-  "start": 161,
-  "text": "homemade signs",
-  "topic": 1
-}
-var h3 = {
-  "caseNum": 1,
-  "end": 175,
-  "start": 149,
-  "text": "Brandishing homemade signs",
-  "topic": 1
-}
-test('Takes in two highlights and merges', () => {
+test ('(Merge: Case 1, Test 1) h1 "engulfs" h2', () => {
+  expect(merge(h3, h4, article)).toEqual(h3);
+});
+test ('(Merge: Case 2, Test 1) h2 "engulfs" h1', () => {
+  expect(merge(h4, h3, article)).toEqual(h3);
+});
+test ('(Merge: Case 3, Test 1) h1 left-overlaps h2', () => {
   expect(merge(h1, h2, article)).toEqual(h3);
 });
+test ('(Merge: Case 4, Test 1) h2 left-overlaps h1', () => {
+  expect(merge(h2, h1, article)).toEqual(h3);
+});
+test ('(Merge: Case 5, Test 1) no overlaps, throw error', () => {
+  expect(merge(h5, h4, article)).toThrowError();
+});
+/*test ('(Merge: Case 6, Test 1) different topics, throw error', () => {
+  expect(merge(h3, h6, article)).toThrow();
+});*/
