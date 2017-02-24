@@ -194,7 +194,7 @@ class HighlightGroup(models.Model):
     highlight_text = models.TextField()
 
     # User assigned case number for this text
-    case_number = models.IntegerField()
+    case_number = models.IntegerField(db_index=True)
 
     # The topic of this text
     topic = models.ForeignKey(Topic, related_name="highlights",
