@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
+from requests.compat import urljoin
 
 # User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
 class UserProfile(models.Model):
@@ -19,14 +21,38 @@ class UserProfile(models.Model):
 
 
 class Project(models.Model):
-    # max_length from Pybossa db
+    # max_length matches Pybossa db
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     instructions = models.TextField()
+    # id as returned by Pybossa on creation
+    pybossa_id = models.IntegerField(null=True)
 
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
 
+    def getURL(self, profile):
+        return urljoin(profile.pybossa_url, "project/%s/" % (self.short_name))
+
+class Task(models.Model):
+    """
+    These task records are created to record successful exports to Pybossa
+    so will always have Pybossa id available
+    """
+    task_type = models.CharField(max_length=16) # 'highlighter' or 'quiz'
+    # components provides either the article id and topic_ids used for a highlight task
+    # or the root topic id, article id, and case number used for a quiz task
+    components = JSONField(default=dict({"task_type":""}))
+    pybossa_id = models.IntegerField()
+    pybossa_project_id = models.IntegerField()
+    created = models.DateTimeField()
+    state = models.CharField(max_length=16) # 'ongoing' or 'completed'
+
+    def __unicode__(self):
+        return "id %d task type: %s pybossa_id: %d" % (self.id, self.task_type, self.pybossa_project_id)
+
+    def getURL(self, profile):
+        return urljoin(profile.pybossa_url, "task/%d/" % (self.pybossa_id))
 
 # Articles containing text for analysis
 class Article(models.Model):
