@@ -10,6 +10,14 @@ const initialState = Object.assign({
 export function quiz(state = initialState, action) {
   console.log(action);
   switch(action.type) {
+    case 'CLEAR_ANSWERS':
+      return {
+        ...state,
+        answer_selected: {},
+        curr_question_id: -1,
+        highlighter_color: {},
+        queue: []
+      }
     case 'FETCH_QUESTION':
       return {
         ...state,

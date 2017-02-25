@@ -70,6 +70,7 @@ function presentTask(dispatch, getState) {
     const task = taskDB[taskId];
     // TODO: Dispatch an action to clear any prior answers
     // dispatch(XXXX);
+    dispatch({type: 'CLEAR_ANSWERS'});
     dispatch({type: 'UPDATE_QUEUE', question: initQueue(taskDB[taskId])});
     dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
     dispatch(storeProject(task.project));

@@ -30,8 +30,8 @@ export class Quiz extends Component {
         {questions.map((elem, i) => {
           var hidden = this.props.question_id == elem.id ? { "border": "2px solid blue", "padding": "10px" } : {};
           var hidden_text = this.props.question_id == elem.id ? 'selected question' : '';
-          var next_id = i < questions.length - 1 ? questions[i + 1].id : elem.id;
-          var prev_id = i > 0 ? questions[i - 1].id : -1;
+          var next_id = i < this.props.queue - 1 ? this.props.queue[i + 1].id : elem.id;
+          var prev_id = i > 0 ? this.props.queue[i - 1].id : -1;
           for(var i = 0; i < this.props.queue.length; i++) {
             if(elem.id == this.props.queue[i]) {
               return (
@@ -130,7 +130,7 @@ export class Quiz extends Component {
       <div className="quiz">
         <div> { this.mapHighlights(highlights) }</div> 
         { this.mapTopic(new_topictree) }
-        <button onClick={this.onSaveAndNext}>Save and Next</button>
+        <button onClick={() => { this.onSaveAndNext(); window.scrollTo(0, 0) }}>Save and Next</button>
       </div>
     )
   }

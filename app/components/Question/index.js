@@ -94,7 +94,7 @@ const Question = React.createClass({
                 style={{ "color": colorText }}>
                 <div style={ style } 
                     onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
-                <input type="radio" name={controlname} 
+                <input type="radio" name={controlname} checked={ this.checkInArray(elem.id) }
                   onChange={ () => { this.radioOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
                 { " " + elem.answer_content }
                 <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
