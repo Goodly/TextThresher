@@ -12,20 +12,32 @@ import json
 import requests
 from requests.compat import urljoin
 import django_rq
+import pbclient
 
 from thresher.models import Article, Topic, Project
 from thresher.views import collectHighlightTasks, collectQuizTasks
 from data import init_defaults
 
-def create_project(profile, project):
+def get_empty_project():
+    return pbclient.Project({
+        "name": "",
+        "short_name": "",
+        "description": "",
+        "info": {
+          "task_presenter": ""
+        }
+    })
+
+def create_project(profile, project, payload):
     headers = {'content-type': 'application/json'}
     url = urljoin(profile.pybossa_url, "/api/project")
     params = {'api_key': profile.pybossa_api_key }
-    payload = dict(name=project.name, short_name=project.short_name,
-                   description="Add project description here.")
+    payload.name = project.name
+    payload.short_name = project.short_name
+    payload.description = "Add project description here."
     resp = requests.post(url, params=params,
                          headers=headers, timeout=30,
-                         data=json.dumps(payload))
+                         data=json.dumps(payload.data))
     result = resp.json()
     if resp.status_code / 100 == 2 and result.get('id'):
         try:
@@ -59,33 +71,39 @@ def delete_project(profile, project):
         logger.info(result.keys().__str__())
     return result
 
-def setHighlighterPresenter(project):
+def setHighlighterPresenter(payload):
     bundlePath = settings.HIGHLIGHTER_BUNDLE_JS
     if os.path.isfile(bundlePath):
         with open(bundlePath) as f:
             js = f.read()
-        project.info['task_presenter'] += "<script>\n%s\n</script>" % js
+        payload.info['task_presenter'] = "<script>\n%s\n</script>" % js
     else:
-        logger.warn("Bundle not found: %s" % (bundlePath))
+        logger.error("Bundle not found: %s" % (bundlePath))
 
-def setQuizPresenter(project):
+def setQuizPresenter(payload):
     bundlePath = settings.QUIZ_BUNDLE_JS
     if os.path.isfile(bundlePath):
         with open(bundlePath) as f:
             js = f.read()
-        project.info['task_presenter'] += "<script>\n%s\n</script>" % js
+        payload.info['task_presenter'] = "<script>\n%s\n</script>" % js
     else:
-        logger.warn("Bundle not found: %s" % (bundlePath))
+        logger.error("Bundle not found: %s" % (bundlePath))
 
-def createPybossaProjects():
+def createRemoteProjects():
     researchers = init_defaults.createThresherGroup()
     profile = init_defaults.createNick(groups=[researchers])
-    hproject = init_defaults.createHighlighterProject()
-    create_project(profile, hproject)
-    qproject = init_defaults.createQuizProject()
-    create_project(profile, qproject)
 
-def deletePybossaProjects():
+    hproject = init_defaults.createHighlighterProject()
+    hproject_data = get_empty_project()
+    setHighlighterPresenter(hproject_data)
+    create_project(profile, hproject, hproject_data)
+
+    qproject = init_defaults.createQuizProject()
+    qproject_data = get_empty_project()
+    setQuizPresenter(qproject_data)
+    create_project(profile, qproject, qproject_data)
+
+def deleteRemoteProjects():
     researchers = init_defaults.createThresherGroup()
     profile = init_defaults.createNick(groups=[researchers])
     hproject = init_defaults.createHighlighterProject()
@@ -114,4 +132,4 @@ if __name__ == '__main__':
     queryCount2 = len(connection.queries)
     logger.info("number of queries %d" % (queryCount2 - queryCount))
 
-    createPybossaProjects()
+    createRemoteProjects()
