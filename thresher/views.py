@@ -115,7 +115,7 @@ def next_question(request, id, ans_num):
         return Response(serializer.data)
 
 
-def collectHighlightTasks(articles=None, project=None, topics=None):
+def collectHighlightTasks(articles=None, topics=None, project=None):
 
     project_data = ProjectSerializer(project, many=False).data
     topics_data = RootTopicSerializer(topics, many=True).data
@@ -152,16 +152,16 @@ class HighlightTasks(GenericAPIView):
 
         # Pagination code is derived from rest_framework.mixins.ListModelMixin
         # and rest_framework.generics.GenericAPIView:get_serializer
-        project = Project.objects.get(name="Deciding Force")
+        project = Project.objects.get(name__exact="Deciding Force Highlighter")
         topics = Topic.objects.filter(parent=None)
 
         articles = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(articles)
         if page is not None:
-            tasks = collectHighlightTasks(page, project, topics)
+            tasks = collectHighlightTasks(page, topics, project)
             return self.get_paginated_response(tasks)
 
-        tasks = collectHighlightTasks(articles, project, topics)
+        tasks = collectHighlightTasks(articles, topics, project)
         return Response(tasks)
 
 
@@ -275,7 +275,7 @@ def quiz_tasks(request):
     if request.method == 'GET':
         taskList = collectQuizTasks(
             topic = Topic.objects.get(name__exact="Protester"),
-            project = Project.objects.get(name__exact="Deciding Force")
+            project = Project.objects.get(name__exact="Deciding Force Quiz")
         )
         # TODO: this needs to be changed to a paginated endpoint for MockQuiz to use
         # Export first 10 for now
