@@ -98,7 +98,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     # Custom fields
     experience_score = serializers.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = serializers.DecimalField(max_digits=5, decimal_places=3)
-    article_highlights = ArticleHighlightSerializer(many=True)
+    users_highlights = ArticleHighlightSerializer(many=True)
     submitted_answers = SubmittedAnswerSerializer(many=True)
 
     def get_username(self, obj):
@@ -107,7 +107,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ('id', 'username',
-                  'experience_score', 'accuracy_score', 'article_highlights',
+                  'experience_score', 'accuracy_score', 'users_highlights',
                   'submitted_answers')
 
 
