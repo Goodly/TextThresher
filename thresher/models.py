@@ -19,6 +19,10 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return "%s" % self.user.username
 
+TASK_TYPE = (
+    ('HLTR', 'Highlighter'),
+    ('QUIZ', 'Quiz'),
+)
 
 class Project(models.Model):
     # max_length matches Pybossa db
@@ -27,6 +31,8 @@ class Project(models.Model):
     instructions = models.TextField()
     # id as returned by Pybossa on creation
     pybossa_id = models.IntegerField(null=True)
+    task_type = models.CharField(max_length=4,
+                                 choices=TASK_TYPE, default="HLTR")
 
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
@@ -39,6 +45,8 @@ class Task(models.Model):
     These task records are created to record successful exports to Pybossa
     so will always have Pybossa id available
     """
+    project = models.ForeignKey(Project, related_name="tasks",
+                                on_delete=models.CASCADE)
     task_type = models.CharField(max_length=16) # 'highlighter' or 'quiz'
     # components provides either the article id and topic_ids used for a highlight task
     # or the root topic id, article id, and case number used for a quiz task

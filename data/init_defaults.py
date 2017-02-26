@@ -84,6 +84,7 @@ def createHighlighterProject():
     (project, created) =  Project.objects.get_or_create(
         name="Deciding Force Highlighter",
         short_name="DecidingForceHighlighter",
+        task_type = "HLTR",
         instructions="Highlight passages in articles that discuss " +
                      "the topics shown."
     )
@@ -95,6 +96,7 @@ def createQuizProject():
     (project, created) =  Project.objects.get_or_create(
         name="Deciding Force Quiz",
         short_name="DecidingForceQuiz",
+        task_type = "QUIZ",
         instructions="Answer questions about short text passages."
     )
     if created:
