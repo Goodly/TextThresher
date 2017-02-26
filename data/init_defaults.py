@@ -74,7 +74,7 @@ def createNick(username="nick", email="nick@example.com", password="bidsatdoe", 
         u.save()
         profile = UserProfile.objects.get_or_create(
             user=u,
-            defaults = {"pybossa_url": "http://crowdcrafting.org/api/",
+            defaults = {"pybossa_url": "http://crowdcrafting.org",
                         "experience_score": 0.98, "accuracy_score": 0.99}
         )[0]
         logger.info("Created researcher '%s', password '%s'." % (username, password))
