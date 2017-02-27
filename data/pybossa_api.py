@@ -132,7 +132,7 @@ def getPresenter(bundlePath):
         raise FileNotFound("Task Presenter bundle.js not found: %s" % (bundlePath))
 
 # Use our default user and projects to exercise the API.
-def createRemoteProjects():
+def testCreateRemoteProjects():
     researchers = init_defaults.createThresherGroup()
     profile = init_defaults.createNick(groups=[researchers])
 
@@ -142,33 +142,62 @@ def createRemoteProjects():
     qproject = init_defaults.createQuizProject()
     create_remote_project(profile, qproject)
 
-def deleteRemoteProjects():
+def testDeleteRemoteProjects():
     researchers = init_defaults.createThresherGroup()
     profile = init_defaults.createNick(groups=[researchers])
+
     hproject = init_defaults.createHighlighterProject()
     delete_remote_project(profile, hproject)
+
     qproject = init_defaults.createQuizProject()
     delete_remote_project(profile, qproject)
 
+def testCreateRemoteHighlighterTasks():
+    # Send primary keys through Django-RQ, not Models and Querysets
+    article_ids = list(Article.objects.all().values_list('id', flat=True))
+    topic_ids = list(Topic.objects.filter(parent=None).values_list('id', flat=True))
+    project_id = Project.objects.get(name__exact="Deciding Force Highlighter").id
+    generate_highlight_tasks_worker.delay(article_ids, topic_ids, project_id)
+
+@django_rq.job('default', timeout=60, result_ttl=24*3600)
+def generate_highlight_tasks_worker(article_ids, topic_ids, project_id):
+    startCount = len(connection.queries)
+    articles = Article.objects.filter(id__in=article_ids)
+    topics = Topic.objects.filter(id__in=topic_ids)
+    project = Project.objects.get(pk=project_id)
+    highlightTasks = collectHighlightTasks(articles, topics, project)
+    return ({
+      "task_type": "HLTR",
+      "generatedTasks": len(highlightTasks),
+      "numberOfQueries": len(connection.queries) - startCount
+    })
+
+def testCreateRemoteQuizTasks():
+    # Send primary keys through Django-RQ, not Models
+    topic_id = Topic.objects.get(name__exact="Protester").id
+    project_id = Project.objects.get(name__exact="Deciding Force Quiz").id
+    generate_quiz_tasks_worker.delay(topic_id, project_id)
+
+@django_rq.job('default', timeout=60, result_ttl=24*3600)
+def generate_quiz_tasks_worker(topic_id, project_id):
+    startCount = len(connection.queries)
+    topic = Topic.objects.get(pk=topic_id)
+    project = Project.objects.get(pk=project_id)
+    quizTasks = collectQuizTasks(topic, project)
+    return ({
+      "task_type": "QUIZ",
+      "generatedTasks": len(quizTasks),
+      "numberOfQueries": len(connection.queries) - startCount
+    })
+
+@django_rq.job('default', timeout=60, result_ttl=24*3600)
+def create_remote_task_worker():
+    pass
 
 if __name__ == '__main__':
     logger.info("Highlighter bundle: %s" % settings.HIGHLIGHTER_BUNDLE_JS)
     logger.info("Quiz bundle: %s" % settings.QUIZ_BUNDLE_JS)
-    highlightTasks = collectHighlightTasks(
-        articles = Article.objects.all(),
-        topics = Topic.objects.filter(parent=None),
-        project = Project.objects.get(name__exact="Deciding Force Highlighter")
-    )
-    logger.info("number of highlight tasks %d" % len(highlightTasks))
-    queryCount = len(connection.queries)
-    logger.info("number of queries %d" % (queryCount))
 
-    quizTasks = collectQuizTasks(
-        topic = Topic.objects.get(name__exact="Protester"),
-        project = Project.objects.get(name__exact="Deciding Force Quiz")
-    )
-    logger.info("number of quiz tasks %d" % len(quizTasks))
-    queryCount2 = len(connection.queries)
-    logger.info("number of queries %d" % (queryCount2 - queryCount))
-
-    createRemoteProjects()
+    testCreateRemoteProjects()
+    testCreateRemoteHighlighterTasks()
+    testCreateRemoteQuizTasks()
