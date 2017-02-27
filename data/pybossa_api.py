@@ -48,10 +48,10 @@ def create_remote_project(profile, project):
     # models for later use.
     # Note: If for some reason the profile or project records disappear
     # by the time the worker runs, then we WANT the worker to fail.
-    create_remote_project_worker.delay(profile.id, project.id)
+    create_remote_project_worker.delay(profile_id=profile.id, project_id=project.id)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
-def create_remote_project_worker(profile_id, project_id):
+def create_remote_project_worker(profile_id=None, project_id=None):
     profile = UserProfile.objects.get(pk=profile_id)
     url = urljoin(profile.pybossa_url, "/api/project")
     params = {'api_key': profile.pybossa_api_key}
@@ -91,10 +91,10 @@ def delete_remote_project(profile, project):
     This functions enqueues the worker to delete a project on a remote
     Pybossa server.
     """
-    delete_remote_project_worker.delay(profile.id, project.id)
+    delete_remote_project_worker.delay(profile_id=profile.id, project_id=project.id)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
-def delete_remote_project_worker(profile_id, project_id):
+def delete_remote_project_worker(profile_id=None, project_id=None):
     profile = UserProfile.objects.get(pk=profile_id)
     project = Project.objects.get(pk=project_id)
     headers = {'content-type': 'application/json'}
@@ -163,12 +163,17 @@ def testDeleteRemoteProjects():
 def testCreateRemoteHighlighterTasks():
     # Send primary keys through Django-RQ, not Models and Querysets
     article_ids = list(Article.objects.all().values_list('id', flat=True))
-    topic_ids = list(Topic.objects.filter(parent=None).values_list('id', flat=True))
+    topic_ids = list(Topic.objects.filter(parent=None)
+                     .values_list('id', flat=True))
     project_id = Project.objects.get(name__exact="Deciding Force Highlighter").id
-    generate_highlight_tasks_worker.delay(article_ids, topic_ids, project_id)
+    generate_highlight_tasks_worker.delay(article_ids=article_ids,
+                                          topic_ids=topic_ids,
+                                          project_id=project_id)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
-def generate_highlight_tasks_worker(article_ids, topic_ids, project_id):
+def generate_highlight_tasks_worker(article_ids=None,
+                                    topic_ids=None,
+                                    project_id=None):
     startCount = len(connection.queries)
     articles = Article.objects.filter(id__in=article_ids)
     topics = Topic.objects.filter(id__in=topic_ids)
@@ -184,10 +189,10 @@ def testCreateRemoteQuizTasks():
     # Send primary keys through Django-RQ, not Models
     topic_id = Topic.objects.get(name__exact="Protester").id
     project_id = Project.objects.get(name__exact="Deciding Force Quiz").id
-    generate_quiz_tasks_worker.delay(topic_id, project_id)
+    generate_quiz_tasks_worker.delay(topic_id=topic_id, project_id=project_id)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
-def generate_quiz_tasks_worker(topic_id, project_id):
+def generate_quiz_tasks_worker(topic_id=None, project_id=None):
     startCount = len(connection.queries)
     topic = Topic.objects.get(pk=topic_id)
     project = Project.objects.get(pk=project_id)
