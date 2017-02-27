@@ -82,11 +82,13 @@ def createNick(username="nick", email="nick@example.com", password="bidsatdoe", 
 
 def createHighlighterProject():
     (project, created) =  Project.objects.get_or_create(
-        name="Deciding Force Highlighter",
         short_name="DecidingForceHighlighter",
-        task_type = "HLTR",
-        instructions="Highlight passages in articles that discuss " +
-                     "the topics shown."
+        defaults = {
+            "name": "Deciding Force Highlighter",
+            "task_type": "HLTR",
+            "instructions": "Highlight passages in articles that discuss " +
+                          "the topics shown."
+        }
     )
     if created:
         logger.info("Created project '%s'" % project.name)
@@ -94,10 +96,12 @@ def createHighlighterProject():
 
 def createQuizProject():
     (project, created) =  Project.objects.get_or_create(
-        name="Deciding Force Quiz",
         short_name="DecidingForceQuiz",
-        task_type = "QUIZ",
-        instructions="Answer questions about short text passages."
+        defaults = {
+            "name": "Deciding Force Quiz",
+            "task_type": "QUIZ",
+            "instructions": "Answer questions about short text passages."
+        }
     )
     if created:
         logger.info("Created project '%s'" % project.name)
