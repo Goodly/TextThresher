@@ -14,7 +14,7 @@ from requests.compat import urljoin
 import django_rq
 import pbclient
 
-from thresher.models import Article, Topic, Project
+from thresher.models import Article, Topic, Project, UserProfile
 from thresher.views import collectHighlightTasks, collectQuizTasks
 from data import init_defaults
 
@@ -25,24 +25,43 @@ class FileNotFound(Exception):
     pass
 
 def get_empty_project():
+    # Note that these pbclient helper objects cannot be Pickled and Unpickled
+    # so they cannot be enqueued by Python RQ.
     return pbclient.Project({
+        "id": 0,
         "name": "",
         "short_name": "",
-        "description": "",
+        "description": "Add project description here.",
         "info": {
           "task_presenter": ""
         }
     })
 
-def create_remote_project(profile, project, payload):
-    headers = {'content-type': 'application/json'}
+def create_remote_project(profile, project):
+    """
+    This functions enqueues the worker with the primary keys for profile
+    and project as it would be unwise to pickle and unpickle Django
+    models for later use.
+    """
+    # Note: If for some reason the profile or project records disappear
+    # by the time the worker runs, then we WANT the worker to fail.
+    create_remote_project_worker.delay(profile.id, project.id)
+
+@django_rq.job('default', timeout=60, result_ttl=24*3600)
+def create_remote_project_worker(profile_id, project_id):
+    profile = UserProfile.objects.get(pk=profile_id)
     url = urljoin(profile.pybossa_url, "/api/project")
     params = {'api_key': profile.pybossa_api_key}
+
+    project = Project.objects.get(pk=project_id)
+    payload = get_empty_project()
     payload.name = project.name
     payload.short_name = project.short_name
-    payload.description = "Add project description here."
     bundlePath = getPresenterPath(project.task_type)
     payload.info['task_presenter'] = getPresenter(bundlePath)
+    payload = pbclient._forbidden_attributes(payload)
+
+    headers = {'content-type': 'application/json'}
     resp = requests.post(url, params=params,
                          headers=headers, timeout=30,
                          data=json.dumps(payload.data))
@@ -57,9 +76,18 @@ def create_remote_project(profile, project, payload):
     else:
         logger.warn("Status %d when trying to create %s. %s" % (
                     resp.status_code, project.name, result['exception_msg']))
+    # ha, Pybossa spits back our multi-megabyte task_presenter at us.
+    # delete the task_presenter from the result so it isn't logged by Python-RQ
+    result['info']['task_presenter'] = ""
     return result
 
 def delete_remote_project(profile, project):
+    delete_remote_project_worker.delay(profile.id, project.id)
+
+@django_rq.job('default', timeout=60, result_ttl=24*3600)
+def delete_remote_project_worker(profile_id, project_id):
+    profile = UserProfile.objects.get(pk=profile_id)
+    project = Project.objects.get(pk=project_id)
     headers = {'content-type': 'application/json'}
     result = {}
     if not project.pybossa_id:
@@ -101,10 +129,10 @@ def createRemoteProjects():
     profile = init_defaults.createNick(groups=[researchers])
 
     hproject = init_defaults.createHighlighterProject()
-    create_remote_project(profile, hproject, get_empty_project())
+    create_remote_project(profile, hproject)
 
     qproject = init_defaults.createQuizProject()
-    create_remote_project(profile, qproject, get_empty_project())
+    create_remote_project(profile, qproject)
 
 def deleteRemoteProjects():
     researchers = init_defaults.createThresherGroup()
