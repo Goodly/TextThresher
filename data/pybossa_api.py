@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 import json
 import requests
 from requests.compat import urljoin
+import iso8601
 import django_rq
 import pbclient
 
@@ -69,20 +70,20 @@ def create_remote_project_worker(profile_id, project_id):
                          data=json.dumps(payload.data))
     result = resp.json()
     if resp.status_code / 100 == 2 and result.get('id'):
-        try:
-            # Test for the existence of this pybossa_id to test
-            # if the this project has been created remotely.
-            project.pybossa_id = int(result.get('id',''))
-            project.save()
-            logger.info("Created project at %s" % (project.getURL(profile)))
-        except ValueError:
-            logger.error("Error converting project id '%s' to integer." % (result.get('id','')))
+        # if Pybossa reports success, then we expect these fields to be present
+        # save info about where this project can be found remotely
+        project.pybossa_url = profile.pybossa_url
+        project.pybossa_id = int(result.get('id'))
+        project.pybossa_owner_id = int(result.get('owner_id'))
+        project.pybossa_secret_key = result.get('secret_key', '')
+        project.pybossa_created = iso8601.parse_date(result.get('created'))
+        project.save()
+        # delete our large task_presenter from the result so it isn't logged by Python-RQ
+        result['info']['task_presenter'] = ""
     else:
-        logger.warn("Status %d when trying to create %s. %s" % (
-                    resp.status_code, project.name, result['exception_msg']))
-    # ha, Pybossa spits back our multi-megabyte task_presenter at us.
-    # delete the task_presenter from the result so it isn't logged by Python-RQ
-    result['info']['task_presenter'] = ""
+        # our large task_presenter is embedded in the error_msg,
+        # so truncate the error message
+        result['exception_msg'] = result['exception_msg'][:256]
     return result
 
 def delete_remote_project(profile, project):
@@ -97,22 +98,29 @@ def delete_remote_project_worker(profile_id, project_id):
     profile = UserProfile.objects.get(pk=profile_id)
     project = Project.objects.get(pk=project_id)
     headers = {'content-type': 'application/json'}
-    result = {}
+    result = {
+        "deleted": False,
+        "short_name": project.short_name,
+        "task_type": project.task_type,
+        "url": project.getURL()
+    }
     if not project.pybossa_id:
-        logger.warn("No id known for deleting %s" % (project.name))
+        result["deleted"] = False
+        result["error"] = "No id for remote project."
         return result
     url = urljoin(profile.pybossa_url, "/api/project/%d" % (project.pybossa_id))
     params = {'api_key': profile.pybossa_api_key }
     resp = requests.delete(url, params=params, headers=headers, timeout=30)
     if resp.status_code / 100 == 2:
+        result["deleted"] = True
+        project.pybossa_url = ""
         project.pybossa_id = None
+        project.pybossa_owner_id = None
+        project.pybossa_secret_key = ""
+        project.pybossa_created = None
         project.save()
-        logger.info("Deleted project at %s" % (project.getURL(profile)))
     else:
-        result = resp.json()
-        logger.warn("Status %d when trying to delete %s. %s" % (
-                    resp.status_code, project.name, result['exception_msg']))
-        logger.info(result.keys().__str__())
+        result = resp.json() # Pybossa only returns JSON if DELETE has error
     return result
 
 def getPresenterPath(task_type):

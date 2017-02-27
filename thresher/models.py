@@ -29,16 +29,24 @@ class Project(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     instructions = models.TextField()
-    # id as returned by Pybossa on creation
-    pybossa_id = models.IntegerField(null=True)
     task_type = models.CharField(max_length=4,
                                  choices=TASK_TYPE, default="HLTR")
+    # following fields are null unless remote Pybossa project has been created
+    pybossa_url = models.URLField(blank=True, default="")
+    pybossa_id = models.IntegerField(null=True)
+    pybossa_owner_id = models.IntegerField(null=True)
+    # UUID format is 36 chars including hyphens
+    pybossa_secret_key = models.CharField(blank=True, max_length=36, default="")
+    pybossa_created = models.DateTimeField(null=True)
 
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
 
-    def getURL(self, profile):
-        return urljoin(profile.pybossa_url, "project/%s/" % (self.short_name))
+    def getURL(self):
+        if (self.pybossa_url):
+            return urljoin(self.pybossa_url, "project/%s/" % (self.short_name))
+        else:
+            return ""
 
 class Task(models.Model):
     """
@@ -59,8 +67,11 @@ class Task(models.Model):
     def __unicode__(self):
         return "id %d task type: %s pybossa_id: %d" % (self.id, self.task_type, self.pybossa_project_id)
 
-    def getURL(self, profile):
-        return urljoin(profile.pybossa_url, "task/%d/" % (self.pybossa_id))
+    def getURL(self):
+        if task.project.pybossa_url:
+            return urljoin(task.project.pybossa_url, "task/%d/" % (self.pybossa_id))
+        else:
+            return ""
 
 # Articles containing text for analysis
 class Article(models.Model):
