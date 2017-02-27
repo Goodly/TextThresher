@@ -39,10 +39,12 @@ def get_empty_project():
 
 def create_remote_project(profile, project):
     """
-    This functions enqueues the worker with the primary keys for profile
-    and project as it would be unwise to pickle and unpickle Django
-    models for later use.
+    This functions enqueues the worker to create a project on a remote
+    Pybossa server.
     """
+    # This enqueues the worker with the primary keys for profile
+    # and project as it would be unwise to pickle and unpickle Django
+    # models for later use.
     # Note: If for some reason the profile or project records disappear
     # by the time the worker runs, then we WANT the worker to fail.
     create_remote_project_worker.delay(profile.id, project.id)
@@ -68,6 +70,8 @@ def create_remote_project_worker(profile_id, project_id):
     result = resp.json()
     if resp.status_code / 100 == 2 and result.get('id'):
         try:
+            # Test for the existence of this pybossa_id to test
+            # if the this project has been created remotely.
             project.pybossa_id = int(result.get('id',''))
             project.save()
             logger.info("Created project at %s" % (project.getURL(profile)))
@@ -82,6 +86,10 @@ def create_remote_project_worker(profile_id, project_id):
     return result
 
 def delete_remote_project(profile, project):
+    """
+    This functions enqueues the worker to delete a project on a remote
+    Pybossa server.
+    """
     delete_remote_project_worker.delay(profile.id, project.id)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
