@@ -1,3 +1,5 @@
+const { fetch, Request, Response, Headers } = require('fetch-ponyfill')();
+
 import { storeProject } from 'actions/project';
 import { storeArticle, storeSaveAndNext } from 'actions/article';
 import { storeTopics } from 'actions/topicPicker';
