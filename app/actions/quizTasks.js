@@ -1,3 +1,5 @@
+const { fetch, Request, Response, Headers } = require('fetch-ponyfill')();
+
 import { storeProject } from 'actions/project';
 import { storeQuizTask, storeSaveAndNext } from 'actions/quiz';
 
@@ -68,8 +70,6 @@ function presentTask(dispatch, getState) {
   if (taskQueue.length > 0) {
     const taskId = taskQueue.shift();
     const task = taskDB[taskId];
-    // TODO: Dispatch an action to clear any prior answers
-    // dispatch(XXXX);
     dispatch({type: 'CLEAR_ANSWERS'});
     dispatch({type: 'UPDATE_QUEUE', question: initQueue(taskDB[taskId])});
     dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
