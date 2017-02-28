@@ -55,14 +55,14 @@ class Task(models.Model):
     """
     project = models.ForeignKey(Project, related_name="tasks",
                                 on_delete=models.CASCADE)
-    task_type = models.CharField(max_length=16) # 'highlighter' or 'quiz'
+    task_type = models.CharField(max_length=4) # 'HLTR' or 'QUIZ'
     # components provides either the article id and topic_ids used for a highlight task
     # or the root topic id, article id, and case number used for a quiz task
-    components = JSONField(default=dict({"task_type":""}))
+    info = JSONField()
     pybossa_id = models.IntegerField()
     pybossa_project_id = models.IntegerField()
-    created = models.DateTimeField()
-    state = models.CharField(max_length=16) # 'ongoing' or 'completed'
+    pybossa_created = models.DateTimeField()
+    pybossa_state = models.CharField(max_length=16) # 'ongoing' or 'completed'
 
     def __unicode__(self):
         return "id %d task type: %s pybossa_id: %d" % (self.id, self.task_type, self.pybossa_project_id)
