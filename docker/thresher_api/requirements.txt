@@ -6,9 +6,9 @@ django-filter==1.0.1
 django-rq==0.9.4
 djangorestframework==3.5.4
 gunicorn==19.6.0
+iso8601==0.1.11
 Markdown==2.6.8
 psycopg2==2.6.2
-pybossa-client==1.1.1
 pytz==2016.10
 redis==2.10.5
 requests==2.13.0

@@ -309,7 +309,8 @@ def load_args():
 
 if __name__ == '__main__':
     init_defaults.createSuperUser()
-    init_defaults.createDecidingForce()
+    init_defaults.createHighlighterProject()
+    init_defaults.createQuizProject()
     researchers = init_defaults.createThresherGroup()
     created_by = init_defaults.createNick(groups=[researchers])
     args = load_args()

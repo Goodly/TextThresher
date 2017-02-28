@@ -114,6 +114,18 @@ def next_question(request, id, ans_num):
         serializer = QuestionSerializer(next_question, many=False)
         return Response(serializer.data)
 
+
+def collectHighlightTasks(articles=None, topics=None, project=None):
+
+    project_data = ProjectSerializer(project, many=False).data
+    topics_data = RootTopicSerializer(topics, many=True).data
+    return [{ "project": project_data,
+              "topics": topics_data,
+              "article":
+                  ArticleSerializer(article, many=False).data
+           } for article in articles ]
+
+
 class HighlightTasks(GenericAPIView):
     # GenericAPIView assists by providing the pagination settings
     # and helpful pagination API
@@ -134,31 +146,23 @@ class HighlightTasks(GenericAPIView):
 
     def get(self, request, *args, **kwargs):
 
+        # GenericAPIView passes kwargs to Serializer in get_serializer
+        # But "?format=json&page=2" works without it.
+        # kwargs = {'context': self.get_serializer_context()}
+
         # Pagination code is derived from rest_framework.mixins.ListModelMixin
         # and rest_framework.generics.GenericAPIView:get_serializer
-        project = Project.objects.get(name="Deciding Force")
+        project = Project.objects.get(name__exact="Deciding Force Highlighter")
         topics = Topic.objects.filter(parent=None)
 
         articles = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(articles)
         if page is not None:
-            tasks = self.collectTaskList(page, project, topics)
+            tasks = collectHighlightTasks(page, topics, project)
             return self.get_paginated_response(tasks)
 
-        tasks = self.collectTaskList(articles, project, topics)
+        tasks = collectHighlightTasks(articles, topics, project)
         return Response(tasks)
-
-    def collectTaskList(self, articles, project, topics):
-        # next line processes features like ?format=json
-        kwargs = {'context': self.get_serializer_context()}
-
-        project_data = ProjectSerializer(project, many=False, **kwargs).data
-        topics_data = RootTopicSerializer(topics, many=True, **kwargs).data
-        return [{ "project": project_data,
-                  "topics": topics_data,
-                  "article":
-                      ArticleSerializer(article, many=False, **kwargs).data
-               } for article in articles ]
 
 
 class HighlightTasksNoPage(HighlightTasks):
@@ -222,25 +226,31 @@ def collectQuizTasks(topic=None, project=None):
     articles = (Article.objects
                 .filter(users_highlights__highlights__topic=topic)
                 .prefetch_related(fetchHighlights))
-    # Export 10 for development (Add endpoint to export all for production.)
-    articles = articles.order_by("id")[:10]
+
+    articles = articles.order_by("id")
+
+    project_data = ProjectSerializer(project, many=False).data
+    topictree_data = TopicSerializer(topictree, many=True).data
 
     # With the prefetching config above, the loops below will
-    # be hitting caches.
+    # be hitting caches. Only 8 queries should be issued against 8 tables,
+    # i.e. The query count will not be a function of number of rows returned.
     for article in articles:
         # Our prefetched highlightsForTopic is nested under
         # the ArticleHightlight record, in HighlightGroup
         # Not expecting more than one ArticleHighlight record
         # but safest to code as if there could be more than one.
+
+        # TODO: Need to further split task by case_number here.
         highlights = [ hg
                        for ah in article.users_highlights.all()
                        for hg in ah.highlightsForTopic
         ]
 
         taskList.append({
-           "project": ProjectSerializer(project, many=False).data,
+           "project": project_data,
            "topTopicId": topic.id,
-           "topictree": TopicSerializer(topictree, many=True).data,
+           "topictree": topictree_data,
            "article": ArticleSerializer(article, many=False).data,
            "highlights": HighlightGroupSerializer(
                              highlights, many=True).data,
@@ -265,8 +275,11 @@ def quiz_tasks(request):
     if request.method == 'GET':
         taskList = collectQuizTasks(
             topic = Topic.objects.get(name__exact="Protester"),
-            project = Project.objects.get(name__exact="Deciding Force")
+            project = Project.objects.get(name__exact="Deciding Force Quiz")
         )
+        # TODO: this needs to be changed to a paginated endpoint for MockQuiz to use
+        # Export first 10 for now
+        taskList = taskList[:10]
         return Response(taskList)
 
 # Register our viewsets with the router

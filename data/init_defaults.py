@@ -74,24 +74,42 @@ def createNick(username="nick", email="nick@example.com", password="bidsatdoe", 
         u.save()
         profile = UserProfile.objects.get_or_create(
             user=u,
-            defaults = {"experience_score": 0.98, "accuracy_score": 0.99}
+            defaults = {"pybossa_url": "http://crowdcrafting.org",
+                        "experience_score": 0.98, "accuracy_score": 0.99}
         )[0]
         logger.info("Created researcher '%s', password '%s'." % (username, password))
     return u.userprofile
 
-def createDecidingForce():
+def createHighlighterProject():
     (project, created) =  Project.objects.get_or_create(
-        name="Deciding Force",
-        instructions="This project analyzes media " +
-            "descriptions of interactions " +
-            "between police and protestors."
+        short_name="DecidingForceHighlighter",
+        defaults = {
+            "name": "Deciding Force Highlighter",
+            "task_type": "HLTR",
+            "instructions": "Highlight passages in articles that discuss " +
+                          "the topics shown."
+        }
     )
     if created:
-        logger.info("Created project 'Deciding Force'")
+        logger.info("Created project '%s'" % project.name)
+    return project
+
+def createQuizProject():
+    (project, created) =  Project.objects.get_or_create(
+        short_name="DecidingForceQuiz",
+        defaults = {
+            "name": "Deciding Force Quiz",
+            "task_type": "QUIZ",
+            "instructions": "Answer questions about short text passages."
+        }
+    )
+    if created:
+        logger.info("Created project '%s'" % project.name)
     return project
 
 if __name__ == '__main__':
     createSuperUser()
     researchers = createThresherGroup()
     createNick(groups=[researchers])
-    createDecidingForce()
+    createHighlighterProject()
+    createQuizProject()

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
+from requests.compat import urljoin
 
 # User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
 class UserProfile(models.Model):
@@ -17,16 +19,59 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return "%s" % self.user.username
 
+TASK_TYPE = (
+    ('HLTR', 'Highlighter'),
+    ('QUIZ', 'Quiz'),
+)
 
 class Project(models.Model):
-    # max_length from Pybossa db
+    # max_length matches Pybossa db
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     instructions = models.TextField()
+    task_type = models.CharField(max_length=4,
+                                 choices=TASK_TYPE, default="HLTR")
+    # following fields are null unless remote Pybossa project has been created
+    pybossa_url = models.URLField(blank=True, default="")
+    pybossa_id = models.IntegerField(null=True)
+    pybossa_owner_id = models.IntegerField(null=True)
+    # UUID format is 36 chars including hyphens
+    pybossa_secret_key = models.CharField(blank=True, max_length=36, default="")
+    pybossa_created = models.DateTimeField(null=True)
 
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
 
+    def getURL(self):
+        if (self.pybossa_url):
+            return urljoin(self.pybossa_url, "project/%s/" % (self.short_name))
+        else:
+            return ""
+
+class Task(models.Model):
+    """
+    These task records are created to record successful exports to Pybossa
+    so will always have Pybossa id available
+    """
+    project = models.ForeignKey(Project, related_name="tasks",
+                                on_delete=models.CASCADE)
+    task_type = models.CharField(max_length=4) # 'HLTR' or 'QUIZ'
+    # components provides either the article id and topic_ids used for a highlight task
+    # or the root topic id, article id, and case number used for a quiz task
+    info = JSONField()
+    pybossa_id = models.IntegerField()
+    pybossa_project_id = models.IntegerField()
+    pybossa_created = models.DateTimeField()
+    pybossa_state = models.CharField(max_length=16) # 'ongoing' or 'completed'
+
+    def __unicode__(self):
+        return "id %d task type: %s pybossa_id: %d" % (self.id, self.task_type, self.pybossa_project_id)
+
+    def getURL(self):
+        if task.project.pybossa_url:
+            return urljoin(task.project.pybossa_url, "task/%d/" % (self.pybossa_id))
+        else:
+            return ""
 
 # Articles containing text for analysis
 class Article(models.Model):
@@ -194,7 +239,7 @@ class HighlightGroup(models.Model):
     highlight_text = models.TextField()
 
     # User assigned case number for this text
-    case_number = models.IntegerField()
+    case_number = models.IntegerField(db_index=True)
 
     # The topic of this text
     topic = models.ForeignKey(Topic, related_name="highlights",
