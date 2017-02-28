@@ -13,7 +13,6 @@ import requests
 from requests.compat import urljoin
 import iso8601
 import django_rq
-import pbclient
 
 from thresher.models import Article, Topic, Project, UserProfile, Task
 from thresher.views import collectHighlightTasks, collectQuizTasks
@@ -22,24 +21,9 @@ from data import init_defaults
 class InvalidTaskType(Exception):
     pass
 
-class RemoteProjectMustExist(Exception):
-    pass
-
 class FileNotFound(Exception):
     pass
 
-def get_empty_project():
-    # Note that these pbclient helper objects cannot be Pickled and Unpickled
-    # so they cannot be enqueued by Python RQ.
-    return pbclient.Project({
-        "id": 0,
-        "name": "",
-        "short_name": "",
-        "description": "Add project description here.",
-        "info": {
-          "task_presenter": ""
-        }
-    })
 
 def create_remote_project(profile, project):
     """
@@ -60,17 +44,19 @@ def create_remote_project_worker(profile_id=None, project_id=None):
     params = {'api_key': profile.pybossa_api_key}
 
     project = Project.objects.get(pk=project_id)
-    payload = get_empty_project()
-    payload.name = project.name
-    payload.short_name = project.short_name
     bundlePath = getPresenterPath(project.task_type)
-    payload.info['task_presenter'] = getPresenter(bundlePath)
-    payload = pbclient._forbidden_attributes(payload)
-
+    payload = {
+        "name": project.name,
+        "short_name": project.short_name,
+        "description": "Add project description here.",
+        "info": {
+          "task_presenter": getPresenter(bundlePath)
+        }
+    }
     headers = {'content-type': 'application/json'}
     resp = requests.post(url, params=params,
                          headers=headers, timeout=30,
-                         data=json.dumps(payload.data))
+                         json=payload)
     result = resp.json()
     if resp.status_code / 100 == 2 and result.get('id'):
         # if Pybossa reports success, then we expect these fields to be present
