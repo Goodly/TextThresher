@@ -149,8 +149,9 @@ if os.environ.get("DATABASE_URL"):
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
-
-import os
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "vendor")
+]
 
 verbose = ( "[%(asctime)s] %(levelname)s "
             "[%(name)s:%(lineno)s] %(message)s" )
