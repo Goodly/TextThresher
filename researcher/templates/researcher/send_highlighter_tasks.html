@@ -1,0 +1,24 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} Send Highlighter Tasks {% endblock %}
+{% block content %}
+<p><a href="{% url 'admin:login' %}?next={% url 'send_highlighter_tasks' %}">Login</a></p>
+<p><a href="{% url 'admin:logout' %}?next={% url 'send_highlighter_tasks' %}">Logout</a></p>
+<p><a href="/admin/auth/user/{{ user.id }}/change/?next={% url 'send_highlighter_tasks' %}">
+  Edit {{ user.username }}
+</a></p>
+<p><a href="{% url 'rq_finished_jobs' 1 %}">Check Queue</a></p>
+<h1>Send Highlighter Tasks</h1>
+  <form
+    action="{% url 'send_highlighter_tasks' %}"
+    method="post">
+    <p>
+      Send Tasks to a Pybossa Server
+    </p>
+    <p>You are logged in as: {{ user.username }}</p>
+    <p>Your remote Pybossa server is set to: {{ user.userprofile.pybossa_url }}</p>
+    <p>Your Pybossa API key is set to: {{ user.userprofile.pybossa_api_key }}</p>
+    {{ form.as_p }}
+    {% csrf_token %}
+    <button type="submit">Send Tasks</button>
+  </form>
+{% endblock %}

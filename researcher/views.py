@@ -3,14 +3,19 @@ logger = logging.getLogger(__name__)
 import tarfile, tempfile, os, fnmatch
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
+from researcher.forms import SendHighlighterTasksForm
 from data.load_data import load_article, load_schema
 from data.parse_document import parse_article
 from data.parse_schema import parse_schema
 from data.legacy.parse_schema import parse_schema as old_parse_schema
+
+from data.pybossa_api import generate_highlight_tasks_worker
+from thresher.models import Article, Topic
 
 def import_article(filename, owner_profile):
     logger.info("is tar file: %s" % tarfile.is_tarfile(filename))
@@ -101,4 +106,43 @@ class UploadSchemaView(PermissionRequiredMixin, View):
                 request,
                 self.template_name,
                 {'form': bound_form}
+            )
+
+class SendHighlighterTasksView(PermissionRequiredMixin, View):
+    form_class = SendHighlighterTasksForm
+    template_name = 'researcher/send_highlighter_tasks.html'
+    login_url = '/admin/login/'
+    redirect_field_name = 'next'
+    permission_required = ()
+
+    def get(self, request):
+        return render(
+            request,
+            self.template_name,
+            {'form': self.form_class(),
+             'user': request.user
+            }
+        )
+
+    def post(self, request):
+        bound_form = self.form_class(request.POST)
+        if bound_form.is_valid():
+            profile_id = request.user.userprofile.id
+            article_ids = list(Article.objects.all().values_list('id', flat=True))
+            topic_ids = list(Topic.objects.filter(parent=None)
+                             .values_list('id', flat=True))
+            project_id = bound_form.cleaned_data['project'].id
+            generate_highlight_tasks_worker.delay(profile_id=profile_id,
+                                                  article_ids=article_ids,
+                                                  topic_ids=topic_ids,
+                                                  project_id=project_id)
+
+            return redirect(reverse('rq_finished_jobs', args=(0,)))
+        else:
+            return render(
+                request,
+                self.template_name,
+                {'form': self.form_class(),
+                 'user': request.user
+                }
             )

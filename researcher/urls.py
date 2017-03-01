@@ -7,5 +7,8 @@ urlpatterns = [
         name='researcher_upload_articles'),
     url(r'^upload_schema/$',
         views.UploadSchemaView.as_view(),
-        name='researcher_upload_schema')
+        name='researcher_upload_schema'),
+    url(r'^send_highlighter_tasks/$',
+        views.SendHighlighterTasksView.as_view(),
+        name='send_highlighter_tasks')
 ]
