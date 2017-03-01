@@ -1,27 +1,16 @@
-{% load staticfiles %}
+{% load static %}
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}This is my new project home page{% endblock title %}</title>
+    <title>{% block title %}This is my new project home page{% endblock title %} &mdash; TextThresher</title>
 
     <link rel="icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
 
-    <!-- build:css /static/basetheme/base-lib.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="/bower_components/sanitize-css/sanitize.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-
-    <!-- build:css /static/basetheme/base.css -->
-    <link rel="stylesheet" href="styles/base.css">
-    <!-- endbuild -->
-    
-    <!-- build:js /static/basetheme/modernizr.js -->
-    <script src="/bower_components/modernizr/modernizr.js"></script>
-    <!-- endbuild -->
+    <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.css' %}" />
+    <script src="{% static 'bower_components/modernizr/modernizr.js' %}"></script>
   </head>
   <body>
     
@@ -41,24 +30,5 @@
     </div>
     {% endblock content %}
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-    <!--build:remove -->
-    <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='https://www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>
-    <!-- endbuild -->
-
-    <!-- build:js /static/basetheme/base-vendor.js -->
-    <!-- bower:js -->
-    <!-- endbower -->
-    <!-- endbuild -->
-    
-    <!-- build:js /static/basetheme/base.js -->
-    <!-- endbuild -->
   </body>
 </html>
