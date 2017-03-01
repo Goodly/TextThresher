@@ -19,7 +19,8 @@ const TYPES = {
   RADIO: 'RADIO',
   CHECKBOX: 'CHECKBOX',
   DATETIME: 'DATETIME',
-  TEXT: 'TEXT'
+  TEXT: 'TEXT',
+  TIME: 'TIME'
 };
 
 const mapStateToProps = state => {
@@ -160,14 +161,14 @@ const Question = React.createClass({
     );
   },
 
-  textInput: function(controlname="textinput") {
+  textInput: function(type, controlname="textinput") {
     var colorText = COLOR_OPTIONS[0];
     var str = this.props.answers[this.props.question.id] ? this.props.answers[this.props.question.id][0].text : '';
     return (
       <form>
         <input type="text" name={controlname} style={{ color: colorText }}
             value={str}
-            onChange={(event) => { this.props.selectAnswer(TYPES.TEXT, this.props.question.id, 0, event.target.value) } }/>
+            onChange={(event) => { this.props.selectAnswer(type, this.props.question.id, 0, event.target.value) } }/>
       </form>
     );
   },
@@ -187,9 +188,11 @@ const Question = React.createClass({
       case TYPES.DATETIME:
         return this.dateTimeInput();
       case TYPES.TEXT:
-        return this.textInput();
+        return this.textInput(TYPES.TEXT);
+      case TYPES.TIME:
+        return this.textInput(TYPES.TIME);
       default:
-        console.log('unsupported answer type, should be: RADIO, CHECKBOX, DATETIME or TEXT');
+        console.log('unsupported answer type: ' + this.props.question.question_type + ', should be: RADIO, CHECKBOX, DATETIME or TEXT');
         return <div></div>
     }
   },
