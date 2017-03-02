@@ -7,6 +7,8 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
+import django_rq
+
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
 from researcher.forms import SendTasksForm
 from data.load_data import load_article, load_schema
@@ -18,10 +20,11 @@ from data.pybossa_api import create_remote_project
 from data.pybossa_api import generate_highlight_tasks_worker
 from data.pybossa_api import generate_quiz_tasks_worker
 from data.pybossa_api import InvalidTaskType
-from thresher.models import Article, Topic
+from thresher.models import Article, Topic, UserProfile
 
-def import_article(filename, owner_profile):
-    logger.info("is tar file: %s" % tarfile.is_tarfile(filename))
+@django_rq.job('default', timeout=60, result_ttl=24*3600)
+def import_article(filename, owner_profile_id):
+    owner_profile = UserProfile.objects.get(pk=owner_profile_id)
     with tarfile.open(filename) as tar:
         members = [ af for af in tar.getmembers()
                         if af.isfile() and fnmatch.fnmatch(af.name, "*.txt")]
@@ -29,14 +32,17 @@ def import_article(filename, owner_profile):
         for member in members:
             article = tar.extractfile(member).read()
             load_article(parse_article(article, member.name), owner_profile)
+    os.remove(filename)
 
-def import_schema(filename, owner_profile):
+@django_rq.job('default', timeout=60, result_ttl=24*3600)
+def import_schema(filename, owner_profile_id):
     load_schema(old_parse_schema(filename))
+    os.remove(filename)
 
 class UploadArticlesView(PermissionRequiredMixin, View):
     form_class = UploadArticlesForm
     template_name = 'researcher/upload_article_form.html'
-    login_url = '/admin/login/'
+    login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
     permission_required = u'thresher.add_article'
 
@@ -52,12 +58,14 @@ class UploadArticlesView(PermissionRequiredMixin, View):
         if bound_form.is_valid():
             f = request.FILES['article_archive_file']
             logger.info("Request to import article archive %s, length %d" % (f.name, f.size))
-            with tempfile.NamedTemporaryFile() as archive_file:
+            with tempfile.NamedTemporaryFile(delete=False) as archive_file:
                 for chunk in f.chunks():
                     archive_file.write(chunk)
                 archive_file.flush()
-                logger.info("Archive copied to temp file %s" % archive_file.name)
-                import_article(archive_file.name, request.user.userprofile)
+                logger.info("Archive copied to temp file %s: tar file format: %s"
+                            % (archive_file.name, tarfile.is_tarfile(archive_file.name)))
+                # Async job must delete temp file when done
+                import_article.delay(archive_file.name, request.user.userprofile.id)
 
             return redirect('/admin/thresher/article/')
         else:
@@ -70,18 +78,12 @@ class UploadArticlesView(PermissionRequiredMixin, View):
 class UploadSchemaView(PermissionRequiredMixin, View):
     form_class = UploadSchemaForm
     template_name = 'researcher/upload_schema_form.html'
-    login_url = '/admin/login/'
+    login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
     permission_required = (
         u'thresher.add_topic',
-        u'thresher.change_topic',
-        u'thresher.delete_topic',
         u'thresher.add_question',
-        u'thresher.change_question',
-        u'thresher.delete_question',
         u'thresher.add_answer',
-        u'thresher.change_answer',
-        u'thresher.delete_answer',
     )
 
     def get(self, request):
@@ -96,12 +98,13 @@ class UploadSchemaView(PermissionRequiredMixin, View):
         if bound_form.is_valid():
             f = request.FILES['schema_file']
             logger.info("Request to import schema %s, length %d" % (f.name, f.size))
-            with tempfile.NamedTemporaryFile() as schema_file:
+            with tempfile.NamedTemporaryFile(delete=False) as schema_file:
                 for chunk in f.chunks():
                     schema_file.write(chunk)
                 schema_file.flush()
                 logger.info("Schema copied to temp file %s" % schema_file.name)
-                import_schema(schema_file.name, request.user.userprofile)
+                # Async job must delete temp file when done
+                import_schema.delay(schema_file.name, request.user.userprofile.id)
 
             return redirect('/admin/thresher/topic/')
         else:
@@ -116,7 +119,12 @@ class SendTasksView(PermissionRequiredMixin, View):
     template_name = 'researcher/send_tasks.html'
     login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
-    permission_required = ()
+    # We are creating remotely, so real permission is via Pybossa API key.
+    # Put some requirements on form access.
+    permission_required = (
+        u'thresher.add_project',
+        u'thresher.change_project',
+    )
 
     def get_task_generator(self, project):
         if project.task_type == "HLTR":

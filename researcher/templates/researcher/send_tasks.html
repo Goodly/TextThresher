@@ -1,43 +1,42 @@
 {% extends parent_template|default:"researcher/base.html" %}
 {% block title %} Generate and Send Tasks for a Project {% endblock %}
 {% block content %}
-<p>
   {% if user.is_anonymous %}
-    <a href="{% url 'admin:login' %}?next={% url 'send_tasks' %}">
-      Login
-    </a>
-  {% else %}
-    <a href="{% url 'admin:logout' %}?next={% url 'send_tasks' %}">
-      Logout
-    </a>
-  {% endif %}
-</p>
-{% if user.is_authenticated %}
-  <p><a href="{% url 'admin:auth_user_change' user.userprofile.id %}">
-    Edit {{ user.username }}
-  </a></p>
-{% endif %}
-<p><a href="{% url 'admin:index' %}">
-  Django Admin
-</a></p>
-<p><a href="{% url 'admin:app_list' app_label='thresher' %}">
-   Edit Thresher Objects
-</a></p>
-<p><a href="{% url 'rq_home' %}">
-  Check Queue
-</a></p>
-<h1>Generate and Send Tasks for a Project</h1>
-  <form
-    action="{% url 'send_tasks' %}"
-    method="post">
     <p>
-      Send Tasks to a Pybossa Server
+      <a href="{% url 'admin:login' %}?next={% url 'send_tasks' %}">
+        Login
+      </a>
+    {% else %}
+      <a href="{% url 'admin:logout' %}?next={% url 'send_tasks' %}">
+        Logout
+      </a>
     </p>
-    <p>You are logged in as: {{ user.username }}</p>
-    <p>Your remote Pybossa server is set to: {{ user.userprofile.pybossa_url }}</p>
-    <p>Your Pybossa API key is set to: {{ user.userprofile.pybossa_api_key }}</p>
-    {{ form.as_p }}
-    {% csrf_token %}
-    <button type="submit">Send Tasks</button>
-  </form>
+  {% endif %}
+  {% if user.is_authenticated %}
+    <p><a href="{% url 'admin:auth_user_change' user.userprofile.id %}">
+      Edit {{ user.username }}
+    </a></p>
+    <p><a href="{% url 'admin:index' %}">
+      Thresher Admin
+    </a></p>
+    <p><a href="{% url 'rq_home' %}">
+      Check Queue
+    </a></p>
+    <h1>Generate and Send Tasks for a Project</h1>
+      <form
+        action="{% url 'send_tasks' %}"
+        method="post">
+        <p>
+          Send Tasks to a Pybossa Server
+        </p>
+        <p>You are logged in as: {{ user.username }}</p>
+        <p>Your remote Pybossa server is set to: {{ user.userprofile.pybossa_url }}</p>
+        <p>Your Pybossa API key is set to: {{ user.userprofile.pybossa_api_key }}</p>
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit">Send Tasks</button>
+      </form>
+  {% else %}
+    <p>You must log in to see the Send Tasks form.</p>
+  {% endif %}
 {% endblock %}
