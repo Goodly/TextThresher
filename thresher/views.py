@@ -189,7 +189,13 @@ class HighlightTasksNoPage(HighlightTasks):
 #            id__in=[9, 11, 38, 53, 55, 202, 209, 236, 259]
 #        ).order_by('id')
 
-def collectQuizTasks(topic=None, project=None):
+def collectQuizTasks(articles=None, topics=None, project=None):
+    taskList = []
+    for topic in topics:
+        taskList.extend(collectQuizTasksForTopic(articles, topic, project))
+    return taskList
+
+def collectQuizTasksForTopic(articles=None, topic=None, project=None):
     taskList = []
 
     topicQuery = Topic.objects.raw("""
@@ -222,8 +228,8 @@ def collectQuizTasks(topic=None, project=None):
     fetchHighlights = Prefetch("users_highlights__highlights",
                                queryset=topicHighlights,
                                to_attr="highlightsForTopic")
-    # Select all articles highlighted with the topic
-    articles = (Article.objects
+    # Find articles highlighted with the topic within the provided queryset
+    articles = (articles
                 .filter(users_highlights__highlights__topic=topic)
                 .prefetch_related(fetchHighlights))
 
@@ -274,9 +280,11 @@ def quiz_tasks(request):
     """
     if request.method == 'GET':
         taskList = collectQuizTasks(
-            topic = Topic.objects.get(name__exact="Protester"),
+            articles = Article.objects.all(),
+            topics = Topic.objects.filter(parent=None),
             project = Project.objects.get(name__exact="Deciding Force Quiz")
         )
+        logger.info("Collected %d quiz tasks." % len(taskList))
         # TODO: this needs to be changed to a paginated endpoint for MockQuiz to use
         # Export first 10 for now
         taskList = taskList[:10]

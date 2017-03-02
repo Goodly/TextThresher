@@ -11,8 +11,8 @@ class SelectProjectField(forms.ModelChoiceField):
     def label_from_instance(self, p):
         return p.name
 
-help_select_project = "Select the Project for which you would like to upload highlights."
-class SendHighlighterTasksForm(forms.Form):
-    project = SelectProjectField(Project.objects.filter(task_type="HLTR"),
+help_select_project = "Select the Project for which you would like to generate tasks."
+class SendTasksForm(forms.Form):
+    project = SelectProjectField(Project.objects.all(),
                                  empty_label=None,
                                  help_text=help_select_project)
