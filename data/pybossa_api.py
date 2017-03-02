@@ -35,7 +35,7 @@ def create_remote_project(profile, project):
     # models for later use.
     # Note: If for some reason the profile or project records disappear
     # by the time the worker runs, then we WANT the worker to fail.
-    create_remote_project_worker.delay(profile_id=profile.id, project_id=project.id)
+    return create_remote_project_worker.delay(profile_id=profile.id, project_id=project.id)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
 def create_remote_project_worker(profile_id=None, project_id=None):
@@ -168,7 +168,8 @@ def testCreateRemoteHighlighterTasks():
 def generate_highlight_tasks_worker(profile_id=None,
                                     article_ids=None,
                                     topic_ids=None,
-                                    project_id=None):
+                                    project_id=None,
+                                    depends_on=None):
     startCount = len(connection.queries)
     articles = Article.objects.filter(id__in=article_ids)
     topics = Topic.objects.filter(id__in=topic_ids)
@@ -180,11 +181,13 @@ def generate_highlight_tasks_worker(profile_id=None,
         return {"error_msg": "Project type must be 'HLTR', "
                 "found '%s'" % (project.task_type)}
     tasks = collectHighlightTasks(articles, topics, project)
-    tasks = tasks[:5] # DEBUG
+    if settings.DEBUG:
+        tasks = tasks[:5] # limit for debugging
     for task in tasks:
         create_remote_task_worker.delay(profile_id=profile_id,
                                         project_id=project_id,
-                                        task=task)
+                                        task=task,
+                                        depends_on=depends_on)
     return ({
       "task_type": "HLTR",
       "generatedTasks": len(tasks),
@@ -194,16 +197,24 @@ def generate_highlight_tasks_worker(profile_id=None,
 def testCreateRemoteQuizTasks():
     # Send primary keys through Django-RQ, not Models
     profile_id = UserProfile.objects.get(user__username="nick").id
-    topic_id = Topic.objects.get(name__exact="Protester").id
+    article_ids = list(Article.objects.all().values_list('id', flat=True))
+    topic_ids = list(Topic.objects.filter(parent=None)
+                     .values_list('id', flat=True))
     project_id = Project.objects.get(name__exact="Deciding Force Quiz").id
     generate_quiz_tasks_worker.delay(profile_id=profile_id,
-                                     topic_id=topic_id,
+                                     article_ids=article_ids,
+                                     topic_ids=topic_ids,
                                      project_id=project_id)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
-def generate_quiz_tasks_worker(profile_id=None, topic_id=None, project_id=None):
+def generate_quiz_tasks_worker(profile_id=None,
+                               article_ids=None,
+                               topic_ids=None,
+                               project_id=None,
+                               depends_on=None):
     startCount = len(connection.queries)
-    topic = Topic.objects.get(pk=topic_id)
+    articles = Article.objects.filter(id__in=article_ids)
+    topics = Topic.objects.filter(id__in=topic_ids)
     project = Project.objects.get(pk=project_id)
     if not project.pybossa_id:
         return {"error_msg":  "Project '%s' must be created remotely "
@@ -211,12 +222,14 @@ def generate_quiz_tasks_worker(profile_id=None, topic_id=None, project_id=None):
     if project.task_type != "QUIZ":
         return {"error_msg": "Project type must be 'QUIZ', "
                 "found '%s'" % (project.task_type)}
-    tasks = collectQuizTasks(topic, project)
-    tasks = tasks[:5] # DEBUG
+    tasks = collectQuizTasks(articles, topics, project)
+    if settings.DEBUG:
+        tasks = tasks[:5] # DEBUG
     for task in tasks:
         create_remote_task_worker.delay(profile_id=profile_id,
                                         project_id=project_id,
-                                        task=task)
+                                        task=task,
+                                        depends_on=depends_on)
     return ({
       "task_type": "QUIZ",
       "generatedTasks": len(tasks),

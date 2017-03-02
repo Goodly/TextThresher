@@ -1,0 +1,18 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} Generate and Send Tasks for a Project {% endblock %}
+{% block content %}
+  <h1>Generate and Send Tasks for a Project</h1>
+    <form
+      action="{% url 'researcher:send_tasks' %}"
+      method="post">
+      <p>
+        Send Tasks to a Pybossa Server
+      </p>
+      <p>You are logged in as: {{ user.username }}</p>
+      <p>Your remote Pybossa server is set to: {{ user.userprofile.pybossa_url }}</p>
+      <p>Your Pybossa API key is set to: {{ user.userprofile.pybossa_api_key }}</p>
+      {{ form.as_p }}
+      {% csrf_token %}
+      <button type="submit">Send Tasks</button>
+    </form>
+{% endblock %}
