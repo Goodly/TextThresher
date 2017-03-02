@@ -57,7 +57,12 @@ def create_remote_project_worker(profile_id=None, project_id=None):
     resp = requests.post(url, params=params,
                          headers=headers, timeout=30,
                          json=payload)
-    result = resp.json()
+    try:
+        # If presenter > 5MB, Will get a 413 Request Entity Too Large
+        # from NGINX as HTML which will cause json parser to throw ValueError
+        result = resp.json()
+    except ValueError:
+        return resp.text # Return the response content for error analysis
     if resp.status_code / 100 == 2 and result.get('id'):
         # if Pybossa reports success, then we expect these fields to be present
         # save info about where this project can be found remotely
