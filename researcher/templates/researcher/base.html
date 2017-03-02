@@ -17,6 +17,35 @@
     <!--[if lt IE 10]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
+    <p><a href="{% url 'researcher:index' %}">
+      Researcher Tools
+    </a></p>
+    {% if user.is_anonymous %}
+      <p>
+        <a href="{% url 'admin:login' %}?next={{ request.get_full_path|urlencode }}">
+          Login
+        </a>
+      </p>
+    {% endif %}
+    {% if user.is_authenticated %}
+      <p>
+        You are logged in as:
+        <a href="{% url 'admin:auth_user_change' user.userprofile.id %}">
+          {{ user.username }}
+        </a>
+      </p>
+      <p>
+        <a href="{% url 'admin:logout' %}?next={{ request.get_full_path|urlencode }}">
+          Logout
+        </a>
+      </p>
+      <p><a href="{% url 'admin:index' %}">
+        Thresher Admin
+      </a></p>
+      <p><a href="{% url 'rq_home' %}">
+        Check Queue
+      </a></p>
+    {% endif %}
 
     {% block content %}
     <div class="hero-unit">

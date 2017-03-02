@@ -5,6 +5,7 @@ import tarfile, tempfile, os, fnmatch
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
+from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 import django_rq
@@ -21,6 +22,13 @@ from data.pybossa_api import generate_highlight_tasks_worker
 from data.pybossa_api import generate_quiz_tasks_worker
 from data.pybossa_api import InvalidTaskType
 from thresher.models import Article, Topic, UserProfile
+
+class IndexView(TemplateView):
+    template_name = 'researcher/index.html'
+
+    def get(self, request):
+        # We need 'request' in the context so use render
+        return render(request, self.template_name)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
 def import_article(filename, owner_profile_id):

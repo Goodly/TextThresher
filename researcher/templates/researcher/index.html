@@ -1,0 +1,14 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} Researcher Tools {% endblock %}
+{% block content %}
+  <h1>Researcher Tools</h1>
+    <p><a href="{% url 'researcher:upload_articles' %}">
+      Upload Articles
+    </a></p>
+    <p><a href="{% url 'researcher:upload_schema' %}">
+      Upload Schema File
+    </a></p>
+    <p><a href="{% url 'researcher:send_tasks' %}">
+      Send Tasks to Pybossa server
+    </a></p>
+{% endblock %}
