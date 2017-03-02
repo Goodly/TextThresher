@@ -17,6 +17,12 @@
     Edit {{ user.username }}
   </a></p>
 {% endif %}
+<p><a href="{% url 'admin:index' %}">
+  Django Admin
+</a></p>
+<p><a href="{% url 'admin:app_list' app_label='thresher' %}">
+   Edit Thresher Objects
+</a></p>
 <p><a href="{% url 'rq_home' %}">
   Check Queue
 </a></p>
