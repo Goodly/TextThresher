@@ -149,8 +149,9 @@ class TopicsSchemaParser(object):
 
             # First we populate the contingency question's answers with the
             # default next answer
+            next_question_default_next_id = next_question.default_next.id
             for answer in next_question_answers:
-                answer.next_question = next_question.default_next
+                answer.next_questions = "[" + next_question_default_next_id + "]"
                 answer.save()
 
             # Now we point the current question's answer to the next question
@@ -158,8 +159,10 @@ class TopicsSchemaParser(object):
                 answers = answers
             else:
                 answers = answers.filter(answer_number=dep.answer)
+            next_question_id = next_question.id
             for answer in answers:
-                answer.next_question = next_question
+                answer.next_questions = (answer.next_questions[:-1] + "," + 
+                                         next_question_id + "]")
                 answer.save()
 
 def load_schema(schema):

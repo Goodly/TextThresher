@@ -110,7 +110,15 @@ def next_question(request, id, ans_num):
     if request.method == 'GET':
         question = Question.objects.get(id=id)
         answer = Answer.objects.get(question=question, answer_number=ans_num)
-        next_question = answer.next_question
+        # TODO: assuming that user wants the first "next question"
+        next_question_array_text = answer.next_questions
+        if len(next_question_array_text) > 0:
+            next_question_first_text = next_question_array_text.split(",")[0]
+            next_question_first_text = next_question_first_text[2:]
+            next_question = int(next_question_first_text)
+        else:
+            return Response("{'next_question': 'null'}", 
+                            status=status.HTTP_404_NOT_FOUND)
         serializer = QuestionSerializer(next_question, many=False)
         return Response(serializer.data)
 

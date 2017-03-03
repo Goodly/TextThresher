@@ -208,9 +208,12 @@ class Answer(models.Model):
     answer_content = models.TextField()
 
     # The next question the answer is leading to
-    next_question = models.ForeignKey(Question,
-                                      related_name="question_next",
-                                      on_delete=models.SET_NULL, null=True)
+    # next_question = models.ForeignKey(Question,
+    #                                   related_name="question_next",
+    #                                   on_delete=models.SET_NULL, null=True)
+    # Next questions as an array of question IDs
+    next_questions = models.TextField()
+
     class Meta:
         unique_together = ("answer_number", "question")
 

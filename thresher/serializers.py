@@ -71,10 +71,11 @@ class ArticleSerializer(serializers.ModelSerializer):
                   'parse_version', 'annotators')
 
 class AnswerSerializer(serializers.ModelSerializer):
+    next_questions = JSONSerializerField()
 
     class Meta:
         model = Answer
-        fields = ('id', 'answer_number', 'answer_content', 'next_question')
+        fields = ('id', 'answer_number', 'answer_content', 'next_questions')
 
 class QuestionSerializer(serializers.ModelSerializer):
     # A nested serializer for all the answers (if any)
