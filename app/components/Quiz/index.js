@@ -5,6 +5,8 @@ import Question from 'components/Question';
 
 import { styles } from './styles.scss';
 
+import { addNonContingentQuestions } from 'actions/quizTasks';
+
 export class Quiz extends Component {
   constructor(props) {
     super(props);
@@ -51,13 +53,13 @@ export class Quiz extends Component {
   generateSubQuestion(topic) {
     var answer_list = [];
     for(var i = 1; i < topic.length; i++) {
-      var temp_answer = { id: -1 - i, answer_number: 1, answer_content: topic[i].name, next_question: null};
+      var temp_answer = { id: -1 - i, answer_number: 1, answer_content: topic[i].name, next_question: topic[i].id};
       answer_list.push(temp_answer);
     }
     var sub_question = {
       id: -1,
       question_number: 0,
-      question_type: 'CHECKBOX',
+      question_type: 'SELECT_SUBTOPIC',
       question_text: 'Which of these subtopics are in the highlighted text?',
       answers: answer_list
     };

@@ -20,7 +20,8 @@ const TYPES = {
   CHECKBOX: 'CHECKBOX',
   DATETIME: 'DATETIME',
   TEXT: 'TEXT',
-  TIME: 'TIME'
+  TIME: 'TIME',
+  SELECT_SUBTOPIC: 'SELECT_SUBTOPIC'
 };
 
 const mapStateToProps = state => {
@@ -107,7 +108,7 @@ const Question = React.createClass({
     );
   },
 
-  mapToCheckbox: function(arr, controlname="controlgroup") {
+  mapToCheckbox: function(arr, type, controlname="controlgroup") {
     return (
       <form>
         { arr.map((elem, i) => {
@@ -124,7 +125,7 @@ const Question = React.createClass({
               <input type="checkbox" 
                   name={controlname}
                   checked={ this.checkInArray(elem.id) }
-                  onChange={ () => { this.checkboxOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
+                  onChange={ () => { this.checkboxOnClick(type, elem, COLOR_OPTIONS[i]) }} />
               { " " + elem.answer_content }
               <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
             </div>
@@ -134,7 +135,7 @@ const Question = React.createClass({
     );
   },
 
-  checkboxOnClick: function(ans_id, text, color) {
+  checkboxOnClick: function(type, answer, color) {
     if(this.checkInArray(ans_id)) {
       this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id);
       if(this.props.color && this.props.color.answer_id == ans_id) {
@@ -184,7 +185,9 @@ const Question = React.createClass({
       case TYPES.RADIO:
         return this.mapToRadio(answer_list)
       case TYPES.CHECKBOX:
-        return this.mapToCheckbox(answer_list)
+        return this.mapToCheckbox(answer_list, TYPES.CHECKBOX)
+      case TYPES.SELECT_SUBTOPIC:
+        return this.mapToCheckbox(answer_list, TYPES.SELECT_SUBTOPIC)
       case TYPES.DATETIME:
         return this.dateTimeInput();
       case TYPES.TEXT:
