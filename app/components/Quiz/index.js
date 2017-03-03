@@ -5,8 +5,6 @@ import Question from 'components/Question';
 
 import { styles } from './styles.scss';
 
-import { addNonContingentQuestions } from 'actions/quizTasks';
-
 export class Quiz extends Component {
   constructor(props) {
     super(props);
@@ -69,14 +67,7 @@ export class Quiz extends Component {
   mapTopic(topic) {
     var sub_question = this.generateSubQuestion(topic);
 
-    var next_id = -1;
-    for(var k = 0; k < topic.length; k++) {
-      if(topic[k].questions.length > 0) {
-        next_id = topic[k].questions[0].id;
-        break;
-      }
-    }
-
+    var next_id = this.props.queue.length > 1 ? this.props.queue[1] : -1;
     // check if element shoudl be displayed as selected
     var format_question = (
       <div key={-1}>
