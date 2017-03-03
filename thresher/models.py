@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxLengthValidator
 from requests.compat import urljoin
 
 # User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
@@ -12,7 +13,11 @@ class UserProfile(models.Model):
     # Metadata
     experience_score = models.DecimalField(max_digits=5, decimal_places=3)
     accuracy_score = models.DecimalField(max_digits=5, decimal_places=3)
-    pybossa_url = models.URLField(blank=True, default="")
+    # URLField uses django.core.validators.URLValidator
+    # However, it requires a TLD, and won't accept a local hostname like
+    # http://pybossa - such as provided by Docker's local virtual network
+    # So fall back to a CharField
+    pybossa_url = models.CharField(blank=True, max_length=200, default="")
     # UUID format is 36 chars including hyphens
     pybossa_api_key = models.CharField(blank=True, max_length=36, default="")
 
