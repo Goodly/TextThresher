@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxLengthValidator
 from requests.compat import urljoin
 
 # User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
