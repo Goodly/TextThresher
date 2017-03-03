@@ -64,7 +64,7 @@ export default {
     }
   },
   context: path.join(__dirname, '../'),
-  devtool: 'cheap-module-inline-source-map',
+  devtool: '#source-map',
   entry: {
     app: [
       'babel-polyfill',

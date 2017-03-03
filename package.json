@@ -7,11 +7,10 @@
     "url": "git@github.com:Goodly/TextThresher.git"
   },
   "scripts": {
-    "dev": "node --harmony ./webpack/dev-server.js",
-    "debug": "DEBUG=dev node --harmony ./webpack/dev-server.js",
-    "serve": "webpack-dev-server --config webpack.config.js",
-    "build": "NODE_ENV=development WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
-    "build:watch": "NODE_ENV=development WEBPACK=cleandist webpack --progress --stats --config webpack.config.js --watch",
+    "dev":   "NODE_ENV=development DEBUG=dev node --harmony ./webpack/dev-server.js",
+    "serve": "NODE_ENV=development DEBUG=dev webpack-dev-server --config webpack.config.js",
+    "build": "NODE_ENV=development DEBUG=dev WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
+    "build:watch": "NODE_ENV=development DEBUG=dev WEBPACK=cleandist webpack --progress --stats --config webpack.config.js --watch",
     "deploy": "NODE_ENV=production WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
     "test": "node --harmony_proxies node_modules/.bin/jest",
     "test:watch": "npm run test -- --watch",
