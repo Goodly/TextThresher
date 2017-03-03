@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { SingleDatePicker } from 'react-dates';
 import moment from 'moment';
 import { answerSelected, answerRemoved, colorSelected } from '../../actions/quiz';
+import { updateQueue, removeElemQueue } from '../../actions/quizTasks';
 
 /* component styles */
 import { styles } from './styles.scss';
@@ -27,13 +28,16 @@ const TYPES = {
 const mapStateToProps = state => {
   var answers = {};
   var color = {};
+  var currTask = {};
   if(state.quiz) {
     answers = state.quiz.answer_selected;
     color = state.quiz.highlighter_color;
+    currTask = state.quiz.currTask;
   }
   return {
     answers,
-    color
+    color,
+    currTask
   };
 }
 
@@ -47,7 +51,13 @@ const mapDispatchToProps = dispatch => {
     },
     setColor: (q_id, a_id, color) => {
       dispatch(colorSelected(q_id, a_id, color))
-    } 
+    },
+    queueUpdate: (questions) => {
+      dispatch(updateQueue(questions))
+    },
+    queueRemove: (questions) => {
+      dispatch(removeElemQueue(questions))
+    }
   };
 }
 
@@ -136,14 +146,28 @@ const Question = React.createClass({
   },
 
   checkboxOnClick: function(type, answer, color) {
-    if(this.checkInArray(ans_id)) {
-      this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id);
-      if(this.props.color && this.props.color.answer_id == ans_id) {
+    var next_topic = {};
+    for(var i = 0; i < this.props.currTask.topictree.length; i++) {
+      var temp = this.props.currTask.topictree[i];
+      if(temp.id == answer.next_question) {
+        next_topic = temp;
+        break;
+      }
+    }
+    if(this.checkInArray(answer.id)) {
+      this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id);
+      if(this.props.color && this.props.color.answer_id == answer.id) {
         this.props.setColor(-1, -1, '');
       }
+      if(type = TYPES.SELECT_SUBTOPIC) {
+        this.props.queueRemove(temp.questions);
+      }
     } else {
-      this.props.setColor(this.props.question.id, ans_id, color);
-      this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id, text);
+      this.props.setColor(this.props.question.id, answer.id, color);
+      this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id, answer.answer_content);
+      if(type == TYPES.SELECT_SUBTOPIC) {
+        this.props.queueUpdate(temp.questions);
+      }
     }
   },
 

@@ -73,7 +73,20 @@ export function quiz(state = initialState, action) {
       }
     case 'UPDATE_QUEUE':
       var new_queue = Object.assign([], state.queue);
-      new_queue = new_queue.concat(action.question);
+      new_queue = new_queue.concat(action.questions);
+      console.log(new_queue, action.questions);
+      return {
+        ...state,
+        queue: new_queue
+      }
+    case 'REMOVE_QUEUE':
+      var new_queue = Object.assign([], state.queue);
+      for(var i = 0; i < action.questions.length; i++) {
+        var ind = new_queue.indexOf(action.questions[i].id);
+        if(ind > -1) {
+          new_queue.splice(ind, 1);
+        }
+      }
       return {
         ...state,
         queue: new_queue

@@ -9,7 +9,7 @@ let taskSchema = new Schema('tasks');
 let taskList = arrayOf(taskSchema);
 
 // helper function to initialize queue
-export function addNonContingentQuestions(questions) {
+function addNonContingentQuestions(questions) {
 
   var contained = new Set();
   for(var i = 0; i < questions.length; i++) {
@@ -81,7 +81,7 @@ function presentTask(dispatch, getState) {
     const task = taskDB[taskId];
 
     dispatch({type: 'CLEAR_ANSWERS'});
-    dispatch({type: 'UPDATE_QUEUE', question: initQueue(taskDB[taskId])});
+    dispatch({type: 'UPDATE_QUEUE', questions: initQueue(taskDB[taskId])});
     dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
     dispatch(storeProject(task.project));
     dispatch(storeQuizTask(task));
@@ -120,6 +120,20 @@ export function fetchQuizTasks() {
         },
         error => dispatch({type: 'FETCH_QUIZ_TASKS_FAIL', error})
       )
+  };
+}
+
+export function updateQueue(questions) {
+  return {
+    type: 'UPDATE_QUEUE',
+    questions: addNonContingentQuestions(questions)
+  };
+}
+
+export function removeElemQueue(questions) {
+  return {
+    type: 'REMOVE_QUEUE',
+    questions
   };
 }
 
