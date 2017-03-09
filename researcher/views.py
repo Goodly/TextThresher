@@ -1,6 +1,7 @@
 import logging
 logger = logging.getLogger(__name__)
 import tarfile, tempfile, os, fnmatch
+from tarfile import TarError
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -21,31 +22,38 @@ from data.pybossa_api import create_remote_project
 from data.pybossa_api import generate_highlight_tasks_worker
 from data.pybossa_api import generate_quiz_tasks_worker
 from data.pybossa_api import InvalidTaskType
-from thresher.models import Article, Topic, UserProfile
+from thresher.models import Article, Topic, UserProfile, Project
 
 class IndexView(TemplateView):
     template_name = 'researcher/index.html'
 
     def get(self, request):
         # We need 'request' in the context so use render
-        return render(request, self.template_name)
+        return render(request,
+                      self.template_name,
+                      {'projects': Project.objects.filter(pybossa_id__isnull=False).order_by("name")}
+        )
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
 def import_article(filename, owner_profile_id):
     owner_profile = UserProfile.objects.get(pk=owner_profile_id)
-    with tarfile.open(filename) as tar:
-        members = [ af for af in tar.getmembers()
-                        if af.isfile() and fnmatch.fnmatch(af.name, "*.txt")]
-        logger.info("articles found %d" % len(members))
-        for member in members:
-            article = tar.extractfile(member).read()
-            load_article(parse_article(article, member.name), owner_profile)
-    os.remove(filename)
+    try:
+        with tarfile.open(filename) as tar:
+            members = [ af for af in tar.getmembers()
+                            if af.isfile() and fnmatch.fnmatch(af.name, "*.txt")]
+            logger.info("articles found %d" % len(members))
+            for member in members:
+                article = tar.extractfile(member).read()
+                load_article(parse_article(article, member.name), owner_profile)
+    finally:
+        os.remove(filename)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
 def import_schema(filename, owner_profile_id):
-    load_schema(old_parse_schema(filename))
-    os.remove(filename)
+    try:
+        load_schema(old_parse_schema(filename))
+    finally:
+        os.remove(filename)
 
 class UploadArticlesView(PermissionRequiredMixin, View):
     form_class = UploadArticlesForm

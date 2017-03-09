@@ -2,13 +2,26 @@
 {% block title %} Researcher Tools {% endblock %}
 {% block content %}
   <h1>Researcher Tools</h1>
-    <p><a href="{% url 'researcher:upload_articles' %}">
-      Upload Articles
-    </a></p>
+  <div>
     <p><a href="{% url 'researcher:upload_schema' %}">
       Upload Schema File
+    </a></p>
+    <p><a href="{% url 'researcher:upload_articles' %}">
+      Upload Articles
     </a></p>
     <p><a href="{% url 'researcher:send_tasks' %}">
       Send Tasks to Pybossa server
     </a></p>
+  </div>
+  <div>
+    <ul>
+      {% for project in projects %}
+        <li>
+        <a href="{{ project.getRemoteURL }}">{{ project.name }}</a>
+        </li>
+      {% empty %}
+        No projects have been created remotely yet.
+      {% endfor %}
+    </ul>
+  </div>
 {% endblock %}

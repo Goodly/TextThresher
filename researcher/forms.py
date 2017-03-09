@@ -13,6 +13,6 @@ class SelectProjectField(forms.ModelChoiceField):
 
 help_select_project = "Select the Project for which you would like to generate tasks."
 class SendTasksForm(forms.Form):
-    project = SelectProjectField(Project.objects.all(),
+    project = SelectProjectField(Project.objects.all().order_by("name"),
                                  empty_label=None,
                                  help_text=help_select_project)

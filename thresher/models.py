@@ -46,7 +46,7 @@ class Project(models.Model):
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
 
-    def getURL(self):
+    def getRemoteURL(self):
         if (self.pybossa_url):
             return urljoin(self.pybossa_url, "project/%s/" % (self.short_name))
         else:
