@@ -1,0 +1,15 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} Delete Remote Project {% endblock %}
+{% block content %}
+<h1>Delete Remote Project</h1>
+  <form
+    action="{% url 'researcher:remote_project_delete' project.id %}"
+    method="post">
+    <p>
+      Are you sure you want to delete {{ project.name }}?
+    </p>
+    {% csrf_token %}
+    <button type="submit">Delete {{ project.name }}</button>
+  </form>
+{% endblock %}
+

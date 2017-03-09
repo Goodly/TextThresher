@@ -18,7 +18,7 @@ from data.parse_document import parse_article
 from data.parse_schema import parse_schema
 from data.legacy.parse_schema import parse_schema as old_parse_schema
 
-from data.pybossa_api import create_remote_project
+from data.pybossa_api import create_remote_project, delete_remote_project
 from data.pybossa_api import generate_highlight_tasks_worker
 from data.pybossa_api import generate_quiz_tasks_worker
 from data.pybossa_api import InvalidTaskType
@@ -31,7 +31,7 @@ class IndexView(TemplateView):
         # We need 'request' in the context so use render
         return render(request,
                       self.template_name,
-                      {'projects': Project.objects.filter(pybossa_id__isnull=False).order_by("name")}
+                      {'projects': Project.objects.filter(pybossa_id__isnull=False).order_by('name')}
         )
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
@@ -143,9 +143,9 @@ class SendTasksView(PermissionRequiredMixin, View):
     )
 
     def get_task_generator(self, project):
-        if project.task_type == "HLTR":
+        if project.task_type == 'HLTR':
             return generate_highlight_tasks_worker.delay
-        elif project.task_type == "QUIZ":
+        elif project.task_type == 'QUIZ':
             return generate_quiz_tasks_worker.delay
         else:
             raise InvalidTaskType("Project task type must be 'HLTR' or 'QUIZ'")
@@ -187,3 +187,21 @@ class SendTasksView(PermissionRequiredMixin, View):
                  'user': request.user
                 }
             )
+
+class RemoteProjectDeleteView(PermissionRequiredMixin, View):
+    form_class = SendTasksForm
+    template_name = 'researcher/confirm_remote_project_delete.html'
+    login_url = reverse_lazy('admin:login')
+    redirect_field_name = 'next'
+    # We are deleting remotely, so correct Pybossa API key must be set
+    # Put a basic requirement on form access.
+    permission_required = ( u'thresher.delete_project', )
+
+    def get(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        return render(request, self.template_name, {'project': project})
+
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        job = delete_remote_project(request.user.userprofile, project)
+        return redirect('researcher:index')

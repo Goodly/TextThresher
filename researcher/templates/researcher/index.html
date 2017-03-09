@@ -17,10 +17,12 @@
     <ul>
       {% for project in projects %}
         <li>
-        <a href="{{ project.getRemoteURL }}">{{ project.name }}</a>
+          <a href="{{ project.get_remote_URL }}" target="_blank">View {{ project.name }}</a>
+          <a href="{{ project.get_remote_delete_URL }}" target="_blank">Delete {{ project.name }}</a>
+          <a href="{{ project.get_local_remote_delete_URL }}">Delete {{ project.name }} using API</a>
         </li>
       {% empty %}
-        No projects have been created remotely yet.
+        No remote projects currently being managed by us.
       {% endfor %}
     </ul>
   </div>
