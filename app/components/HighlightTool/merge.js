@@ -8,6 +8,7 @@ export default function merge(h1, h2, text) {
         "text": h1.text,
         "topic": h1.topic
       }
+
       return h;
     } else if (h2.start <= h1.start && h2.end >= h1.end) {
       var h = {
@@ -17,6 +18,7 @@ export default function merge(h1, h2, text) {
         "text": h2.text,
         "topic": h2.topic
       }
+
       return h;
     } else if (h1.start <= h2.start && h1.end <= h2.end && h1.end >= h2.start) {
       var h = {
@@ -26,6 +28,7 @@ export default function merge(h1, h2, text) {
         "text": text.slice(h1.start, h2.end),
         "topic": h1.topic
       }
+
       return h;
     } else if (h2.start <= h1.start && h2.end <= h1.end && h2.end >= h2.start) {
       var h = {
@@ -35,6 +38,7 @@ export default function merge(h1, h2, text) {
         "text": text.slice(h2.start, h1.end),
         "topic": h2.topic
       }
+      
       return h;
     } else {
       throw Error("merge method error: no overlap");

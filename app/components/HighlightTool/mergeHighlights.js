@@ -8,6 +8,7 @@ What the function is doing;
     - else add current to merged and set the next highlight as current
 */
 export default function mergeHighlights(highlights, text) {
+
   var merged = [];
   var current = highlights[0];
   var i = 1;
@@ -24,5 +25,6 @@ export default function mergeHighlights(highlights, text) {
     }
   }
   merged.push(current);
+  
   return merged;
 }

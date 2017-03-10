@@ -1,4 +1,8 @@
 export default function breakHighlights(highlights) {
+  console.log("BREAKHIGHLIGHTS INPUT")
+  console.log(highlights)
+
+
   var parsedHighlights = [];
   var temp_index = 0;
   while (temp_index < highlights.length) {
@@ -13,5 +17,7 @@ export default function breakHighlights(highlights) {
   parsedHighlights.sort((a,b) => {
     return a.index - b.index;
   });
+  console.log("BREAKHIGHLIGHTS OUTPUT")
+  console.log(parsedHighlights)
   return parsedHighlights;
 }

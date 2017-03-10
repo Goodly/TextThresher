@@ -7,8 +7,6 @@ var h3 = mock_highlights.highlights.h3;
 var h4 = mock_highlights.highlights.h4;
 var h5 = mock_highlights.highlights.h5;
 var h6 = mock_highlights.highlights.h6;
-console.log(h3.topic == h6.topic)
-console.log(h3.topic == h4.topic)
 
 /*
 5 cases:

@@ -6,7 +6,7 @@ Methods:
   -------- input test --------
   1. Finish merge (round one complete)
   2. Finish overlap (round one complete)
-  3. Finish mergeHighlights (P1 today)
+  3. Finish mergeHighlights (round one complete)
   4. Finish breakHighlights (round one complete)
   5. Finish processHighlights (P1 today)
   6. Finish mergeColors (P3 today)
