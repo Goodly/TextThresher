@@ -178,8 +178,10 @@ class SendTasksView(PermissionRequiredMixin, View):
             article_ids = list(articles.values_list('id', flat=True))
             logger.info("%d articles in selected range" % len(article_ids))
 
-            topic_ids = list(Topic.objects.filter(parent=None)
+            topic_ids = list(bound_form.cleaned_data['topics']
                              .values_list('id', flat=True))
+            logger.info("%d topics selected" % len(topic_ids))
+
             project = bound_form.cleaned_data['project']
             project_id = project.id
             job = None
