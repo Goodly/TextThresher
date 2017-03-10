@@ -1,7 +1,5 @@
 export default function overlap(h1, h2) {
-  //console.log("OVERLAP INPUT")
-  //console.log(h1)
-  //console.log(h2)
+
 
   if (h1.topic == h2.topic) {
     if (h1.start <= h2.start && h1.end >= h2.end) {

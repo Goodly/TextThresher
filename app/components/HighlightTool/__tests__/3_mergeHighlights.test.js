@@ -38,6 +38,46 @@ var m_h3 = mock_merged.h3;
 var m_h4 = mock_merged.h4;
 
 
+/*var custom_case = [
+  {
+    "caseNum":1 ,
+    "end": 29,
+    "start": 7,
+    "text": "Wall Street supporters",
+    "topic": 13,
+  },
+  {
+    "caseNum": 1,
+    "end": 377,
+    "start": 12,
+    "text": "Street supporters gather in Albany                                ↵November 05, 2011 7:30 am↵By Steve Lathrop, Albany Democrat-Herald↵↵↵↵Brandishing homemade signs and waving at passing  cars, more than 60 people supporting the Occupy Wall Street movement lined up  in downtown Albany late Friday afternoon to deliver their message.↵About five counter-demonstrators" ,
+    "topic":13 ,
+  },
+  {
+    "caseNum": 1,
+    "end": 91,
+    "start": 19,
+    "text": "supporters gather in Albany                                ↵November 05,",
+    "topic": 7,
+  },
+  {
+    "caseNum": 1,
+    "end": 96,
+    "start": 88,
+    "text": "05, 2011",
+    "topic": 13,
+  },
+  {
+    "caseNum": 1,
+    "end": 129,
+    "start": 114,
+    "text": "Lathrop, Albany",
+    "topic": 7,
+  },
+];*/
+
+
+
 /*
 mergeHighlights:
   1. Pass in two overlapping highlights, output should be single merged highlight
@@ -75,3 +115,7 @@ test('(mergeHighlights: Case 4, Test 1) five highlights with two separate overla
 test('(mergeHighlights: Very Complicated Example that throws everything in - 10 overlaps that it needs to sort out)', () => {
   expect(mergeHighlights([h13, h14, h15, h16, h17, h18, h19, h20, h21, h22, h23], article)).toEqual([m_h3, m_h4]);
 });
+/*test('(mergeHighlights: Custom Case, highlight right to left over several lines and there is an earlier highlight of the same topic (currently does not create highlight))', () => {
+  expect(mergeHighlights(custom_case, article)).toEqual([]);
+});
+*/

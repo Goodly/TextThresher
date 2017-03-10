@@ -1,48 +1,64 @@
-import React, Component from 'react';
+import React, {Component} from 'react';
 
 class selectionObj extends Component {
-  var selectionObj = {
+  /*var selectionObj = {
     anchorNode: 0,
     anchorOffset: 0,
     extentNode: 0,
     extentOffset: 0,
     text: ""
+  }*/
+  constructor(props) {
+    super(props);
+    this.state = {
+      anchorNode: 0,
+      anchorOffset: 0,
+      extentNode: 0,
+      extentOffset: 0,
+      text: ""
+    };
   }
-  function setAN(an) {
-    selectionObj.anchorNode = an;
+
+  setAN(an) {
+    this.state.anchorNode = an;
   }
-  function setAO(ao) {
-    selectionObj.anchorNode = ao;
+  setAO(ao) {
+    this.state.anchorNode = ao;
   }
-  function setEN(en) {
-    selectionObj.anchorNode = en;
+  setEN(en) {
+    this.state.anchorNode = en;
   }
-  function setEO(eo) {
-    selectionObj.anchorNode = eo;
+  setEO(eo) {
+    this.state.anchorNode = eo;
   }
-  function setText(text) {
-    selectionObj.anchorNode = text;
+  setText(text) {
+    this.state.anchorNode = text;
   }
-  function returnObj() {
-    return selectionObj;
+  returnObj() {
+    return this.state;
   }
-  function toString() {
-    return selectionObj.text;
+  toString() {
+    return this.state.text;
   }
 }
 
 export default class test_window extends Component {
-  var selObj = selectionObj();
-
-  function setSelection(an, ao, en, eo, t) {
-    selObj.setAN(an);
-    selObj.setAO(ao);
-    selObj.setEN(en);
-    selObj.setEO(eo);
-    selObj.setText(t);
+  constructor(props) {
+    super(props);
+    this.state = {
+      selObj: selectionObj()
+    };
   }
 
-  function getSelection() {
-    return selObj.returnObj()
+   setSelection(an, ao, en, eo, t) {
+    this.state.selObj.setAN(an);
+    this.state.selObj.setAO(ao);
+    this.state.selObj.setEN(en);
+    this.state.selObj.setEO(eo);
+    this.state.selObj.setText(t);
+  }
+
+   getSelection() {
+    return this.state.selObj.returnObj()
   }
 }

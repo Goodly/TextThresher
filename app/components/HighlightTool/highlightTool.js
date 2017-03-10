@@ -79,7 +79,6 @@ const HighlightTool = React.createClass({
       parsedHighlights.push(end);
       temp_index += 1;
     }
-
     parsedHighlights.sort((a,b) => {
       return a.index - b.index;
     });
@@ -87,22 +86,15 @@ const HighlightTool = React.createClass({
   },
 
   processHighlights: function(highlights) {
-    console.log("PROCESSHIGHLIGHTS")
-    console.log(highlights)
-
-
-    //Break highlights into start and end pieces
     var parsedHighlights = this.breakHighlights(highlights);
 
     //Track which topics are active - activeTopic indices corresponds to this.props.topics indices
-    var topicNum = this.props.topics.length;
     var activeTopics = [];
     var topic_list = [];
-    for (i=0; i<topicNum; i++) {
+    for (i=0; i<this.props.topics.length; i++) {
       activeTopics.push(false);
       topic_list.push(this.props.topics[i].id)
     }
-
 
     var final = [];
     var activeSources = [];
@@ -116,7 +108,6 @@ const HighlightTool = React.createClass({
 
       var i = parsedHighlights[temp_index];
       //processed = highlight 'piece' that corresponds to individual overlap spans
-
       //initialize highlight overlap span
       var processed = {
         start: null,
@@ -144,7 +135,7 @@ const HighlightTool = React.createClass({
       processed.start = start;
       processed.end = i.index;
 
-      // (4)
+      // (4) checks if ranges overlap
       if (selectedHighlights.length) {
         var select_index = 0;
         //check if the highlight is selected, if selected change field in processed
@@ -183,6 +174,7 @@ const HighlightTool = React.createClass({
         }
       }
       // (6) Activate/Deactivate Sources
+
       if (active_state){
         var active = {start: i.source.start, end: i.source.end, text: i.source.text, top: i.source.topic, source: i.source};
         activeSources = activeSources.concat([active]);
@@ -205,8 +197,8 @@ const HighlightTool = React.createClass({
       temp_index += 1;
     }
 
-    console.log('OUTPUT');
-    console.log(final);
+    //console.log('OUTPUT');
+    //console.log(final);
 
     return final;
   },
@@ -258,7 +250,6 @@ const HighlightTool = React.createClass({
       end = temp;
     }
 
-
     var correction = 0;
     var ch = this.props.text[start];
     var inwards = ((ch == ' ') || (ch == '\t') || (ch == '\n'));
@@ -280,6 +271,7 @@ const HighlightTool = React.createClass({
       ch = this.props.text[start + correction];
     }
     start = start + correction + edit;
+
     var correction = 0;
     var ch = this.props.text[end];
     var inwards = ((ch == ' ') || (ch == '\t') || (ch == '\n'));
@@ -307,12 +299,6 @@ const HighlightTool = React.createClass({
   handleClick: function() {
     var currentTopicId = this.props.currentTopicId;
     var selectionObj = window.getSelection();
-    //var selectionObj = window.Selection;
-    console.log("WINDOW")
-    console.log(window);
-    console.log("TEXT");
-    console.log(this.props.text);
-    console.log(selectionObj);
     if (selectionObj.anchorOffset == selectionObj.extentOffset) {
       return;
     }
@@ -329,14 +315,14 @@ const HighlightTool = React.createClass({
         var extentResult = getOffset(this.articleRef, extent);
         end += extentResult.offset;
       }
-      console.log("WORD CORRECTION")
+      /*console.log("WORD CORRECTION")
       console.log(start)
-      console.log(end)
+      console.log(end)*/
       var ends = this.wordCorrection(start, end);
       start = ends[0];
       end = ends[1];
-      console.log(start)
-      console.log(end)
+      //console.log(start)
+      //console.log(end)
 
 
       var temp_text = this.props.text;
@@ -348,14 +334,8 @@ const HighlightTool = React.createClass({
       }
 
       if (start !== end) {
-        console.log('HANDLECLICK OUTPUT')
-        console.log(this.props)
-        console.log(start)
-        console.log(end)
-        console.log(new_text)
         this.props.deselectHighlight();
         this.props.addHighlight(start, end, new_text, currentTopicId, this.props.text);
-        //this.props.selectHighlight([{'start':start, 'end':end, 'text':new_text, 'topic':currentTopicId}]);
         var newHighlight = (
           { start: start,
             end: end,
@@ -363,8 +343,6 @@ const HighlightTool = React.createClass({
             topic: currentTopicId,
             caseNum: 1
           });
-        console.log("BEFORE LOOP")
-        console.log(newHighlight);
         var j = 0;
         //for selecting after merging
         while (j < this.props.highlights.length) {
@@ -373,19 +351,13 @@ const HighlightTool = React.createClass({
             start = new_highlight[0].start;
             end = new_highlight[0].end;
             new_text = new_highlight[0].text
-            console.log('HANDLECLICK MERGEHIGHLIGHT OUTPUT')
-            console.log(start)
-            console.log(end)
-            console.log(new_text)
-          }
+            newHighlight = new_highlight[0];          }
           j+=1;
         }
-        console.log(start);
-        console.log(end);
-        console.log(new_text);
-        console.log("SHOULD BE HIGHLOIGHTED");
 
-        this.props.selectHighlight([{'start':start, 'end':end, 'text':new_text, 'topic':currentTopicId}]);
+        console.log("about to be selected in handleclick")
+        var select_highlight = {'start':start, 'end':end, 'text':new_text, 'topic':currentTopicId};
+        this.props.selectHighlight([select_highlight]);
       }
     }
     //removes selection after creating highlight
@@ -418,22 +390,25 @@ const HighlightTool = React.createClass({
 
   handleSelect: function(source, e) {
     console.log("HANDLE SELECT")
-    this.props.selectHighlight(source);
-    e.nativeEvent.preventDefault();
-    e.nativeEvent.stopPropagation();
+    console.log("source")
+    console.log(source)
+    if (source.length != 0) {
+      this.props.selectHighlight(source);
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
   },
 
   handleCase: function(source, e, i) {
     this.props.changeCaseHighlight(source, source.caseNum + i);
     e.nativeEvent.preventDefault();
     e.nativeEvent.stopPropagation();
-
   },
 
   render() {
     var text = this.props.text;
-    console.log("RENDER PROPS")
-    console.log(this.props)
+    /*console.log("RENDER PROPS")
+    console.log(this.props)*/
     var highlights = this.processHighlights(this.props.highlights) || [];
     var start = 0;
     var tail = '';
@@ -446,8 +421,8 @@ const HighlightTool = React.createClass({
     var last_curHL;
 
     if ( l > 0) {
-      console.log(highlights[l - 1].end);
-      console.log(text.length);
+      //console.log(highlights[l - 1].end);
+      //console.log(text.length);
     }
 
     return (

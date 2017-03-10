@@ -2,6 +2,7 @@ import HighlightTool from '../highlightTool';
 import {mock_highlights} from '../mocks/mock_highlights';
 import {mock_broken} from '../mocks/mock_broken';
 import {shallow, mount} from 'enzyme';
+import {test_window} from '../global_window';
 //import test_window from '../global_window';
 
 var article = mock_highlights.article;
@@ -91,8 +92,22 @@ Known Issues:
 //make global object where you pass in each element that matters
 
 
-//var w = test_window();
-//global.window = w;
+
+
+var w = test_window();
+w.setSelection();
+global.window = w;
+
+test('(breakHighlights: Case 1, Test 1) no highlights returns empty', () => {
+  expect(wrapper.instance().breakHighlights([])).toEqual([]);
+});
+
+
+
+
+
+
+
 
 test('(breakHighlights: Case 1, Test 1) no highlights returns empty', () => {
   expect(wrapper.instance().breakHighlights([])).toEqual([]);
@@ -151,8 +166,6 @@ Version for r to l and l to r:
 5. multi word, right word hang
 6. multi word, both
 */
-console.log('BEFORE WORDCORRECTION TESTS')
-console.log(wrapper.instance().props);
 test('(processHighlights: Case 1, hang left one word, r to l)', () => {
   expect(wrapper.instance().wordCorrection(82, 87)).toEqual([79, 87]);
 });
