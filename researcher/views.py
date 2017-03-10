@@ -8,6 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import Min, Max
 
 import django_rq
 
@@ -151,10 +152,14 @@ class SendTasksView(PermissionRequiredMixin, View):
             raise InvalidTaskType("Project task type must be 'HLTR' or 'QUIZ'")
 
     def get(self, request):
+        agg = Article.objects.aggregate(Min('id'), Max('id'))
+        initial = { 'starting_article_id': agg['id__min'],
+                    'ending_article_id': agg['id__max']
+        }
         return render(
             request,
             self.template_name,
-            {'form': self.form_class(),
+            {'form': self.form_class(initial=initial),
              'user': request.user
             }
         )
@@ -163,7 +168,16 @@ class SendTasksView(PermissionRequiredMixin, View):
         bound_form = self.form_class(request.POST)
         if request.user.is_authenticated and bound_form.is_valid():
             profile_id = request.user.userprofile.id
-            article_ids = list(Article.objects.all().values_list('id', flat=True))
+
+            starting_article_id = bound_form.cleaned_data['starting_article_id']
+            ending_article_id = bound_form.cleaned_data['ending_article_id']
+            articles = Article.objects.filter(
+                id__gte=starting_article_id,
+                id__lte=ending_article_id
+            )
+            article_ids = list(articles.values_list('id', flat=True))
+            logger.info("%d articles in selected range" % len(article_ids))
+
             topic_ids = list(Topic.objects.filter(parent=None)
                              .values_list('id', flat=True))
             project = bound_form.cleaned_data['project']

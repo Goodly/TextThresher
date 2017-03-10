@@ -16,3 +16,5 @@ class SendTasksForm(forms.Form):
     project = SelectProjectField(Project.objects.all().order_by("name"),
                                  empty_label=None,
                                  help_text=help_select_project)
+    starting_article_id = forms.IntegerField(min_value=0)
+    ending_article_id = forms.IntegerField(min_value=0)
