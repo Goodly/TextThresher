@@ -13,6 +13,14 @@ services:
     volumes:
       - .:/home/thresher
 
+  nlp_hints:
+    # python:2.7-slim
+    build:
+      context: ./docker
+      dockerfile: ./nlp_hints/Dockerfile
+    depends_on:
+      - django_rq
+
   django_rq:
     image: redis:3.2.8
 
