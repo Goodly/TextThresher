@@ -2,13 +2,31 @@
 {% block title %} Researcher Tools {% endblock %}
 {% block content %}
   <h1>Researcher Tools</h1>
-    <p><a href="{% url 'researcher:upload_articles' %}">
-      Upload Articles
-    </a></p>
+  <div>
     <p><a href="{% url 'researcher:upload_schema' %}">
       Upload Schema File
+    </a></p>
+    <p><a href="{% url 'researcher:upload_articles' %}">
+      Upload Articles
     </a></p>
     <p><a href="{% url 'researcher:send_tasks' %}">
       Send Tasks to Pybossa server
     </a></p>
+  </div>
+  <div>
+      {% for project in projects %}
+        <p>
+          {{ project.name }}
+        <ul>
+          <li>
+            <a href="{{ project.get_remote_URL }}" target="_blank">view remote</a>
+          </li>
+          <li>
+            <a href="{{ project.get_local_remote_delete_URL }}">delete remote</a>
+          </li>
+        </ul>
+      {% empty %}
+        No remote projects currently being managed by us.
+      {% endfor %}
+  </div>
 {% endblock %}

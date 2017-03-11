@@ -1,12 +1,14 @@
 import logging
 logger = logging.getLogger(__name__)
 import tarfile, tempfile, os, fnmatch
+from tarfile import TarError
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import Min, Max
 
 import django_rq
 
@@ -17,35 +19,42 @@ from data.parse_document import parse_article
 from data.parse_schema import parse_schema
 from data.legacy.parse_schema import parse_schema as old_parse_schema
 
-from data.pybossa_api import create_remote_project
+from data.pybossa_api import create_remote_project, delete_remote_project
 from data.pybossa_api import generate_highlight_tasks_worker
 from data.pybossa_api import generate_quiz_tasks_worker
 from data.pybossa_api import InvalidTaskType
-from thresher.models import Article, Topic, UserProfile
+from thresher.models import Article, Topic, UserProfile, Project
 
 class IndexView(TemplateView):
     template_name = 'researcher/index.html'
 
     def get(self, request):
         # We need 'request' in the context so use render
-        return render(request, self.template_name)
+        return render(request,
+                      self.template_name,
+                      {'projects': Project.objects.filter(pybossa_id__isnull=False).order_by('name')}
+        )
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
 def import_article(filename, owner_profile_id):
     owner_profile = UserProfile.objects.get(pk=owner_profile_id)
-    with tarfile.open(filename) as tar:
-        members = [ af for af in tar.getmembers()
-                        if af.isfile() and fnmatch.fnmatch(af.name, "*.txt")]
-        logger.info("articles found %d" % len(members))
-        for member in members:
-            article = tar.extractfile(member).read()
-            load_article(parse_article(article, member.name), owner_profile)
-    os.remove(filename)
+    try:
+        with tarfile.open(filename) as tar:
+            members = [ af for af in tar.getmembers()
+                            if af.isfile() and fnmatch.fnmatch(af.name, "*.txt")]
+            logger.info("articles found %d" % len(members))
+            for member in members:
+                article = tar.extractfile(member).read()
+                load_article(parse_article(article, member.name), owner_profile)
+    finally:
+        os.remove(filename)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
 def import_schema(filename, owner_profile_id):
-    load_schema(old_parse_schema(filename))
-    os.remove(filename)
+    try:
+        load_schema(old_parse_schema(filename))
+    finally:
+        os.remove(filename)
 
 class UploadArticlesView(PermissionRequiredMixin, View):
     form_class = UploadArticlesForm
@@ -135,18 +144,22 @@ class SendTasksView(PermissionRequiredMixin, View):
     )
 
     def get_task_generator(self, project):
-        if project.task_type == "HLTR":
+        if project.task_type == 'HLTR':
             return generate_highlight_tasks_worker.delay
-        elif project.task_type == "QUIZ":
+        elif project.task_type == 'QUIZ':
             return generate_quiz_tasks_worker.delay
         else:
             raise InvalidTaskType("Project task type must be 'HLTR' or 'QUIZ'")
 
     def get(self, request):
+        agg = Article.objects.aggregate(Min('id'), Max('id'))
+        initial = { 'starting_article_id': agg['id__min'],
+                    'ending_article_id': agg['id__max']
+        }
         return render(
             request,
             self.template_name,
-            {'form': self.form_class(),
+            {'form': self.form_class(initial=initial),
              'user': request.user
             }
         )
@@ -155,9 +168,20 @@ class SendTasksView(PermissionRequiredMixin, View):
         bound_form = self.form_class(request.POST)
         if request.user.is_authenticated and bound_form.is_valid():
             profile_id = request.user.userprofile.id
-            article_ids = list(Article.objects.all().values_list('id', flat=True))
-            topic_ids = list(Topic.objects.filter(parent=None)
+
+            starting_article_id = bound_form.cleaned_data['starting_article_id']
+            ending_article_id = bound_form.cleaned_data['ending_article_id']
+            articles = Article.objects.filter(
+                id__gte=starting_article_id,
+                id__lte=ending_article_id
+            )
+            article_ids = list(articles.values_list('id', flat=True))
+            logger.info("%d articles in selected range" % len(article_ids))
+
+            topic_ids = list(bound_form.cleaned_data['topics']
                              .values_list('id', flat=True))
+            logger.info("%d topics selected" % len(topic_ids))
+
             project = bound_form.cleaned_data['project']
             project_id = project.id
             job = None
@@ -179,3 +203,21 @@ class SendTasksView(PermissionRequiredMixin, View):
                  'user': request.user
                 }
             )
+
+class RemoteProjectDeleteView(PermissionRequiredMixin, View):
+    form_class = SendTasksForm
+    template_name = 'researcher/confirm_remote_project_delete.html'
+    login_url = reverse_lazy('admin:login')
+    redirect_field_name = 'next'
+    # We are deleting remotely, so correct Pybossa API key must be set
+    # Put a basic requirement on form access.
+    permission_required = ( u'thresher.delete_project', )
+
+    def get(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        return render(request, self.template_name, {'project': project})
+
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        job = delete_remote_project(request.user.userprofile, project)
+        return redirect('researcher:index')

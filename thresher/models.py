@@ -2,7 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
-from requests.compat import urljoin
+from requests.compat import urljoin, urlparse
+from urlparse import urlunsplit
+from django.urls import reverse
 
 # User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
 class UserProfile(models.Model):
@@ -46,11 +48,26 @@ class Project(models.Model):
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
 
-    def getURL(self):
-        if (self.pybossa_url):
-            return urljoin(self.pybossa_url, "project/%s/" % (self.short_name))
-        else:
+    def join_remote_base_URL(self, urlpath):
+        if self.pybossa_url is None:
             return ""
+        # If the URL is reachable only from inside Docker, rewrite it for devs
+        if urlparse(self.pybossa_url).netloc.lower() == "pybossa":
+            return urljoin("http://localhost:3002", urlpath)
+        else:
+            return urljoin(self.pybossa_url, urlpath)
+
+    def get_remote_URL(self):
+        """ Return a link to the remote Pybossa project if it has been created."""
+        return self.join_remote_base_URL("project/%s/" % (self.short_name))
+
+    def get_remote_delete_URL(self):
+        """ Return a link to the local page to delete the remote project."""
+        return self.join_remote_base_URL("project/%s/delete" % (self.short_name))
+
+    def get_local_remote_delete_URL(self):
+        """ Return a link to the local page to delete the remote project."""
+        return reverse('researcher:remote_project_delete', kwargs={"pk": self.id})
 
 class Task(models.Model):
     """

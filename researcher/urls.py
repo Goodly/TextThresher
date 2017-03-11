@@ -14,5 +14,8 @@ urlpatterns = [
         name='upload_schema'),
     url(r'^send_tasks/$',
         views.SendTasksView.as_view(),
-        name='send_tasks')
+        name='send_tasks'),
+    url(r'^remoteproject/(?P<pk>[0-9]+)/delete/$',
+        views.RemoteProjectDeleteView.as_view(),
+        name='remote_project_delete')
 ]

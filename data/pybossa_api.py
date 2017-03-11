@@ -85,7 +85,8 @@ def delete_remote_project(profile, project):
     This functions enqueues the worker to delete a project on a remote
     Pybossa server.
     """
-    delete_remote_project_worker.delay(profile_id=profile.id, project_id=project.id)
+    return delete_remote_project_worker.delay(profile_id=profile.id,
+                                              project_id=project.id)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
 def delete_remote_project_worker(profile_id=None, project_id=None):
