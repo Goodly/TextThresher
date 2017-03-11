@@ -88,7 +88,7 @@ class Task(models.Model):
     def __unicode__(self):
         return "id %d task type: %s pybossa_id: %d" % (self.id, self.task_type, self.pybossa_project_id)
 
-    def getURL(self):
+    def get_remote_URL(self):
         if task.project.pybossa_url:
             return urljoin(task.project.pybossa_url, "task/%d/" % (self.pybossa_id))
         else:

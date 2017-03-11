@@ -13,6 +13,20 @@ services:
     volumes:
       - .:/home/thresher
 
+  import_export_worker:
+    # Same image as thresher_api
+    # Runs the queue for importing articles and schemas and exporting projects and tasks
+    depends_on:
+      - django_rq
+    build:
+      context: ./docker
+      dockerfile: ./thresher_api/Dockerfile
+    volumes:
+      - .:/home/thresher
+    environment:
+      PYTHONPATH: /home/thresher
+    command: ["python", "data/rqworker.py"]
+
   nlp_hints:
     # python:2.7-slim
     build:

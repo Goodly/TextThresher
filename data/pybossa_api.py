@@ -97,7 +97,7 @@ def delete_remote_project_worker(profile_id=None, project_id=None):
         "deleted": False,
         "short_name": project.short_name,
         "task_type": project.task_type,
-        "url": project.getURL()
+        "url": project.get_remote_URL()
     }
     if not project.pybossa_id:
         result["deleted"] = False
