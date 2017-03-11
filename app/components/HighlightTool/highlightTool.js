@@ -196,10 +196,6 @@ const HighlightTool = React.createClass({
       }
       temp_index += 1;
     }
-
-    //console.log('OUTPUT');
-    //console.log(final);
-
     return final;
   },
   /*
@@ -243,7 +239,60 @@ const HighlightTool = React.createClass({
     return 'rgba(' + Math.round(red) + ', ' + Math.round(green) + ', ' + Math.round(blue) + ', ' + opacity +')';
   },
 
+
+
+
   wordCorrection: function(start, end) {
+    end -= 1;
+    if (start > end) {
+      var temp = start;
+      start = end;
+      end = temp;
+    }
+    var start_char = this.props.text[start];
+    var end_char = this.props.text[end];
+    console.log("Check charactera")
+    console.log(start_char)
+    console.log(end_char)
+    var start_empty = ((start_char == ' ') || (start_char == '\t') || (start_char == '\n'));
+    var end_empty = ((end_char == ' ') || (end_char == '\t') || (end_char == '\n'));
+
+    var start_correction = start;
+    var end_correction = end;
+
+    var edit = start_correction;
+    while (((start_char == ' ') || (start_char == '\t') || (start_char == '\n')) == start_empty) {
+      console.log(start_char)
+      if (start_empty) {
+        start_correction += 1;
+        edit = start_correction;
+      } else {
+        start_correction = edit;
+        edit -= 1;
+      }
+      start_char = this.props.text[edit];
+    }
+
+    edit = end_correction;
+    while (((end_char == ' ') || (end_char == '\t') || (end_char == '\n')) == end_empty) {
+      // want to keep start_correction at one step before and start_char at one space ahead
+      // not equal direction. If moving from text to space, previous step
+      // if moving from space to text, include step that cut out
+      if (end_empty) {
+        end_correction -= 1;
+        edit = end_correction;
+      } else {
+        end_correction = edit;
+        edit += 1;
+      }
+      end_char = this.props.text[edit]
+    }
+
+
+    return [start_correction, end_correction+1];
+  },
+
+  /*wordCorrection: function(start, end) {
     if (start > end) {
       var temp = start;
       start = end;
@@ -251,13 +300,14 @@ const HighlightTool = React.createClass({
     }
 
     var correction = 0;
+    //looks at start
     var ch = this.props.text[start];
-    var inwards = ((ch == ' ') || (ch == '\t') || (ch == '\n'));
+    var inwards = ((ch == ' ') || (ch == '\t') || (ch == '\n')); //checks if start is empty
     var edit = 1;
     if (inwards) {
       edit = 0;
     }
-    while (((ch == ' ') || (ch == '\t') || (ch == '\n')) == inwards) {
+    while (((ch == ' ') || (ch == '\t') || (ch == '\n')) == inwards) { //moves right until no more spaces
       if (inwards) {
         correction += 1;
       } else {
@@ -273,13 +323,14 @@ const HighlightTool = React.createClass({
     start = start + correction + edit;
 
     var correction = 0;
+    //looks at end
     var ch = this.props.text[end];
     var inwards = ((ch == ' ') || (ch == '\t') || (ch == '\n'));
     var edit = 0;
     if (inwards) {
       edit = 1;
     }
-    while (((ch == ' ') || (ch == '\t') || (ch == '\n')) == inwards) {
+    while (((ch == ' ') || (ch == '\t') || (ch == '\n')) == inwards) { //if
       if (inwards) {
         correction -= 1;
       } else {
@@ -294,7 +345,7 @@ const HighlightTool = React.createClass({
     }
     end = end + correction + edit;
     return [start, end];
-  },
+  },*/
 
   handleClick: function() {
     var currentTopicId = this.props.currentTopicId;
