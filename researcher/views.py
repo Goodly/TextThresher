@@ -14,7 +14,7 @@ import django_rq
 
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
 from researcher.forms import SendTasksForm
-from data.load_data import load_article, load_schema
+from data.load_data import load_article, load_annotations, load_schema
 from data.parse_document import parse_article
 from data.parse_schema import parse_schema
 from data.legacy.parse_schema import parse_schema as old_parse_schema
@@ -36,7 +36,7 @@ class IndexView(TemplateView):
         )
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
-def import_article(filename, owner_profile_id):
+def import_article(filename, owner_profile_id, with_annotations=False):
     owner_profile = UserProfile.objects.get(pk=owner_profile_id)
     try:
         with tarfile.open(filename) as tar:
@@ -45,7 +45,10 @@ def import_article(filename, owner_profile_id):
             logger.info("articles found %d" % len(members))
             for member in members:
                 article = tar.extractfile(member).read()
-                load_article(parse_article(article, member.name), owner_profile)
+                annotated_article = parse_article(article, member.name)
+                article_obj = load_article(annotated_article, owner_profile)
+                if with_annotations:
+                    load_annotations(annotated_article, article_obj, owner_profile)
     finally:
         os.remove(filename)
 
@@ -74,6 +77,7 @@ class UploadArticlesView(PermissionRequiredMixin, View):
         bound_form = self.form_class(request.POST, request.FILES)
         if bound_form.is_valid():
             f = request.FILES['article_archive_file']
+            with_annotations = bound_form.cleaned_data["with_annotations"]
             logger.info("Request to import article archive %s, length %d" % (f.name, f.size))
             with tempfile.NamedTemporaryFile(delete=False) as archive_file:
                 for chunk in f.chunks():
@@ -82,7 +86,7 @@ class UploadArticlesView(PermissionRequiredMixin, View):
                 logger.info("Archive copied to temp file %s: tar file format: %s"
                             % (archive_file.name, tarfile.is_tarfile(archive_file.name)))
                 # Async job must delete temp file when done
-                import_article.delay(archive_file.name, request.user.userprofile.id)
+                import_article.delay(archive_file.name, request.user.userprofile.id, with_annotations)
 
             return redirect('/admin/thresher/article/')
         else:

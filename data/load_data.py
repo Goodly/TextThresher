@@ -3,7 +3,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "thresher_backend.settings")
 
 import django
 django.setup()
-from django.conf import settings
 
 import argparse
 import json
@@ -161,7 +160,7 @@ class TopicsSchemaParser(object):
                 answers = answers.filter(answer_number=dep.answer)
             next_question_id = next_question.id
             for answer in answers:
-                answer.next_questions = (answer.next_questions[:-1] + "," + 
+                answer.next_questions = (answer.next_questions[:-1] + "," +
                                          str(next_question_id) + "]")
                 answer.save()
 
@@ -237,7 +236,9 @@ def load_article(article, created_by):
     article_obj.save()
     print "article id %d numbered %s" % (article_obj.id,
           article_obj.article_number)
+    return article_obj
 
+def load_annotations(article, article_obj, created_by):
     # In future usage, the articles being imported will not be highlighted
     # already and thus won't have 'annotators'.
     # The field annotators on Article logically maps to the
@@ -283,19 +284,19 @@ def load_schema_dir(dirpath):
     for schema_file in schema_files:
         load_schema(parse_schema(os.path.join(dirpath, schema_file)))
 
-def load_article_dir(dirpath, created_by):
-    for article_file in os.listdir(dirpath):
-        if os.path.splitext(article_file)[1] != '.txt':
-            continue
-        load_article(parse_document(os.path.join(dirpath, article_file)), created_by)
-
 def load_old_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
     for schema_file in schema_files:
         load_schema(old_parse_schema(os.path.join(dirpath, schema_file)))
 
-# To load old schemas:
-# PYTHONPATH=/home/thresher python data/load_data.py -o data/DF-schema/
+def load_article_dir(dirpath, created_by, with_annotations=False):
+    for article_filename in os.listdir(dirpath):
+        if os.path.splitext(article_filename)[1] != '.txt':
+            continue
+        annotated_article = parse_document(os.path.join(dirpath, article_filename))
+        article_obj = load_article(annotated_article, created_by)
+        if with_annotations:
+            load_annotations(annotated_article, article_obj, created_by)
 
 def load_args():
     parser = argparse.ArgumentParser()
@@ -307,7 +308,12 @@ def load_args():
         help='The directory holding old schema files')
     parser.add_argument(
         '-d', '--article-dir',
-        help='The directory holding raw article files for the TUA types')
+        help='directory with articles to load')
+    parser.add_argument(
+        '-a', '--with-annotations',
+        default=False,
+        action='store_true',
+        help='import article annotations and add any missing topics')
     return parser.parse_args()
 
 if __name__ == '__main__':
@@ -324,4 +330,4 @@ if __name__ == '__main__':
         load_old_schema_dir(args.old_schema_dir)
         print "Finished loading schemas"
     if args.article_dir:
-        load_article_dir(args.article_dir, created_by)
+        load_article_dir(args.article_dir, created_by, args.with_annotations)
