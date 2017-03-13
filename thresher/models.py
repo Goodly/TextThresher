@@ -212,7 +212,7 @@ class Answer(models.Model):
     #                                   related_name="question_next",
     #                                   on_delete=models.SET_NULL, null=True)
     # Next questions as an array of question IDs
-    next_questions = models.TextField()
+    next_questions = models.TextField(default="[]")
 
     class Meta:
         unique_together = ("answer_number", "question")

@@ -151,7 +151,7 @@ class TopicsSchemaParser(object):
             # default next answer
             next_question_default_next_id = next_question.default_next.id
             for answer in next_question_answers:
-                answer.next_questions = "[" + next_question_default_next_id + "]"
+                answer.next_questions = "[" + str(next_question_default_next_id) + "]"
                 answer.save()
 
             # Now we point the current question's answer to the next question
@@ -162,7 +162,7 @@ class TopicsSchemaParser(object):
             next_question_id = next_question.id
             for answer in answers:
                 answer.next_questions = (answer.next_questions[:-1] + "," + 
-                                         next_question_id + "]")
+                                         str(next_question_id) + "]")
                 answer.save()
 
 def load_schema(schema):
