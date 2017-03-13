@@ -35,9 +35,7 @@ class IndexView(TemplateView):
                       {'projects': Project.objects.filter(pybossa_id__isnull=False).order_by('name')}
         )
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
-def import_article(filename, owner_profile_id, with_annotations=False):
-    owner_profile = UserProfile.objects.get(pk=owner_profile_id)
+def import_archive(filename, owner_profile_id, with_annotations=False):
     try:
         with tarfile.open(filename) as tar:
             members = [ af for af in tar.getmembers()
@@ -45,12 +43,18 @@ def import_article(filename, owner_profile_id, with_annotations=False):
             logger.info("articles found %d" % len(members))
             for member in members:
                 article = tar.extractfile(member).read()
-                annotated_article = parse_article(article, member.name)
-                article_obj = load_article(annotated_article, owner_profile)
-                if with_annotations:
-                    load_annotations(annotated_article, article_obj, owner_profile)
+                import_article.delay(article, member.name, owner_profile_id, with_annotations)
     finally:
         os.remove(filename)
+
+@django_rq.job('default', timeout=60, result_ttl=24*3600)
+def import_article(article, filename, owner_profile_id, with_annotations):
+    owner_profile = UserProfile.objects.get(pk=owner_profile_id)
+
+    annotated_article = parse_article(article, filename)
+    article_obj = load_article(annotated_article, owner_profile)
+    if with_annotations:
+        load_annotations(annotated_article, article_obj, owner_profile)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
 def import_schema(filename, owner_profile_id):
@@ -85,8 +89,7 @@ class UploadArticlesView(PermissionRequiredMixin, View):
                 archive_file.flush()
                 logger.info("Archive copied to temp file %s: tar file format: %s"
                             % (archive_file.name, tarfile.is_tarfile(archive_file.name)))
-                # Async job must delete temp file when done
-                import_article.delay(archive_file.name, request.user.userprofile.id, with_annotations)
+                import_archive(archive_file.name, request.user.userprofile.id, with_annotations)
 
             return redirect('/admin/thresher/article/')
         else:
