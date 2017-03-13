@@ -14,7 +14,7 @@ import django_rq
 
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
 from researcher.forms import SendTasksForm
-from data.load_data import load_article, load_schema
+from data.load_data import load_article, load_annotations, load_schema
 from data.parse_document import parse_article
 from data.parse_schema import parse_schema
 from data.legacy.parse_schema import parse_schema as old_parse_schema
@@ -35,9 +35,7 @@ class IndexView(TemplateView):
                       {'projects': Project.objects.filter(pybossa_id__isnull=False).order_by('name')}
         )
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
-def import_article(filename, owner_profile_id):
-    owner_profile = UserProfile.objects.get(pk=owner_profile_id)
+def import_archive(filename, owner_profile_id, with_annotations=False):
     try:
         with tarfile.open(filename) as tar:
             members = [ af for af in tar.getmembers()
@@ -45,16 +43,25 @@ def import_article(filename, owner_profile_id):
             logger.info("articles found %d" % len(members))
             for member in members:
                 article = tar.extractfile(member).read()
-                load_article(parse_article(article, member.name), owner_profile)
+                import_article.delay(article, member.name, owner_profile_id, with_annotations)
     finally:
         os.remove(filename)
 
 @django_rq.job('default', timeout=60, result_ttl=24*3600)
-def import_schema(filename, owner_profile_id):
-    try:
-        load_schema(old_parse_schema(filename))
-    finally:
-        os.remove(filename)
+def import_article(article, filename, owner_profile_id, with_annotations):
+    owner_profile = UserProfile.objects.get(pk=owner_profile_id)
+    annotated_article = parse_article(article, filename)
+    article_obj = load_article(annotated_article, owner_profile)
+    if with_annotations:
+        load_annotations(annotated_article, article_obj, owner_profile)
+
+@django_rq.job('default', timeout=60, result_ttl=24*3600)
+def import_schema(schema_contents, owner_profile_id):
+    logger.info("Received %d schema file bytes" % len(schema_contents))
+    with tempfile.NamedTemporaryFile(delete=True) as schema_file:
+        schema_file.write(schema_contents)
+        schema_file.flush()
+        load_schema(old_parse_schema(schema_file.name))
 
 class UploadArticlesView(PermissionRequiredMixin, View):
     form_class = UploadArticlesForm
@@ -74,6 +81,7 @@ class UploadArticlesView(PermissionRequiredMixin, View):
         bound_form = self.form_class(request.POST, request.FILES)
         if bound_form.is_valid():
             f = request.FILES['article_archive_file']
+            with_annotations = bound_form.cleaned_data["with_annotations"]
             logger.info("Request to import article archive %s, length %d" % (f.name, f.size))
             with tempfile.NamedTemporaryFile(delete=False) as archive_file:
                 for chunk in f.chunks():
@@ -81,8 +89,7 @@ class UploadArticlesView(PermissionRequiredMixin, View):
                 archive_file.flush()
                 logger.info("Archive copied to temp file %s: tar file format: %s"
                             % (archive_file.name, tarfile.is_tarfile(archive_file.name)))
-                # Async job must delete temp file when done
-                import_article.delay(archive_file.name, request.user.userprofile.id)
+                import_archive(archive_file.name, request.user.userprofile.id, with_annotations)
 
             return redirect('/admin/thresher/article/')
         else:
@@ -115,13 +122,13 @@ class UploadSchemaView(PermissionRequiredMixin, View):
         if bound_form.is_valid():
             f = request.FILES['schema_file']
             logger.info("Request to import schema %s, length %d" % (f.name, f.size))
-            with tempfile.NamedTemporaryFile(delete=False) as schema_file:
+            with tempfile.NamedTemporaryFile(delete=True) as schema_file:
                 for chunk in f.chunks():
                     schema_file.write(chunk)
-                schema_file.flush()
                 logger.info("Schema copied to temp file %s" % schema_file.name)
-                # Async job must delete temp file when done
-                import_schema.delay(schema_file.name, request.user.userprofile.id)
+                schema_file.seek(0)
+                schema_contents = schema_file.read()
+                import_schema.delay(schema_contents, request.user.userprofile.id)
 
             return redirect('/admin/thresher/topic/')
         else:

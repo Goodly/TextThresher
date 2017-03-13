@@ -3,8 +3,12 @@ from django.forms.widgets import SelectMultiple
 
 from thresher.models import Project, Topic
 
+help_with_annotations = "Check this box to import any existing annotations and topics embedded in the articles."
 class UploadArticlesForm(forms.Form):
     article_archive_file = forms.FileField(allow_empty_file=False)
+    with_annotations = forms.BooleanField(required=False,
+                                          label="Import annotations",
+                                          help_text=help_with_annotations)
 
 class UploadSchemaForm(forms.Form):
     schema_file = forms.FileField(allow_empty_file=False)
