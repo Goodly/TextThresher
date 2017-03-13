@@ -29,7 +29,7 @@ __pycache__/
 /thresher/bin/
 
 # django artifacts
-staticfiles
+/staticfiles/
 _postgres_data
 
 # gunicorn artifacts

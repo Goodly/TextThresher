@@ -147,7 +147,8 @@ if os.environ.get("DATABASE_URL"):
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-STATIC_ROOT = 'staticfiles'
+STATICFILES_STORAGE='thresher_backend.storage.TTStaticFilesStorage'
+STATIC_ROOT = '/var/www/staticfiles'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "vendor")
