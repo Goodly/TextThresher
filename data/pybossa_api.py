@@ -37,7 +37,7 @@ def create_remote_project(profile, project):
     # by the time the worker runs, then we WANT the worker to fail.
     return create_remote_project_worker.delay(profile_id=profile.id, project_id=project.id)
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
+@django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
 def create_remote_project_worker(profile_id=None, project_id=None):
     profile = UserProfile.objects.get(pk=profile_id)
     url = urljoin(profile.pybossa_url, "/api/project")
@@ -88,7 +88,7 @@ def delete_remote_project(profile, project):
     return delete_remote_project_worker.delay(profile_id=profile.id,
                                               project_id=project.id)
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
+@django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
 def delete_remote_project_worker(profile_id=None, project_id=None):
     profile = UserProfile.objects.get(pk=profile_id)
     project = Project.objects.get(pk=project_id)
@@ -170,7 +170,7 @@ def testCreateRemoteHighlighterTasks():
                                           topic_ids=topic_ids,
                                           project_id=project_id)
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
+@django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
 def generate_highlight_tasks_worker(profile_id=None,
                                     article_ids=None,
                                     topic_ids=None,
@@ -212,7 +212,7 @@ def testCreateRemoteQuizTasks():
                                      topic_ids=topic_ids,
                                      project_id=project_id)
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
+@django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
 def generate_quiz_tasks_worker(profile_id=None,
                                article_ids=None,
                                topic_ids=None,
@@ -242,7 +242,7 @@ def generate_quiz_tasks_worker(profile_id=None,
       "numberOfQueries": len(connection.queries) - startCount
     })
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
+@django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
 def create_remote_task_worker(profile_id=None, project_id=None, task=None, n_answers=1):
     profile = UserProfile.objects.get(pk=profile_id)
     url = urljoin(profile.pybossa_url, "/api/task")

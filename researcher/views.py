@@ -47,21 +47,23 @@ def import_archive(filename, owner_profile_id, with_annotations=False):
     finally:
         os.remove(filename)
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
+@django_rq.job('file_importer', timeout=60, result_ttl=24*3600)
 def import_article(article, filename, owner_profile_id, with_annotations):
     owner_profile = UserProfile.objects.get(pk=owner_profile_id)
     annotated_article = parse_article(article, filename)
     article_obj = load_article(annotated_article, owner_profile)
-    if with_annotations:
+    if article_obj and with_annotations:
         load_annotations(annotated_article, article_obj, owner_profile)
+    return article_obj.id
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
+@django_rq.job('file_importer', timeout=60, result_ttl=24*3600)
 def import_schema(schema_contents, owner_profile_id):
     logger.info("Received %d schema file bytes" % len(schema_contents))
     with tempfile.NamedTemporaryFile(delete=True) as schema_file:
         schema_file.write(schema_contents)
         schema_file.flush()
-        load_schema(old_parse_schema(schema_file.name))
+        schema_id = load_schema(old_parse_schema(schema_file.name))
+        return schema_id
 
 class UploadArticlesView(PermissionRequiredMixin, View):
     form_class = UploadArticlesForm
