@@ -13,10 +13,12 @@ class JSONSerializerField(serializers.Field):
     """
     def to_representation(self, obj):
         if obj:
-            return json.loads(obj)
-
-        else:
-            return {}
+            try:
+                return json.loads(obj)
+            except ValueError:
+                if obj[0:1] == '[':
+                    return []
+        return {}
 
     def to_internal_value(self, data):
         return json.dumps(data)
