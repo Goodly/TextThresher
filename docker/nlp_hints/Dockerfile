@@ -55,4 +55,4 @@ RUN git clone https://github.com/Goodly/NLP-hints nlp_hints
 WORKDIR /home/nlp_hints
 RUN mvn compile
 
-CMD ["bash"]
+CMD ["/usr/local/bin/rq", "worker", "nlp_exporter", "--url", "redis://django_rq/1"]

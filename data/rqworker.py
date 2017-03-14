@@ -9,5 +9,6 @@ from django.conf import settings
 from django_rq import get_worker
 
 if __name__ == '__main__':
-    worker = get_worker('task_exporter', 'task_importer', 'file_importer')
+    worker = get_worker('task_exporter', 'task_importer',
+                        'file_importer', 'nlp_importer')
     worker.work()
