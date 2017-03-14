@@ -45,14 +45,19 @@ RUN apt-get install -y --no-install-recommends maven
 
 RUN rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home/build
+WORKDIR /home
+RUN git clone https://github.com/Goodly/NLP-hints nlp_hints
+WORKDIR /home/nlp_hints
+RUN mvn compile
+
+WORKDIR /home/nlp_worker
 COPY ./nlp_hints/requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-WORKDIR /home
-RUN git clone https://github.com/Goodly/NLP-hints nlp_hints
-# most useful dir to end up in after "docker-compose exec nlp_hints bash"
+COPY ./nlp_hints/nlp_worker ./nlp_worker
+ENV PYTHONPATH=/home/nlp_worker
+
+# Maven wants to run in this dir
 WORKDIR /home/nlp_hints
-RUN mvn compile
 
 CMD ["/usr/local/bin/rq", "worker", "nlp_exporter", "--url", "redis://django_rq/1"]
