@@ -187,8 +187,6 @@ def generate_highlight_tasks_worker(profile_id=None,
         return {"error_msg": "Project type must be 'HLTR', "
                 "found '%s'" % (project.task_type)}
     tasks = collectHighlightTasks(articles, topics, project)
-    if settings.DEBUG:
-        tasks = tasks[:5] # limit for debugging
     for task in tasks:
         create_remote_task_worker.delay(profile_id=profile_id,
                                         project_id=project_id,
@@ -229,8 +227,6 @@ def generate_quiz_tasks_worker(profile_id=None,
         return {"error_msg": "Project type must be 'QUIZ', "
                 "found '%s'" % (project.task_type)}
     tasks = collectQuizTasks(articles, topics, project)
-    if settings.DEBUG:
-        tasks = tasks[:5] # DEBUG
     for task in tasks:
         create_remote_task_worker.delay(profile_id=profile_id,
                                         project_id=project_id,
