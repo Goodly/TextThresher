@@ -15,6 +15,7 @@ from models import Article, Topic, HighlightGroup, Project, Question, Answer, Ar
 from serializers import (UserProfileSerializer, ArticleSerializer,
                          TopicSerializer, HighlightGroupSerializer,
                          ProjectSerializer, QuestionSerializer,
+                         NLPQuestionSerializer,
                          ArticleHighlightSerializer, RootTopicSerializer,
                          SubmittedAnswerSerializer)
 
@@ -282,31 +283,19 @@ def quiz_tasks(request):
         taskList = taskList[:10]
         return Response(taskList)
 
-# Note, all collect* functions must have same signature to be called by
-# SendTasksView
-def collectNLPTasks(articles=None, topics=None, project=None):
-    taskList = []
-    for topic in topics:
-        topictree = topic.getTopicTree()
+def collectNLPTasks(articles=None, topics=None):
+    questions = []
+    for root in topics:
+        topictree = root.getTopicTree()
         prefetch_related_objects(topictree, "questions")
+        for topic in topictree:
+            nlp_input_format = NLPQuestionSerializer(topic.questions.all(),
+                                                     many=True)
+            questions.extend(nlp_input_format.data)
 
-    # TODO: Aggregate above prefetched questions into structure like that below
-    taskList = [{ "Topic Text": article.text,
-                  "Questions": [
-                      {
-                        "ID": 1,
-                        "Question": "How many people were arrested?"
-                      },
-                      {
-                        "ID": 2,
-                        "Question": "When was camping banned?"
-                      },
-                      {
-                        "ID": 3,
-                        "Question": "How many tents were there?"
-                      }
-              ]
-           } for article in articles ]
+    taskList = [{ "Topic Text": article.text, "Questions": questions }
+        for article in articles
+    ]
     return taskList
 
 @api_view(['GET'])
@@ -317,7 +306,7 @@ def NLP_tasks(request):
             topics = Topic.objects.filter(parent=None),
         )
         logger.info("Collected %d quiz tasks." % len(taskList))
-        # TODO: this needs to be changed to a paginated endpoint for MockQuiz to use
+        # TODO: change to GenericView and add a paginated version
         # Export first 10 for now
         taskList = taskList[:10]
         return Response(taskList)

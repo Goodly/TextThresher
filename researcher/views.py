@@ -22,6 +22,7 @@ from data.legacy.parse_schema import parse_schema as old_parse_schema
 from data.pybossa_api import create_remote_project, delete_remote_project
 from data.pybossa_api import generate_highlight_tasks_worker
 from data.pybossa_api import generate_quiz_tasks_worker
+from data.nlp_exporter import generate_nlp_tasks_worker
 from data.pybossa_api import InvalidTaskType
 from thresher.models import Article, Topic, UserProfile, Project
 
@@ -196,7 +197,10 @@ class SendTasksView(PermissionRequiredMixin, View):
             job = None
             if not project.pybossa_id:
                 job = create_remote_project(request.user.userprofile, project)
-            generator = self.get_task_generator(project)
+            if bound_form.cleaned_data['add_nlp_hints']:
+                generator = generate_nlp_tasks_worker.delay
+            else:
+                generator = self.get_task_generator(project)
             generator(profile_id=profile_id,
                       article_ids=article_ids,
                       topic_ids=topic_ids,

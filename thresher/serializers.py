@@ -94,6 +94,16 @@ class QuestionSerializer(serializers.ModelSerializer):
             Answer.objects.create(question=question, **answer)
         return question
 
+class NLPQuestionSerializer(serializers.Serializer):
+    ID = serializers.SerializerMethodField()
+    Question = serializers.SerializerMethodField()
+
+    def get_ID(self, obj):
+        return obj.id
+
+    def get_Question(self, obj):
+        return obj.question_text
+
 class UserProfileSerializer(serializers.ModelSerializer):
     # Getting info from User model
     username = serializers.SerializerMethodField()
