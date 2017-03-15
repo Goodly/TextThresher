@@ -1,9 +1,9 @@
 import time
 from rq import Queue
-from redis import Redis
+from redis import StrictRedis
 
 # Tell RQ what Redis connection to use
-redis_conn = Redis(host='django_rq', port=6379, db=1)
+redis_conn = StrictRedis(host='django_rq', port=6379, db=0)
 q = Queue('nlp_exporter', connection=redis_conn)
 
 # Request annotation from NLP worker

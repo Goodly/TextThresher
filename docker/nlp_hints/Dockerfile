@@ -60,4 +60,4 @@ ENV PYTHONPATH=/home/nlp_worker
 # Maven wants to run in this dir
 WORKDIR /home/nlp_hints
 
-CMD ["/usr/local/bin/rq", "worker", "nlp_exporter", "--url", "redis://django_rq/1"]
+CMD ["/usr/local/bin/rq", "worker", "nlp_exporter", "--url", "redis://django_rq/0"]

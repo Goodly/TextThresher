@@ -214,7 +214,7 @@ RQ_QUEUES = {
     'nlp_exporter': {
         'HOST': 'django_rq',
         'PORT': 6379,
-        'DB': 1,
+        'DB': 0,
         'DEFAULT_TIMEOUT': 360,
     },
     'nlp_importer': {
