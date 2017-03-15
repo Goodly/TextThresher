@@ -1,11 +1,11 @@
 import shlex
 import tempfile
 from subprocess32 import check_output, CalledProcessError
-from rq import Queue
+import rq
 from redis import StrictRedis
 
 redis_conn = StrictRedis(host='django_rq', port=6379, db=0)
-q = Queue('nlp_importer', connection=redis_conn)
+q = rq.Queue('nlp_importer', connection=redis_conn)
 
 run_cmd = shlex.split('mvn -q exec:java -Dexec.mainClass="annotator.Annotator" -Dexec.args=in.json')
 
@@ -17,5 +17,6 @@ def nlp_hints(hint_source):
         annotations = check_output(run_cmd, universal_newlines=True)
         # send annotations back to Django for importing
         job = q.enqueue('data.nlp_importer.nlp_load', annotations,
+                        rq.get_current_job().id,
                         timeout=60, result_ttl=24*3600)
         return annotations
