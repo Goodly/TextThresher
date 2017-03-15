@@ -206,24 +206,8 @@ def collectQuizTasks(articles=None, topics=None, project=None):
 def collectQuizTasksForTopic(articles=None, topic=None, project=None):
     taskList = []
 
-    topicQuery = Topic.objects.raw("""
-        WITH RECURSIVE subtopic(id, parent_id, name, "order",
-                                glossary, instructions)
-        AS (
-            SELECT id, parent_id, name, "order",
-                   glossary, instructions
-            FROM thresher_topic WHERE id=%s
-          UNION ALL
-            SELECT t.id, t.parent_id, t.name, t.order,
-                   t.glossary, t.instructions
-            FROM subtopic, thresher_topic t
-            WHERE t.parent_id = subtopic.id
-        )
-        SELECT id, parent_id, name, "order", glossary, instructions
-        FROM subtopic ORDER BY "order" LIMIT 500;
-    """, [topic.id])
-    # Force query to execute and generate Topic models array
-    topictree = topicQuery[:]
+    # getTopicTree returns the topic with all levels of its subtopic tree
+    topictree = topic.getTopicTree()
     prefetch_related_objects(topictree, "questions__answers")
 
     # Set up Prefetch that will cache just the highlights matching
@@ -291,6 +275,46 @@ def quiz_tasks(request):
             articles = Article.objects.all(),
             topics = Topic.objects.filter(parent=None),
             project = Project.objects.get(name__exact="Deciding Force Quiz")
+        )
+        logger.info("Collected %d quiz tasks." % len(taskList))
+        # TODO: this needs to be changed to a paginated endpoint for MockQuiz to use
+        # Export first 10 for now
+        taskList = taskList[:10]
+        return Response(taskList)
+
+# Note, all collect* functions must have same signature to be called by
+# SendTasksView
+def collectNLPTasks(articles=None, topics=None, project=None):
+    taskList = []
+    for topic in topics:
+        topictree = topic.getTopicTree()
+        prefetch_related_objects(topictree, "questions")
+
+    # TODO: Aggregate above prefetched questions into structure like that below
+    taskList = [{ "Topic Text": article.text,
+                  "Questions": [
+                      {
+                        "ID": 1,
+                        "Question": "How many people were arrested?"
+                      },
+                      {
+                        "ID": 2,
+                        "Question": "When was camping banned?"
+                      },
+                      {
+                        "ID": 3,
+                        "Question": "How many tents were there?"
+                      }
+              ]
+           } for article in articles ]
+    return taskList
+
+@api_view(['GET'])
+def NLP_tasks(request):
+    if request.method == 'GET':
+        taskList = collectNLPTasks(
+            articles = Article.objects.all(),
+            topics = Topic.objects.filter(parent=None),
         )
         logger.info("Collected %d quiz tasks." % len(taskList))
         # TODO: this needs to be changed to a paginated endpoint for MockQuiz to use

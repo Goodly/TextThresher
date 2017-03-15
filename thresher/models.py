@@ -152,6 +152,27 @@ class Topic(models.Model):
                     self.name, self.parent.name)
         return "id %d %s (no parent)" % (self.id, self.name)
 
+    def getTopicTree(self):
+        """ returns the topic with all levels of its subtopic tree """
+        topicQuery = Topic.objects.raw("""
+            WITH RECURSIVE subtopic(id, parent_id, name, "order",
+                                    glossary, instructions)
+            AS (
+                SELECT id, parent_id, name, "order",
+                       glossary, instructions
+                FROM thresher_topic WHERE id=%s
+              UNION ALL
+                SELECT t.id, t.parent_id, t.name, t.order,
+                       t.glossary, t.instructions
+                FROM subtopic, thresher_topic t
+                WHERE t.parent_id = subtopic.id
+            )
+            SELECT id, parent_id, name, "order", glossary, instructions
+            FROM subtopic ORDER BY "order" LIMIT 500;
+        """, [self.id])
+        # Force query to execute and generate Topic models array
+        return topicQuery[:]
+
 
 # Question
 class Question(models.Model):
