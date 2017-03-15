@@ -39,10 +39,6 @@ RUN apt-get install -y --no-install-recommends maven
 #COPY ./bd_build /bd_build
 #RUN ./prepare.sh
 
-#WORKDIR /ansible_build
-#COPY ./pybossa .
-#RUN ansible-playbook playbook.yml -i ansible_hosts -c local
-
 RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home
