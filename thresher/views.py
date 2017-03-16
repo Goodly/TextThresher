@@ -310,8 +310,7 @@ def NLP_tasks(request):
             topics = Topic.objects.filter(parent=None),
         )
         logger.info("Collected %d quiz tasks." % len(taskList))
-        # TODO: change to GenericView and add a paginated version
-        # Export first 10 for now
+        # This endpoint is just for debugging use, so limit response size
         taskList = taskList[:10]
         return Response(taskList)
 
