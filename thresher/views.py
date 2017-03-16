@@ -15,6 +15,7 @@ from models import Article, Topic, HighlightGroup, Project, Question, Answer, Ar
 from serializers import (UserProfileSerializer, ArticleSerializer,
                          TopicSerializer, HighlightGroupSerializer,
                          ProjectSerializer, QuestionSerializer,
+                         NLPQuestionSerializer,
                          ArticleHighlightSerializer, RootTopicSerializer,
                          SubmittedAnswerSerializer)
 
@@ -206,24 +207,8 @@ def collectQuizTasks(articles=None, topics=None, project=None):
 def collectQuizTasksForTopic(articles=None, topic=None, project=None):
     taskList = []
 
-    topicQuery = Topic.objects.raw("""
-        WITH RECURSIVE subtopic(id, parent_id, name, "order",
-                                glossary, instructions)
-        AS (
-            SELECT id, parent_id, name, "order",
-                   glossary, instructions
-            FROM thresher_topic WHERE id=%s
-          UNION ALL
-            SELECT t.id, t.parent_id, t.name, t.order,
-                   t.glossary, t.instructions
-            FROM subtopic, thresher_topic t
-            WHERE t.parent_id = subtopic.id
-        )
-        SELECT id, parent_id, name, "order", glossary, instructions
-        FROM subtopic ORDER BY "order" LIMIT 500;
-    """, [topic.id])
-    # Force query to execute and generate Topic models array
-    topictree = topicQuery[:]
+    # getTopicTree returns the topic with all levels of its subtopic tree
+    topictree = topic.getTopicTree()
     prefetch_related_objects(topictree, "questions__answers")
 
     # Set up Prefetch that will cache just the highlights matching
@@ -295,6 +280,37 @@ def quiz_tasks(request):
         logger.info("Collected %d quiz tasks." % len(taskList))
         # TODO: this needs to be changed to a paginated endpoint for MockQuiz to use
         # Export first 10 for now
+        taskList = taskList[:10]
+        return Response(taskList)
+
+def collectNLPTasks(articles=None, topics=None):
+    questions = []
+    for root in topics:
+        topictree = root.getTopicTree()
+        prefetch_related_objects(topictree, "questions")
+        for topic in topictree:
+            nlp_input_format = NLPQuestionSerializer(topic.questions.all(),
+                                                     many=True)
+            questions.extend(nlp_input_format.data)
+
+    taskList = [{
+                  "article_id": article.id,
+                  "Topic Text": article.text,
+                  "Questions": questions
+                }
+        for article in articles
+    ]
+    return taskList
+
+@api_view(['GET'])
+def NLP_tasks(request):
+    if request.method == 'GET':
+        taskList = collectNLPTasks(
+            articles = Article.objects.all(),
+            topics = Topic.objects.filter(parent=None),
+        )
+        logger.info("Collected %d quiz tasks." % len(taskList))
+        # This endpoint is just for debugging use, so limit response size
         taskList = taskList[:10]
         return Response(taskList)
 

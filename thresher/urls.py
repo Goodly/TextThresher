@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^highlighter_tasks/$', views.HighlightTasksNoPage.as_view()),
     url(r'^highlighter_tasks2/$', views.HighlightTasks.as_view()),
     url(r'^quiz_tasks/$', views.quiz_tasks),
+    url(r'^nlp_tasks/$', views.NLP_tasks),
 ]

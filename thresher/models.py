@@ -152,6 +152,27 @@ class Topic(models.Model):
                     self.name, self.parent.name)
         return "id %d %s (no parent)" % (self.id, self.name)
 
+    def getTopicTree(self):
+        """ returns the topic with all levels of its subtopic tree """
+        topicQuery = Topic.objects.raw("""
+            WITH RECURSIVE subtopic(id, parent_id, name, "order",
+                                    glossary, instructions)
+            AS (
+                SELECT id, parent_id, name, "order",
+                       glossary, instructions
+                FROM thresher_topic WHERE id=%s
+              UNION ALL
+                SELECT t.id, t.parent_id, t.name, t.order,
+                       t.glossary, t.instructions
+                FROM subtopic, thresher_topic t
+                WHERE t.parent_id = subtopic.id
+            )
+            SELECT id, parent_id, name, "order", glossary, instructions
+            FROM subtopic ORDER BY "order" LIMIT 500;
+        """, [self.id])
+        # Force query to execute and generate Topic models array
+        return topicQuery[:]
+
 
 # Question
 class Question(models.Model):
@@ -238,6 +259,7 @@ class ArticleHighlight(models.Model):
     HIGHLIGHT_SOURCE_CHOICES = (
         ('HLTR', 'Highlighter'),
         ('QUIZ', 'Quiz'),
+        ('NLP', 'NLP Hints'),
     )
     highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES,
                                                 max_length=4)
@@ -283,11 +305,15 @@ class HighlightGroup(models.Model):
         return answers
 
     def __unicode__(self):
+        if self.topic:
+            topic_name = self.topic.name
+        else:
+            topic_name = "NLP"
         return ("id %d article id %d "
                 "Topic %s and Case %d "
                 "created by %s") % (self.id,
                  self.article_highlight.article.id,
-                 self.topic.name, self.case_number,
+                 topic_name, self.case_number,
                  self.article_highlight.created_by.user.username)
 
 

@@ -23,6 +23,7 @@ class SelectTopicsField(forms.ModelMultipleChoiceField):
 
 help_select_project = "Select the Project for which you would like to generate tasks."
 help_select_topics = "The selected topics will be used for task generation."
+help_with_nlp = "Checking this box will generate NLP hints instead of generating tasks. Potentially time consuming."
 class SendTasksForm(forms.Form):
     project = SelectProjectField(Project.objects.all().order_by("name"),
                                  empty_label=None,
@@ -32,3 +33,6 @@ class SendTasksForm(forms.Form):
                                widget=SelectMultiple(attrs={"size":11}))
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
+    add_nlp_hints = forms.BooleanField(required=False,
+                                       label="Begin NLP processing",
+                                       help_text=help_with_nlp)

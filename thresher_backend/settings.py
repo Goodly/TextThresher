@@ -193,6 +193,42 @@ RQ_QUEUES = {
         'DB': 0,
         'DEFAULT_TIMEOUT': 360,
     },
+    'task_exporter': {
+        'HOST': 'django_rq',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
+    'task_importer': {
+        'HOST': 'django_rq',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
+    'file_importer': {
+        'HOST': 'django_rq',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
+    'nlp_generator': {
+        'HOST': 'django_rq',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
+    'nlp_exporter': {
+        'HOST': 'django_rq',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
+    'nlp_importer': {
+        'HOST': 'django_rq',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
 }
 
 #RQ_EXCEPTION_HANDLERS = ['path.to.my.handler'] # If you need custom exception handlers

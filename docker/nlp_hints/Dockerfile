@@ -39,20 +39,21 @@ RUN apt-get install -y --no-install-recommends maven
 #COPY ./bd_build /bd_build
 #RUN ./prepare.sh
 
-#WORKDIR /ansible_build
-#COPY ./pybossa .
-#RUN ansible-playbook playbook.yml -i ansible_hosts -c local
-
 RUN rm -rf /var/lib/apt/lists/*
-
-WORKDIR /home/build
-COPY ./nlp_hints/requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
 
 WORKDIR /home
 RUN git clone https://github.com/Goodly/NLP-hints nlp_hints
-# most useful dir to end up in after "docker-compose exec nlp_hints bash"
 WORKDIR /home/nlp_hints
 RUN mvn compile
 
-CMD ["bash"]
+WORKDIR /home/nlp_worker
+COPY ./nlp_hints/requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+COPY ./nlp_hints/nlp_worker ./nlp_worker
+ENV PYTHONPATH=/home/nlp_worker
+
+# Maven wants to run in this dir
+WORKDIR /home/nlp_hints
+
+CMD ["/usr/local/bin/rq", "worker", "nlp_exporter", "--url", "redis://django_rq/0"]

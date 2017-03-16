@@ -205,6 +205,7 @@ def load_schema(schema):
                                        schema=schema['topics'],
                                        dependencies=schema['dependencies'])
     schema_parser.load_topics()
+    return schema_obj.id
 
 def load_article(article, created_by):
     new_id = int(article['metadata']['article_number'])

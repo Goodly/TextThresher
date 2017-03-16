@@ -22,6 +22,7 @@ from data.legacy.parse_schema import parse_schema as old_parse_schema
 from data.pybossa_api import create_remote_project, delete_remote_project
 from data.pybossa_api import generate_highlight_tasks_worker
 from data.pybossa_api import generate_quiz_tasks_worker
+from data.nlp_exporter import generate_nlp_tasks_worker
 from data.pybossa_api import InvalidTaskType
 from thresher.models import Article, Topic, UserProfile, Project
 
@@ -47,21 +48,23 @@ def import_archive(filename, owner_profile_id, with_annotations=False):
     finally:
         os.remove(filename)
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
+@django_rq.job('file_importer', timeout=60, result_ttl=24*3600)
 def import_article(article, filename, owner_profile_id, with_annotations):
     owner_profile = UserProfile.objects.get(pk=owner_profile_id)
     annotated_article = parse_article(article, filename)
     article_obj = load_article(annotated_article, owner_profile)
-    if with_annotations:
+    if article_obj and with_annotations:
         load_annotations(annotated_article, article_obj, owner_profile)
+    return article_obj.id
 
-@django_rq.job('default', timeout=60, result_ttl=24*3600)
+@django_rq.job('file_importer', timeout=60, result_ttl=24*3600)
 def import_schema(schema_contents, owner_profile_id):
     logger.info("Received %d schema file bytes" % len(schema_contents))
     with tempfile.NamedTemporaryFile(delete=True) as schema_file:
         schema_file.write(schema_contents)
         schema_file.flush()
-        load_schema(old_parse_schema(schema_file.name))
+        schema_id = load_schema(old_parse_schema(schema_file.name))
+        return schema_id
 
 class UploadArticlesView(PermissionRequiredMixin, View):
     form_class = UploadArticlesForm
@@ -194,7 +197,10 @@ class SendTasksView(PermissionRequiredMixin, View):
             job = None
             if not project.pybossa_id:
                 job = create_remote_project(request.user.userprofile, project)
-            generator = self.get_task_generator(project)
+            if bound_form.cleaned_data['add_nlp_hints']:
+                generator = generate_nlp_tasks_worker.delay
+            else:
+                generator = self.get_task_generator(project)
             generator(profile_id=profile_id,
                       article_ids=article_ids,
                       topic_ids=topic_ids,
