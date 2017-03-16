@@ -293,7 +293,11 @@ def collectNLPTasks(articles=None, topics=None):
                                                      many=True)
             questions.extend(nlp_input_format.data)
 
-    taskList = [{ "Topic Text": article.text, "Questions": questions }
+    taskList = [{
+                  "article_id": article.id,
+                  "Topic Text": article.text,
+                  "Questions": questions
+                }
         for article in articles
     ]
     return taskList
