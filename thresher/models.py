@@ -259,6 +259,7 @@ class ArticleHighlight(models.Model):
     HIGHLIGHT_SOURCE_CHOICES = (
         ('HLTR', 'Highlighter'),
         ('QUIZ', 'Quiz'),
+        ('NLP', 'NLP Hints'),
     )
     highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES,
                                                 max_length=4)
@@ -304,11 +305,15 @@ class HighlightGroup(models.Model):
         return answers
 
     def __unicode__(self):
+        if self.topic:
+            topic_name = self.topic.name
+        else:
+            topic_name = "NLP"
         return ("id %d article id %d "
                 "Topic %s and Case %d "
                 "created by %s") % (self.id,
                  self.article_highlight.article.id,
-                 self.topic.name, self.case_number,
+                 topic_name, self.case_number,
                  self.article_highlight.created_by.user.username)
 
 
