@@ -22,7 +22,8 @@ const mapStateToProps = state => {
     queue: state.quiz.queue,
     question_id: state.quiz.curr_question_id,
     answer_selected: state.quiz.answer_selected,
-    saveAndNext: state.quiz.saveAndNext
+    saveAndNext: state.quiz.saveAndNext,
+    review: state.quiz.review
   }
 };
 

@@ -1,6 +1,7 @@
 const initialState = Object.assign({
   currTask: null,
   queue: [],
+  review: false,
   curr_question_id: -1,
   answer_selected: {},
   highlighter_color: {},
@@ -65,6 +66,11 @@ export function quiz(state = initialState, action) {
         };
       }
       return state;
+    case 'UPDATE_REVIEW':
+      return {
+        ...state,
+        review: action.review
+      }
     case 'COLOR_SELECTED':
       var assign_dict = { question_id: action.question_id, answer_id: action.answer_id, color: action.color };
       return {
