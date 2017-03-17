@@ -2,7 +2,7 @@ import json
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from models import (Article, Topic, Question, Answer,
-                    HighlightGroup, SubmittedAnswer,
+                    HighlightGroup, SubmittedAnswer, NLPHints,
                     Project, ArticleHighlight, UserProfile)
 
 
@@ -53,7 +53,7 @@ class HighlightGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HighlightGroup
-        fields = ('id', 'offsets', 'highlight_text', 'case_number',
+        fields = ('id', 'offsets', 'case_number',
                   'topic', 'submitted_answers')
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
@@ -163,3 +163,10 @@ class RootTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = ('id', 'name', 'order', 'glossary', 'instructions')
+
+class NLPHintSerializer(serializers.ModelSerializer):
+    offsets = JSONSerializerField()
+
+    class Meta:
+        model = NLPHints
+        fields = ('id', 'article', 'question', 'offsets')

@@ -14,11 +14,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 
-from models import Article, Topic, HighlightGroup, Project, Question, Answer, ArticleHighlight, UserProfile
+from models import (Project,  UserProfile, Article, Topic, Question, Answer,
+                    ArticleHighlight, HighlightGroup, NLPHints)
 from serializers import (UserProfileSerializer, ArticleSerializer,
                          TopicSerializer, HighlightGroupSerializer,
                          ProjectSerializer, QuestionSerializer,
-                         NLPQuestionSerializer,
+                         NLPQuestionSerializer, NLPHintSerializer,
                          ArticleHighlightSerializer, RootTopicSerializer,
                          SubmittedAnswerSerializer)
 
@@ -214,22 +215,32 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
     topictree = topic.getTopicTree()
     prefetch_related_objects(topictree, "questions__answers")
 
-    # Set up Prefetch that will cache just the highlights matching
-    # this topic to article.users_highlights[n].highlightsForTopic
     # Prefetching uses one query per related table to populate caches.
     # This helps us avoid per row queries when looping over rows.
+    # Put all the Hints for this article for this root topic and subtopics in
+    # article.hintsForTopic
+    topicHints = NLPHints.objects.filter(question__topic_id__in=topictree)
+    fetchHints = Prefetch("hints",
+                          queryset=topicHints,
+                          to_attr="hintsForTopic")
+    logger.info("Found %d topicHints for root topic %d"
+                 % (len(topicHints), topic.id))
+
+    # Set up Prefetch that will cache just the highlights matching
+    # this topic to article.users_highlights[n].highlightsForTopic
     topicHighlights = (HighlightGroup.objects.filter(topic=topic)
                        .prefetch_related("submitted_answers"))
     fetchHighlights = Prefetch("users_highlights__highlights",
                                queryset=topicHighlights,
                                to_attr="highlightsForTopic")
     # Find articles highlighted with the topic within the provided queryset
+    # distinct is essential after prefetch_related chained method
     articles = (articles
                 .filter(users_highlights__highlights__topic=topic)
-                .prefetch_related(fetchHighlights))
-
-    # distinct is essential after above filter to related tables
-    articles = articles.order_by("id").distinct()
+                .prefetch_related(fetchHighlights)
+                .prefetch_related(fetchHints)
+                .order_by("id")
+                .distinct())
 
     project_data = ProjectSerializer(project, many=False).data
     topictree_data = TopicSerializer(topictree, many=True).data
@@ -262,6 +273,7 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
                "article": ArticleSerializer(article, many=False).data,
                "highlights": HighlightGroupSerializer(
                                  hg_case_group, many=True).data,
+               "hints": NLPHintSerializer(article.hintsForTopic, many=True).data,
             })
 
     return taskList
