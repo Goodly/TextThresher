@@ -1,32 +1,88 @@
 {% extends parent_template|default:"researcher/base.html" %}
 {% block title %} Researcher Tools {% endblock %}
 {% block content %}
-  <h1>Researcher Tools</h1>
-  <div>
-    <p><a href="{% url 'researcher:upload_schema' %}">
-      Upload Schema File
-    </a></p>
-    <p><a href="{% url 'researcher:upload_articles' %}">
-      Upload Articles
-    </a></p>
-    <p><a href="{% url 'researcher:send_tasks' %}">
-      Send Tasks to Pybossa server
-    </a></p>
-  </div>
-  <div>
-      {% for project in projects %}
-        <p>
-          {{ project.name }}
-        <ul>
-          <li>
-            <a href="{{ project.get_remote_URL }}" target="_blank">view remote</a>
+  <div class="content-container">
+
+    <h1 class="main-label">Researcher Tools</h1>
+
+    <div class="main-container">
+
+      <!-- First section -->
+      <div class="general-container">
+        <div class="section-label-container">
+          <p class="section-label">GENERAL TOOLS</p>
+        </div>
+        <ul class="item-container">
+          <li class="item">
+            <a href="{% url 'researcher:upload_schema' %}">
+              Upload Schema File
+            </a>
           </li>
-          <li>
-            <a href="{{ project.get_local_remote_delete_URL }}">delete remote</a>
+          <li class="item">
+            <a href="{% url 'researcher:upload_articles' %}">
+              Upload Articles
+            </a>
+          </li>
+          <li class="item">
+            <a href="{% url 'researcher:send_tasks' %}">
+              Send Tasks to Pybossa server
+            </a>
           </li>
         </ul>
-      {% empty %}
-        No remote projects currently being managed by us.
-      {% endfor %}
+        
+        <!-- <p></p>
+        <p></p> -->
+      </div>
+      <!-- End first section -->
+
+      <!-- Second section -->
+      <div class="projects-container">
+        <div class="section-label-container">
+          <p class="section-label">REMOTE PROJECTS</p>
+        </div>
+          {% for project in projects %}
+            <p>
+              {{ project.name }}
+            <ul class="item-container">
+              <li class="item">
+                <a href="{{ project.get_remote_URL }}" target="_blank">view remote</a>
+              </li>
+              <li class="item">
+                <a href="{{ project.get_local_remote_delete_URL }}">delete remote</a>
+              </li>
+            </ul>
+          {% empty %}
+          <div class="nothing-label">
+            No remote projects currently being managed by us.
+          </div>
+          {% endfor %}
+      </div>
+      <!-- End second section -->
+    </div>
+
+    <!-- Right section -->
+    <div class="right-section-container">
+      <div class="right-section-label">
+        Related actions
+      </div>
+      <div class="line-delimiter"></div>
+      {% if user.is_authenticated %}
+        <div class="right-section-item">
+          <a href="{% url 'admin:index' %}">
+            Thresher Admin
+          </a>
+        </div>
+        <div class="right-section-item">
+          <a href="{% url 'rq_home' %}">
+            Check Queue
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <!-- End right section -->
+      
+      <!-- <p></p>
+      <p></p> -->
   </div>
+
 {% endblock %}

@@ -1,0 +1,97 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+    color: #333;
+    background: #fff;
+}
+
+.header {
+    width: auto;
+    height: 65px;
+    padding: 10px 40px;
+    background: #417690;
+    line-height: 40px;
+    color: #ffc;
+    overflow: hidden;
+}
+
+.branding {
+    float: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+h1.brand-label {
+    padding: 0;
+    margin: 0 20px 0 0;
+    font-weight: 300;
+    font-size: 24px;
+    color: yellow;
+}
+
+h1.brand-label, h1.brand-label a:link, h1.brand-label a:visited {
+    color: #f5dd5d;
+}
+
+.user-tools {
+    float: right;
+    padding: 3px 0 0 0;
+    margin: 0 0 0 20px;
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: right;
+}
+
+.username {
+    float: left;
+}
+
+a.actual-name {
+    text-decoration: none;
+    color: #ffc;
+}
+
+.logout {
+    float: right;
+    margin-left: 10px;
+}
+
+.logout-text {
+    text-decoration: none;
+    word-spacing: 5px;
+    color: #fff;
+}
+
+.content-container {
+    width: 600px;
+    padding: 20px 40px;
+}
+
+h1.main-label {
+    padding: 0 0 20px;
+    margin-top: 0;
+    font-weight: 300;
+    font-size: 20px;
+    color: #666;
+}
+
+.general-container {border: none;margin-bottom: 30px;background: #fff;}
+
+.projects-container {border: none;margin-bottom: 30px;background: #fff;}
+
+.right-section-container {
+    float: right;
+    width: 260px;
+    position: relative;
+    margin-right: -300px;
+}
+
+.main-container {
+    float: left;
+    width: 100%;
+}
