@@ -52,8 +52,8 @@ const mapDispatchToProps = dispatch => {
     setColor: (q_id, a_id, color) => {
       dispatch(colorSelected(q_id, a_id, color))
     },
-    queueUpdate: (questions) => {
-      dispatch(updateQueue(questions))
+    queueUpdate: (questions, type) => {
+      dispatch(updateQueue(questions, type))
     },
     queueRemove: (questions) => {
       dispatch(removeElemQueue(questions))
@@ -113,11 +113,28 @@ const Question = React.createClass({
     );
   },
 
+  findNextQuestions: function(answer) {
+    var next_id = answer.next_questions;
+    var next_question = [];
+    for(var i = 0; i < next_id.length; i++) {
+      for(var j = 0; j < this.props.currTask.topictree.length; j++) {
+        var temp = this.props.currTask.topictree[j];
+        for(var k = 0; k < temp.questions.length; k++) {
+          if(temp.questions[k].id == next_id[i]) {
+            next_question.push(temp.questions[k]);
+            break;
+          }
+        }
+      }
+    }
+    return next_question;
+  },
 
   radioOnClick: function(answer, color) {
     if(this.checkInArray(answer.id)) {
-
-      this.props.queueRemove()
+      this.props.queueRemove(this.findNextQuestions(answer));
+    } else {
+      this.props.queueUpdate(answer.next_questions, TYPES.RADIO);
     }
     this.props.setColor(this.props.question.id, answer.id, color);
     this.props.selectAnswer(TYPES.RADIO, this.props.question.id, answer.id, answer.text);
@@ -165,17 +182,17 @@ const Question = React.createClass({
         this.props.setColor(-1, -1, '');
       }
       if(type = TYPES.SELECT_SUBTOPIC) {
-        var temp_queue = [];
-        for(var i = 0; i < next_topic.questions.length; i++) {
-          temp_queue.push(next_topic.questions[i].id);
-        }
-        this.props.queueRemove(temp_queue);
+        this.props.queueRemove(next_topic.questions);
+      } else {
+        this.props.queueRemove(this.findNextQuestions(answer));
       }
     } else {
       this.props.setColor(this.props.question.id, answer.id, color);
       this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id, answer.answer_content);
       if(type == TYPES.SELECT_SUBTOPIC) {
-        this.props.queueUpdate(temp.questions);
+        this.props.queueUpdate(next_topic.questions, TYPES.SELECT_SUBTOPIC);
+      } else {
+        this.props.queueUpdate(answer.next_questions, TYPES.CHECKBOX);
       }
     }
   },
