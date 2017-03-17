@@ -86,11 +86,6 @@ const Question = React.createClass({
     return false;
   },
 
-  radioOnClick: function(ans_id, text, color) {
-    this.props.setColor(this.props.question.id, ans_id, color);
-    this.props.selectAnswer(TYPES.RADIO, this.props.question.id, ans_id, text);
-  },
-
   mapToRadio: function(arr, controlname="controlgroup") {
     return (
       <form>
@@ -107,7 +102,7 @@ const Question = React.createClass({
                 <div style={ style } 
                     onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
                 <input type="radio" name={controlname} checked={ this.checkInArray(elem.id) }
-                  onChange={ () => { this.radioOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
+                  onChange={ () => { this.radioOnClick(elem, COLOR_OPTIONS[i]) }} />
                 { " " + elem.answer_content }
                 <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
               </div>
@@ -116,6 +111,16 @@ const Question = React.createClass({
         }
       </form>
     );
+  },
+
+
+  radioOnClick: function(answer, color) {
+    if(this.checkInArray(answer.id)) {
+
+      this.props.queueRemove()
+    }
+    this.props.setColor(this.props.question.id, answer.id, color);
+    this.props.selectAnswer(TYPES.RADIO, this.props.question.id, answer.id, answer.text);
   },
 
   mapToCheckbox: function(arr, type, controlname="controlgroup") {
@@ -160,7 +165,11 @@ const Question = React.createClass({
         this.props.setColor(-1, -1, '');
       }
       if(type = TYPES.SELECT_SUBTOPIC) {
-        this.props.queueRemove(temp.questions);
+        var temp_queue = [];
+        for(var i = 0; i < next_topic.questions.length; i++) {
+          temp_queue.push(next_topic.questions[i].id);
+        }
+        this.props.queueRemove(temp_queue);
       }
     } else {
       this.props.setColor(this.props.question.id, answer.id, color);

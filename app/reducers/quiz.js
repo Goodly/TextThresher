@@ -82,9 +82,9 @@ export function quiz(state = initialState, action) {
     case 'REMOVE_QUEUE':
       var new_queue = Object.assign([], state.queue);
       for(var i = 0; i < action.questions.length; i++) {
-        var ind = new_queue.indexOf(action.questions[i].id);
-        if(ind > -1) {
-          new_queue.splice(ind, 1);
+        var ind = state.queue.indexOf(action.questions[i]);
+        if(ind == -1) {
+          new_queue.push(state.queue[ind]);
         }
       }
       return {
