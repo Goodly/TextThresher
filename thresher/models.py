@@ -259,7 +259,6 @@ class ArticleHighlight(models.Model):
     HIGHLIGHT_SOURCE_CHOICES = (
         ('HLTR', 'Highlighter'),
         ('QUIZ', 'Quiz'),
-        ('NLP', 'NLP Hints'),
     )
     highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES,
                                                 max_length=4)
@@ -336,3 +335,20 @@ class SubmittedAnswer(models.Model):
     def __unicode__(self):
         return ("id %d question id %d user %s") % (self.id,
                 question.id, self.user_submitted.user.username)
+
+
+class NLPHints(models.Model):
+    article = models.ForeignKey(Article,
+                                related_name="hints",
+                                on_delete=models.CASCADE)
+    question = models.ForeignKey(Question,
+                                 related_name="hints",
+                                 on_delete=models.CASCADE)
+    # The highlighted text (stored as JSON array of offset tuples)
+    highlight_text = models.TextField()
+    # The highlighted text (stored as JSON array of offset tuples)
+    offsets = models.TextField()
+
+    def __unicode__(self):
+        return ("id %d article id %d question id %d") % (self.id,
+                self.article_id, self.question_id)
