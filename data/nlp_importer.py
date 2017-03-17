@@ -6,20 +6,12 @@ django.setup()
 
 import json
 
-from data import init_defaults
-from thresher.models import ArticleHighlight, HighlightGroup
+from thresher.models import NLPHints
 
 def nlp_load(annotations):
-    print annotations
-    researchers = init_defaults.createThresherGroup()
-    created_by = init_defaults.createNick(groups=[researchers])
     resultList = json.loads(annotations)
     for result in resultList:
-        ah = ArticleHighlight.objects.create(
-            article_id=result['article_id'],
-            created_by = created_by,
-            highlight_source = 'NLP'
-        )
+        article_id=result['article_id']
         for hint in result['Hints']:
             question_id = hint['qID']
             highlightList = hint['Highlights']
@@ -29,14 +21,9 @@ def nlp_load(annotations):
             # You could argue that an object would be better style. Oh well.
             for i in range(len(offsetList)):
                 offsetList[i].append(highlightList[i])
-            # HighlightGroup is overloaded to store highlights from three
-            # sources 1) Topic highlighter, 2) NLP hints, 3) Extra answer context
-            # TODO: Think about whether it's good or bad to overload this heavily.
-            # Note: storing question_id in case_number is a temporary hack
-            HighlightGroup.objects.create(
-                article_highlight = ah,
-                topic = None,
-                case_number = question_id, # TODO: temporary hacky hack
+            NLPHints.objects.create(
+                article_id = article_id,
+                question_id = question_id,
                 highlight_text = json.dumps(highlightList),
                 offsets = json.dumps(offsetList)
             )

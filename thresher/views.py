@@ -1,9 +1,12 @@
 import logging
 logger = logging.getLogger(__name__)
 
+from itertools import groupby
+
 from django.contrib.auth.models import User
 from django.db.models import Prefetch
 from django.db.models import prefetch_related_objects
+from django.db.models import Q
 
 from rest_framework import routers, viewsets
 from rest_framework.decorators import list_route, api_view
@@ -11,11 +14,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 
-from models import Article, Topic, HighlightGroup, Project, Question, Answer, ArticleHighlight, UserProfile
+from models import (Project,  UserProfile, Article, Topic, Question, Answer,
+                    ArticleHighlight, HighlightGroup, NLPHints)
 from serializers import (UserProfileSerializer, ArticleSerializer,
                          TopicSerializer, HighlightGroupSerializer,
                          ProjectSerializer, QuestionSerializer,
-                         NLPQuestionSerializer,
+                         NLPQuestionSerializer, NLPHintSerializer,
                          ArticleHighlightSerializer, RootTopicSerializer,
                          SubmittedAnswerSerializer)
 
@@ -211,22 +215,32 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
     topictree = topic.getTopicTree()
     prefetch_related_objects(topictree, "questions__answers")
 
-    # Set up Prefetch that will cache just the highlights matching
-    # this topic to article.users_highlights[n].highlightsForTopic
     # Prefetching uses one query per related table to populate caches.
     # This helps us avoid per row queries when looping over rows.
+    # Put all the Hints for this article for this root topic and subtopics in
+    # article.hintsForTopic
+    topicHints = NLPHints.objects.filter(question__topic_id__in=topictree)
+    fetchHints = Prefetch("hints",
+                          queryset=topicHints,
+                          to_attr="hintsForTopic")
+    logger.info("Found %d topicHints for root topic %d"
+                 % (len(topicHints), topic.id))
+
+    # Set up Prefetch that will cache just the highlights matching
+    # this topic to article.users_highlights[n].highlightsForTopic
     topicHighlights = (HighlightGroup.objects.filter(topic=topic)
-                       .order_by("case_number")
                        .prefetch_related("submitted_answers"))
     fetchHighlights = Prefetch("users_highlights__highlights",
                                queryset=topicHighlights,
                                to_attr="highlightsForTopic")
     # Find articles highlighted with the topic within the provided queryset
+    # distinct is essential after prefetch_related chained method
     articles = (articles
                 .filter(users_highlights__highlights__topic=topic)
-                .prefetch_related(fetchHighlights))
-
-    articles = articles.order_by("id")
+                .prefetch_related(fetchHighlights)
+                .prefetch_related(fetchHints)
+                .order_by("id")
+                .distinct())
 
     project_data = ProjectSerializer(project, many=False).data
     topictree_data = TopicSerializer(topictree, many=True).data
@@ -240,20 +254,27 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
         # Not expecting more than one ArticleHighlight record
         # but safest to code as if there could be more than one.
 
-        # TODO: Need to further split task by case_number here.
         highlights = [ hg
                        for ah in article.users_highlights.all()
                        for hg in ah.highlightsForTopic
         ]
+        # At this point, we are processing one topic for one article
+        # Need to sort here instead of the above prefetch because we want
+        # to ignore the potential grouping effect if there was more than one
+        # ArticleHighlight in above list comprehension
+        hg_by_case = sorted(highlights, key=lambda x: x.case_number)
 
-        taskList.append({
-           "project": project_data,
-           "topTopicId": topic.id,
-           "topictree": topictree_data,
-           "article": ArticleSerializer(article, many=False).data,
-           "highlights": HighlightGroupSerializer(
-                             highlights, many=True).data,
-        })
+        for case_number, hg_case_group in groupby(hg_by_case,
+                                                  key=lambda x: x.case_number):
+            taskList.append({
+               "project": project_data,
+               "topTopicId": topic.id,
+               "topictree": topictree_data,
+               "article": ArticleSerializer(article, many=False).data,
+               "highlights": HighlightGroupSerializer(
+                                 hg_case_group, many=True).data,
+               "hints": NLPHintSerializer(article.hintsForTopic, many=True).data,
+            })
 
     return taskList
 
@@ -272,15 +293,21 @@ def quiz_tasks(request):
     5. the questions and answers for this Topic
     """
     if request.method == 'GET':
+        # This endpoint is just for testing the Quiz front-end, so limit results
+        # for speed and quality.
+        # There are lots of topics in the test set without questions.
+        # Limit this to the 4 main schemas we have questions for.
+        # Finding the cases for the four specified root topics in the
+        # first 20 articles generates 46 tasks.
+        # TODO: Could add paginated version of endpoint like HighlightTasks
+        df_schemas = Q(name="Protester") | Q(name="City")
+        df_schemas |=  Q(name="Camp") | Q(name="Police")
         taskList = collectQuizTasks(
-            articles = Article.objects.all(),
-            topics = Topic.objects.filter(parent=None),
+            articles = Article.objects.filter(id__lte=20),
+            topics = Topic.objects.filter(df_schemas),
             project = Project.objects.get(name__exact="Deciding Force Quiz")
         )
         logger.info("Collected %d quiz tasks." % len(taskList))
-        # TODO: this needs to be changed to a paginated endpoint for MockQuiz to use
-        # Export first 10 for now
-        taskList = taskList[:10]
         return Response(taskList)
 
 def collectNLPTasks(articles=None, topics=None):
