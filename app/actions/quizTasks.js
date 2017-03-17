@@ -123,10 +123,13 @@ export function fetchQuizTasks() {
   };
 }
 
-export function updateQueue(questions) {
+export function updateQueue(questions, question_type) {
+  if(question_type == 'SELECT_SUBTOPIC') {
+    questions = addNonContingentQuestions(questions);
+  }
   return {
     type: 'UPDATE_QUEUE',
-    questions: addNonContingentQuestions(questions)
+    questions
   };
 }
 

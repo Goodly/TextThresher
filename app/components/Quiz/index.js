@@ -27,16 +27,15 @@ export class Quiz extends Component {
   dispQuestion(question) { 
     var next_id = question.id;
     var prev_id = -1;
-    var in_queue = false;
     for(var k = 0; k < this.props.queue.length; k++) {
       if(question.id == this.props.queue[k]) {
-        in_queue = true;
         if(k < this.props.queue.length - 1) {
           next_id = this.props.queue[k + 1];
         }
         if(k > 0) {
           prev_id = this.props.queue[k - 1];
         }
+        break;
       }
     } 
     return (
@@ -66,14 +65,16 @@ export class Quiz extends Component {
 
   mapTopic(topic) {
     var sub_question = this.generateSubQuestion(topic);
+    var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
+    var last_button = last_question ? <button type="button"> { "Review" } </button> : <div></div>;
 
     var next_id = this.props.queue.length > 1 ? this.props.queue[1] : -1;
-    // check if element shoudl be displayed as selected
     var format_question = (
       <div key={-1}>
         <Question question={sub_question} />
         <button type="button" onClick={() => { this.props.activeQuestion(-1)}}> { "Prev" }</button>
         <button type="button" onClick={() => { this.props.activeQuestion(next_id)}}> { "Next" } </button>
+        { last_button }
       </div>
     );  
     if(this.props.question_id == -1) {
@@ -91,15 +92,14 @@ export class Quiz extends Component {
             }}>
               <div> {topic[i].name} </div>
               { this.dispQuestion(topic[i].questions[k]) }
+              { last_button }
             </div>
           );
         }
       }
     }
-    if(topic.length > 0) {
-      return <div key={topic[0].id}></div>;
-    }
-    return (<div key={-1}></div>);
+    console.log("there was some error with the question queue processing");
+    return <div></div>;
   }
 
   mapHighlights(highlights) {
