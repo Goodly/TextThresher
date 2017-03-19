@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6fdbe726769123b76ace"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d49f9da4f6e8cdf4a668"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -18390,7 +18390,7 @@
 	exports.quiz = quiz;
 	var initialState = Object.assign({
 	  currTask: null,
-	  queue: [],
+	  queue: [-1],
 	  review: false,
 	  curr_question_id: -1,
 	  answer_selected: {},
@@ -18403,6 +18403,7 @@
 	  var action = arguments[1];
 	
 	  console.log(action);
+	  console.log(state.queue);
 	  switch (action.type) {
 	    case 'CLEAR_ANSWERS':
 	      return _extends({}, state, {

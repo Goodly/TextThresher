@@ -1,6 +1,6 @@
 const initialState = Object.assign({
   currTask: null,
-  queue: [],
+  queue: [-1],
   review: false,
   curr_question_id: -1,
   answer_selected: {},
@@ -10,6 +10,7 @@ const initialState = Object.assign({
 
 export function quiz(state = initialState, action) {
   console.log(action);
+  console.log(state.queue);
   switch(action.type) {
     case 'CLEAR_ANSWERS':
       return {

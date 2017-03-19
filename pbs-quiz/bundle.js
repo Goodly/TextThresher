@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6fdbe726769123b76ace"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d49f9da4f6e8cdf4a668"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23793,7 +23793,7 @@
 	exports.quiz = quiz;
 	var initialState = Object.assign({
 	  currTask: null,
-	  queue: [],
+	  queue: [-1],
 	  review: false,
 	  curr_question_id: -1,
 	  answer_selected: {},
@@ -23806,6 +23806,7 @@
 	  var action = arguments[1];
 	
 	  console.log(action);
+	  console.log(state.queue);
 	  switch (action.type) {
 	    case 'CLEAR_ANSWERS':
 	      return _extends({}, state, {
@@ -57137,7 +57138,11 @@
 	      null,
 	      arr.map(function (elem, i) {
 	        var colorText = _this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
-	        var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+	        var style = { "display": "inline-block",
+	          "borderRadius": 15,
+	          "width": 30,
+	          "height": 30,
+	          "backgroundColor": COLOR_OPTIONS[i] };
 	        if (_this.props.color && _this.props.color.answer_id == elem.id) {
 	          style["border"] = "2px solid black";
 	        }
@@ -57155,14 +57160,7 @@
 	            onChange: function onChange() {
 	              _this.radioOnClick(elem, COLOR_OPTIONS[i]);
 	            } }),
-	          " " + elem.answer_content,
-	          _react2.default.createElement(
-	            'span',
-	            { style: { "fontSize": "80%", "color": "red" } },
-	            ' ',
-	            elem.next_question,
-	            ' '
-	          )
+	          " " + elem.answer_content
 	        );
 	      })
 	    );
@@ -57205,33 +57203,36 @@
 	      null,
 	      arr.map(function (elem, i) {
 	        var colorText = _this2.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
-	        var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+	        var style = { "display": "inline-block",
+	          "width": 30,
+	          "height": 30,
+	          "backgroundColor": COLOR_OPTIONS[i],
+	          "verticalAlign": "middle",
+	          "marginRight": 5,
+	          "borderRadius": 15 };
 	        if (_this2.props.color && _this2.props.color.answer_id == elem.id) {
 	          style["border"] = "2px solid black";
 	        }
 	        return _react2.default.createElement(
 	          'div',
 	          { key: elem.id,
-	            style: { "color": colorText } },
+	            style: { "color": colorText, "margin": 10 } },
 	          _react2.default.createElement('div', { style: style,
 	            onClick: function onClick() {
 	              if (colorText) {
 	                _this2.props.setColor(_this2.props.question.id, elem.id, COLOR_OPTIONS[i]);
 	              }
 	            } }),
-	          _react2.default.createElement('input', { type: 'checkbox',
-	            name: controlname,
-	            checked: _this2.checkInArray(elem.id),
-	            onChange: function onChange() {
-	              _this2.checkboxOnClick(type, elem, COLOR_OPTIONS[i]);
-	            } }),
-	          " " + elem.answer_content,
 	          _react2.default.createElement(
 	            'span',
-	            { style: { "fontSize": "80%", "color": "red" } },
-	            ' ',
-	            elem.next_question,
-	            ' '
+	            { style: { "verticalAlign": "middle" } },
+	            _react2.default.createElement('input', { type: 'checkbox',
+	              name: controlname,
+	              checked: _this2.checkInArray(elem.id),
+	              onChange: function onChange() {
+	                _this2.checkboxOnClick(type, elem, COLOR_OPTIONS[i]);
+	              } }),
+	            " " + elem.answer_content
 	          )
 	        );
 	      })
@@ -57343,17 +57344,10 @@
 	      'div',
 	      { className: '' + _styles.styles },
 	      _react2.default.createElement(
-	        'div',
-	        null,
+	        'span',
+	        { style: { "paddingRight": 10 } },
 	        ' ',
 	        this.props.question.question_number,
-	        ' '
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        { style: { "fontSize": "80%", "color": "red" } },
-	        ' ',
-	        this.props.question.id,
 	        ' '
 	      ),
 	      this.props.question.question_text,
@@ -57447,7 +57441,7 @@
 	
 	  _createClass(Quiz, [{
 	    key: 'dispQuestion',
-	    value: function dispQuestion(question) {
+	    value: function dispQuestion(question, showButton) {
 	      var _this2 = this;
 	
 	      var next_id = question.id;
@@ -57463,10 +57457,9 @@
 	          break;
 	        }
 	      }
-	      return _react2.default.createElement(
+	      var button = showButton ? _react2.default.createElement(
 	        'div',
-	        { key: question.id },
-	        _react2.default.createElement(_Question2.default, { question: question }),
+	        null,
 	        _react2.default.createElement(
 	          'button',
 	          { type: 'button', onClick: function onClick() {
@@ -57482,17 +57475,23 @@
 	            } },
 	          "Next"
 	        )
+	      ) : _react2.default.createElement('div', null);
+	      return _react2.default.createElement(
+	        'div',
+	        { key: question.id },
+	        _react2.default.createElement(_Question2.default, { question: question }),
+	        button
 	      );
 	    }
 	  }, {
 	    key: 'generateSubQuestion',
-	    value: function generateSubQuestion(topic) {
+	    value: function generateSubQuestion(topic, showButton) {
 	      var _this3 = this;
 	
 	      var answer_list = [];
 	      for (var i = 0; i < topic.length; i++) {
 	        if (topic[i].id != this.props.currTask.topTopicId) {
-	          var temp_answer = { id: -1 - i, answer_number: 1, answer_content: topic[i].name, next_question: topic[i].id };
+	          var temp_answer = { id: -2 - i, answer_number: 1, answer_content: topic[i].name, next_question: topic[i].id };
 	          answer_list.push(temp_answer);
 	        }
 	      }
@@ -57505,19 +57504,9 @@
 	      };
 	      var next_id = this.props.queue.length > 1 ? this.props.queue[1] : -1;
 	      var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
-	      var last_button = last_question ? _react2.default.createElement(
-	        'button',
-	        { type: 'button', onClick: function onClick() {
-	            _this3.props.setReview(true);
-	          } },
-	        ' ',
-	        "Review",
-	        ' '
-	      ) : _react2.default.createElement('div', null);
-	      return _react2.default.createElement(
+	      var button = showButton ? _react2.default.createElement(
 	        'div',
-	        { key: -1 },
-	        _react2.default.createElement(_Question2.default, { question: sub_question }),
+	        null,
 	        _react2.default.createElement(
 	          'button',
 	          { type: 'button', onClick: function onClick() {
@@ -57534,7 +57523,22 @@
 	          ' ',
 	          "Next",
 	          ' '
-	        ),
+	        )
+	      ) : _react2.default.createElement('div', null);
+	      var last_button = last_question && showButton ? _react2.default.createElement(
+	        'button',
+	        { type: 'button', onClick: function onClick() {
+	            _this3.props.setReview(true);
+	          } },
+	        ' ',
+	        "Review",
+	        ' '
+	      ) : _react2.default.createElement('div', null);
+	      return _react2.default.createElement(
+	        'div',
+	        { key: -1 },
+	        _react2.default.createElement(_Question2.default, { question: sub_question }),
+	        button,
 	        last_button
 	      );
 	    }
@@ -57556,7 +57560,7 @@
 	      ) : _react2.default.createElement('div', null);
 	
 	      if (this.props.question_id == -1) {
-	        return this.generateSubQuestion(topic);
+	        return this.generateSubQuestion(topic, true);
 	      }
 	
 	      for (var i = 0; i < topic.length; i++) {
@@ -57564,19 +57568,8 @@
 	          if (this.props.question_id == topic[i].questions[k].id) {
 	            return _react2.default.createElement(
 	              'div',
-	              { key: topic[i].id, style: {
-	                  "border": "2px solid black",
-	                  "padding": "15px",
-	                  "margin": "15px"
-	                } },
-	              _react2.default.createElement(
-	                'div',
-	                null,
-	                ' ',
-	                topic[i].name,
-	                ' '
-	              ),
-	              this.dispQuestion(topic[i].questions[k]),
+	              { key: topic[i].id },
+	              this.dispQuestion(topic[i].questions[k], true),
 	              last_button
 	            );
 	          }
@@ -57596,7 +57589,7 @@
 	        questions.map(function (elem, i) {
 	          for (var j = 0; j < _this5.props.queue.length; j++) {
 	            if (elem.id == _this5.props.queue[j]) {
-	              return _this5.dispQuestion(elem);
+	              return _this5.dispQuestion(elem, false);
 	              break;
 	            }
 	          }
@@ -57609,7 +57602,7 @@
 	      var _this6 = this;
 	
 	      return this.props.currTask.topictree.map(function (elem, i) {
-	        var question = i == 0 ? _this6.generateSubQuestion(_this6.props.currTask.topictree) : _react2.default.createElement('div', null);
+	        var question = i == 0 ? _this6.generateSubQuestion(_this6.props.currTask.topictree, false) : _react2.default.createElement('div', null);
 	        return _react2.default.createElement(
 	          'div',
 	          { key: elem.id, style: {
@@ -57635,19 +57628,12 @@
 	      return highlights.map(function (elem, i) {
 	        return _react2.default.createElement(
 	          'div',
-	          { key: i },
-	          _react2.default.createElement(
-	            'div',
-	            { style: { "fontWeight": "700" } },
-	            ' ',
-	            'Highlight ' + i,
-	            ' '
-	          ),
+	          { key: i, style: { "marginBottom": "10px" } },
 	          _react2.default.createElement(
 	            'div',
 	            null,
 	            ' ',
-	            elem[2],
+	            '...' + elem[2] + '...',
 	            ' '
 	          )
 	        );
@@ -57660,6 +57646,12 @@
 	      var highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
 	      var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 	
+	      var saveAndNextButton = this.props.review ? _react2.default.createElement(
+	        'button',
+	        { onClick: this.onSaveAndNext },
+	        'Save and Next'
+	      ) : _react2.default.createElement('div', null);
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'quiz' },
@@ -57669,11 +57661,11 @@
 	          ' ',
 	          this.mapHighlights(highlights)
 	        ),
-	        question_list,
 	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.onSaveAndNext },
-	          'Save and Next'
+	          'div',
+	          null,
+	          question_list,
+	          saveAndNextButton
 	        )
 	      );
 	    }

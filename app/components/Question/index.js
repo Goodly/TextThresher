@@ -92,7 +92,11 @@ const Question = React.createClass({
         { arr.map((elem, i) => 
           {
             var colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
-            var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+            var style = { "display": "inline-block", 
+              "borderRadius": 15,
+              "width": 30, 
+              "height": 30, 
+              "backgroundColor": COLOR_OPTIONS[i] };
             if(this.props.color && this.props.color.answer_id == elem.id) {
               style["border"] = "2px solid black";
             } 
@@ -104,7 +108,7 @@ const Question = React.createClass({
                 <input type="radio" name={controlname} checked={ this.checkInArray(elem.id) }
                   onChange={ () => { this.radioOnClick(elem, COLOR_OPTIONS[i]) }} />
                 { " " + elem.answer_content }
-                <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
+                { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
               </div>
             );
           }) 
@@ -145,21 +149,29 @@ const Question = React.createClass({
       <form>
         { arr.map((elem, i) => {
           let colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
-          var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+          var style = { "display": "inline-block", 
+            "width": 30, 
+            "height": 30, 
+            "backgroundColor": COLOR_OPTIONS[i], 
+            "verticalAlign": "middle",
+            "marginRight": 5,
+            "borderRadius": 15 };
           if(this.props.color && this.props.color.answer_id == elem.id) {
             style["border"] = "2px solid black";
           } 
           return (
             <div key={elem.id}
-              style={{ "color": colorText }}>
+              style={{ "color": colorText, "margin": 10 }}>
               <div style={ style } 
                   onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
-              <input type="checkbox" 
-                  name={controlname}
-                  checked={ this.checkInArray(elem.id) }
-                  onChange={ () => { this.checkboxOnClick(type, elem, COLOR_OPTIONS[i]) }} />
-              { " " + elem.answer_content }
-              <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
+              <span style={{ "verticalAlign": "middle" }}>
+                <input type="checkbox" 
+                    name={controlname}
+                    checked={ this.checkInArray(elem.id) }
+                    onChange={ () => { this.checkboxOnClick(type, elem, COLOR_OPTIONS[i]) }} />
+                { " " + elem.answer_content }
+                { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
+              </span>
             </div>
           );
         })}
@@ -255,8 +267,8 @@ const Question = React.createClass({
     const mapped_answers = this.props.question ? this.mapQuestionAnswers() :  <div></div> ;
     return (
       <div className={`${styles}`}>
-        <div> {this.props.question.question_number} </div>
-        <span style={{ "fontSize": "80%", "color": "red" }}> { this.props.question.id } </span>
+        <span style={{"paddingRight": 10}}> {this.props.question.question_number} </span>
+        { /* <span style={{ "fontSize": "80%", "color": "red" }}> { this.props.question.id } </span> */ }
         {this.props.question.question_text}
         { mapped_answers }
       </div>

@@ -27,7 +27,7 @@ export class Quiz extends Component {
     this.props.saveAndNext(this.props.answer_selected);
   }
 
-  dispQuestion(question) { 
+  dispQuestion(question, showButton) { 
     var next_id = question.id;
     var prev_id = -1;
     for(var k = 0; k < this.props.queue.length; k++) {
@@ -40,21 +40,26 @@ export class Quiz extends Component {
         }
         break;
       }
-    } 
+    }
+    var button = showButton ?  
+      <div>
+        <button type="button" onClick={() => { this.props.activeQuestion(prev_id) }}> { "Prev" }</button>
+        <button type="button" onClick={() => { this.props.activeQuestion(next_id) }}>{ "Next" }</button>
+      </div>
+      : <div></div>;
     return (
       <div key={question.id}>
         <Question question={question} /> 
-        <button type="button" onClick={() => { this.props.activeQuestion(prev_id) }}> { "Prev" }</button>
-        <button type="button" onClick={() => { this.props.activeQuestion(next_id) }}>{ "Next" }</button>
+        { button }
       </div>
     );
   }
 
-  generateSubQuestion(topic) {
+  generateSubQuestion(topic, showButton) {
     var answer_list = [];
     for(var i = 0; i < topic.length; i++) {
       if(topic[i].id != this.props.currTask.topTopicId) {
-        var temp_answer = { id: -1 - i, answer_number: 1, answer_content: topic[i].name, next_question: topic[i].id};
+        var temp_answer = { id: -2 - i, answer_number: 1, answer_content: topic[i].name, next_question: topic[i].id};
         answer_list.push(temp_answer);
       }
     }
@@ -67,14 +72,19 @@ export class Quiz extends Component {
     };
     var next_id = this.props.queue.length > 1 ? this.props.queue[1] : -1;
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
-    var last_button = last_question ? 
+    var button = showButton ? 
+      <div>
+        <button type="button" onClick={() => {this.props.activeQuestion(-1)}}> { "Prev" }</button>
+        <button type="button" onClick={() => {this.props.activeQuestion(next_id)}}> {"Next"} </button>
+      </div>
+      : <div></div>;
+    var last_button = last_question && showButton ? 
       <button type="button" onClick={() => { this.props.setReview(true) }}> { "Review" } </button> 
       : <div></div>;
     return (
       <div key={-1}>
         <Question question={sub_question} />
-        <button type="button" onClick={() => {this.props.activeQuestion(-1)}}> { "Prev" }</button>
-        <button type="button" onClick={() => {this.props.activeQuestion(next_id)}}> {"Next"} </button>
+        { button }
         { last_button }
       </div>
     );
@@ -88,20 +98,15 @@ export class Quiz extends Component {
       : <div></div>;
 
     if(this.props.question_id == -1) {
-      return this.generateSubQuestion(topic);
+      return this.generateSubQuestion(topic, true);
     }
 
     for(var i = 0; i < topic.length; i++) {
       for(var k = 0; k < topic[i].questions.length; k++) {
         if(this.props.question_id == topic[i].questions[k].id) {
           return (
-            <div key={topic[i].id} style={{
-              "border": "2px solid black",
-              "padding": "15px",
-              "margin": "15px"
-            }}>
-              <div> {topic[i].name} </div>
-              { this.dispQuestion(topic[i].questions[k]) }
+            <div key={topic[i].id}>
+              { this.dispQuestion(topic[i].questions[k], true) }
               { last_button }
             </div>
           );
@@ -118,7 +123,7 @@ export class Quiz extends Component {
         {questions.map((elem, i) => {
           for(var j = 0; j < this.props.queue.length; j++) {
             if(elem.id == this.props.queue[j]) {
-              return this.dispQuestion(elem);
+              return this.dispQuestion(elem, false);
               break;
             }
           }
@@ -130,7 +135,7 @@ export class Quiz extends Component {
 
   dispReview() {
     return this.props.currTask.topictree.map((elem, i) => {
-      var question = i == 0 ? this.generateSubQuestion(this.props.currTask.topictree) : <div></div>;
+      var question = i == 0 ? this.generateSubQuestion(this.props.currTask.topictree, false) : <div></div>;
         return (<div key={elem.id} style={{
           "border": "2px solid black",
           "padding": "15px",
@@ -146,9 +151,8 @@ export class Quiz extends Component {
   mapHighlights(highlights) {
     return highlights.map((elem, i) => {
       return (
-        <div key={i}>
-          <div style={{ "fontWeight": "700"}}> { 'Highlight ' + i } </div>
-          <div> { elem[2] } </div>
+        <div key={i} style={{ "marginBottom": "10px"}}>
+          <div> { '...' + elem[2] + '...' } </div>
         </div>
       );
     });
@@ -159,11 +163,15 @@ export class Quiz extends Component {
     var highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 
+    var saveAndNextButton = this.props.review ? <button onClick={ this.onSaveAndNext }>Save and Next</button> : <div></div>;
+
     return (
-      <div className="quiz">
+      <div className="quiz" >
         <div> { this.mapHighlights(highlights) }</div> 
-        { question_list }
-        <button onClick={ this.onSaveAndNext }>Save and Next</button>
+        <div>
+          { question_list }
+          { saveAndNextButton }
+        </div>
       </div>
     )
   }
