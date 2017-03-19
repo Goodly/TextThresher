@@ -24,6 +24,9 @@ class InvalidTaskType(Exception):
 class FileNotFound(Exception):
     pass
 
+class ImproperConfigForRemote(Exception):
+    pass
+
 
 def create_remote_project(profile, project):
     """
@@ -62,7 +65,7 @@ def create_remote_project_worker(profile_id=None, project_id=None):
         # from NGINX as HTML which will cause json parser to throw ValueError
         result = resp.json()
     except ValueError:
-        return resp.text # Return the response content for error analysis
+        raise ImproperConfigForRemote(resp.text)
     if resp.status_code / 100 == 2 and result.get('id'):
         # if Pybossa reports success, then we expect these fields to be present
         # save info about where this project can be found remotely
@@ -74,11 +77,12 @@ def create_remote_project_worker(profile_id=None, project_id=None):
         project.save()
         # delete our large task_presenter from the result so it isn't logged by Python-RQ
         result['info']['task_presenter'] = ""
+        return result
     else:
         # our large task_presenter is embedded in the exception_msg,
         # so truncate the message
         result['exception_msg'] = result['exception_msg'][:256]
-    return result
+        raise ImproperConfigForRemote(json.dumps(result))
 
 def delete_remote_project(profile, project):
     """
@@ -93,21 +97,13 @@ def delete_remote_project_worker(profile_id=None, project_id=None):
     profile = UserProfile.objects.get(pk=profile_id)
     project = Project.objects.get(pk=project_id)
     headers = {'content-type': 'application/json'}
-    result = {
-        "deleted": False,
-        "short_name": project.short_name,
-        "task_type": project.task_type,
-        "url": project.get_remote_URL()
-    }
-    if not project.pybossa_id:
-        result["deleted"] = False
-        result["error"] = "No id for remote project."
-        return result
-    url = urljoin(profile.pybossa_url, "/api/project/%d" % (project.pybossa_id))
+    url = urljoin(project.pybossa_url, "/api/project/%d" % (project.pybossa_id))
+    if not project.pybossa_url or not project.pybossa_id:
+        raise ImproperConfigForRemote("While trying to delete %s, only have %s"
+                                      % (project.short_name, url))
     params = {'api_key': profile.pybossa_api_key }
     resp = requests.delete(url, params=params, headers=headers, timeout=30)
     if resp.status_code / 100 == 2:
-        result["deleted"] = True
         project.pybossa_url = ""
         project.pybossa_id = None
         project.pybossa_owner_id = None
@@ -117,9 +113,11 @@ def delete_remote_project_worker(profile_id=None, project_id=None):
         # Pybossa has cascade deleted any tasks on the server - get rid of
         # our references to those tasks
         project.tasks.all().delete()
-    else:
-        result = resp.json() # Pybossa only returns JSON if DELETE has error
-    return result
+        # Pybossa returns no body on success.
+        return True
+
+    # Pybossa returns JSON if DELETE has error.
+    raise ImproperConfigForRemote(resp.text)
 
 def getPresenterPath(task_type):
     if task_type == "HLTR":
@@ -271,13 +269,14 @@ def create_remote_task_worker(profile_id=None, project_id=None, task=None, n_ans
             pybossa_created = iso8601.parse_date(result.get('created')),
             pybossa_state = result.get('state')
         ).save()
-        # are task info was already logged by Python RQ as an incoming parameter
+        # our task info was already logged by Python RQ as an incoming parameter
         result['info'] = ""
+        return result
     else:
         # our large info item may be embedded in the exception_msg,
         # so truncate the message
         result['exception_msg'] = result['exception_msg'][:256]
-    return result
+        raise ImproperConfigForRemote(json.dumps(result))
 
 
 if __name__ == '__main__':
