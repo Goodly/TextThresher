@@ -251,9 +251,6 @@ const HighlightTool = React.createClass({
     }
     var start_char = this.props.text[start];
     var end_char = this.props.text[end];
-    console.log("Check charactera")
-    console.log(start_char)
-    console.log(end_char)
     var start_empty = ((start_char == ' ') || (start_char == '\t') || (start_char == '\n'));
     var end_empty = ((end_char == ' ') || (end_char == '\t') || (end_char == '\n'));
 
@@ -262,7 +259,6 @@ const HighlightTool = React.createClass({
 
     var edit = start_correction;
     while (((start_char == ' ') || (start_char == '\t') || (start_char == '\n')) == start_empty) {
-      console.log(start_char)
       if (start_empty) {
         start_correction += 1;
         edit = start_correction;
@@ -292,60 +288,14 @@ const HighlightTool = React.createClass({
     return [start_correction, end_correction+1];
   },
 
-  /*wordCorrection: function(start, end) {
-    if (start > end) {
-      var temp = start;
-      start = end;
-      end = temp;
-    }
+  clearHighlights: function() {
+    this.props.clearHighlights();
+  },
 
-    var correction = 0;
-    //looks at start
-    var ch = this.props.text[start];
-    var inwards = ((ch == ' ') || (ch == '\t') || (ch == '\n')); //checks if start is empty
-    var edit = 1;
-    if (inwards) {
-      edit = 0;
-    }
-    while (((ch == ' ') || (ch == '\t') || (ch == '\n')) == inwards) { //moves right until no more spaces
-      if (inwards) {
-        correction += 1;
-      } else {
-        correction -= 1;
-        if (-correction > start) {
-          //return start + correction + 1;
-          edit = 1
-          break;
-        }
-      }
-      ch = this.props.text[start + correction];
-    }
-    start = start + correction + edit;
+  returnHighlights: function() {
+    return this.props.highlights;
+  },
 
-    var correction = 0;
-    //looks at end
-    var ch = this.props.text[end];
-    var inwards = ((ch == ' ') || (ch == '\t') || (ch == '\n'));
-    var edit = 0;
-    if (inwards) {
-      edit = 1;
-    }
-    while (((ch == ' ') || (ch == '\t') || (ch == '\n')) == inwards) { //if
-      if (inwards) {
-        correction -= 1;
-      } else {
-        correction += 1;
-        if (correction + end > this.props.text.length) {
-          edit = -1;
-          break;
-          //return end + correction - 1;
-        }
-      }
-      ch = this.props.text[end + correction];
-    }
-    end = end + correction + edit;
-    return [start, end];
-  },*/
 
   handleClick: function() {
     var currentTopicId = this.props.currentTopicId;
@@ -406,7 +356,6 @@ const HighlightTool = React.createClass({
           j+=1;
         }
 
-        console.log("about to be selected in handleclick")
         var select_highlight = {'start':start, 'end':end, 'text':new_text, 'topic':currentTopicId};
         this.props.selectHighlight([select_highlight]);
       }
@@ -440,9 +389,6 @@ const HighlightTool = React.createClass({
   },
 
   handleSelect: function(source, e) {
-    console.log("HANDLE SELECT")
-    console.log("source")
-    console.log(source)
     if (source.length != 0) {
       this.props.selectHighlight(source);
       e.nativeEvent.preventDefault();

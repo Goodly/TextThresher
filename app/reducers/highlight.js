@@ -12,8 +12,10 @@ const initialState = Object.assign({
 
 export function highlight(state = initialState, action) {
   switch (action.type) {
+    case 'CLEAR_HIGHLIGHTS':
+      return Object.assign({}, state, {highlights:[]});
     case 'DESELECT_HIGHLIGHT':
-    return Object.assign({}, state, {selectedHighlight:[]});
+      return Object.assign({}, state, {selectedHighlight:[]});
     case 'ADD_HIGHLIGHT':
       var new_state = [];
 

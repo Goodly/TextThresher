@@ -1,7 +1,4 @@
 export default function merge(h1, h2, text) {
-  console.log("MERGE")
-  console.log(h1)
-  console.log(h2)
   if (h1.topic == h2.topic) {
     if (h1.start <= h2.start && h1.end >= h2.end) {
       var h = {
