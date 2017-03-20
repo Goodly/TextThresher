@@ -3,7 +3,7 @@ import {mock_highlights} from '../mocks/mock_highlights';
 import {mock_broken} from '../mocks/mock_broken';
 import {shallow, mount} from 'enzyme';
 import {test_window} from '../global_window';
-//import test_window from '../global_window';
+import { clearHighlights } from 'actions/highlight.js';
 
 var article = mock_highlights.article;
 var h1 = mock_highlights.highlights.h1;
@@ -65,12 +65,14 @@ const wrapper = shallow(
   currentTopicId={currentTopicId}
   highlights={[h5]}
   selectedHighlight={[1]}
+  clearHighlights={clearHighlights}
   />
 );
 //selected is start-end pair
 test('testing quiz functionality clear highlights', () => {
-  wrapper.instance().clearHighlights();
-  console.log(wrapper.instance())
+  // clearHighlights returns an unbound action that isn't dispatched
+  var action = wrapper.instance().clearHighlights();
+  console.log(action)
   //expect(wrapper.instance().props.highlights).toEqual([]);
 });
 test('testing quiz functionality returns highlights', () => {
