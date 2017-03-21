@@ -398,11 +398,8 @@ const HighlightTool = React.createClass({
   },
 
   render() {
-    console.log("Highlights")
     var text = this.props.text;
-    console.log(this.props.highlights)
     var highlights = this.processHighlights(this.props.highlights) || [];
-    console.log(highlights)
     var start = 0;
     var tail = '';
     var l = highlights.length;
@@ -433,11 +430,19 @@ const HighlightTool = React.createClass({
           if (minus_case == 0) {
             minus_case = 1;
           }
-
+          /*
+          <span key={i}
+            className="articleText"
+            source={curHL.source}
+            onClick={this.handleSelect.bind(this, curHL.source)}
+            style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+            title={topics}>
+            {text.substring(curHL.start, curHL.end)}
+          </span>
+          */
           return (
             <span key={i}
               className="articleText"
-              source = {curHL.source}
               onClick={this.handleSelect.bind(this, curHL.source)}
               style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
               title={topics}>

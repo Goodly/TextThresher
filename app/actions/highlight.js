@@ -20,6 +20,8 @@ export function deleteHighlight(source) {
 }
 
 export function selectHighlight(source) {
+  console.log("Checking in select")
+  console.log(source)
   return { type: SELECT_HIGHLIGHT, highlight: source };
 }
 

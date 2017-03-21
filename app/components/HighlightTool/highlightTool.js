@@ -289,7 +289,9 @@ const HighlightTool = React.createClass({
   },
 
   clearHighlights: function() {
-    this.props.clearHighlights();
+    console.log("Running clear highlights")
+    console.log(this.props.addHighlight())
+    //this.props.clearHighlights();
   },
 
   returnHighlights: function() {
@@ -443,11 +445,10 @@ const HighlightTool = React.createClass({
           if (minus_case == 0) {
             minus_case = 1;
           }
-
+          
           return (
             <span key={i}
               className="articleText"
-              source = {curHL.source}
               onClick={this.handleSelect.bind(this, curHL.source)}
               style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
               title={topics}>
