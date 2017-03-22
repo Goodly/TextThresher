@@ -10,6 +10,10 @@
     <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
 
     <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.css' %}" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'researcher/researcher_base.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+
     <script src="{% static 'bower_components/modernizr/modernizr.js' %}"></script>
   </head>
   <body>
@@ -17,35 +21,46 @@
     <!--[if lt IE 10]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <p><a href="{% url 'researcher:index' %}">
-      Researcher Tools
-    </a></p>
-    {% if user.is_anonymous %}
-      <p>
-        <a href="{% url 'admin:login' %}?next={{ request.get_full_path|urlencode }}">
-          Login
-        </a>
-      </p>
-    {% endif %}
-    {% if user.is_authenticated %}
-      <p>
-        You are logged in as:
-        <a href="{% url 'admin:auth_user_change' user.userprofile.id %}">
-          {{ user.username }}
-        </a>
-      </p>
-      <p>
-        <a href="{% url 'admin:logout' %}?next={{ request.get_full_path|urlencode }}">
-          Logout
-        </a>
-      </p>
-      <p><a href="{% url 'admin:index' %}">
-        Thresher Admin
-      </a></p>
-      <p><a href="{% url 'rq_home' %}">
-        Check Queue
-      </a></p>
-    {% endif %}
+    <!-- Header -->
+    <div class="header">
+      <div class="branding">
+        <h1 href="{% url 'researcher:index' %}" class="brand-label">
+          Researcher Tools
+        </h1>
+      </div>
+      <div class="user-tools">
+        {% if user.is_anonymous %}
+          <div class="login">
+            <p>
+              <a href="{% url 'admin:login' %}?next={{ request.get_full_path|urlencode }}">
+                Login
+              </a>
+            </p>
+          </div>
+        {% endif %}
+        {% if user.is_authenticated %}
+          <div class="username">
+            <p>
+              WELCOME:
+              <strong>
+                <a href="{% url 'admin:auth_user_change' user.userprofile.id %}"
+                class="actual-name ">
+                {{ user.username }}
+                </a>
+              </strong>
+            </p>
+          </div>
+          <div class="logout">
+            <p>
+              <a href="{% url 'admin:logout' %}?next={{ request.get_full_path|urlencode }}" class="logout-text">
+                / LOGOUT
+              </a>
+            </p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <!-- End Header -->
 
     {% block content %}
     <div class="hero-unit">
