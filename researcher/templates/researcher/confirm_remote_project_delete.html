@@ -8,7 +8,8 @@
     <p>
       Are you sure you want to delete {{ project.name }} from the remote site
       <a href="{{ project.get_remote_URL }}">{{ project.get_remote_URL }}</a>?
-      The local copy of the project will not be deleted.
+      <p>The local copy of the project will not be deleted, and local copies of tasks
+         and retrieved taskruns will not be deleted.</p>
     </p>
     {% csrf_token %}
     <button type="submit">Delete remote {{ project.name }}</button>

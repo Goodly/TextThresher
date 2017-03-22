@@ -61,8 +61,12 @@ class Project(models.Model):
         """ Return a link to the remote Pybossa project if it has been created."""
         return self.join_remote_base_URL("project/%s/" % (self.short_name))
 
+    def get_local_task_retrieval_URL(self):
+        """ Return a link to the local page to start retrieval of task runs."""
+        return reverse('researcher:retrieve_taskruns', kwargs={"pk": self.id})
+
     def get_remote_delete_URL(self):
-        """ Return a link to the local page to delete the remote project."""
+        """ Return a link to the remote page to delete the remote project."""
         return self.join_remote_base_URL("project/%s/delete" % (self.short_name))
 
     def get_local_remote_delete_URL(self):
@@ -224,14 +228,10 @@ class Answer(models.Model):
                                  related_name="answers",
                                  on_delete=models.CASCADE, null=True)
 
-    # The text of the amswer
+    # The text of the answer
     answer_content = models.TextField()
 
-    # The next question the answer is leading to
-    # next_question = models.ForeignKey(Question,
-    #                                   related_name="question_next",
-    #                                   on_delete=models.SET_NULL, null=True)
-    # Next questions as an array of question IDs
+    # Contingent questions as an array of question IDs
     next_questions = models.TextField(default="[]")
 
     class Meta:
@@ -252,7 +252,10 @@ class ArticleHighlight(models.Model):
     article = models.ForeignKey(Article,
                                 related_name="users_highlights",
                                 on_delete=models.CASCADE)
-
+    task = models.ForeignKey(Task,
+                             null=True,
+                             related_name="users_highlights",
+                             on_delete=models.SET_NULL)
     # Source of the highlight
     HIGHLIGHT_SOURCE_CHOICES = (
         ('HLTR', 'Highlighter'),

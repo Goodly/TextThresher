@@ -40,6 +40,12 @@ permissions = [
     u'add_topic',
     u'change_topic',
     u'delete_topic',
+    u'add_task',
+    u'change_task',
+    u'delete_task',
+    u'add_nlp_hints',
+    u'change_nlp_hints',
+    u'delete_nlp_hints',
 ]
 
 def createSuperUser(username="norman", email="norman@example.com", password="bidsatdoe"):

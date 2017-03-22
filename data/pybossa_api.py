@@ -114,10 +114,10 @@ def delete_remote_project_worker(profile_id=None, project_id=None):
         project.pybossa_secret_key = ""
         project.pybossa_created = None
         project.save()
-        # Pybossa has cascade deleted any tasks on the server - get rid of
-        # our references to those tasks
-        project.tasks.all().delete()
-        # Pybossa returns no body on success.
+        # Pybossa cascade deletes tasks and taskruns on the server
+        # Keep all of our local copies of those items intact, namely,
+        # Task, ArticleHighlight, HighlightGroup
+        # n.b. Pybossa returns no body on success.
         return True
 
     # Pybossa returns JSON if DELETE has error.
@@ -329,17 +329,23 @@ def get_remote_taskrun_worker(profile_id=None, project_id=None, task_id=None, sa
     pybossa_task = resp.json()
     if resp.status_code / 100 == 2:
         taskruns = pybossa_task['task_runs']
+        count = 0
         for taskrun in taskruns:
-            save_taskrun(task, taskrun)
-        return { 'taskruns_imported': len(taskruns) }
+            if save_taskrun(task, taskrun):
+                count += 1
+        return {
+            'taskruns_imported': count,
+            'taskruns_skipped': len(taskruns)-count
+        }
 
     raise ImproperConfigForRemote(resp.text[:1024])
 
 def save_highlight_taskrun(task, taskrun):
-    taskrun_id = taskrun['id']
-    article_id = task.info['article']['id'] # safe - this is from our database, not Pybossa
+    if ArticleHighlight.objects.filter(task=task).count():
+        return None
     ah = ArticleHighlight.objects.create(
-        article_id=article_id,
+        task=task, # safe - from our database, not Pybossa
+        article_id=task.info['article']['id'], # safe - from our database
         pybossa_user_id=taskrun['user_id'],
         highlight_source=task.task_type,
         info=taskrun
