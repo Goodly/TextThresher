@@ -263,8 +263,11 @@ class ArticleHighlight(models.Model):
     )
     highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES,
                                                 max_length=4)
-
+    # Allow null to avoid making changes to test data loader in data.load_data
+    # Pybossa id of taskrun contributor
     pybossa_user_id = models.IntegerField(null=True)
+    # Taskrun id
+    pybossa_id = models.IntegerField(null=True, db_index=True)
     # Complete taskrun as returned by Pybossa
     info = JSONField(null=True)
 

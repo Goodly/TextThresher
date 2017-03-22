@@ -341,12 +341,15 @@ def get_remote_taskrun_worker(profile_id=None, project_id=None, task_id=None, sa
     raise ImproperConfigForRemote(resp.text[:1024])
 
 def save_highlight_taskrun(task, taskrun):
-    if ArticleHighlight.objects.filter(task=task).count():
+    taskrun_id = taskrun['id']
+    if ArticleHighlight.objects.filter(pybossa_id=taskrun_id).count():
+        # Previously saved this taskrun
         return None
     ah = ArticleHighlight.objects.create(
         task=task, # safe - from our database, not Pybossa
         article_id=task.info['article']['id'], # safe - from our database
         pybossa_user_id=taskrun['user_id'],
+        pybossa_id=taskrun_id,
         highlight_source=task.task_type,
         info=taskrun
     )
