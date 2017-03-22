@@ -43,9 +43,9 @@ permissions = [
     u'add_task',
     u'change_task',
     u'delete_task',
-    u'add_nlp_hints',
-    u'change_nlp_hints',
-    u'delete_nlp_hints',
+    u'add_nlphints',
+    u'change_nlphints',
+    u'delete_nlphints',
 ]
 
 def createSuperUser(username="norman", email="norman@example.com", password="bidsatdoe"):
