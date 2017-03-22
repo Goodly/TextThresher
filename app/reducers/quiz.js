@@ -1,6 +1,7 @@
 const initialState = Object.assign({
   currTask: null,
-  queue: [],
+  queue: [-1],
+  review: false,
   curr_question_id: -1,
   answer_selected: {},
   highlighter_color: {},
@@ -9,6 +10,7 @@ const initialState = Object.assign({
 
 export function quiz(state = initialState, action) {
   console.log(action);
+  console.log(state.queue);
   switch(action.type) {
     case 'CLEAR_ANSWERS':
       return {
@@ -65,6 +67,11 @@ export function quiz(state = initialState, action) {
         };
       }
       return state;
+    case 'UPDATE_REVIEW':
+      return {
+        ...state,
+        review: action.review
+      }
     case 'COLOR_SELECTED':
       var assign_dict = { question_id: action.question_id, answer_id: action.answer_id, color: action.color };
       return {
@@ -73,7 +80,24 @@ export function quiz(state = initialState, action) {
       }
     case 'UPDATE_QUEUE':
       var new_queue = Object.assign([], state.queue);
-      new_queue = new_queue.concat(action.question);
+      var ind = new_queue.indexOf(state.curr_question_id);
+      for(var i = 0; i < action.questions.length; i++) {
+        if(state.queue.indexOf(action.questions[i]) == -1) {
+          new_queue.splice(ind + i + 1, 0, action.questions[i]);
+        }
+      }
+      return {
+        ...state,
+        queue: new_queue
+      }
+    case 'REMOVE_QUEUE':
+      var new_queue = Object.assign([], state.queue);
+      for(var i = 0; i < action.questions.length; i++) {
+        var ind = new_queue.indexOf(action.questions[i].id);
+        if(ind != -1) {
+          new_queue.splice(ind, 1);
+        }
+      }
       return {
         ...state,
         queue: new_queue

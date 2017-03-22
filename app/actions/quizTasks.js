@@ -9,26 +9,35 @@ let taskSchema = new Schema('tasks');
 let taskList = arrayOf(taskSchema);
 
 // helper function to initialize queue
+function addNonContingentQuestions(questions) {
+
+  var contained = new Set();
+  for(var i = 0; i < questions.length; i++) {
+    for(var k = 0; k < questions[i].answers.length; k++) {
+      contained.add(questions[i].answers[k].next_question);
+    }
+  }
+
+  var to_return = [];
+  for(var i = 0; i < questions.length; i++) {
+    if(!contained.has(questions[i].id)) {
+      to_return.push(questions[i].id);
+    }
+  }
+  return to_return.sort((a, b) => { return a.id - b.id; });
+}
+
 function initQueue(currTask) {
   var topictree = currTask.topictree;
-  var topic = [];
+  var topic = {};
   for(var i = 0; i < topictree.length; i++) {
     if(topictree[i].id == currTask.topTopicId) {
-      topic.unshift(topictree[i]);
-    } else {
-      topic.push(topictree[i]);
+      topic = topictree[i];
+      break;
     }
   }
-  var to_return = [];
-  to_return.push(-1);
-  for(var i = 0; i < topic.length; i++) {
-    var questions = topic[i].questions.sort((a, b) => { return a.id - b.id; });
-    var to_append = [];
-    for(var j = 0; j < questions.length; j++) {
-      to_append.push(questions[j].id);
-    }
-    to_return = to_return.concat(to_append);
-  }
+  var to_return = [-1];
+  to_return = to_return.concat(addNonContingentQuestions(topic.questions));
   return to_return;
 }
 
@@ -70,8 +79,9 @@ function presentTask(dispatch, getState) {
   if (taskQueue.length > 0) {
     const taskId = taskQueue.shift();
     const task = taskDB[taskId];
+
     dispatch({type: 'CLEAR_ANSWERS'});
-    dispatch({type: 'UPDATE_QUEUE', question: initQueue(taskDB[taskId])});
+    dispatch({type: 'UPDATE_QUEUE', questions: initQueue(taskDB[taskId])});
     dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
     dispatch(storeProject(task.project));
     dispatch(storeQuizTask(task));
@@ -110,6 +120,23 @@ export function fetchQuizTasks() {
         },
         error => dispatch({type: 'FETCH_QUIZ_TASKS_FAIL', error})
       )
+  };
+}
+
+export function updateQueue(questions, question_type) {
+  if(question_type == 'SELECT_SUBTOPIC') {
+    questions = addNonContingentQuestions(questions);
+  }
+  return {
+    type: 'UPDATE_QUEUE',
+    questions
+  };
+}
+
+export function removeElemQueue(questions) {
+  return {
+    type: 'REMOVE_QUEUE',
+    questions
   };
 }
 

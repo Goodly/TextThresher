@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { SingleDatePicker } from 'react-dates';
 import moment from 'moment';
 import { answerSelected, answerRemoved, colorSelected } from '../../actions/quiz';
+import { updateQueue, removeElemQueue } from '../../actions/quizTasks';
 
 /* component styles */
 import { styles } from './styles.scss';
@@ -19,19 +20,24 @@ const TYPES = {
   RADIO: 'RADIO',
   CHECKBOX: 'CHECKBOX',
   DATETIME: 'DATETIME',
-  TEXT: 'TEXT'
+  TEXT: 'TEXT',
+  TIME: 'TIME',
+  SELECT_SUBTOPIC: 'SELECT_SUBTOPIC'
 };
 
 const mapStateToProps = state => {
   var answers = {};
   var color = {};
+  var currTask = {};
   if(state.quiz) {
     answers = state.quiz.answer_selected;
     color = state.quiz.highlighter_color;
+    currTask = state.quiz.currTask;
   }
   return {
     answers,
-    color
+    color,
+    currTask
   };
 }
 
@@ -45,7 +51,13 @@ const mapDispatchToProps = dispatch => {
     },
     setColor: (q_id, a_id, color) => {
       dispatch(colorSelected(q_id, a_id, color))
-    } 
+    },
+    queueUpdate: (questions, type) => {
+      dispatch(updateQueue(questions, type))
+    },
+    queueRemove: (questions) => {
+      dispatch(removeElemQueue(questions))
+    }
   };
 }
 
@@ -74,18 +86,17 @@ const Question = React.createClass({
     return false;
   },
 
-  radioOnClick: function(ans_id, text, color) {
-    this.props.setColor(this.props.question.id, ans_id, color);
-    this.props.selectAnswer(TYPES.RADIO, this.props.question.id, ans_id, text);
-  },
-
   mapToRadio: function(arr, controlname="controlgroup") {
     return (
       <form>
         { arr.map((elem, i) => 
           {
             var colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
-            var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+            var style = { "display": "inline-block", 
+              "borderRadius": 15,
+              "width": 30, 
+              "height": 30, 
+              "backgroundColor": COLOR_OPTIONS[i] };
             if(this.props.color && this.props.color.answer_id == elem.id) {
               style["border"] = "2px solid black";
             } 
@@ -95,9 +106,9 @@ const Question = React.createClass({
                 <div style={ style } 
                     onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
                 <input type="radio" name={controlname} checked={ this.checkInArray(elem.id) }
-                  onChange={ () => { this.radioOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
+                  onChange={ () => { this.radioOnClick(elem, COLOR_OPTIONS[i]) }} />
                 { " " + elem.answer_content }
-                <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
+                { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
               </div>
             );
           }) 
@@ -106,26 +117,61 @@ const Question = React.createClass({
     );
   },
 
-  mapToCheckbox: function(arr, controlname="controlgroup") {
+  findNextQuestions: function(answer) {
+    var next_id = answer.next_questions;
+    var next_question = [];
+    for(var i = 0; i < next_id.length; i++) {
+      for(var j = 0; j < this.props.currTask.topictree.length; j++) {
+        var temp = this.props.currTask.topictree[j];
+        for(var k = 0; k < temp.questions.length; k++) {
+          if(temp.questions[k].id == next_id[i]) {
+            next_question.push(temp.questions[k]);
+            break;
+          }
+        }
+      }
+    }
+    return next_question;
+  },
+
+  radioOnClick: function(answer, color) {
+    if(this.checkInArray(answer.id)) {
+      this.props.queueRemove(this.findNextQuestions(answer));
+    } else {
+      this.props.queueUpdate(answer.next_questions, TYPES.RADIO);
+    }
+    this.props.setColor(this.props.question.id, answer.id, color);
+    this.props.selectAnswer(TYPES.RADIO, this.props.question.id, answer.id, answer.text);
+  },
+
+  mapToCheckbox: function(arr, type, controlname="controlgroup") {
     return (
       <form>
         { arr.map((elem, i) => {
           let colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
-          var style = { "display": "inline-block", "width": 30, "height": 30, "backgroundColor": COLOR_OPTIONS[i] };
+          var style = { "display": "inline-block", 
+            "width": 30, 
+            "height": 30, 
+            "backgroundColor": COLOR_OPTIONS[i], 
+            "verticalAlign": "middle",
+            "marginRight": 5,
+            "borderRadius": 15 };
           if(this.props.color && this.props.color.answer_id == elem.id) {
             style["border"] = "2px solid black";
           } 
           return (
             <div key={elem.id}
-              style={{ "color": colorText }}>
+              style={{ "color": colorText, "margin": 10 }}>
               <div style={ style } 
                   onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
-              <input type="checkbox" 
-                  name={controlname}
-                  checked={ this.checkInArray(elem.id) }
-                  onChange={ () => { this.checkboxOnClick(elem.id, elem.answer_content, COLOR_OPTIONS[i]) }} />
-              { " " + elem.answer_content }
-              <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span>
+              <span style={{ "verticalAlign": "middle" }}>
+                <input type="checkbox" 
+                    name={controlname}
+                    checked={ this.checkInArray(elem.id) }
+                    onChange={ () => { this.checkboxOnClick(type, elem, COLOR_OPTIONS[i]) }} />
+                { " " + elem.answer_content }
+                { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
+              </span>
             </div>
           );
         })}
@@ -133,15 +179,33 @@ const Question = React.createClass({
     );
   },
 
-  checkboxOnClick: function(ans_id, text, color) {
-    if(this.checkInArray(ans_id)) {
-      this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id);
-      if(this.props.color && this.props.color.answer_id == ans_id) {
+  checkboxOnClick: function(type, answer, color) {
+    var next_topic = {};
+    for(var i = 0; i < this.props.currTask.topictree.length; i++) {
+      var temp = this.props.currTask.topictree[i];
+      if(temp.id == answer.next_question) {
+        next_topic = temp;
+        break;
+      }
+    }
+    if(this.checkInArray(answer.id)) {
+      this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id);
+      if(this.props.color && this.props.color.answer_id == answer.id) {
         this.props.setColor(-1, -1, '');
       }
+      if(type = TYPES.SELECT_SUBTOPIC) {
+        this.props.queueRemove(next_topic.questions);
+      } else {
+        this.props.queueRemove(this.findNextQuestions(answer));
+      }
     } else {
-      this.props.setColor(this.props.question.id, ans_id, color);
-      this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, ans_id, text);
+      this.props.setColor(this.props.question.id, answer.id, color);
+      this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id, answer.answer_content);
+      if(type == TYPES.SELECT_SUBTOPIC) {
+        this.props.queueUpdate(next_topic.questions, TYPES.SELECT_SUBTOPIC);
+      } else {
+        this.props.queueUpdate(answer.next_questions, TYPES.CHECKBOX);
+      }
     }
   },
 
@@ -160,14 +224,14 @@ const Question = React.createClass({
     );
   },
 
-  textInput: function(controlname="textinput") {
+  textInput: function(type, controlname="textinput") {
     var colorText = COLOR_OPTIONS[0];
     var str = this.props.answers[this.props.question.id] ? this.props.answers[this.props.question.id][0].text : '';
     return (
       <form>
         <input type="text" name={controlname} style={{ color: colorText }}
             value={str}
-            onChange={(event) => { this.props.selectAnswer(TYPES.TEXT, this.props.question.id, 0, event.target.value) } }/>
+            onChange={(event) => { this.props.selectAnswer(type, this.props.question.id, 0, event.target.value) } }/>
       </form>
     );
   },
@@ -183,13 +247,17 @@ const Question = React.createClass({
       case TYPES.RADIO:
         return this.mapToRadio(answer_list)
       case TYPES.CHECKBOX:
-        return this.mapToCheckbox(answer_list)
+        return this.mapToCheckbox(answer_list, TYPES.CHECKBOX)
+      case TYPES.SELECT_SUBTOPIC:
+        return this.mapToCheckbox(answer_list, TYPES.SELECT_SUBTOPIC)
       case TYPES.DATETIME:
         return this.dateTimeInput();
       case TYPES.TEXT:
-        return this.textInput();
+        return this.textInput(TYPES.TEXT);
+      case TYPES.TIME:
+        return this.textInput(TYPES.TIME);
       default:
-        console.log('unsupported answer type, should be: RADIO, CHECKBOX, DATETIME or TEXT');
+        console.log('unsupported answer type: ' + this.props.question.question_type + ', should be: RADIO, CHECKBOX, DATETIME or TEXT');
         return <div></div>
     }
   },
@@ -199,8 +267,8 @@ const Question = React.createClass({
     const mapped_answers = this.props.question ? this.mapQuestionAnswers() :  <div></div> ;
     return (
       <div className={`${styles}`}>
-        <div> {this.props.question.question_number} </div>
-        <span style={{ "fontSize": "80%", "color": "red" }}> { this.props.question.id } </span>
+        <span style={{"paddingRight": 10}}> {this.props.question.question_number} </span>
+        { /* <span style={{ "fontSize": "80%", "color": "red" }}> { this.props.question.id } </span> */ }
         {this.props.question.question_text}
         { mapped_answers }
       </div>
