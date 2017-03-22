@@ -61,8 +61,12 @@ class Project(models.Model):
         """ Return a link to the remote Pybossa project if it has been created."""
         return self.join_remote_base_URL("project/%s/" % (self.short_name))
 
+    def get_local_task_retrieval_URL(self):
+        """ Return a link to the local page to start retrieval of task runs."""
+        return reverse('researcher:retrieve_taskruns', kwargs={"pk": self.id})
+
     def get_remote_delete_URL(self):
-        """ Return a link to the local page to delete the remote project."""
+        """ Return a link to the remote page to delete the remote project."""
         return self.join_remote_base_URL("project/%s/delete" % (self.short_name))
 
     def get_local_remote_delete_URL(self):
@@ -77,8 +81,7 @@ class Task(models.Model):
     project = models.ForeignKey(Project, related_name="tasks",
                                 on_delete=models.CASCADE)
     task_type = models.CharField(max_length=4) # 'HLTR' or 'QUIZ'
-    # components provides either the article id and topic_ids used for a highlight task
-    # or the root topic id, article id, and case number used for a quiz task
+    # Copy of complete task as sent to Pybossa
     info = JSONField()
     pybossa_id = models.IntegerField()
     pybossa_project_id = models.IntegerField()
@@ -225,14 +228,10 @@ class Answer(models.Model):
                                  related_name="answers",
                                  on_delete=models.CASCADE, null=True)
 
-    # The text of the amswer
+    # The text of the answer
     answer_content = models.TextField()
 
-    # The next question the answer is leading to
-    # next_question = models.ForeignKey(Question,
-    #                                   related_name="question_next",
-    #                                   on_delete=models.SET_NULL, null=True)
-    # Next questions as an array of question IDs
+    # Contingent questions as an array of question IDs
     next_questions = models.TextField(default="[]")
 
     class Meta:
@@ -248,13 +247,15 @@ class Answer(models.Model):
 
 # A container class for an Article and its Highlight Group
 # that will be referenced by a topic
+# This is used to store HLTR taskruns retrieved from Pybossa
 class ArticleHighlight(models.Model):
     article = models.ForeignKey(Article,
                                 related_name="users_highlights",
                                 on_delete=models.CASCADE)
-    created_by = models.ForeignKey(UserProfile, related_name="users_highlights",
-                                   on_delete=models.CASCADE)
-
+    task = models.ForeignKey(Task,
+                             null=True,
+                             related_name="users_highlights",
+                             on_delete=models.SET_NULL)
     # Source of the highlight
     HIGHLIGHT_SOURCE_CHOICES = (
         ('HLTR', 'Highlighter'),
@@ -262,6 +263,13 @@ class ArticleHighlight(models.Model):
     )
     highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES,
                                                 max_length=4)
+    # Allow null to avoid making changes to test data loader in data.load_data
+    # Pybossa id of taskrun contributor
+    pybossa_user_id = models.IntegerField(null=True)
+    # Taskrun id
+    pybossa_id = models.IntegerField(null=True, db_index=True)
+    # Complete taskrun as returned by Pybossa
+    info = JSONField(null=True)
 
     topics_identified = models.ManyToManyField(
                         Topic,
@@ -269,12 +277,11 @@ class ArticleHighlight(models.Model):
                         through_fields=('article_highlight', 'topic'))
 
     def __unicode__(self):
-        return ("id %d for article id %d "
-                "by %s") % (self.id, self.article.id,
-                self.created_by.user.username)
+        return ("id %d for article id %d by Pybossa user %d" %
+                (self.id, self.article.id, self.pybossa_user_id))
 
 
-# A submitted highlight group
+# This is used to store HLTR taskruns retrieved from Pybossa
 class HighlightGroup(models.Model):
 
     # The highlighted text (stored as JSON array of offset tuples)
@@ -310,10 +317,10 @@ class HighlightGroup(models.Model):
             topic_name = "NLP"
         return ("id %d article id %d "
                 "Topic %s and Case %d "
-                "created by %s") % (self.id,
+                "created by %d") % (self.id,
                  self.article_highlight.article.id,
                  topic_name, self.case_number,
-                 self.article_highlight.created_by.user.username)
+                 self.article_highlight.pybossa_user_id)
 
 
 # A submitted answer to a question

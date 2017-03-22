@@ -9,12 +9,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 import json
+from itertools import groupby
 import requests
 from requests.compat import urljoin
 import iso8601
 import django_rq
 
 from thresher.models import Article, Topic, Project, UserProfile, Task
+from thresher.models import ArticleHighlight, HighlightGroup
 from thresher.views import collectHighlightTasks, collectQuizTasks
 from data import init_defaults
 
@@ -24,6 +26,11 @@ class InvalidTaskType(Exception):
 class FileNotFound(Exception):
     pass
 
+class ImproperConfigForRemote(Exception):
+    pass
+
+class InvalidTaskRun(Exception):
+    pass
 
 def create_remote_project(profile, project):
     """
@@ -62,7 +69,7 @@ def create_remote_project_worker(profile_id=None, project_id=None):
         # from NGINX as HTML which will cause json parser to throw ValueError
         result = resp.json()
     except ValueError:
-        return resp.text # Return the response content for error analysis
+        raise ImproperConfigForRemote(resp.text)
     if resp.status_code / 100 == 2 and result.get('id'):
         # if Pybossa reports success, then we expect these fields to be present
         # save info about where this project can be found remotely
@@ -74,11 +81,12 @@ def create_remote_project_worker(profile_id=None, project_id=None):
         project.save()
         # delete our large task_presenter from the result so it isn't logged by Python-RQ
         result['info']['task_presenter'] = ""
+        return result
     else:
         # our large task_presenter is embedded in the exception_msg,
         # so truncate the message
         result['exception_msg'] = result['exception_msg'][:256]
-    return result
+        raise ImproperConfigForRemote(json.dumps(result))
 
 def delete_remote_project(profile, project):
     """
@@ -93,33 +101,27 @@ def delete_remote_project_worker(profile_id=None, project_id=None):
     profile = UserProfile.objects.get(pk=profile_id)
     project = Project.objects.get(pk=project_id)
     headers = {'content-type': 'application/json'}
-    result = {
-        "deleted": False,
-        "short_name": project.short_name,
-        "task_type": project.task_type,
-        "url": project.get_remote_URL()
-    }
-    if not project.pybossa_id:
-        result["deleted"] = False
-        result["error"] = "No id for remote project."
-        return result
-    url = urljoin(profile.pybossa_url, "/api/project/%d" % (project.pybossa_id))
+    url = urljoin(project.pybossa_url, "/api/project/%d" % (project.pybossa_id))
+    if not project.pybossa_url or not project.pybossa_id:
+        raise ImproperConfigForRemote("While trying to delete %s, only have %s"
+                                      % (project.short_name, url))
     params = {'api_key': profile.pybossa_api_key }
     resp = requests.delete(url, params=params, headers=headers, timeout=30)
     if resp.status_code / 100 == 2:
-        result["deleted"] = True
         project.pybossa_url = ""
         project.pybossa_id = None
         project.pybossa_owner_id = None
         project.pybossa_secret_key = ""
         project.pybossa_created = None
         project.save()
-        # Pybossa has cascade deleted any tasks on the server - get rid of
-        # our references to those tasks
-        project.tasks.all().delete()
-    else:
-        result = resp.json() # Pybossa only returns JSON if DELETE has error
-    return result
+        # Pybossa cascade deletes tasks and taskruns on the server
+        # Keep all of our local copies of those items intact, namely,
+        # Task, ArticleHighlight, HighlightGroup
+        # n.b. Pybossa returns no body on success.
+        return True
+
+    # Pybossa returns JSON if DELETE has error.
+    raise ImproperConfigForRemote(resp.text)
 
 def getPresenterPath(task_type):
     if task_type == "HLTR":
@@ -241,10 +243,10 @@ def generate_quiz_tasks_worker(profile_id=None,
 @django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
 def create_remote_task_worker(profile_id=None, project_id=None, task=None, n_answers=1):
     profile = UserProfile.objects.get(pk=profile_id)
-    url = urljoin(profile.pybossa_url, "/api/task")
-    params = {'api_key': profile.pybossa_api_key}
-
     project = Project.objects.get(pk=project_id)
+
+    params = {'api_key': profile.pybossa_api_key}
+    url = urljoin(project.pybossa_url, "/api/task")
 
     payload = {
         "project_id": project.pybossa_id,
@@ -271,13 +273,116 @@ def create_remote_task_worker(profile_id=None, project_id=None, task=None, n_ans
             pybossa_created = iso8601.parse_date(result.get('created')),
             pybossa_state = result.get('state')
         ).save()
-        # are task info was already logged by Python RQ as an incoming parameter
+        # our task info was already logged by Python RQ as an incoming parameter
         result['info'] = ""
+        return result
     else:
         # our large info item may be embedded in the exception_msg,
         # so truncate the message
         result['exception_msg'] = result['exception_msg'][:256]
-    return result
+        raise ImproperConfigForRemote(json.dumps(result))
+
+def testGetHighlighterTaskRuns():
+    profile_id = UserProfile.objects.get(user__username="nick").id
+    project_id = Project.objects.get(name__exact="Deciding Force Highlighter").id
+    generate_get_taskruns_worker.delay(profile_id=profile_id,
+                                       project_id=project_id)
+
+
+@django_rq.job('task_importer', timeout=60, result_ttl=24*3600)
+def generate_get_taskruns_worker(profile_id=None, project_id=None):
+    startCount = len(connection.queries)
+    profile = UserProfile.objects.get(pk=profile_id)
+    project = Project.objects.get(pk=project_id)
+    if project.task_type == 'HLTR':
+        save_taskrun = save_highlight_taskrun
+    elif project.task_type == 'QUIZ':
+        save_taskrun = save_quiz_taskrun
+    else:
+        raise InvalidTaskType("Project task type must be 'HLTR' or 'QUIZ'")
+    tasks = Task.objects.filter(project=project)
+    for task in tasks:
+        get_remote_taskrun_worker.delay(profile_id=profile_id,
+                                        project_id=project_id,
+                                        task_id=task.id,
+                                        save_taskrun=save_taskrun)
+    return ({
+        "task_type": project.task_type,
+        "generatedTasks": len(tasks),
+        "numberOfQueries": len(connection.queries) - startCount
+    })
+
+@django_rq.job('task_importer', timeout=60, result_ttl=24*3600)
+def get_remote_taskrun_worker(profile_id=None, project_id=None, task_id=None, save_taskrun=None):
+    profile = UserProfile.objects.get(pk=profile_id)
+    project = Project.objects.get(pk=project_id)
+    task = Task.objects.get(pk=task_id)
+
+    # Request the task, with the query parameter related=True to include
+    # the task_runs for this task.
+    params = {'api_key': profile.pybossa_api_key,
+              'related': 'True'}
+    url = urljoin(project.pybossa_url, '/api/task/%d' % (task.pybossa_id))
+    headers = {'content-type': 'application/json'}
+    resp = requests.get(url, params=params,
+                        headers=headers, timeout=30)
+    pybossa_task = resp.json()
+    if resp.status_code / 100 == 2:
+        taskruns = pybossa_task['task_runs']
+        count = 0
+        for taskrun in taskruns:
+            if save_taskrun(task, taskrun):
+                count += 1
+        return {
+            'taskruns_imported': count,
+            'taskruns_skipped': len(taskruns)-count
+        }
+
+    raise ImproperConfigForRemote(resp.text[:1024])
+
+def save_highlight_taskrun(task, taskrun):
+    taskrun_id = taskrun['id']
+    if ArticleHighlight.objects.filter(pybossa_id=taskrun_id).count():
+        # Previously saved this taskrun
+        return None
+    ah = ArticleHighlight.objects.create(
+        task=task, # safe - from our database, not Pybossa
+        article_id=task.info['article']['id'], # safe - from our database
+        pybossa_user_id=taskrun['user_id'],
+        pybossa_id=taskrun_id,
+        highlight_source=task.task_type,
+        info=taskrun
+    )
+
+    valid_topics_for_task = [ topic['id'] for topic in task.info['topics'] ]
+    highlights = taskrun['info']
+    # See thresher.views.collectQuizTasksForTopic for export code
+    # Our highlight_groups model allows us to aggregate a set
+    # of highlights for a given article, topic, and case_number.
+    # So let's aggregate accordingly.
+    sortkey = lambda x: (x['topic'], x['caseNum'])
+    hg_by_topic_case = sorted(highlights, key=sortkey)
+
+    for (topic_id, case_number), hg in groupby(hg_by_topic_case, key=sortkey):
+        # Verify this is a valid topic_id, since it is externally provided
+        if topic_id not in valid_topics_for_task:
+            raise InvalidTaskRun("Valid topic ids for task are %s, received %d" %
+                                 (str(valid_topics_for_task), topic_id))
+        hg_list = list(hg)
+        offsets=[ [x['start'], x['end'], x['text']] for x in hg_list ]
+        highlight_text=[ [x['text']] for x in hg_list ]
+        HighlightGroup.objects.create(
+            article_highlight=ah,
+            topic_id=topic_id,
+            case_number=case_number,
+            highlight_text=json.dumps(highlight_text),
+            offsets=json.dumps(offsets)
+        )
+
+    return ah
+
+def save_quiz_taskrun(task, taskrun):
+    return False
 
 
 if __name__ == '__main__':

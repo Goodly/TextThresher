@@ -207,7 +207,7 @@ def load_schema(schema):
     schema_parser.load_topics()
     return schema_obj.id
 
-def load_article(article, created_by):
+def load_article(article):
     new_id = int(article['metadata']['article_number'])
 
     try: # Catch duplicate article ids and assign new ids.
@@ -239,14 +239,10 @@ def load_article(article, created_by):
           article_obj.article_number)
     return article_obj
 
-def load_annotations(article, article_obj, created_by):
+def load_annotations(article, article_obj):
     # In future usage, the articles being imported will not be highlighted
     # already and thus won't have 'annotators'.
-    # The field annotators on Article logically maps to the
-    # created_by field on ArticleHighlight, which represents a set of
-    # highlights one article created by one user.
     article_highlight = ArticleHighlight.objects.create(article=article_obj,
-                                                        created_by=created_by,
                                                         highlight_source='HLTR')
 
     for tua_type, tuas in article['tuas'].iteritems():
@@ -290,14 +286,14 @@ def load_old_schema_dir(dirpath):
     for schema_file in schema_files:
         load_schema(old_parse_schema(os.path.join(dirpath, schema_file)))
 
-def load_article_dir(dirpath, created_by, with_annotations=False):
+def load_article_dir(dirpath, with_annotations=False):
     for article_filename in os.listdir(dirpath):
         if os.path.splitext(article_filename)[1] != '.txt':
             continue
         annotated_article = parse_document(os.path.join(dirpath, article_filename))
-        article_obj = load_article(annotated_article, created_by)
+        article_obj = load_article(annotated_article)
         if with_annotations:
-            load_annotations(annotated_article, article_obj, created_by)
+            load_annotations(annotated_article, article_obj)
 
 def load_args():
     parser = argparse.ArgumentParser()
@@ -331,4 +327,4 @@ if __name__ == '__main__':
         load_old_schema_dir(args.old_schema_dir)
         print "Finished loading schemas"
     if args.article_dir:
-        load_article_dir(args.article_dir, created_by, args.with_annotations)
+        load_article_dir(args.article_dir, args.with_annotations)

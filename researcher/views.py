@@ -22,6 +22,7 @@ from data.legacy.parse_schema import parse_schema as old_parse_schema
 from data.pybossa_api import create_remote_project, delete_remote_project
 from data.pybossa_api import generate_highlight_tasks_worker
 from data.pybossa_api import generate_quiz_tasks_worker
+from data.pybossa_api import generate_get_taskruns_worker
 from data.nlp_exporter import generate_nlp_tasks_worker
 from data.pybossa_api import InvalidTaskType
 from thresher.models import Article, Topic, UserProfile, Project
@@ -151,6 +152,8 @@ class SendTasksView(PermissionRequiredMixin, View):
     permission_required = (
         u'thresher.add_project',
         u'thresher.change_project',
+        u'thresher.add_task',
+        u'thresher.change_task',
     )
 
     def get_task_generator(self, project):
@@ -184,7 +187,7 @@ class SendTasksView(PermissionRequiredMixin, View):
             articles = Article.objects.filter(
                 id__gte=starting_article_id,
                 id__lte=ending_article_id
-            )
+            ).order_by("id")
             article_ids = list(articles.values_list('id', flat=True))
             logger.info("%d articles in selected range" % len(article_ids))
 
@@ -217,6 +220,31 @@ class SendTasksView(PermissionRequiredMixin, View):
                 }
             )
 
+class RetrieveTaskrunsView(PermissionRequiredMixin, View):
+    form_class = SendTasksForm
+    template_name = 'researcher/retrieve_taskruns.html'
+    login_url = reverse_lazy('admin:login')
+    redirect_field_name = 'next'
+    # Put a basic requirement on form access.
+    permission_required = (
+        u'thresher.add_articlehighlight',
+        u'thresher.change_articlehighlight',
+        u'thresher.delete_articlehighlight',
+        u'thresher.add_highlightgroup',
+        u'thresher.change_highlightgroup',
+        u'thresher.delete_highlightgroup',
+     )
+    
+    def get(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        return render(request, self.template_name, {'project': project})
+
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        job = generate_get_taskruns_worker.delay(request.user.userprofile.id, project.id)
+        return redirect(reverse('rq_home'))
+
+
 class RemoteProjectDeleteView(PermissionRequiredMixin, View):
     form_class = SendTasksForm
     template_name = 'researcher/confirm_remote_project_delete.html'
@@ -224,7 +252,8 @@ class RemoteProjectDeleteView(PermissionRequiredMixin, View):
     redirect_field_name = 'next'
     # We are deleting remotely, so correct Pybossa API key must be set
     # Put a basic requirement on form access.
-    permission_required = ( u'thresher.delete_project', )
+    permission_required = ( u'thresher.delete_project',
+                            u'thresher.delete_task')
 
     def get(self, request, pk):
         project = get_object_or_404(Project, pk=pk)

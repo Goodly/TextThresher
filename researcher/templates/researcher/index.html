@@ -25,9 +25,8 @@
           </li>
           <li class="item">
             <a href="{% url 'researcher:send_tasks' %}">
-              Send Tasks to Pybossa server
+              Send Tasks to Pybossa Server
             </a>
-          </li>
         </ul>
         
         <!-- <p></p>
@@ -45,10 +44,17 @@
               {{ project.name }}
             <ul class="item-container">
               <li class="item">
-                <a href="{{ project.get_remote_URL }}" target="_blank">view remote</a>
+                <a href="{{ project.get_remote_URL }}" target="_blank">View Remote</a>
               </li>
               <li class="item">
-                <a href="{{ project.get_local_remote_delete_URL }}">delete remote</a>
+                <a href="{{ project.get_local_task_retrieval_URL }}">
+                  Retrieve Task Runs
+                </a>
+              </li>
+              <li class="item">
+                <a href="{{ project.get_local_remote_delete_URL }}">
+                  Delete Remote
+                </a>
               </li>
             </ul>
           {% empty %}
