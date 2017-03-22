@@ -334,7 +334,10 @@ def extract_bracket_text(match, source_text):
         # at least one occurrence before the bracket--back reference.
         if bracket_text_index != 0:
             bracket_text_index -= 1
-        tuas_to_create.append((bracket_text, bracket_text_index, num_matches))
+        # include the full TUA following the closing bracket, instead of
+        # accidentally chopping off the TUA's tail
+        tua_tail = source_text[body_start+len(bracket_text)+2:m_end-2]
+        tuas_to_create.append((bracket_text + tua_tail, bracket_text_index, num_matches))
 
         # Track the text we need to remove
         # The bracket match is relative to the TUA match, so ajdust the offset.
