@@ -251,14 +251,14 @@ const HighlightTool = React.createClass({
     }
     var start_char = this.props.text[start];
     var end_char = this.props.text[end];
-    var start_empty = ((start_char == ' ') || (start_char == '\t') || (start_char == '\n'));
-    var end_empty = ((end_char == ' ') || (end_char == '\t') || (end_char == '\n'));
+    var start_empty = ((start_char == ' ') || (start_char == '\t') || (start_char == '\n') || (start_char == undefined));
+    var end_empty = ((end_char == ' ') || (end_char == '\t') || (end_char == '\n') || (end_char == undefined));
 
     var start_correction = start;
     var end_correction = end;
 
     var edit = start_correction;
-    while (((start_char == ' ') || (start_char == '\t') || (start_char == '\n')) == start_empty) {
+    while (((start_char == ' ') || (start_char == '\t') || (start_char == '\n') || (start_char == undefined)) == start_empty) {
       if (start_empty) {
         start_correction += 1;
         edit = start_correction;
@@ -270,7 +270,7 @@ const HighlightTool = React.createClass({
     }
 
     edit = end_correction;
-    while (((end_char == ' ') || (end_char == '\t') || (end_char == '\n')) == end_empty) {
+    while (((end_char == ' ') || (end_char == '\t') || (end_char == '\n') || (end_char == undefined)) == end_empty) {
       // want to keep start_correction at one step before and start_char at one space ahead
       // not equal direction. If moving from text to space, previous step
       // if moving from space to text, include step that cut out
@@ -283,14 +283,12 @@ const HighlightTool = React.createClass({
       }
       end_char = this.props.text[edit]
     }
-
-
     return [start_correction, end_correction+1];
   },
 
   clearHighlights: function() {
-    console.log("Running clear highlights")
-    console.log(this.props.addHighlight())
+    //console.log("Running clear highlights")
+    //console.log(this.props.addHighlight())
     this.props.clearHighlights();
   },
 
@@ -318,14 +316,9 @@ const HighlightTool = React.createClass({
         var extentResult = getOffset(this.articleRef, extent);
         end += extentResult.offset;
       }
-      /*console.log("WORD CORRECTION")
-      console.log(start)
-      console.log(end)*/
       var ends = this.wordCorrection(start, end);
       start = ends[0];
       end = ends[1];
-      //console.log(start)
-      //console.log(end)
 
 
       var temp_text = this.props.text;
@@ -347,7 +340,6 @@ const HighlightTool = React.createClass({
             caseNum: 1
           });
         var j = 0;
-        //for selecting after merging
         while (j < this.props.highlights.length) {
           if (overlap(newHighlight, this.props.highlights[j])) {
             var new_highlight = mergeHighlights([newHighlight, this.props.highlights[j]], this.props.text);
@@ -368,8 +360,6 @@ const HighlightTool = React.createClass({
 
   componentDidMount: function() {
     document.addEventListener('keydown',this.handleKeyDown);
-    /* pass in oncontextmenu obj into contextMenu*/
-    //document.addEventListener('contextmenu', this.contextMenu(event));
     let HighlightContainer = document.getElementById('highlight');
   },
 
@@ -382,12 +372,6 @@ const HighlightTool = React.createClass({
         }
       }
     }
-  },
-
-  contextMenu: function(e) {
-    //console.log('contextMenu')
-    //console.log(e)
-
   },
 
   handleSelect: function(source, e) {
@@ -406,8 +390,6 @@ const HighlightTool = React.createClass({
 
   render() {
     var text = this.props.text;
-    /*console.log("RENDER PROPS")
-    console.log(this.props)*/
     var highlights = this.processHighlights(this.props.highlights) || [];
     var start = 0;
     var tail = '';
@@ -419,10 +401,10 @@ const HighlightTool = React.createClass({
     }
     var last_curHL;
 
-    if ( l > 0) {
+    /*if ( l > 0) {
       //console.log(highlights[l - 1].end);
       //console.log(text.length);
-    }
+    }*/
 
     return (
       <div onKeyDown={this.handleKeyDown} ref={(ref) => this.articleRef = ref } onMouseUp={this.handleClick}>
