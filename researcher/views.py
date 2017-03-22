@@ -184,7 +184,7 @@ class SendTasksView(PermissionRequiredMixin, View):
             articles = Article.objects.filter(
                 id__gte=starting_article_id,
                 id__lte=ending_article_id
-            )
+            ).order_by("id")
             article_ids = list(articles.values_list('id', flat=True))
             logger.info("%d articles in selected range" % len(article_ids))
 

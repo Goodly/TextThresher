@@ -77,8 +77,7 @@ class Task(models.Model):
     project = models.ForeignKey(Project, related_name="tasks",
                                 on_delete=models.CASCADE)
     task_type = models.CharField(max_length=4) # 'HLTR' or 'QUIZ'
-    # components provides either the article id and topic_ids used for a highlight task
-    # or the root topic id, article id, and case number used for a quiz task
+    # Copy of complete task as sent to Pybossa
     info = JSONField()
     pybossa_id = models.IntegerField()
     pybossa_project_id = models.IntegerField()
@@ -248,12 +247,11 @@ class Answer(models.Model):
 
 # A container class for an Article and its Highlight Group
 # that will be referenced by a topic
+# This is used to store HLTR taskruns retrieved from Pybossa
 class ArticleHighlight(models.Model):
     article = models.ForeignKey(Article,
                                 related_name="users_highlights",
                                 on_delete=models.CASCADE)
-    created_by = models.ForeignKey(UserProfile, related_name="users_highlights",
-                                   on_delete=models.CASCADE)
 
     # Source of the highlight
     HIGHLIGHT_SOURCE_CHOICES = (
@@ -263,18 +261,21 @@ class ArticleHighlight(models.Model):
     highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES,
                                                 max_length=4)
 
+    pybossa_user_id = models.IntegerField(null=True)
+    # Complete taskrun as returned by Pybossa
+    info = JSONField(null=True)
+
     topics_identified = models.ManyToManyField(
                         Topic,
                         through='HighlightGroup',
                         through_fields=('article_highlight', 'topic'))
 
     def __unicode__(self):
-        return ("id %d for article id %d "
-                "by %s") % (self.id, self.article.id,
-                self.created_by.user.username)
+        return ("id %d for article id %d by Pybossa user %d" %
+                (self.id, self.article.id, self.pybossa_user_id))
 
 
-# A submitted highlight group
+# This is used to store HLTR taskruns retrieved from Pybossa
 class HighlightGroup(models.Model):
 
     # The highlighted text (stored as JSON array of offset tuples)
@@ -310,10 +311,10 @@ class HighlightGroup(models.Model):
             topic_name = "NLP"
         return ("id %d article id %d "
                 "Topic %s and Case %d "
-                "created by %s") % (self.id,
+                "created by %d") % (self.id,
                  self.article_highlight.article.id,
                  topic_name, self.case_number,
-                 self.article_highlight.created_by.user.username)
+                 self.article_highlight.pybossa_user_id)
 
 
 # A submitted answer to a question

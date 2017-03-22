@@ -9,12 +9,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 import json
+from itertools import groupby
 import requests
 from requests.compat import urljoin
 import iso8601
 import django_rq
 
 from thresher.models import Article, Topic, Project, UserProfile, Task
+from thresher.models import ArticleHighlight, HighlightGroup
 from thresher.views import collectHighlightTasks, collectQuizTasks
 from data import init_defaults
 
@@ -27,6 +29,8 @@ class FileNotFound(Exception):
 class ImproperConfigForRemote(Exception):
     pass
 
+class InvalidTaskRun(Exception):
+    pass
 
 def create_remote_project(profile, project):
     """
@@ -239,10 +243,10 @@ def generate_quiz_tasks_worker(profile_id=None,
 @django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
 def create_remote_task_worker(profile_id=None, project_id=None, task=None, n_answers=1):
     profile = UserProfile.objects.get(pk=profile_id)
-    url = urljoin(profile.pybossa_url, "/api/task")
-    params = {'api_key': profile.pybossa_api_key}
-
     project = Project.objects.get(pk=project_id)
+
+    params = {'api_key': profile.pybossa_api_key}
+    url = urljoin(project.pybossa_url, "/api/task")
 
     payload = {
         "project_id": project.pybossa_id,
@@ -277,6 +281,99 @@ def create_remote_task_worker(profile_id=None, project_id=None, task=None, n_ans
         # so truncate the message
         result['exception_msg'] = result['exception_msg'][:256]
         raise ImproperConfigForRemote(json.dumps(result))
+
+def testGetHighlighterTaskRuns():
+    profile_id = UserProfile.objects.get(user__username="nick").id
+    project_id = Project.objects.get(name__exact="Deciding Force Highlighter").id
+    generate_get_taskruns_worker.delay(profile_id=profile_id,
+                                       project_id=project_id)
+
+
+@django_rq.job('task_importer', timeout=60, result_ttl=24*3600)
+def generate_get_taskruns_worker(profile_id=None, project_id=None):
+    startCount = len(connection.queries)
+    profile = UserProfile.objects.get(pk=profile_id)
+    project = Project.objects.get(pk=project_id)
+    if project.task_type == 'HLTR':
+        save_taskrun = save_highlight_taskrun
+    elif project.task_type == 'QUIZ':
+        save_taskrun = save_quiz_taskrun
+    else:
+        raise InvalidTaskType("Project task type must be 'HLTR' or 'QUIZ'")
+    tasks = Task.objects.filter(project=project)
+    for task in tasks:
+        get_remote_taskrun_worker.delay(profile_id=profile_id,
+                                        project_id=project_id,
+                                        task_id=task.id,
+                                        save_taskrun=save_taskrun)
+    return ({
+        "task_type": project.task_type,
+        "generatedTasks": len(tasks),
+        "numberOfQueries": len(connection.queries) - startCount
+    })
+
+@django_rq.job('task_importer', timeout=60, result_ttl=24*3600)
+def get_remote_taskrun_worker(profile_id=None, project_id=None, task_id=None, save_taskrun=None):
+    profile = UserProfile.objects.get(pk=profile_id)
+    project = Project.objects.get(pk=project_id)
+    task = Task.objects.get(pk=task_id)
+
+    # Request the task, with the query parameter related=True to include
+    # the task_runs for this task.
+    params = {'api_key': profile.pybossa_api_key,
+              'related': 'True'}
+    url = urljoin(project.pybossa_url, '/api/task/%d' % (task.pybossa_id))
+    headers = {'content-type': 'application/json'}
+    resp = requests.get(url, params=params,
+                        headers=headers, timeout=30)
+    pybossa_task = resp.json()
+    if resp.status_code / 100 == 2:
+        taskruns = pybossa_task['task_runs']
+        for taskrun in taskruns:
+            save_taskrun(task, taskrun)
+        return { 'taskruns_imported': len(taskruns) }
+
+    raise ImproperConfigForRemote(resp.text[:1024])
+
+def save_highlight_taskrun(task, taskrun):
+    taskrun_id = taskrun['id']
+    article_id = task.info['article']['id'] # safe - this is from our database, not Pybossa
+    ah = ArticleHighlight.objects.create(
+        article_id=article_id,
+        pybossa_user_id=taskrun['user_id'],
+        highlight_source=task.task_type,
+        info=taskrun
+    )
+
+    valid_topics_for_task = [ topic['id'] for topic in task.info['topics'] ]
+    highlights = taskrun['info']
+    # See thresher.views.collectQuizTasksForTopic for export code
+    # Our highlight_groups model allows us to aggregate a set
+    # of highlights for a given article, topic, and case_number.
+    # So let's aggregate accordingly.
+    sortkey = lambda x: (x['topic'], x['caseNum'])
+    hg_by_topic_case = sorted(highlights, key=sortkey)
+
+    for (topic_id, case_number), hg in groupby(hg_by_topic_case, key=sortkey):
+        # Verify this is a valid topic_id, since it is externally provided
+        if topic_id not in valid_topics_for_task:
+            raise InvalidTaskRun("Valid topic ids for task are %s, received %d" %
+                                 (str(valid_topics_for_task), topic_id))
+        hg_list = list(hg)
+        offsets=[ [x['start'], x['end'], x['text']] for x in hg_list ]
+        highlight_text=[ [x['text']] for x in hg_list ]
+        HighlightGroup.objects.create(
+            article_highlight=ah,
+            topic_id=topic_id,
+            case_number=case_number,
+            highlight_text=json.dumps(highlight_text),
+            offsets=json.dumps(offsets)
+        )
+
+    return ah
+
+def save_quiz_taskrun(task, taskrun):
+    return False
 
 
 if __name__ == '__main__':
