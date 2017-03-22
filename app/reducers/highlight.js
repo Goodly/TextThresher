@@ -63,9 +63,7 @@ export function highlight(state = initialState, action) {
       var new_state = kept;
       return Object.assign({}, state, { highlights: new_state, selectedHighlight: []});
     case 'CHANGE_CASE_HIGHLIGHT':
-      console.log("CHANGE_CASE_HIGHLIGHT");
-      console.log(state)
-      console.log(action)
+
       var new_highlights = [];
       var caseMax = 0;
       for (var i = 0; i < state.highlights.length; i++) {
