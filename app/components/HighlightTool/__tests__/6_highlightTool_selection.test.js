@@ -69,19 +69,12 @@ const wrapper = shallow(
   />
 );
 //selected is start-end pair
-test('testing quiz functionality clear highlights', () => {
+/*test('Clear highlights', () => {
   // clearHighlights returns an unbound action that isn't dispatched
   var action = wrapper.instance().clearHighlights();
   console.log(action)
   //expect(wrapper.instance().props.highlights).toEqual([]);
-});
-test('testing quiz functionality returns highlights', () => {
+});*/
+test('Returns highlights', () => {
   expect(wrapper.instance().returnHighlights()).toEqual([h5]);
 });
-
-
-/*test('(breakHighlights: Case 1, Test 1) no highlights returns empty', () => {
-
-  wrapper.instance().addHighlight(h4.start, h4.end, h4.text, h4.topic, article)
-  expect(wrapper.instance().props.selectedHighlight).toEqual([161, 169]);
-});*/

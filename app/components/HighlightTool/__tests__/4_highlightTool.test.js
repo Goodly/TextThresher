@@ -70,44 +70,10 @@ const wrapper = shallow(
   selectedHighlight={[1]}
   />
 );
-/*const event1 = {
-  target: {
-    values:
-  }
-}*/
-/*
-Methods:
-1. processHighlights (now)
-2. breakHighlights (done)
-3. handleClick
-4. mergeColors
-5. wordCorrection (now)
-6. handleKeyDown()
-7.
-
-Known Issues:
-1. wordCorrection conflicts with highlights starting at very beginning and very end of article
-2. Not selecting aftering adding highlight
-*/
-//make global object where you pass in each element that matters
-
-
-
-
-var w = test_window();
-w.setSelection();
-global.window = w;
 
 test('(breakHighlights: Case 1, Test 1) no highlights returns empty', () => {
   expect(wrapper.instance().breakHighlights([])).toEqual([]);
 });
-
-
-
-
-
-
-
 
 test('(breakHighlights: Case 1, Test 1) no highlights returns empty', () => {
   expect(wrapper.instance().breakHighlights([])).toEqual([]);
