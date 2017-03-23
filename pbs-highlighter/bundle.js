@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "694ec431c090e2806b24"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "806369dd325846d42812"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -38646,8 +38646,6 @@
 	
 	var _topicPicker = __webpack_require__(260);
 	
-	var _highlight = __webpack_require__(258);
-	
 	var _normalizr = __webpack_require__(289);
 	
 	var _require = __webpack_require__(286)(),
@@ -38714,8 +38712,6 @@
 	    dispatch((0, _project.storeProject)(task.project));
 	    dispatch((0, _article.storeArticle)(task.article));
 	    dispatch((0, _topicPicker.storeTopics)(task.topics));
-	    // Dispatch an action to clear any existing highlights
-	    dispatch((0, _highlight.clearHighlights)());
 	    dispatch({ type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue: taskQueue });
 	    dispatch({ type: 'CURRENT_HIGHLIGHT_TASK', taskId: taskId });
 	
@@ -38934,7 +38930,9 @@
 	
 	    _this.onSaveAndNext = function () {
 	      window.scrollTo(0, 0);
-	      _this.props.saveAndNext(_this.props.highlights);
+	      // Send copy for async save
+	      _this.props.saveAndNext(Object.assign({}, _this.props.highlights));
+	      _this.props.clearHighlights();
 	    };
 	
 	    _this.handleScroll = _this.handleScroll.bind(_this);
@@ -39331,13 +39329,17 @@
 	
 	var projectActionCreators = _interopRequireWildcard(_project);
 	
+	var _highlight = __webpack_require__(258);
+	
+	var highlightActionCreators = _interopRequireWildcard(_highlight);
+	
 	var _highlightTasks = __webpack_require__(815);
 	
 	var taskActionCreators = _interopRequireWildcard(_highlightTasks);
 	
-	var _highlight = __webpack_require__(823);
+	var _highlight2 = __webpack_require__(823);
 	
-	var _highlight2 = _interopRequireDefault(_highlight);
+	var _highlight3 = _interopRequireDefault(_highlight2);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -39349,7 +39351,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var assembledActionCreators = Object.assign({}, articleActionCreators, topicsActionCreators, projectActionCreators, taskActionCreators);
+	var assembledActionCreators = Object.assign({}, articleActionCreators, topicsActionCreators, projectActionCreators, highlightActionCreators, taskActionCreators);
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
@@ -39399,7 +39401,7 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      _get(RealHighlighter.prototype.__proto__ || Object.getPrototypeOf(RealHighlighter.prototype), 'componentDidMount', this).call(this);
-	      (0, _highlight2.default)(this.props.storeArticle, this.props.storeProject, this.props.storeTopics, this.props.storeSaveAndNext);
+	      (0, _highlight3.default)(this.props.storeArticle, this.props.storeProject, this.props.storeTopics, this.props.storeSaveAndNext);
 	    }
 	  }]);
 	

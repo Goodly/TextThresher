@@ -3,7 +3,6 @@ const { fetch, Request, Response, Headers } = require('fetch-ponyfill')();
 import { storeProject } from 'actions/project';
 import { storeArticle, storeSaveAndNext } from 'actions/article';
 import { storeTopics } from 'actions/topicPicker';
-import { clearHighlights } from 'actions/highlight';
 
 import { normalize, Schema, arrayOf } from 'normalizr';
 
@@ -53,8 +52,6 @@ function presentTask(dispatch, getState) {
     dispatch(storeProject(task.project));
     dispatch(storeArticle(task.article));
     dispatch(storeTopics(task.topics));
-    // Dispatch an action to clear any existing highlights
-    dispatch(clearHighlights());
     dispatch({type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue});
     dispatch({type: 'CURRENT_HIGHLIGHT_TASK', taskId});
 
