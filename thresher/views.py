@@ -168,7 +168,7 @@ class HighlightTasks(GenericAPIView):
         project = Project.objects.get(name__exact="Deciding Force Highlighter")
         topics = Topic.objects.filter(parent=None)
 
-        articles = self.filter_queryset(self.get_queryset())
+        articles = self.filter_queryset(self.get_queryset()).order_by("id")
         page = self.paginate_queryset(articles)
         if page is not None:
             tasks = collectHighlightTasks(page, topics, project)
@@ -259,13 +259,15 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
                        for hg in ah.highlightsForTopic
         ]
         # At this point, we are processing one topic for one article
+        # All the highlights for a given topic/case need to be in one task.
         # Need to sort here instead of the above prefetch because we want
         # to ignore the potential grouping effect if there was more than one
         # ArticleHighlight in above list comprehension
-        hg_by_case = sorted(highlights, key=lambda x: x.case_number)
+        # See data.pybossa_api.save_highlight_taskrun for import code
+        sortkey = lambda x: x.case_number
+        hg_by_case = sorted(highlights, key=sortkey)
 
-        for case_number, hg_case_group in groupby(hg_by_case,
-                                                  key=lambda x: x.case_number):
+        for case_number, hg_case_group in groupby(hg_by_case, key=sortkey):
             taskList.append({
                "project": project_data,
                "topTopicId": topic.id,

@@ -5,6 +5,7 @@
 
     <h1 class="main-label">Researcher Home</h1>
 
+
     <div class="main-container">
 
       <!-- First section -->
@@ -25,9 +26,8 @@
           </li>
           <li class="item">
             <a href="{% url 'researcher:send_tasks' %}">
-              Send Tasks to Pybossa server
+              Send Tasks to Pybossa Server
             </a>
-          </li>
         </ul>
         
         <!-- <p></p>
@@ -46,14 +46,22 @@
                 {{ project.name }}
               <ul class="item-container">
                 <li class="item">
-                  <a href="{{ project.get_remote_URL }}" target="_blank">view remote</a>
+                  <a href="{{ project.get_remote_URL }}" target="_blank">
+                    View Remote
+                  </a>
                 </li>
                 <li class="item">
-                  <a href="{{ project.get_local_remote_delete_URL }}">delete remote</a>
+                  <a href="{{ project.get_local_task_retrieval_URL }}">
+                    Retrieve Task Runs
+                  </a>
+                </li>
+                <li class="item">
+                  <a href="{{ project.get_local_remote_delete_URL }}">
+                    Delete Remote
+                  </a>
                 </li>
               </ul>
             </div>
-            
           {% empty %}
           <div class="nothing-label">
             No remote projects currently being managed by us.
@@ -67,6 +75,7 @@
     <div class="right-section-container">
       <div class="right-section-label">
         RELATED ACTIONS
+
       </div>
       <div class="line-delimiter"></div>
       {% if user.is_authenticated %}

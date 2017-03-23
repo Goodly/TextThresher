@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'researcher/researcher_base.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
 
-    <script src="/static/bower_components/modernizr/modernizr.js"></script>
+    <script src="{% static 'bower_components/modernizr/modernizr.js' %}"></script>
   </head>
   <body>
     
@@ -29,6 +29,7 @@
             Researcher Tools
           </h1>
         </a>
+
       </div>
       <div class="user-tools">
         {% if user.is_anonymous %}

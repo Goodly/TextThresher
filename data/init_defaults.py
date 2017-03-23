@@ -40,6 +40,12 @@ permissions = [
     u'add_topic',
     u'change_topic',
     u'delete_topic',
+    u'add_task',
+    u'change_task',
+    u'delete_task',
+    u'add_nlphints',
+    u'change_nlphints',
+    u'delete_nlphints',
 ]
 
 def createSuperUser(username="norman", email="norman@example.com", password="bidsatdoe"):
@@ -66,7 +72,7 @@ def createNick(username="nick", email="nick@example.com", password="bidsatdoe", 
     try:
         u = User.objects.get(username=username)
     except ObjectDoesNotExist:
-        u = User.objects.create_user('nick', 'nick@example.com', 'bidsatdoe')
+        u = User.objects.create_superuser('nick', 'nick@example.com', 'bidsatdoe')
         u.first_name = "Nick"
         u.last_name = "Adams"
         u.is_staff = True
