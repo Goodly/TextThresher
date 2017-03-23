@@ -12,7 +12,7 @@
     "build": "NODE_ENV=development DEBUG=dev WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
     "build:watch": "NODE_ENV=development DEBUG=dev WEBPACK=cleandist webpack --progress --stats --config webpack.config.js --watch",
     "deploy": "NODE_ENV=production WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
-    "test": "node --harmony_proxies node_modules/.bin/jest",
+    "test": "node node_modules/.bin/jest",
     "test:watch": "npm run test -- --watch",
     "tasks:highlighter": "curl http://localhost:5000/api/highlighter_tasks/?format=json | python -m json.tool > pbs-highlighter/highlighter_tasks.json",
     "tasks:quiz": "curl http://localhost:5000/api/quiz_tasks/?format=json | python -m json.tool > pbs-quiz/quiz_tasks.json"

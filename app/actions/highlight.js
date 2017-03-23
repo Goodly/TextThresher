@@ -2,13 +2,17 @@ export const ADD_HIGHLIGHT = 'ADD_HIGHLIGHT';
 export const DELETE_HIGHLIGHT = 'DELETE_HIGHLIGHT';
 export const SELECT_HIGHLIGHT = 'SELECT_HIGHLIGHT';
 export const DESELECT_HIGHLIGHT = 'DESELECT_HIGHLIGHT';
+export const CLEAR_HIGHLIGHTS = 'CLEAR_HIGHLIGHTS';
 
 export const RESIZE_HIGHLIGHT = 'CHANGE_HIGHLIGHT';
 export const CHANGE_CASE_HIGHLIGHT = 'CHANGE_CASE_HIGHLIGHT';
 
 
-export function addHighlight(start, end, selectedText, currentTopic, order) {
-  return { type: ADD_HIGHLIGHT, selection: {start, end, selectedText, currentTopic, order} };
+export function clearHighlights() {
+  return {type: CLEAR_HIGHLIGHTS};
+}
+export function addHighlight(start, end, selectedText, currentTopic, text) {
+  return { type: ADD_HIGHLIGHT, selection: {start, end, selectedText, currentTopic}, text: text };
 }
 
 export function deleteHighlight(source) {

@@ -107,12 +107,14 @@ export class TopicHighlighter extends Component {
               <div className="article" key={this.props.article.articleId}>
                 <Project />
                 <div id='article-container'>
+
                   <HighlightTool
                     text={this.props.article.text}
                     topics={this.props.topics.results}
                     colors={colors}
                     currentTopicId={this.props.currentTopicId}
                   />
+                  
                 </div>
                 <button onClick={this.onSaveAndNext}>Save and Next</button>
               </div>

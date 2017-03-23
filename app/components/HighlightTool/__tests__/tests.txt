@@ -1,0 +1,108 @@
+
+Methods:
+  TODO:
+  Currently:
+  - 14 functions total, have 17 cases with 21 tests for 4 functions. 3 look pretty stable, 1 has issues but testing is helping a tremendous amount
+  -------- input test --------
+  1. Finish merge (round one complete)
+  2. Finish overlap (round one complete)
+  3. Finish mergeHighlights (round one complete)
+  4. Finish breakHighlights (round one complete)
+  5. Finish processHighlights (P1 today)
+  6. Finish mergeColors (P3 today)
+  ------- event testing -------
+  7. handleSelect (P3)
+  8. handleClick (P3)
+  9. handleKeyDown (P3)
+  10. getOffset (P1)
+  ------- action testing ------
+  11. SELECT
+  12. DESELECT
+  13. ADD (P2)
+  14. DELETE
+
+
+  Tool:
+  1. getOffset (Regular)
+    - event dependent
+  2. parseHighlights (Regular)
+    - input dependent
+  3. processHighlights (Display)
+    - input dependent
+  4. mergeColors (Regular)
+    - input dependent
+  5. wordCorrection (Display)
+    - input dependent
+  6. handleClick (Display)
+    - event
+  7. handleKeyDown (Display)
+    - event
+  8. handleSelect (Display)
+    - event
+
+  Reducer:
+  9. mergeHighlights (Display and Regular)
+    - input
+  10. DESELECT_HIGHLIGHT (Display)
+  11. ADD_HIGHLIGHT (Display)
+  12. SELECT_HIGHLIGHT (Display)
+  13. DELETE_HIGHLIGHT (Display)
+  14. overlap
+    - input
+  15. merge
+    - input
+
+REGULAR TESTS:
+  mergeHighlights:
+    1. Pass in two overlapping highlights, output should be single merged highlight
+    2. Pass in five separate highlights and a sixth highlight of the same topic that spans all of them, expect a single merged highlight
+    3. Same set up as 2 but the sixth highlight is a different topic, expect six highlights
+
+  parseHighlights tests (see if highlights are broken into start/end segments properly):
+    1. Returned highlights are sorted from least to greatest index
+    2. Should be twice as many returned segments as the number of highlights
+    3. Output source should be consistent with type, index, topic
+    4. Test selected, compare output with selectedHighlights
+
+  mergeColor tests:
+    1. Feed several topics, false selected, can see if output color is correct average (with opacity)
+    2. Feed several topics, true selected, can see if output is correct average
+
+  getOffset tests:
+
+DISPLAY TEST CASES (presumably tested by passing redux actions into store and testing the output):
+  Single topic, Adding/Merging:
+  1. Left to right one full word (Adding, Direction)
+  2. Left to right one partial word, hanging left (Adding, Start correction, Direction)
+  3. Left to right one partial word, hanging right (Adding, End correction, Direction)
+  4. Left to right one partial word, hanging both sides (Adding, Start, End correction, Direction)
+  5. Right to left one full word (Adding, Direction)
+  6. Right to left one partial word, hanging left (Adding, Start correction, Direction)
+  7. Right to left one partial word, hanging right (Adding, End correction, Direction)
+  8. Right to left one partial word, hanging both sides (Adding, Start, End correction, Direction)
+  9. One topic, merge second highlight right to left, one full word (Adding, Merging, Direction)
+  10. One topic, merge second highlight right to left, one right word, hanging right (Adding, Merging, Direction, End correction)
+  11. One topic, merge second highlight right to left, one left word, hanging left (Adding, Merging, Direction, Start correction)
+  12. One topic, merge second highlight left to right, one full word (Adding, Merging, Direction)
+  13. One topic, merge second highlight left to right, one right word, hanging right (Adding, Merging, Direction, End correction)
+  14. One topic, merge second highlight left to right, one left word, hanging left (Adding, Merging, Direction, Start correction)
+  Double topic, Adding/Merging:
+  15. One topic, merge second highlight of different topic right to left, one full word (Adding, Merging, Direction)
+  16. One topic, merge second highlight of different topic right to left, one right word, hanging right (Adding, Merging, Direction, End correction, Color merging)
+  17. One topic, merge second highlight of different topic right to left, one left word, hanging left (Adding, Merging, Direction, Start correction, Color merging)
+  18. One topic, merge second highlight of different topic left to right, one full word (Adding, Merging, Direction, Color merging)
+  19. One topic, merge second highlight of different topic left to right, one right word, hanging right (Adding, Merging, Direction, End correction, Color merging)
+  20. One topic, merge second highlight of different topic left to right, one left word, hanging left (Adding, Merging, Direction, Start correction, Color merging)b
+  Selecting/Deleting:
+  21. Select one highlight (Select)
+  22. Delete one highlight (Delete)
+  23. Deselect one highlight by clicking on the side (Deselect)
+  24. Click overlap of two highlights, selecting two highlights (Double Select)
+  25. Delete two highlights (Double Delete)
+  26. Click right non-overlapping portion of two overlapping highlights, selecting only one highlight (Single select despite overlap)
+  27. Delete right highlight, leaving left highlight  (Single delete despite overlap)
+  28. Click left non-overlapping portion of two overlapping highlights, selecting only one highlight (Single select despite overlap)
+  29. Delete left highlight, leaving right highlight (Single delete despite overlap)
+  N Highlight Cases (Setup: 5 highlights with different topics, all have the same left starting word, but each is one word longer than the last, without offset errors)
+  30. Move from right to left, selecting each span will select one more highlight
+  31. Move from right to left, after selecting each span, delete will apply only to selected highlights
