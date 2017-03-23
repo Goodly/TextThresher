@@ -1,16 +1,28 @@
 {% extends parent_template|default:"researcher/base.html" %}
 {% block title %} Upload Schema File {% endblock %}
 {% block content %}
-<h1>Upload Schema File</h1>
-  <form enctype="multipart/form-data"
-    action="{% url 'researcher:upload_schema' %}"
-    method="post">
-    <p>
-      Use this form to upload a schema file containing topics, with questions and answers for those topics.
-    </p>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload file</button>
-  </form>
+  <div class="content-container">
+    <h1 class="main-label">
+      Upload Schema File
+    </h1>
+
+    <div class="main-container">
+      <form enctype="multipart/form-data"
+        action="{% url 'researcher:upload_schema' %}"
+        method="post">
+        <div class="page-description" id="page">
+          <div class="description-text">
+            Use this form to upload a schema file containing topics, with questions and answers for those topics.
+          </div>
+        </div>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload file</button>
+      </form>
+    </div>
+    
+  </div>
+
+  
 {% endblock %}
 

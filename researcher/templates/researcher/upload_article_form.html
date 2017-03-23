@@ -1,16 +1,24 @@
 {% extends parent_template|default:"researcher/base.html" %}
 {% block title %} Upload Article Archive {% endblock %}
 {% block content %}
-<h1>Upload Article Archive</h1>
-  <form enctype="multipart/form-data"
-    action="{% url 'researcher:upload_articles' %}"
-    method="post">
-    <p>
-      You may select a tar file (.tar, .tar.gz, .tgz) containing a correctly formatted
-      corpus of articles for importing.
-    </p>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload file</button>
-  </form>
+  <div class="content-container">
+    <h1 class="main-label">
+      Upload Article Archive
+    </h1>
+    <div class="main-container">
+      <form enctype="multipart/form-data"
+        action="{% url 'researcher:upload_articles' %}"
+        method="post">
+        <div class="page-description">
+          <div class="description-text">
+            You may select a tar file (.tar, .tar.gz, .tgz) containing a correctly formatted corpus of articles for importing.
+          </div>
+        </div>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload file</button>
+      </form>
+    </div>
+  </div>
+
 {% endblock %}

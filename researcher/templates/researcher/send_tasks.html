@@ -1,18 +1,106 @@
 {% extends parent_template|default:"researcher/base.html" %}
 {% block title %} Generate and Send Tasks for a Project {% endblock %}
 {% block content %}
-  <h1>Generate and Send Tasks for a Project</h1>
-    <form
-      action="{% url 'researcher:send_tasks' %}"
-      method="post">
-      <p>
-        Send Tasks to a Pybossa Server
-      </p>
-      <p>You are logged in as: {{ user.username }}</p>
-      <p>Your remote Pybossa server is set to: {{ user.userprofile.pybossa_url }}</p>
-      <p>Your Pybossa API key is set to: {{ user.userprofile.pybossa_api_key }}</p>
-      {{ form.as_p }}
-      {% csrf_token %}
-      <button type="submit">Send Tasks</button>
-    </form>
+  <div class="content-container">
+    <h1 class="main-label">
+      Generate and Send Tasks for a Project
+    </h1>
+
+    <div class="main-container">
+      <form
+        action="{% url 'researcher:send_tasks' %}"
+        method="post">
+        <div class="page-description">
+          <div class="description-text">
+            Send Tasks to a Pybossa Server
+          </div>
+        </div>
+
+<!--         <p>You are logged in as: {{ user.username }}</p>
+        <p>Your remote Pybossa server is set to: {{ user.userprofile.pybossa_url }}</p>
+        <p>Your Pybossa API key is set to: {{ user.userprofile.pybossa_api_key }}</p>
+ -->
+        <div class="form-container">
+          <div class="form-label">
+            Project:
+          </div>
+          <div class="form-selector">
+            {{ form.project }}
+          </div>
+          <div class="form-hint">
+            {{ form.project.help_text }}
+          </div>
+        </div>
+
+        <div class="form-container">
+          <div class="form-label">
+            Topics:
+          </div>
+          <div class="form-selector">
+            {{ form.topics }}
+          </div>
+          <div class="form-hint">
+            {{ form.topics.help_text }}
+          </div>
+          <div class="form-hint">
+            Hold down "Control", or "Command" on a Mac, to select more than one.
+          </div>
+        </div>
+
+        <div class="form-container">
+          <div class="form-label">
+            Articles:
+          </div>
+          <div class="form-selector">
+            Starting article id: 
+            <span class="article-id-selector" id="starting-article-id">
+              {{ form.starting_article_id }}
+            </span>
+          </div>
+          <div class="form-selector">
+            Ending article id: 
+            <span class="article-id-selector" id="ending-article-id">
+              {{ form.ending_article_id }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-container">
+          <div class="form-label">
+            NLP Hints
+          </div>
+          <div class="form-selector" id="ending-article-id">
+            {{ form.add_nlp_hints }}
+            <span class="nlp-hints-label">
+              {{ form.add_nlp_hints.label }}
+            </span>
+          </div>
+          <div class="form-hint">
+            {{ form.add_nlp_hints.help_text }}
+          </div>
+        </div>
+
+        <!-- {{ form.as_p }} -->
+        {% csrf_token %}
+        <button type="submit" class="submit">
+          Send Tasks
+        </button>
+      </form>
+    </div>
+
+    <div class="right-section-container">
+      <div class="right-section-label">
+        RELATED INFO
+      </div>
+      <div class="right-section-item">
+        <strong>User: </strong> {{ user.username }}
+      </div>
+      <div class="right-section-item">
+        <strong>Server: </strong> {{ user.userprofile.pybossa_url }}
+      </div>
+      <div class="right-section-item">
+        <strong>API Key: </strong> {{ user.userprofile.pybossa_api_key }}
+      </div>
+    </div>
+  </div>
 {% endblock %}

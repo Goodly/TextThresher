@@ -73,25 +73,150 @@ a.actual-name {
 }
 
 h1.main-label {
-    padding: 0 0 20px;
+    padding: 0;
     margin-top: 0;
     font-weight: 300;
     font-size: 20px;
     color: #666;
 }
 
-.general-container {border: none;margin-bottom: 30px;background: #fff;}
 
-.projects-container {border: none;margin-bottom: 30px;background: #fff;}
+.general-container {
+    border: none;
+    margin-bottom: 30px;
+    background: #fff;
+}
+
+.projects-container {
+    border: none;
+    margin-bottom: 30px;
+    background: #fff;
+}
 
 .right-section-container {
     float: right;
     width: 260px;
     position: relative;
-    margin-right: -300px;
+    margin-top: 10px;
+    margin-right: -400px;
+    background: #f8f8f8;
+
 }
 
 .main-container {
     float: left;
     width: 100%;
+    margin-top: 10px;
+}
+
+.line-delimiter {
+}
+
+.right-section-label {
+    background: none;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #eaeaea;
+    font-size: 14px;
+    color: #333;
+}
+
+.right-section-item {
+    font-size: 14px;
+    color: #666;
+    padding: 0 20px;
+    margin: 0 0 20px;
+    word-spacing: 2px;
+    font-weight: 300;
+    font-family: 'Lato', sans-serif;
+}
+
+.project {
+    margin-left: 15px;
+}
+
+.page-description {
+    /*border-radius: 5px;*/
+    width: 100%;
+    background: #f8f8f8;
+    color: black;
+    /*margin-left: 5px;*/
+    margin-bottom: 10px;
+    float: left;
+}
+
+.description-text {
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    float: left;
+}
+
+.form-label {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.form-container {
+    float: left;
+    margin-left: 10px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px lightgrey solid;
+    width: 96%;
+}
+
+.form-selector {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.form-hint {
+    margin-left: 10px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: dimgray;
+}
+
+select#id_topics {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border-color: lightgrey;
+}
+
+option {
+    margin: 2px 0px;
+}
+
+.article-id-selector {
+    margin-left: 5px;
+    font-size: 11px;
+    line-height: 4px;
+}
+
+span.nlp-hints-label {
+    margin-left: 5px;
+}
+
+button.submit {
+    float: left;
+    margin-left: 15px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    border: none;
+    font-weight: 400;
+    background: lightgray;
+    border-radius: 2px;
+    height: 35px;
+    padding: 5px 10px;
+}
+
+p.confirm-delete {
+    margin-left: 20px;
+    width: 90%;
+    line-height: 20px;
+}
+
+button.delete-button {
+    margin-left: 15px;
 }

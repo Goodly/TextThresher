@@ -1,18 +1,29 @@
 {% extends parent_template|default:"researcher/base.html" %}
 {% block title %} Delete Remote Project {% endblock %}
 {% block content %}
-<h1>Delete Remote Project</h1>
-  <form
-    action="{% url 'researcher:remote_project_delete' project.id %}"
-    method="post">
-    <p>
-      Are you sure you want to delete {{ project.name }} from the remote site
-      <a href="{{ project.get_remote_URL }}">{{ project.get_remote_URL }}</a>?
-      <p>The local copy of the project will not be deleted, and local copies of tasks
-         and retrieved taskruns will not be deleted.</p>
-    </p>
-    {% csrf_token %}
-    <button type="submit">Delete remote {{ project.name }}</button>
-  </form>
+  <div class="content-container">
+    <h1 class="main-label">
+      Delete Remote Project
+    </h1>
+
+    <div class="main-container">
+      <form
+        action="{% url 'researcher:remote_project_delete' project.id %}"
+        method="post">
+        <div class="page-description">
+          <div class="description-text">
+            Deleting remote project. The local copy of the project will not be deleted.
+          </div>
+        </div>
+        <p class="confirm-delete">
+          Are you sure you want to delete {{ project.name }} from 
+          <a href="{{ project.get_remote_URL }}">{{ project.get_remote_URL }}</a>?
+        </p>
+        {% csrf_token %}
+        <button type="submit" class="delete-button">Delete remote {{ project.name }}</button>
+      </form>
+    </div>
+  </div>
+
 {% endblock %}
 

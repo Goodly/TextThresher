@@ -3,7 +3,8 @@
 {% block content %}
   <div class="content-container">
 
-    <h1 class="main-label">Researcher Tools</h1>
+    <h1 class="main-label">Researcher Home</h1>
+
 
     <div class="main-container">
 
@@ -40,23 +41,27 @@
           <p class="section-label">REMOTE PROJECTS</p>
         </div>
           {% for project in projects %}
-            <p>
-              {{ project.name }}
-            <ul class="item-container">
-              <li class="item">
-                <a href="{{ project.get_remote_URL }}" target="_blank">View Remote</a>
-              </li>
-              <li class="item">
-                <a href="{{ project.get_local_task_retrieval_URL }}">
-                  Retrieve Task Runs
-                </a>
-              </li>
-              <li class="item">
-                <a href="{{ project.get_local_remote_delete_URL }}">
-                  Delete Remote
-                </a>
-              </li>
-            </ul>
+            <div class="project">
+              <p>
+                {{ project.name }}
+              <ul class="item-container">
+                <li class="item">
+                  <a href="{{ project.get_remote_URL }}" target="_blank">
+                    View Remote
+                  </a>
+                </li>
+                <li class="item">
+                  <a href="{{ project.get_local_task_retrieval_URL }}">
+                    Retrieve Task Runs
+                  </a>
+                </li>
+                <li class="item">
+                  <a href="{{ project.get_local_remote_delete_URL }}">
+                    Delete Remote
+                  </a>
+                </li>
+              </ul>
+            </div>
           {% empty %}
           <div class="nothing-label">
             No remote projects currently being managed by us.
@@ -69,18 +74,19 @@
     <!-- Right section -->
     <div class="right-section-container">
       <div class="right-section-label">
-        Related actions
+        RELATED ACTIONS
+
       </div>
       <div class="line-delimiter"></div>
       {% if user.is_authenticated %}
         <div class="right-section-item">
           <a href="{% url 'admin:index' %}">
-            Thresher Admin
+            <strong> - Thresher Admin </strong>
           </a>
         </div>
         <div class="right-section-item">
           <a href="{% url 'rq_home' %}">
-            Check Queue
+            <strong> - Check Queue </strong>
           </a>
         </div>
       {% endif %}
