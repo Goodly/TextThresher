@@ -10,13 +10,17 @@
       <form
         action="{% url 'researcher:remote_project_delete' project.id %}"
         method="post">
-        <p>
-          Are you sure you want to delete {{ project.name }} from the remote site
+        <div class="page-description">
+          <div class="description-text">
+            Deleting remote project. The local copy of the project will not be deleted.
+          </div>
+        </div>
+        <p class="confirm-delete">
+          Are you sure you want to delete {{ project.name }} from 
           <a href="{{ project.get_remote_URL }}">{{ project.get_remote_URL }}</a>?
-          The local copy of the project will not be deleted.
         </p>
         {% csrf_token %}
-        <button type="submit">Delete remote {{ project.name }}</button>
+        <button type="submit" class="delete-button">Delete remote {{ project.name }}</button>
       </form>
     </div>
   </div>

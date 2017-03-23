@@ -41,16 +41,19 @@
           <p class="section-label">REMOTE PROJECTS</p>
         </div>
           {% for project in projects %}
-            <p>
-              {{ project.name }}
-            <ul class="item-container">
-              <li class="item">
-                <a href="{{ project.get_remote_URL }}" target="_blank">view remote</a>
-              </li>
-              <li class="item">
-                <a href="{{ project.get_local_remote_delete_URL }}">delete remote</a>
-              </li>
-            </ul>
+            <div class="project">
+              <p>
+                {{ project.name }}
+              <ul class="item-container">
+                <li class="item">
+                  <a href="{{ project.get_remote_URL }}" target="_blank">view remote</a>
+                </li>
+                <li class="item">
+                  <a href="{{ project.get_local_remote_delete_URL }}">delete remote</a>
+                </li>
+              </ul>
+            </div>
+            
           {% empty %}
           <div class="nothing-label">
             No remote projects currently being managed by us.
@@ -69,12 +72,12 @@
       {% if user.is_authenticated %}
         <div class="right-section-item">
           <a href="{% url 'admin:index' %}">
-            Thresher Admin
+            <strong> - Thresher Admin </strong>
           </a>
         </div>
         <div class="right-section-item">
           <a href="{% url 'rq_home' %}">
-            Check Queue
+            <strong> - Check Queue </strong>
           </a>
         </div>
       {% endif %}

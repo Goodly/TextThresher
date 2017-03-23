@@ -10,9 +10,11 @@
       <form enctype="multipart/form-data"
         action="{% url 'researcher:upload_schema' %}"
         method="post">
-        <p>
-          Use this form to upload a schema file containing topics, with questions and answers for those topics.
-        </p>
+        <div class="page-description" id="page">
+          <div class="description-text">
+            Use this form to upload a schema file containing topics, with questions and answers for those topics.
+          </div>
+        </div>
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Upload file</button>

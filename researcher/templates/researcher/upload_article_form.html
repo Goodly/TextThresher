@@ -9,10 +9,11 @@
       <form enctype="multipart/form-data"
         action="{% url 'researcher:upload_articles' %}"
         method="post">
-        <p>
-          You may select a tar file (.tar, .tar.gz, .tgz) containing a correctly formatted
-          corpus of articles for importing.
-        </p>
+        <div class="page-description">
+          <div class="description-text">
+            You may select a tar file (.tar, .tar.gz, .tgz) containing a correctly formatted corpus of articles for importing.
+          </div>
+        </div>
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Upload file</button>
