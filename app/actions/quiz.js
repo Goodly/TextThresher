@@ -38,12 +38,13 @@ export function answerRemoved(question_type, question_id, answer_id) {
   }
 }
 
-export function colorSelected(question_id, answer_id, color) {
+export function colorSelected(question_id, answer_id, color, color_id) {
   return {
     type: 'COLOR_SELECTED',
     question_id,
     answer_id,
-    color
+    color,
+    color_id
   };
 }
 

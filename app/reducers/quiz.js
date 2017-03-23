@@ -73,7 +73,7 @@ export function quiz(state = initialState, action) {
         review: action.review
       }
     case 'COLOR_SELECTED':
-      var assign_dict = { question_id: action.question_id, answer_id: action.answer_id, color: action.color };
+      var assign_dict = { question_id: action.question_id, answer_id: action.answer_id, color: action.color, color_id: action.color_id };
       return {
         ...state,
         highlighter_color: assign_dict
