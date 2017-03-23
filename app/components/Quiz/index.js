@@ -203,16 +203,16 @@ export class Quiz extends Component {
       "padding-right": "58px",
     };
     var answer_container = {
-          "float": "left",
-    "height": "800px",
-    "position": "relative",
-    "width": "50%",
-    "display": "inline-block",
-    "padding-left": "13px",
+      "float": "left",
+      "height": "800px",
+      "position": "relative",
+      "width": "50%",
+      "display": "inline-block",
+      "padding-left": "13px",
     }
 
     return (
-      <div className="quiz" >
+      <div className="quiz clearfix" >
         <div style={highlighter_container}> 
           <div> { this.mapHighlights(highlights) }</div> 
         </div> 
