@@ -1,16 +1,23 @@
 {% extends parent_template|default:"researcher/base.html" %}
 {% block title %} Retrieve remote taskruns {% endblock %}
 {% block content %}
-<h1>Retrieve remote taskruns from Pybossa</h1>
-  <form
-    action="{% url 'researcher:retrieve_taskruns' project.id %}"
-    method="post">
-    <p>
-      Do you want to retrieve taskruns for {{ project.name }} from the remote site
-      <a href="{{ project.get_remote_URL }}">{{ project.get_remote_URL }}</a>?
-    </p>
-    {% csrf_token %}
-    <button type="submit">Retrieve taskruns for {{ project.name }}</button>
-  </form>
+  <div class="content-container">
+    <h1 class="main-label">
+      Retrieve remote taskruns from Pybossa
+    </h1>
+
+    <div class="main-container">
+      <form
+        action="{% url 'researcher:retrieve_taskruns' project.id %}"
+        method="post">
+        <p class="confirm-delete">
+          Do you want to retrieve taskruns for {{ project.name }} from the remote site
+          <a href="{{ project.get_remote_URL }}">{{ project.get_remote_URL }}</a>?
+        </p>
+        {% csrf_token %}
+        <button type="submit" class="delete-button">Retrieve taskruns for {{ project.name }}</button>
+      </form>
+    </div>
+  </div>
 {% endblock %}
 
