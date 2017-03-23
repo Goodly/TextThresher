@@ -89,9 +89,29 @@ h1.main-label {
     width: 260px;
     position: relative;
     margin-right: -300px;
+    background: #f8f8f8;
 }
 
 .main-container {
     float: left;
     width: 100%;
+}
+
+.line-delimiter {
+}
+
+.right-section-label {
+    background: none;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #eaeaea;
+    font-size: 14px;
+    color: #333;
+}
+
+.right-section-item {
+    font-size: 14px;
+    color: #666;
+    padding: 0 20px;
+    margin: 0 0 20px;
 }

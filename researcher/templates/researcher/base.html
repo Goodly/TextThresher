@@ -24,9 +24,11 @@
     <!-- Header -->
     <div class="header">
       <div class="branding">
-        <h1 href="{% url 'researcher:index' %}" class="brand-label">
-          Researcher Tools
-        </h1>
+        <a href="{% url 'researcher:index' %}">
+          <h1 class="brand-label">
+            Researcher Tools
+          </h1>
+        </a>
       </div>
       <div class="user-tools">
         {% if user.is_anonymous %}
