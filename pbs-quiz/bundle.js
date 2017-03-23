@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e06192bc5914388b2162"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "694ec431c090e2806b24"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -6069,7 +6069,7 @@
 	var debugTool = null;
 	
 	if (true) {
-	  var ReactDebugTool = __webpack_require__(276);
+	  var ReactDebugTool = __webpack_require__(277);
 	  debugTool = ReactDebugTool;
 	}
 	
@@ -6840,7 +6840,7 @@
 	var ReactPropTypes = __webpack_require__(794);
 	var ReactVersion = __webpack_require__(796);
 	
-	var onlyChild = __webpack_require__(282);
+	var onlyChild = __webpack_require__(283);
 	var warning = __webpack_require__(4);
 	
 	var createElement = ReactElement.createElement;
@@ -10521,7 +10521,7 @@
 	var ReactEventEmitterMixin = __webpack_require__(748);
 	var ViewportMetrics = __webpack_require__(238);
 	
-	var getVendorPrefixedEventName = __webpack_require__(280);
+	var getVendorPrefixedEventName = __webpack_require__(281);
 	var isEventSupported = __webpack_require__(169);
 	
 	/**
@@ -13000,7 +13000,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".fadein-appear {\n  opacity: 0.01;\n}\n\n.fadein-appear.fadein-appear-active {\n  opacity: 1;\n  transition: opacity .5s ease-in;\n}\n\n.fade-between-enter {\n  opacity: 0.01;\n}\n\n.fade-between-enter.fade-between-enter-active {\n  opacity: 1;\n}\n\n.fade-between-leave {\n  /* hacky disappear for state change */\n  visibility: hidden;\n  height: 0px;\n  width: 0px;\n  opacity: 1;\n}\n\n.fade-between-leave.fade-between-leave-active {\n  opacity: 0;\n}\n\nbody {\n  font-size: 16px;\n}\n\n#react-root {\n  margin-top: 70px;\n}\n", "", {"version":3,"sources":["/./app/containers/App/app/containers/App/app/styles/_fade.scss","/./app/containers/App/app/containers/App/app/containers/App/styles.scss","/./app/containers/App/app/containers/App/app/styles/_variables.scss"],"names":[],"mappings":"AAAA;EACE,cAAa;CACd;;AAED;EACE,WAAU;EACV,gCAA+B;CAChC;;AAED;EACE,cAAa;CACd;;AAED;EACE,WAAU;CACX;;AAED;EACE,sCAAsC;EACtC,mBAAkB;EAClB,YAAW;EACX,WAAU;EACV,WAAU;CACX;;AAED;EACE,WAAU;CACX;;ACtBD;EACE,gBAAe;CAChB;;AAGD;EACE,iBCM0B;CDL3B","file":"styles.scss","sourcesContent":[".fadein-appear {\n  opacity: 0.01;\n}\n\n.fadein-appear.fadein-appear-active {\n  opacity: 1;\n  transition: opacity .5s ease-in;\n}\n\n.fade-between-enter {\n  opacity: 0.01;\n}\n\n.fade-between-enter.fade-between-enter-active {\n  opacity: 1;\n}\n\n.fade-between-leave {\n  /* hacky disappear for state change */\n  visibility: hidden;\n  height: 0px;\n  width: 0px;\n  opacity: 1;\n}\n\n.fade-between-leave.fade-between-leave-active {\n  opacity: 0;\n}\n","// GLOBAL STYLES\n\n@import 'app/styles/_variables.scss';\n@import 'app/styles/_fade.scss';\n\nbody {\n  font-size: 16px;\n}\n\n// Move below Crowdcrafting fixed header\n#react-root {\n  margin-top: $pybossa-header-height;\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 70px;\n"],"sourceRoot":"webpack://"}]);
+	exports.push([module.id, ".fadein-appear {\n  opacity: 0.01;\n}\n\n.fadein-appear.fadein-appear-active {\n  opacity: 1;\n  transition: opacity .5s ease-in;\n}\n\n.fade-between-enter {\n  opacity: 0.01;\n}\n\n.fade-between-enter.fade-between-enter-active {\n  opacity: 1;\n}\n\n.fade-between-leave {\n  /* hacky disappear for state change */\n  visibility: hidden;\n  height: 0px;\n  width: 0px;\n  opacity: 1;\n}\n\n.fade-between-leave.fade-between-leave-active {\n  opacity: 0;\n}\n\nbody {\n  font-size: 16px;\n}\n", "", {"version":3,"sources":["/./app/containers/App/app/containers/App/app/styles/_fade.scss","/./app/containers/App/app/containers/App/app/containers/App/styles.scss"],"names":[],"mappings":"AAAA;EACE,cAAa;CACd;;AAED;EACE,WAAU;EACV,gCAA+B;CAChC;;AAED;EACE,cAAa;CACd;;AAED;EACE,WAAU;CACX;;AAED;EACE,sCAAsC;EACtC,mBAAkB;EAClB,YAAW;EACX,WAAU;EACV,WAAU;CACX;;AAED;EACE,WAAU;CACX;;ACtBD;EACE,gBAAe;CAChB","file":"styles.scss","sourcesContent":[".fadein-appear {\n  opacity: 0.01;\n}\n\n.fadein-appear.fadein-appear-active {\n  opacity: 1;\n  transition: opacity .5s ease-in;\n}\n\n.fade-between-enter {\n  opacity: 0.01;\n}\n\n.fade-between-enter.fade-between-enter-active {\n  opacity: 1;\n}\n\n.fade-between-leave {\n  /* hacky disappear for state change */\n  visibility: hidden;\n  height: 0px;\n  width: 0px;\n  opacity: 1;\n}\n\n.fade-between-leave.fade-between-leave-active {\n  opacity: 0;\n}\n","// GLOBAL STYLES\n\n@import 'app/styles/_variables.scss';\n@import 'app/styles/_fade.scss';\n\nbody {\n  font-size: 16px;\n}\n\n#react-root {\n//  Move below Crowdcrafting fixed header\n//  Don't need for newest version\n//  margin-top: $pybossa-header-height;\n}\n"],"sourceRoot":"webpack://"}]);
 	
 	// exports
 
@@ -15244,13 +15244,13 @@
 	'use strict';
 	
 	var ReactDOMComponentTree = __webpack_require__(15);
-	var ReactDefaultInjection = __webpack_require__(277);
+	var ReactDefaultInjection = __webpack_require__(278);
 	var ReactMount = __webpack_require__(235);
 	var ReactReconciler = __webpack_require__(63);
 	var ReactUpdates = __webpack_require__(30);
 	var ReactVersion = __webpack_require__(761);
 	
-	var findDOMNode = __webpack_require__(278);
+	var findDOMNode = __webpack_require__(279);
 	var getHostComponentFromComposite = __webpack_require__(241);
 	var renderSubtreeIntoContainer = __webpack_require__(783);
 	var warning = __webpack_require__(4);
@@ -18639,11 +18639,11 @@
 	var _prodInvariant = __webpack_require__(7),
 	    _assign = __webpack_require__(11);
 	
-	var ReactCompositeComponent = __webpack_require__(275);
+	var ReactCompositeComponent = __webpack_require__(276);
 	var ReactEmptyComponent = __webpack_require__(231);
 	var ReactHostComponent = __webpack_require__(233);
 	
-	var getNextDebugID = __webpack_require__(279);
+	var getNextDebugID = __webpack_require__(280);
 	var invariant = __webpack_require__(3);
 	var warning = __webpack_require__(4);
 	
@@ -19723,6 +19723,92 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.clearHighlights = clearHighlights;
+	exports.addHighlight = addHighlight;
+	exports.deleteHighlight = deleteHighlight;
+	exports.selectHighlight = selectHighlight;
+	exports.deselectHighlight = deselectHighlight;
+	exports.changeCaseHighlight = changeCaseHighlight;
+	var ADD_HIGHLIGHT = exports.ADD_HIGHLIGHT = 'ADD_HIGHLIGHT';
+	var DELETE_HIGHLIGHT = exports.DELETE_HIGHLIGHT = 'DELETE_HIGHLIGHT';
+	var SELECT_HIGHLIGHT = exports.SELECT_HIGHLIGHT = 'SELECT_HIGHLIGHT';
+	var DESELECT_HIGHLIGHT = exports.DESELECT_HIGHLIGHT = 'DESELECT_HIGHLIGHT';
+	var CLEAR_HIGHLIGHTS = exports.CLEAR_HIGHLIGHTS = 'CLEAR_HIGHLIGHTS';
+	
+	var RESIZE_HIGHLIGHT = exports.RESIZE_HIGHLIGHT = 'CHANGE_HIGHLIGHT';
+	var CHANGE_CASE_HIGHLIGHT = exports.CHANGE_CASE_HIGHLIGHT = 'CHANGE_CASE_HIGHLIGHT';
+	
+	function clearHighlights() {
+	  return { type: CLEAR_HIGHLIGHTS };
+	}
+	function addHighlight(start, end, selectedText, currentTopic, text) {
+	  return { type: ADD_HIGHLIGHT, selection: { start: start, end: end, selectedText: selectedText, currentTopic: currentTopic }, text: text };
+	}
+	
+	function deleteHighlight(source) {
+	  return { type: DELETE_HIGHLIGHT, highlights: source };
+	}
+	
+	function selectHighlight(source) {
+	  return { type: SELECT_HIGHLIGHT, highlight: source };
+	}
+	
+	function deselectHighlight() {
+	  return { type: DESELECT_HIGHLIGHT, highlights: [] };
+	}
+	
+	/*export function resizeHighlight(highlight, start, end) {
+	  return {type: RESIZE_HIGHLIGHT, highlight: highlight, start: start, end: end}
+	}*/
+	
+	function changeCaseHighlight(highlight, case_num) {
+	  return { type: CHANGE_CASE_HIGHLIGHT, highlight: highlight, caseNum: case_num };
+	}
+	;
+	
+	var _temp = function () {
+	  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+	    return;
+	  }
+	
+	  __REACT_HOT_LOADER__.register(ADD_HIGHLIGHT, 'ADD_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(DELETE_HIGHLIGHT, 'DELETE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(SELECT_HIGHLIGHT, 'SELECT_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(DESELECT_HIGHLIGHT, 'DESELECT_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(CLEAR_HIGHLIGHTS, 'CLEAR_HIGHLIGHTS', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(RESIZE_HIGHLIGHT, 'RESIZE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(CHANGE_CASE_HIGHLIGHT, 'CHANGE_CASE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(clearHighlights, 'clearHighlights', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(addHighlight, 'addHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(deleteHighlight, 'deleteHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(selectHighlight, 'selectHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(deselectHighlight, 'deselectHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(changeCaseHighlight, 'changeCaseHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	}();
+
+	;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.activeQuestion = activeQuestion;
 	exports.setReview = setReview;
 	exports.storeQuizTask = storeQuizTask;
@@ -19811,8 +19897,8 @@
 	;
 
 /***/ },
-/* 259 */,
-/* 260 */
+/* 260 */,
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(70)();
@@ -19826,8 +19912,8 @@
 
 
 /***/ },
-/* 261 */,
-/* 262 */
+/* 262 */,
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(70)();
@@ -19841,7 +19927,7 @@
 
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(70)();
@@ -19849,16 +19935,16 @@
 	
 	
 	// module
-	exports.push([module.id, ".quiz {\n  position: relative;\n  width: 90%;\n  margin-top: 70px;\n  margin-bottom: 0px;\n  margin-left: auto;\n  margin-right: auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n\n.quiz__next {\n  margin-top: 20px;\n  float: right;\n  font-family: \"Avenir Next\", \"Montserrat\", sans-serif;\n  font-weight: bold;\n  color: #333;\n}\n\n.quiz__next[disabled] {\n  color: #ededed;\n}\n\n.quiz__question .quiz__context {\n  font-size: 14pt;\n}\n\n.quiz__question .quiz__context span {\n  color: #CCC;\n}\n\n.quiz__question .quiz__context .highlighted {\n  color: #333;\n  font-style: italic;\n}\n\n.prompt {\n  position: relative;\n  opacity: 0;\n  left: 30%;\n  margin-top: 25px;\n  text-align: center;\n  transition: opacity 1s ease;\n}\n\n.prompt.active {\n  opacity: 1;\n}\n", "", {"version":3,"sources":["/./app/components/Quiz/app/components/Quiz/app/components/Quiz/styles.scss","/./app/components/Quiz/app/components/Quiz/app/styles/_variables.scss"],"names":[],"mappings":"AAEA;EAEE,mBAAkB;EAClB,WAAU;EACV,iBCW0B;EDV1B,mBAAkB;EAClB,kBAAiB;EACjB,mBAAkB;EAClB,kBAAiB;EACjB,qBAAoB;CA4BrB;;AA1BC;EACE,iBAAgB;EAChB,aAAY;EACZ,qDCd6C;EDe7C,kBAAiB;EACjB,YCTiB;CDclB;;AAVD;EAQI,eCXkB;CDYnB;;AAGH;EAEI,gBAAe;CAShB;;AAXH;EAIM,YAAW;CACZ;;AALL;EAQM,YAAW;EACX,mBAAkB;CACnB;;AAMP;EACE,mBAAkB;EAClB,WAAU;EAEV,UAAS;EACT,iBAAgB;EAChB,mBAAkB;EAClB,4BAA2B;CAK5B;;AAZD;EASI,WAAU;CACX","file":"styles.scss","sourcesContent":["@import 'app/styles/_variables.scss';\n\n.quiz {\n  // In case we need to position child highlighter_container 'absolute' on scroll\n  position: relative;\n  width: 90%;\n  margin-top: $pybossa-header-height;\n  margin-bottom: 0px;\n  margin-left: auto;\n  margin-right: auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n\n  &__next {\n    margin-top: 20px;\n    float: right;\n    font-family: $font-ui;\n    font-weight: bold;\n    color: $offblack;\n\n    &[disabled] {\n      color: $offwhite;\n    }\n  }\n\n  &__question {\n    .quiz__context {\n      font-size: 14pt;\n      span {\n        color: #CCC;\n      }\n\n      .highlighted {\n        color: #333;\n        font-style: italic;\n      }\n    }\n\n  }\n}\n\n.prompt {\n  position: relative;\n  opacity: 0;\n  //top: 50px;\n  left: 30%;\n  margin-top: 25px;\n  text-align: center;\n  transition: opacity 1s ease;\n  &.active {\n    opacity: 1;\n  }\n\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 70px;\n"],"sourceRoot":"webpack://"}]);
+	exports.push([module.id, ".quiz {\n  position: relative;\n  width: 90%;\n  margin-bottom: 0px;\n  margin-left: auto;\n  margin-right: auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n\n.quiz__next {\n  margin-top: 20px;\n  float: right;\n  font-family: \"Avenir Next\", \"Montserrat\", sans-serif;\n  font-weight: bold;\n  color: #333;\n}\n\n.quiz__next[disabled] {\n  color: #ededed;\n}\n\n.quiz__question .quiz__context {\n  font-size: 14pt;\n}\n\n.quiz__question .quiz__context span {\n  color: #CCC;\n}\n\n.quiz__question .quiz__context .highlighted {\n  color: #333;\n  font-style: italic;\n}\n\n.prompt {\n  position: relative;\n  opacity: 0;\n  left: 30%;\n  margin-top: 25px;\n  text-align: center;\n  transition: opacity 1s ease;\n}\n\n.prompt.active {\n  opacity: 1;\n}\n", "", {"version":3,"sources":["/./app/components/Quiz/app/components/Quiz/app/components/Quiz/styles.scss","/./app/components/Quiz/app/components/Quiz/app/styles/_variables.scss"],"names":[],"mappings":"AAEA;EAEE,mBAAkB;EAClB,WAAU;EAGV,mBAAkB;EAClB,kBAAiB;EACjB,mBAAkB;EAClB,kBAAiB;EACjB,qBAAoB;CA4BrB;;AA1BC;EACE,iBAAgB;EAChB,aAAY;EACZ,qDCf6C;EDgB7C,kBAAiB;EACjB,YCViB;CDelB;;AAVD;EAQI,eCZkB;CDanB;;AAGH;EAEI,gBAAe;CAShB;;AAXH;EAIM,YAAW;CACZ;;AALL;EAQM,YAAW;EACX,mBAAkB;CACnB;;AAMP;EACE,mBAAkB;EAClB,WAAU;EAEV,UAAS;EACT,iBAAgB;EAChB,mBAAkB;EAClB,4BAA2B;CAK5B;;AAZD;EASI,WAAU;CACX","file":"styles.scss","sourcesContent":["@import 'app/styles/_variables.scss';\n\n.quiz {\n  // In case we need to position child highlighter_container 'absolute' on scroll\n  position: relative;\n  width: 90%;\n  // newest Pybossa has container with h1 title that pushes us down\n  //  margin-top: $pybossa-header-height;\n  margin-bottom: 0px;\n  margin-left: auto;\n  margin-right: auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n\n  &__next {\n    margin-top: 20px;\n    float: right;\n    font-family: $font-ui;\n    font-weight: bold;\n    color: $offblack;\n\n    &[disabled] {\n      color: $offwhite;\n    }\n  }\n\n  &__question {\n    .quiz__context {\n      font-size: 14pt;\n      span {\n        color: #CCC;\n      }\n\n      .highlighted {\n        color: #333;\n        font-style: italic;\n      }\n    }\n\n  }\n}\n\n.prompt {\n  position: relative;\n  opacity: 0;\n  //top: 50px;\n  left: 30%;\n  margin-top: 25px;\n  text-align: center;\n  transition: opacity 1s ease;\n  &.active {\n    opacity: 1;\n  }\n\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n$topic-picker-fixed-width: 250px;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 60px;\n"],"sourceRoot":"webpack://"}]);
 	
 	// exports
 
 
 /***/ },
-/* 264 */,
 /* 265 */,
 /* 266 */,
-/* 267 */
+/* 267 */,
+/* 268 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -19903,16 +19989,16 @@
 
 
 /***/ },
-/* 268 */,
 /* 269 */,
 /* 270 */,
-/* 271 */
+/* 271 */,
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(912);
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
@@ -20594,7 +20680,7 @@
 	/* 2 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(271);
+		module.exports = __webpack_require__(272);
 	
 	/***/ },
 	/* 3 */,
@@ -20673,7 +20759,7 @@
 	/******/ ]);
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -20685,7 +20771,7 @@
 	}
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -20713,7 +20799,7 @@
 	}
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21619,7 +21705,7 @@
 	module.exports = ReactCompositeComponent;
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21984,7 +22070,7 @@
 	module.exports = ReactDebugTool;
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22074,7 +22160,7 @@
 	};
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22138,7 +22224,7 @@
 	module.exports = findDOMNode;
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports) {
 
 	/**
@@ -22163,7 +22249,7 @@
 	module.exports = getNextDebugID;
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22268,7 +22354,7 @@
 	module.exports = getVendorPrefixedEventName;
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports) {
 
 	/**
@@ -22331,7 +22417,7 @@
 	module.exports = KeyEscapeUtils;
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22373,7 +22459,7 @@
 	module.exports = onlyChild;
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22395,7 +22481,7 @@
 	
 	var getIteratorFn = __webpack_require__(176);
 	var invariant = __webpack_require__(3);
-	var KeyEscapeUtils = __webpack_require__(281);
+	var KeyEscapeUtils = __webpack_require__(282);
 	var warning = __webpack_require__(4);
 	
 	var SEPARATOR = '.';
@@ -22553,7 +22639,7 @@
 	module.exports = traverseAllChildren;
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22574,7 +22660,7 @@
 	
 	var _highlightTool2 = _interopRequireDefault(_highlightTool);
 	
-	var _highlight = __webpack_require__(297);
+	var _highlight = __webpack_require__(258);
 	
 	var highlightActionCreators = _interopRequireWildcard(_highlight);
 	
@@ -22619,7 +22705,7 @@
 	;
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;(function (self) {
@@ -23121,8 +23207,8 @@
 
 
 /***/ },
-/* 286 */,
-/* 287 */
+/* 287 */,
+/* 288 */
 /***/ function(module, exports) {
 
 	/**
@@ -23178,7 +23264,7 @@
 
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23372,11 +23458,11 @@
 	}
 
 /***/ },
-/* 289 */,
 /* 290 */,
 /* 291 */,
 /* 292 */,
-/* 293 */
+/* 293 */,
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -23410,7 +23496,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23418,8 +23504,8 @@
 	var define = __webpack_require__(494);
 	var ES = __webpack_require__(495);
 	
-	var implementation = __webpack_require__(293);
-	var getPolyfill = __webpack_require__(295);
+	var implementation = __webpack_require__(294);
+	var getPolyfill = __webpack_require__(296);
 	var polyfill = getPolyfill();
 	var shim = __webpack_require__(814);
 	
@@ -23441,12 +23527,12 @@
 
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var implementation = __webpack_require__(293);
+	var implementation = __webpack_require__(294);
 	
 	module.exports = function getPolyfill() {
 		return Array.prototype.includes || implementation;
@@ -23454,93 +23540,7 @@
 
 
 /***/ },
-/* 296 */,
-/* 297 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.clearHighlights = clearHighlights;
-	exports.addHighlight = addHighlight;
-	exports.deleteHighlight = deleteHighlight;
-	exports.selectHighlight = selectHighlight;
-	exports.deselectHighlight = deselectHighlight;
-	exports.changeCaseHighlight = changeCaseHighlight;
-	var ADD_HIGHLIGHT = exports.ADD_HIGHLIGHT = 'ADD_HIGHLIGHT';
-	var DELETE_HIGHLIGHT = exports.DELETE_HIGHLIGHT = 'DELETE_HIGHLIGHT';
-	var SELECT_HIGHLIGHT = exports.SELECT_HIGHLIGHT = 'SELECT_HIGHLIGHT';
-	var DESELECT_HIGHLIGHT = exports.DESELECT_HIGHLIGHT = 'DESELECT_HIGHLIGHT';
-	var CLEAR_HIGHLIGHTS = exports.CLEAR_HIGHLIGHTS = 'CLEAR_HIGHLIGHTS';
-	
-	var RESIZE_HIGHLIGHT = exports.RESIZE_HIGHLIGHT = 'CHANGE_HIGHLIGHT';
-	var CHANGE_CASE_HIGHLIGHT = exports.CHANGE_CASE_HIGHLIGHT = 'CHANGE_CASE_HIGHLIGHT';
-	
-	function clearHighlights() {
-	  return { type: CLEAR_HIGHLIGHTS };
-	}
-	function addHighlight(start, end, selectedText, currentTopic, text) {
-	  return { type: ADD_HIGHLIGHT, selection: { start: start, end: end, selectedText: selectedText, currentTopic: currentTopic }, text: text };
-	}
-	
-	function deleteHighlight(source) {
-	  return { type: DELETE_HIGHLIGHT, highlights: source };
-	}
-	
-	function selectHighlight(source) {
-	  return { type: SELECT_HIGHLIGHT, highlight: source };
-	}
-	
-	function deselectHighlight() {
-	  return { type: DESELECT_HIGHLIGHT, highlights: [] };
-	}
-	
-	/*export function resizeHighlight(highlight, start, end) {
-	  return {type: RESIZE_HIGHLIGHT, highlight: highlight, start: start, end: end}
-	}*/
-	
-	function changeCaseHighlight(highlight, case_num) {
-	  return { type: CHANGE_CASE_HIGHLIGHT, highlight: highlight, caseNum: case_num };
-	}
-	;
-	
-	var _temp = function () {
-	  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
-	    return;
-	  }
-	
-	  __REACT_HOT_LOADER__.register(ADD_HIGHLIGHT, 'ADD_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(DELETE_HIGHLIGHT, 'DELETE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(SELECT_HIGHLIGHT, 'SELECT_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(DESELECT_HIGHLIGHT, 'DESELECT_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(CLEAR_HIGHLIGHTS, 'CLEAR_HIGHLIGHTS', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(RESIZE_HIGHLIGHT, 'RESIZE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(CHANGE_CASE_HIGHLIGHT, 'CHANGE_CASE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(clearHighlights, 'clearHighlights', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(addHighlight, 'addHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(deleteHighlight, 'deleteHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(selectHighlight, 'selectHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(deselectHighlight, 'deselectHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(changeCaseHighlight, 'changeCaseHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	}();
-
-	;
-
-/***/ },
+/* 297 */,
 /* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -23559,11 +23559,11 @@
 	
 	var _project = __webpack_require__(119);
 	
-	var _quiz = __webpack_require__(258);
+	var _quiz = __webpack_require__(259);
 	
-	var _normalizr = __webpack_require__(288);
+	var _normalizr = __webpack_require__(289);
 	
-	var _require = __webpack_require__(285)(),
+	var _require = __webpack_require__(286)(),
 	    fetch = _require.fetch,
 	    Request = _require.Request,
 	    Response = _require.Response,
@@ -43228,7 +43228,7 @@
 	/* 2 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(271);
+		module.exports = __webpack_require__(272);
 	
 	/***/ },
 	/* 3 */
@@ -43891,7 +43891,7 @@
 	/* 2 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(271);
+		module.exports = __webpack_require__(272);
 	
 	/***/ },
 	/* 3 */
@@ -44266,7 +44266,7 @@
 	/***/ 14:
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(273);
+		module.exports = __webpack_require__(274);
 	
 	/***/ }
 	
@@ -45220,7 +45220,7 @@
 	/* 26 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(274);
+		module.exports = __webpack_require__(275);
 	
 	/***/ },
 	/* 27 */
@@ -45956,7 +45956,7 @@
 	/* 14 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(273);
+		module.exports = __webpack_require__(274);
 	
 	/***/ },
 	/* 15 */,
@@ -45986,7 +45986,7 @@
 	/* 34 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(294);
+		module.exports = __webpack_require__(295);
 	
 	/***/ },
 	/* 35 */
@@ -46010,7 +46010,7 @@
 	/* 38 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(272);
+		module.exports = __webpack_require__(273);
 	
 	/***/ }
 	/******/ ]);
@@ -54578,7 +54578,7 @@
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _hoistNonReactStatics = __webpack_require__(287);
+	var _hoistNonReactStatics = __webpack_require__(288);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
@@ -55129,7 +55129,7 @@
 	var ReactElement = __webpack_require__(61);
 	
 	var emptyFunction = __webpack_require__(29);
-	var traverseAllChildren = __webpack_require__(283);
+	var traverseAllChildren = __webpack_require__(284);
 	
 	var twoArgumentPooler = PooledClass.twoArgumentPooler;
 	var fourArgumentPooler = PooledClass.fourArgumentPooler;
@@ -57890,7 +57890,7 @@
 	'use strict';
 	
 	var define = __webpack_require__(494);
-	var getPolyfill = __webpack_require__(295);
+	var getPolyfill = __webpack_require__(296);
 	
 	module.exports = function shimArrayPrototypeIncludes() {
 		var polyfill = getPolyfill();
@@ -57925,7 +57925,7 @@
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
-	var _quiz = __webpack_require__(258);
+	var _quiz = __webpack_require__(259);
 	
 	var _quizTasks = __webpack_require__(298);
 	
@@ -58291,7 +58291,7 @@
 	
 	var _Question2 = _interopRequireDefault(_Question);
 	
-	var _HighlightTool = __webpack_require__(284);
+	var _HighlightTool = __webpack_require__(285);
 	
 	var _HighlightTool2 = _interopRequireDefault(_HighlightTool);
 	
@@ -58629,7 +58629,7 @@
 	
 	var _project = __webpack_require__(119);
 	
-	var _quiz = __webpack_require__(258);
+	var _quiz = __webpack_require__(259);
 	
 	var quizActions = _interopRequireWildcard(_quiz);
 	
@@ -58867,7 +58867,7 @@
 	var sign = __webpack_require__(499);
 	var mod = __webpack_require__(498);
 	
-	var IsCallable = __webpack_require__(267);
+	var IsCallable = __webpack_require__(268);
 	var toPrimitive = __webpack_require__(832);
 	
 	// https://es5.github.io/#x9
@@ -58981,7 +58981,7 @@
 	
 	var isPrimitive = __webpack_require__(500);
 	
-	var isCallable = __webpack_require__(267);
+	var isCallable = __webpack_require__(268);
 	
 	// https://es5.github.io/#x8.12
 	var ES5internalSlots = {
@@ -59023,7 +59023,7 @@
 	var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
 	
 	var isPrimitive = __webpack_require__(500);
-	var isCallable = __webpack_require__(267);
+	var isCallable = __webpack_require__(268);
 	var isDate = __webpack_require__(867);
 	var isSymbol = __webpack_require__(869);
 	
@@ -59750,7 +59750,7 @@
 	var DateRangePickerInputController = __webpack_require__(709).default;
 	var SingleDatePicker = __webpack_require__(894).default;
 	var SingleDatePickerInput = __webpack_require__(711).default;
-	var DayPicker = __webpack_require__(272).default;
+	var DayPicker = __webpack_require__(273).default;
 	var DayPickerRangeController = __webpack_require__(710).default;
 	var CalendarMonthGrid = __webpack_require__(706).default;
 	var CalendarMonth = __webpack_require__(705).default;
@@ -59765,7 +59765,7 @@
 	var isSameDay = __webpack_require__(118).default;
 	
 	var toISODateString = __webpack_require__(897).default;
-	var toLocalizedDateString = __webpack_require__(274).default;
+	var toLocalizedDateString = __webpack_require__(275).default;
 	var toMomentObject = __webpack_require__(156).default;
 	
 	
@@ -60345,7 +60345,7 @@
 	/* 14 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(273);
+		module.exports = __webpack_require__(274);
 	
 	/***/ },
 	/* 15 */
@@ -61856,7 +61856,7 @@
 	/* 26 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(274);
+		module.exports = __webpack_require__(275);
 	
 	/***/ },
 	/* 27 */,
@@ -61869,7 +61869,7 @@
 	/* 34 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(294);
+		module.exports = __webpack_require__(295);
 	
 	/***/ },
 	/* 35 */,
@@ -61883,7 +61883,7 @@
 	/* 38 */
 	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(272);
+		module.exports = __webpack_require__(273);
 	
 	/***/ },
 	/* 39 */
@@ -62043,7 +62043,7 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(260);
+	var content = __webpack_require__(261);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(74)(content, {});
@@ -62052,8 +62052,8 @@
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(260, function() {
-				var newContent = __webpack_require__(260);
+			module.hot.accept(261, function() {
+				var newContent = __webpack_require__(261);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -62070,7 +62070,7 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(262);
+	var content = __webpack_require__(263);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(74)(content, {});
@@ -62079,8 +62079,8 @@
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(262, function() {
-				var newContent = __webpack_require__(262);
+			module.hot.accept(263, function() {
+				var newContent = __webpack_require__(263);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -62096,7 +62096,7 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(263);
+	var content = __webpack_require__(264);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(74)(content, {});
@@ -62105,8 +62105,8 @@
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(263, function() {
-				var newContent = __webpack_require__(263);
+			module.hot.accept(264, function() {
+				var newContent = __webpack_require__(264);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});

@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e06192bc5914388b2162"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "694ec431c090e2806b24"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1762,7 +1762,7 @@
 	var debugTool = null;
 	
 	if (true) {
-	  var ReactDebugTool = __webpack_require__(276);
+	  var ReactDebugTool = __webpack_require__(277);
 	  debugTool = ReactDebugTool;
 	}
 	
@@ -2515,7 +2515,7 @@
 	var ReactPropTypes = __webpack_require__(794);
 	var ReactVersion = __webpack_require__(796);
 	
-	var onlyChild = __webpack_require__(282);
+	var onlyChild = __webpack_require__(283);
 	var warning = __webpack_require__(4);
 	
 	var createElement = ReactElement.createElement;
@@ -6164,7 +6164,7 @@
 	var ReactEventEmitterMixin = __webpack_require__(748);
 	var ViewportMetrics = __webpack_require__(238);
 	
-	var getVendorPrefixedEventName = __webpack_require__(280);
+	var getVendorPrefixedEventName = __webpack_require__(281);
 	var isEventSupported = __webpack_require__(169);
 	
 	/**
@@ -8482,7 +8482,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".fadein-appear {\n  opacity: 0.01;\n}\n\n.fadein-appear.fadein-appear-active {\n  opacity: 1;\n  transition: opacity .5s ease-in;\n}\n\n.fade-between-enter {\n  opacity: 0.01;\n}\n\n.fade-between-enter.fade-between-enter-active {\n  opacity: 1;\n}\n\n.fade-between-leave {\n  /* hacky disappear for state change */\n  visibility: hidden;\n  height: 0px;\n  width: 0px;\n  opacity: 1;\n}\n\n.fade-between-leave.fade-between-leave-active {\n  opacity: 0;\n}\n\nbody {\n  font-size: 16px;\n}\n\n#react-root {\n  margin-top: 70px;\n}\n", "", {"version":3,"sources":["/./app/containers/App/app/containers/App/app/styles/_fade.scss","/./app/containers/App/app/containers/App/app/containers/App/styles.scss","/./app/containers/App/app/containers/App/app/styles/_variables.scss"],"names":[],"mappings":"AAAA;EACE,cAAa;CACd;;AAED;EACE,WAAU;EACV,gCAA+B;CAChC;;AAED;EACE,cAAa;CACd;;AAED;EACE,WAAU;CACX;;AAED;EACE,sCAAsC;EACtC,mBAAkB;EAClB,YAAW;EACX,WAAU;EACV,WAAU;CACX;;AAED;EACE,WAAU;CACX;;ACtBD;EACE,gBAAe;CAChB;;AAGD;EACE,iBCM0B;CDL3B","file":"styles.scss","sourcesContent":[".fadein-appear {\n  opacity: 0.01;\n}\n\n.fadein-appear.fadein-appear-active {\n  opacity: 1;\n  transition: opacity .5s ease-in;\n}\n\n.fade-between-enter {\n  opacity: 0.01;\n}\n\n.fade-between-enter.fade-between-enter-active {\n  opacity: 1;\n}\n\n.fade-between-leave {\n  /* hacky disappear for state change */\n  visibility: hidden;\n  height: 0px;\n  width: 0px;\n  opacity: 1;\n}\n\n.fade-between-leave.fade-between-leave-active {\n  opacity: 0;\n}\n","// GLOBAL STYLES\n\n@import 'app/styles/_variables.scss';\n@import 'app/styles/_fade.scss';\n\nbody {\n  font-size: 16px;\n}\n\n// Move below Crowdcrafting fixed header\n#react-root {\n  margin-top: $pybossa-header-height;\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 70px;\n"],"sourceRoot":"webpack://"}]);
+	exports.push([module.id, ".fadein-appear {\n  opacity: 0.01;\n}\n\n.fadein-appear.fadein-appear-active {\n  opacity: 1;\n  transition: opacity .5s ease-in;\n}\n\n.fade-between-enter {\n  opacity: 0.01;\n}\n\n.fade-between-enter.fade-between-enter-active {\n  opacity: 1;\n}\n\n.fade-between-leave {\n  /* hacky disappear for state change */\n  visibility: hidden;\n  height: 0px;\n  width: 0px;\n  opacity: 1;\n}\n\n.fade-between-leave.fade-between-leave-active {\n  opacity: 0;\n}\n\nbody {\n  font-size: 16px;\n}\n", "", {"version":3,"sources":["/./app/containers/App/app/containers/App/app/styles/_fade.scss","/./app/containers/App/app/containers/App/app/containers/App/styles.scss"],"names":[],"mappings":"AAAA;EACE,cAAa;CACd;;AAED;EACE,WAAU;EACV,gCAA+B;CAChC;;AAED;EACE,cAAa;CACd;;AAED;EACE,WAAU;CACX;;AAED;EACE,sCAAsC;EACtC,mBAAkB;EAClB,YAAW;EACX,WAAU;EACV,WAAU;CACX;;AAED;EACE,WAAU;CACX;;ACtBD;EACE,gBAAe;CAChB","file":"styles.scss","sourcesContent":[".fadein-appear {\n  opacity: 0.01;\n}\n\n.fadein-appear.fadein-appear-active {\n  opacity: 1;\n  transition: opacity .5s ease-in;\n}\n\n.fade-between-enter {\n  opacity: 0.01;\n}\n\n.fade-between-enter.fade-between-enter-active {\n  opacity: 1;\n}\n\n.fade-between-leave {\n  /* hacky disappear for state change */\n  visibility: hidden;\n  height: 0px;\n  width: 0px;\n  opacity: 1;\n}\n\n.fade-between-leave.fade-between-leave-active {\n  opacity: 0;\n}\n","// GLOBAL STYLES\n\n@import 'app/styles/_variables.scss';\n@import 'app/styles/_fade.scss';\n\nbody {\n  font-size: 16px;\n}\n\n#react-root {\n//  Move below Crowdcrafting fixed header\n//  Don't need for newest version\n//  margin-top: $pybossa-header-height;\n}\n"],"sourceRoot":"webpack://"}]);
 	
 	// exports
 
@@ -10733,13 +10733,13 @@
 	'use strict';
 	
 	var ReactDOMComponentTree = __webpack_require__(15);
-	var ReactDefaultInjection = __webpack_require__(277);
+	var ReactDefaultInjection = __webpack_require__(278);
 	var ReactMount = __webpack_require__(235);
 	var ReactReconciler = __webpack_require__(63);
 	var ReactUpdates = __webpack_require__(30);
 	var ReactVersion = __webpack_require__(761);
 	
-	var findDOMNode = __webpack_require__(278);
+	var findDOMNode = __webpack_require__(279);
 	var getHostComponentFromComposite = __webpack_require__(241);
 	var renderSubtreeIntoContainer = __webpack_require__(783);
 	var warning = __webpack_require__(4);
@@ -14128,11 +14128,11 @@
 	var _prodInvariant = __webpack_require__(7),
 	    _assign = __webpack_require__(11);
 	
-	var ReactCompositeComponent = __webpack_require__(275);
+	var ReactCompositeComponent = __webpack_require__(276);
 	var ReactEmptyComponent = __webpack_require__(231);
 	var ReactHostComponent = __webpack_require__(233);
 	
-	var getNextDebugID = __webpack_require__(279);
+	var getNextDebugID = __webpack_require__(280);
 	var invariant = __webpack_require__(3);
 	var warning = __webpack_require__(4);
 	
@@ -15204,8 +15204,94 @@
 /***/ },
 /* 256 */,
 /* 257 */,
-/* 258 */,
-/* 259 */
+/* 258 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.clearHighlights = clearHighlights;
+	exports.addHighlight = addHighlight;
+	exports.deleteHighlight = deleteHighlight;
+	exports.selectHighlight = selectHighlight;
+	exports.deselectHighlight = deselectHighlight;
+	exports.changeCaseHighlight = changeCaseHighlight;
+	var ADD_HIGHLIGHT = exports.ADD_HIGHLIGHT = 'ADD_HIGHLIGHT';
+	var DELETE_HIGHLIGHT = exports.DELETE_HIGHLIGHT = 'DELETE_HIGHLIGHT';
+	var SELECT_HIGHLIGHT = exports.SELECT_HIGHLIGHT = 'SELECT_HIGHLIGHT';
+	var DESELECT_HIGHLIGHT = exports.DESELECT_HIGHLIGHT = 'DESELECT_HIGHLIGHT';
+	var CLEAR_HIGHLIGHTS = exports.CLEAR_HIGHLIGHTS = 'CLEAR_HIGHLIGHTS';
+	
+	var RESIZE_HIGHLIGHT = exports.RESIZE_HIGHLIGHT = 'CHANGE_HIGHLIGHT';
+	var CHANGE_CASE_HIGHLIGHT = exports.CHANGE_CASE_HIGHLIGHT = 'CHANGE_CASE_HIGHLIGHT';
+	
+	function clearHighlights() {
+	  return { type: CLEAR_HIGHLIGHTS };
+	}
+	function addHighlight(start, end, selectedText, currentTopic, text) {
+	  return { type: ADD_HIGHLIGHT, selection: { start: start, end: end, selectedText: selectedText, currentTopic: currentTopic }, text: text };
+	}
+	
+	function deleteHighlight(source) {
+	  return { type: DELETE_HIGHLIGHT, highlights: source };
+	}
+	
+	function selectHighlight(source) {
+	  return { type: SELECT_HIGHLIGHT, highlight: source };
+	}
+	
+	function deselectHighlight() {
+	  return { type: DESELECT_HIGHLIGHT, highlights: [] };
+	}
+	
+	/*export function resizeHighlight(highlight, start, end) {
+	  return {type: RESIZE_HIGHLIGHT, highlight: highlight, start: start, end: end}
+	}*/
+	
+	function changeCaseHighlight(highlight, case_num) {
+	  return { type: CHANGE_CASE_HIGHLIGHT, highlight: highlight, caseNum: case_num };
+	}
+	;
+	
+	var _temp = function () {
+	  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+	    return;
+	  }
+	
+	  __REACT_HOT_LOADER__.register(ADD_HIGHLIGHT, 'ADD_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(DELETE_HIGHLIGHT, 'DELETE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(SELECT_HIGHLIGHT, 'SELECT_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(DESELECT_HIGHLIGHT, 'DESELECT_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(CLEAR_HIGHLIGHTS, 'CLEAR_HIGHLIGHTS', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(RESIZE_HIGHLIGHT, 'RESIZE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(CHANGE_CASE_HIGHLIGHT, 'CHANGE_CASE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(clearHighlights, 'clearHighlights', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(addHighlight, 'addHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(deleteHighlight, 'deleteHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(selectHighlight, 'selectHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(deselectHighlight, 'deselectHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(changeCaseHighlight, 'changeCaseHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
+	}();
+
+	;
+
+/***/ },
+/* 259 */,
+/* 260 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -15245,8 +15331,8 @@
 	;
 
 /***/ },
-/* 260 */,
-/* 261 */
+/* 261 */,
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(70)();
@@ -15260,22 +15346,8 @@
 
 
 /***/ },
-/* 262 */,
 /* 263 */,
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(70)();
-	// imports
-	
-	
-	// module
-	exports.push([module.id, ".topic-highlighter-wrapper {\n  position: relative;\n  padding-bottom: 100px;\n}\n\n.topic-picker-wrapper {\n  position: fixed;\n  top: 70px;\n}\n\n.loading {\n  width: 100%;\n  height: 100%;\n  z-index: 100;\n  top: 0px;\n  left: 0px;\n  position: fixed;\n  background-color: rgba(30, 30, 30, 0.3);\n}\n\n.article {\n  white-space: pre-wrap;\n  line-height: 1.5;\n  font-family: georgia, \"PT Serif\", serif;\n  transition: opacity 0.6s ease;\n  margin: 6em 1em 0em 275px;\n  line-height: 2.2;\n}\n\n.article .article__header-text {\n  padding: 10px;\n  margin-bottom: 10px;\n}\n\n.article #article-container {\n  padding: 1em;\n  border: 1px solid black;\n}\n\n.article button {\n  margin: 2em;\n}\n", "", {"version":3,"sources":["/./app/components/TopicHighlighter/app/components/TopicHighlighter/app/components/TopicHighlighter/styles.scss","/./app/components/TopicHighlighter/app/components/TopicHighlighter/app/styles/_variables.scss","/./app/components/TopicHighlighter/app/components/TopicHighlighter/app/styles/_mixins.scss"],"names":[],"mappings":"AAGA;EACE,mBAAkB;EAElB,sBAAqB;CACtB;;AAED;EACE,gBAAe;EACf,UCM0B;CDL3B;;AAED;EACE,YAAW;EACX,aAAY;EACZ,aAAY;EACZ,SAAQ;EACR,UAAS;EACT,gBAAe;EACf,wCAAuC;CACxC;;AAED;EETE,sBAAqB;EACrB,iBAAgB;EAChB,wCDhByC;EDyBzC,8BCpByB;EDqBzB,0BAAyB;EACzB,iBAAgB;CAejB;;AAnBD;EAOI,cAAa;EACb,oBAAmB;CACpB;;AATH;EAYI,aAAY;EACZ,wBAAuB;CACxB;;AAdH;EAiBI,YAAW;CACZ","file":"styles.scss","sourcesContent":["@import 'app/styles/_mixins.scss';\n@import 'app/styles/_variables.scss';\n\n.topic-highlighter-wrapper {\n  position: relative;\n  // TopicInstructions will be positioned absolute inside this padding.\n  padding-bottom: 100px;\n}\n\n.topic-picker-wrapper {\n  position: fixed;\n  top: $pybossa-header-height;\n}\n\n.loading {\n  width: 100%;\n  height: 100%;\n  z-index: 100;\n  top: 0px;\n  left: 0px;\n  position: fixed;\n  background-color: rgba(30, 30, 30, 0.3);\n}\n\n.article {\n  @include newspaper;\n  transition: opacity $transition-slow;\n  margin: 6em 1em 0em 275px;\n  line-height: 2.2;\n\n  .article__header-text {\n    padding: 10px;\n    margin-bottom: 10px;\n  }\n\n  #article-container {\n    padding: 1em;\n    border: 1px solid black;\n  }\n\n  button {\n    margin: 2em;\n  }\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 70px;\n","@mixin vertical-align($position: relative) {\n  position: $position;\n  top: 50%;\n  transform: translateY(-50%);\n}\n\n@mixin ul-reset {\n  list-style: none;\n  padding-left: initial;\n  margin-bottom: initial;\n}\n\n@mixin newspaper {\n  // text-indent: 20px;\n  // Think about em-dashes and more spaces / automatic <p> creation\n  white-space: pre-wrap;\n  line-height: 1.5;\n  font-family: $font-newspaper;\n}\n"],"sourceRoot":"webpack://"}]);
-	
-	// exports
-
-
-/***/ },
+/* 264 */,
 /* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -15284,13 +15356,27 @@
 	
 	
 	// module
-	exports.push([module.id, ".topic-picker {\n  width: 250px;\n  background-color: #333;\n  overflow: hidden;\n  transition: background 0.3s ease;\n}\n\n.topic-picker .topic-picker__header {\n  background-color: #ededed;\n  padding: 1em;\n  max-height: 200px;\n}\n\n.topic-picker ul.topic-picker__nav {\n  display: -ms-flexbox;\n  display: flex;\n  -ms-flex-direction: column;\n      flex-direction: column;\n  padding: 0;\n  margin-bottom: 0;\n}\n\n.topic-picker ul.topic-picker__nav li {\n  color: #ededed;\n  padding: 1em 2em;\n  font-family: \"Avenir Next\", \"Montserrat\", sans-serif;\n  font-size: 1.1em;\n  background-color: #333;\n  letter-spacing: 2px;\n  text-align: center;\n  text-transform: uppercase;\n  list-style: none;\n  cursor: pointer;\n}\n\n.instructions {\n  position: fixed;\n  bottom: 0;\n  left: 250px;\n  right: 0px;\n  padding: 1em;\n  font-size: 0.9em;\n  background-color: #4c4545;\n  color: white;\n  border: 5px 0 0 0;\n}\n", "", {"version":3,"sources":["/./app/components/TopicPicker/app/components/TopicPicker/app/components/TopicPicker/styles.scss","/./app/components/TopicPicker/app/components/TopicPicker/app/styles/_variables.scss"],"names":[],"mappings":"AAKA;EACE,aAAY;EACZ,uBCEmB;EDDnB,iBAAgB;EAChB,iCCJyB;CD8B1B;;AA9BD;EAOI,0BCFoB;EDGpB,aAAY;EACZ,kBAAiB;CAClB;;AAVH;EAaI,qBAAa;EAAb,cAAa;EACb,2BAAsB;MAAtB,uBAAsB;EACtB,WAAU;EACV,iBAAgB;CAajB;;AA7BH;EAkBM,eCbkB;EDclB,iBAAgB;EAChB,qDCvB2C;EDwB3C,iBAAgB;EAChB,uBClBe;EDmBf,oBAAmB;EACnB,mBAAkB;EAClB,0BAAyB;EACzB,iBAAgB;EAChB,gBAAe;CAChB;;AAIL;EACE,gBAAe;EACf,UAAS;EACT,YAAW;EACX,WAAU;EACV,aAAY;EACZ,iBAAgB;EAChB,0BAA+B;EAC/B,aAAY;EACZ,kBAAiB;CAClB","file":"styles.scss","sourcesContent":["@import 'app/styles/_mixins.scss';\n@import 'app/styles/_variables.scss';\n\n$topic-picker-nav-width: 25%;\n\n.topic-picker {\n  width: 250px;\n  background-color: $offblack;\n  overflow: hidden;\n  transition: background $transition-fast;\n\n  .topic-picker__header {\n    background-color: $offwhite;\n    padding: 1em;\n    max-height: 200px;\n  }\n\n  ul.topic-picker__nav {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n    margin-bottom: 0;\n    li {\n      color: $offwhite;\n      padding: 1em 2em;\n      font-family: $font-ui;\n      font-size: 1.1em;\n      background-color: $offblack;\n      letter-spacing: 2px;\n      text-align: center;\n      text-transform: uppercase;\n      list-style: none;\n      cursor: pointer;\n    }\n  }\n}\n\n.instructions {\n  position: fixed;\n  bottom: 0;\n  left: 250px;\n  right: 0px;\n  padding: 1em;\n  font-size: 0.9em;\n  background-color: rgb(76,69,69);\n  color: white;\n  border: 5px 0 0 0;\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 70px;\n"],"sourceRoot":"webpack://"}]);
+	exports.push([module.id, ".topic-highlighter-wrapper {\n  position: relative;\n  padding-bottom: 100px;\n}\n\n.topic-picker-wrapper {\n  position: fixed;\n  top: 60px;\n}\n\n.loading {\n  width: 100%;\n  height: 100%;\n  z-index: 100;\n  top: 0px;\n  left: 0px;\n  position: fixed;\n  background-color: rgba(30, 30, 30, 0.3);\n}\n\n.article {\n  white-space: pre-wrap;\n  line-height: 1.5;\n  font-family: georgia, \"PT Serif\", serif;\n  transition: opacity 0.6s ease;\n  margin: 6em 1em 0em 275px;\n  line-height: 2.2;\n}\n\n.article .article__header-text {\n  padding: 10px;\n  margin-bottom: 10px;\n}\n\n.article #article-container {\n  padding: 1em;\n  border: 1px solid black;\n}\n\n.article button {\n  margin: 2em;\n}\n\n.container .row {\n  margin-left: 250px !important;\n  padding-left: 0px;\n}\n\n.container .row h1 {\n  font-size: 16px;\n}\n\nfooter {\n  margin-top: 0px !important;\n}\n", "", {"version":3,"sources":["/./app/components/TopicHighlighter/app/components/TopicHighlighter/app/components/TopicHighlighter/styles.scss","/./app/components/TopicHighlighter/app/components/TopicHighlighter/app/styles/_variables.scss","/./app/components/TopicHighlighter/app/components/TopicHighlighter/app/styles/_mixins.scss"],"names":[],"mappings":"AAGA;EACE,mBAAkB;EAElB,sBAAqB;CACtB;;AAED;EACE,gBAAe;EACf,UCQ0B;CDP3B;;AAED;EACE,YAAW;EACX,aAAY;EACZ,aAAY;EACZ,SAAQ;EACR,UAAS;EACT,gBAAe;EACf,wCAAuC;CACxC;;AAED;EETE,sBAAqB;EACrB,iBAAgB;EAChB,wCDhByC;EDyBzC,8BCpByB;EDqBzB,0BAAyB;EACzB,iBAAgB;CAejB;;AAnBD;EAOI,cAAa;EACb,oBAAmB;CACpB;;AATH;EAYI,aAAY;EACZ,wBAAuB;CACxB;;AAdH;EAiBI,YAAW;CACZ;;AAIH;EACE,8BAAiD;EACjD,kBAAiB;CAClB;;AAED;EACE,gBAAe;CAChB;;AAED;EACE,2BAA0B;CAC3B","file":"styles.scss","sourcesContent":["@import 'app/styles/_mixins.scss';\n@import 'app/styles/_variables.scss';\n\n.topic-highlighter-wrapper {\n  position: relative;\n  // TopicInstructions will be positioned absolute inside this padding.\n  padding-bottom: 100px;\n}\n\n.topic-picker-wrapper {\n  position: fixed;\n  top: $pybossa-header-height;\n}\n\n.loading {\n  width: 100%;\n  height: 100%;\n  z-index: 100;\n  top: 0px;\n  left: 0px;\n  position: fixed;\n  background-color: rgba(30, 30, 30, 0.3);\n}\n\n.article {\n  @include newspaper;\n  transition: opacity $transition-slow;\n  margin: 6em 1em 0em 275px;\n  line-height: 2.2;\n\n  .article__header-text {\n    padding: 10px;\n    margin-bottom: 10px;\n  }\n\n  #article-container {\n    padding: 1em;\n    border: 1px solid black;\n  }\n\n  button {\n    margin: 2em;\n  }\n}\n\n// Override Pybossa theme\n.container .row {\n  margin-left: $topic-picker-fixed-width !important;\n  padding-left: 0px;\n}\n\n.container .row h1 {\n  font-size: 16px;\n}\n\nfooter {\n  margin-top: 0px !important;\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n$topic-picker-fixed-width: 250px;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 60px;\n","@mixin vertical-align($position: relative) {\n  position: $position;\n  top: 50%;\n  transform: translateY(-50%);\n}\n\n@mixin ul-reset {\n  list-style: none;\n  padding-left: initial;\n  margin-bottom: initial;\n}\n\n@mixin newspaper {\n  // text-indent: 20px;\n  // Think about em-dashes and more spaces / automatic <p> creation\n  white-space: pre-wrap;\n  line-height: 1.5;\n  font-family: $font-newspaper;\n}\n"],"sourceRoot":"webpack://"}]);
 	
 	// exports
 
 
 /***/ },
 /* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(70)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".topic-picker {\n  width: 250px;\n  background-color: #333;\n  overflow: hidden;\n  transition: background 0.3s ease;\n}\n\n.topic-picker .topic-picker__header {\n  background-color: #ededed;\n  padding: 1em;\n  max-height: 200px;\n}\n\n.topic-picker ul.topic-picker__nav {\n  display: -ms-flexbox;\n  display: flex;\n  -ms-flex-direction: column;\n      flex-direction: column;\n  padding: 0;\n  margin-bottom: 0;\n}\n\n.topic-picker ul.topic-picker__nav li {\n  color: #ededed;\n  padding: 1em 2em;\n  font-family: \"Avenir Next\", \"Montserrat\", sans-serif;\n  font-size: 1.1em;\n  background-color: #333;\n  letter-spacing: 2px;\n  text-align: center;\n  text-transform: uppercase;\n  list-style: none;\n  cursor: pointer;\n}\n\n.instructions {\n  position: fixed;\n  bottom: 0;\n  left: 250px;\n  right: 0px;\n  padding: 1em;\n  font-size: 0.9em;\n  background-color: #4c4545;\n  color: white;\n  border: 5px 0 0 0;\n}\n", "", {"version":3,"sources":["/./app/components/TopicPicker/app/components/TopicPicker/app/components/TopicPicker/styles.scss","/./app/components/TopicPicker/app/components/TopicPicker/app/styles/_variables.scss"],"names":[],"mappings":"AAKA;EACE,aAAY;EACZ,uBCEmB;EDDnB,iBAAgB;EAChB,iCCJyB;CD8B1B;;AA9BD;EAOI,0BCFoB;EDGpB,aAAY;EACZ,kBAAiB;CAClB;;AAVH;EAaI,qBAAa;EAAb,cAAa;EACb,2BAAsB;MAAtB,uBAAsB;EACtB,WAAU;EACV,iBAAgB;CAajB;;AA7BH;EAkBM,eCbkB;EDclB,iBAAgB;EAChB,qDCvB2C;EDwB3C,iBAAgB;EAChB,uBClBe;EDmBf,oBAAmB;EACnB,mBAAkB;EAClB,0BAAyB;EACzB,iBAAgB;EAChB,gBAAe;CAChB;;AAIL;EACE,gBAAe;EACf,UAAS;EACT,YCxB8B;EDyB9B,WAAU;EACV,aAAY;EACZ,iBAAgB;EAChB,0BAA+B;EAC/B,aAAY;EACZ,kBAAiB;CAClB","file":"styles.scss","sourcesContent":["@import 'app/styles/_mixins.scss';\n@import 'app/styles/_variables.scss';\n\n$topic-picker-nav-width: 25%;\n\n.topic-picker {\n  width: 250px;\n  background-color: $offblack;\n  overflow: hidden;\n  transition: background $transition-fast;\n\n  .topic-picker__header {\n    background-color: $offwhite;\n    padding: 1em;\n    max-height: 200px;\n  }\n\n  ul.topic-picker__nav {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n    margin-bottom: 0;\n    li {\n      color: $offwhite;\n      padding: 1em 2em;\n      font-family: $font-ui;\n      font-size: 1.1em;\n      background-color: $offblack;\n      letter-spacing: 2px;\n      text-align: center;\n      text-transform: uppercase;\n      list-style: none;\n      cursor: pointer;\n    }\n  }\n}\n\n.instructions {\n  position: fixed;\n  bottom: 0;\n  left: $topic-picker-fixed-width;\n  right: 0px;\n  padding: 1em;\n  font-size: 0.9em;\n  background-color: rgb(76,69,69);\n  color: white;\n  border: 5px 0 0 0;\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n$topic-picker-fixed-width: 250px;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 60px;\n"],"sourceRoot":"webpack://"}]);
+	
+	// exports
+
+
+/***/ },
+/* 267 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -15308,8 +15394,8 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 267 */,
-/* 268 */
+/* 268 */,
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15331,7 +15417,7 @@
 	
 	var _mapObject2 = _interopRequireDefault(_mapObject);
 	
-	var _prefixer = __webpack_require__(269);
+	var _prefixer = __webpack_require__(270);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -15358,7 +15444,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 269 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -15442,7 +15528,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -15514,11 +15600,11 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 271 */,
 /* 272 */,
 /* 273 */,
 /* 274 */,
-/* 275 */
+/* 275 */,
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16424,7 +16510,7 @@
 	module.exports = ReactCompositeComponent;
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16789,7 +16875,7 @@
 	module.exports = ReactDebugTool;
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16879,7 +16965,7 @@
 	};
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16943,7 +17029,7 @@
 	module.exports = findDOMNode;
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports) {
 
 	/**
@@ -16968,7 +17054,7 @@
 	module.exports = getNextDebugID;
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17073,7 +17159,7 @@
 	module.exports = getVendorPrefixedEventName;
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports) {
 
 	/**
@@ -17136,7 +17222,7 @@
 	module.exports = KeyEscapeUtils;
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17178,7 +17264,7 @@
 	module.exports = onlyChild;
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17200,7 +17286,7 @@
 	
 	var getIteratorFn = __webpack_require__(176);
 	var invariant = __webpack_require__(3);
-	var KeyEscapeUtils = __webpack_require__(281);
+	var KeyEscapeUtils = __webpack_require__(282);
 	var warning = __webpack_require__(4);
 	
 	var SEPARATOR = '.';
@@ -17358,7 +17444,7 @@
 	module.exports = traverseAllChildren;
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17379,7 +17465,7 @@
 	
 	var _highlightTool2 = _interopRequireDefault(_highlightTool);
 	
-	var _highlight = __webpack_require__(297);
+	var _highlight = __webpack_require__(258);
 	
 	var highlightActionCreators = _interopRequireWildcard(_highlight);
 	
@@ -17424,7 +17510,7 @@
 	;
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;(function (self) {
@@ -17926,8 +18012,8 @@
 
 
 /***/ },
-/* 286 */,
-/* 287 */
+/* 287 */,
+/* 288 */
 /***/ function(module, exports) {
 
 	/**
@@ -17983,7 +18069,7 @@
 
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18177,14 +18263,14 @@
 	}
 
 /***/ },
-/* 289 */,
 /* 290 */,
 /* 291 */,
 /* 292 */,
 /* 293 */,
 /* 294 */,
 /* 295 */,
-/* 296 */
+/* 296 */,
+/* 297 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -18217,92 +18303,6 @@
 	  __REACT_HOT_LOADER__.register(storeArticle, 'storeArticle', '/home/norman/goodly/TextThresher/app/actions/article.js');
 	
 	  __REACT_HOT_LOADER__.register(storeSaveAndNext, 'storeSaveAndNext', '/home/norman/goodly/TextThresher/app/actions/article.js');
-	}();
-
-	;
-
-/***/ },
-/* 297 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.clearHighlights = clearHighlights;
-	exports.addHighlight = addHighlight;
-	exports.deleteHighlight = deleteHighlight;
-	exports.selectHighlight = selectHighlight;
-	exports.deselectHighlight = deselectHighlight;
-	exports.changeCaseHighlight = changeCaseHighlight;
-	var ADD_HIGHLIGHT = exports.ADD_HIGHLIGHT = 'ADD_HIGHLIGHT';
-	var DELETE_HIGHLIGHT = exports.DELETE_HIGHLIGHT = 'DELETE_HIGHLIGHT';
-	var SELECT_HIGHLIGHT = exports.SELECT_HIGHLIGHT = 'SELECT_HIGHLIGHT';
-	var DESELECT_HIGHLIGHT = exports.DESELECT_HIGHLIGHT = 'DESELECT_HIGHLIGHT';
-	var CLEAR_HIGHLIGHTS = exports.CLEAR_HIGHLIGHTS = 'CLEAR_HIGHLIGHTS';
-	
-	var RESIZE_HIGHLIGHT = exports.RESIZE_HIGHLIGHT = 'CHANGE_HIGHLIGHT';
-	var CHANGE_CASE_HIGHLIGHT = exports.CHANGE_CASE_HIGHLIGHT = 'CHANGE_CASE_HIGHLIGHT';
-	
-	function clearHighlights() {
-	  return { type: CLEAR_HIGHLIGHTS };
-	}
-	function addHighlight(start, end, selectedText, currentTopic, text) {
-	  return { type: ADD_HIGHLIGHT, selection: { start: start, end: end, selectedText: selectedText, currentTopic: currentTopic }, text: text };
-	}
-	
-	function deleteHighlight(source) {
-	  return { type: DELETE_HIGHLIGHT, highlights: source };
-	}
-	
-	function selectHighlight(source) {
-	  return { type: SELECT_HIGHLIGHT, highlight: source };
-	}
-	
-	function deselectHighlight() {
-	  return { type: DESELECT_HIGHLIGHT, highlights: [] };
-	}
-	
-	/*export function resizeHighlight(highlight, start, end) {
-	  return {type: RESIZE_HIGHLIGHT, highlight: highlight, start: start, end: end}
-	}*/
-	
-	function changeCaseHighlight(highlight, case_num) {
-	  return { type: CHANGE_CASE_HIGHLIGHT, highlight: highlight, caseNum: case_num };
-	}
-	;
-	
-	var _temp = function () {
-	  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
-	    return;
-	  }
-	
-	  __REACT_HOT_LOADER__.register(ADD_HIGHLIGHT, 'ADD_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(DELETE_HIGHLIGHT, 'DELETE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(SELECT_HIGHLIGHT, 'SELECT_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(DESELECT_HIGHLIGHT, 'DESELECT_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(CLEAR_HIGHLIGHTS, 'CLEAR_HIGHLIGHTS', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(RESIZE_HIGHLIGHT, 'RESIZE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(CHANGE_CASE_HIGHLIGHT, 'CHANGE_CASE_HIGHLIGHT', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(clearHighlights, 'clearHighlights', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(addHighlight, 'addHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(deleteHighlight, 'deleteHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(selectHighlight, 'selectHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(deselectHighlight, 'deselectHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
-	
-	  __REACT_HOT_LOADER__.register(changeCaseHighlight, 'changeCaseHighlight', '/home/norman/goodly/TextThresher/app/actions/highlight.js');
 	}();
 
 	;
@@ -26878,7 +26878,7 @@
 	
 	var _react = __webpack_require__(8);
 	
-	var _styleKeeper = __webpack_require__(270);
+	var _styleKeeper = __webpack_require__(271);
 	
 	var _styleKeeper2 = _interopRequireDefault(_styleKeeper);
 	
@@ -27217,7 +27217,7 @@
 	
 	var _appendImportantToEachValue2 = _interopRequireDefault(_appendImportantToEachValue);
 	
-	var _cssRuleSetToString = __webpack_require__(268);
+	var _cssRuleSetToString = __webpack_require__(269);
 	
 	var _cssRuleSetToString2 = _interopRequireDefault(_cssRuleSetToString);
 	
@@ -35319,7 +35319,7 @@
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _hoistNonReactStatics = __webpack_require__(287);
+	var _hoistNonReactStatics = __webpack_require__(288);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
@@ -35870,7 +35870,7 @@
 	var ReactElement = __webpack_require__(61);
 	
 	var emptyFunction = __webpack_require__(29);
-	var traverseAllChildren = __webpack_require__(283);
+	var traverseAllChildren = __webpack_require__(284);
 	
 	var twoArgumentPooler = PooledClass.twoArgumentPooler;
 	var fourArgumentPooler = PooledClass.fourArgumentPooler;
@@ -38642,13 +38642,15 @@
 	
 	var _project = __webpack_require__(119);
 	
-	var _article = __webpack_require__(296);
+	var _article = __webpack_require__(297);
 	
-	var _topicPicker = __webpack_require__(259);
+	var _topicPicker = __webpack_require__(260);
 	
-	var _normalizr = __webpack_require__(288);
+	var _highlight = __webpack_require__(258);
 	
-	var _require = __webpack_require__(285)(),
+	var _normalizr = __webpack_require__(289);
+	
+	var _require = __webpack_require__(286)(),
 	    fetch = _require.fetch,
 	    Request = _require.Request,
 	    Response = _require.Response,
@@ -38713,7 +38715,7 @@
 	    dispatch((0, _article.storeArticle)(task.article));
 	    dispatch((0, _topicPicker.storeTopics)(task.topics));
 	    // Dispatch an action to clear any existing highlights
-	    // dispatch(XXXX);
+	    dispatch((0, _highlight.clearHighlights)());
 	    dispatch({ type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue: taskQueue });
 	    dispatch({ type: 'CURRENT_HIGHLIGHT_TASK', taskId: taskId });
 	
@@ -38883,7 +38885,7 @@
 	
 	var _colors = __webpack_require__(309);
 	
-	var _HighlightTool = __webpack_require__(284);
+	var _HighlightTool = __webpack_require__(285);
 	
 	var _HighlightTool2 = _interopRequireDefault(_HighlightTool);
 	
@@ -38931,6 +38933,7 @@
 	    var _this = _possibleConstructorReturn(this, (TopicHighlighter.__proto__ || Object.getPrototypeOf(TopicHighlighter)).call(this, props));
 	
 	    _this.onSaveAndNext = function () {
+	      window.scrollTo(0, 0);
 	      _this.props.saveAndNext(_this.props.highlights);
 	    };
 	
@@ -38960,7 +38963,7 @@
 	  }, {
 	    key: 'handleScroll',
 	    value: function handleScroll() {
-	      var navbar = document.querySelector('nav.navbar');
+	      var navbar = document.querySelector('.navbar');
 	      var footer = document.querySelector('footer');
 	      var topicPicker = document.querySelector('.topic-picker-wrapper');
 	      var getRect = function getRect(el) {
@@ -39085,7 +39088,7 @@
 	
 	var _styles = __webpack_require__(922);
 	
-	var _topicPicker = __webpack_require__(259);
+	var _topicPicker = __webpack_require__(260);
 	
 	var _colors = __webpack_require__(309);
 	
@@ -39316,11 +39319,11 @@
 	
 	var _reactRedux = __webpack_require__(82);
 	
-	var _article = __webpack_require__(296);
+	var _article = __webpack_require__(297);
 	
 	var articleActionCreators = _interopRequireWildcard(_article);
 	
-	var _topicPicker = __webpack_require__(259);
+	var _topicPicker = __webpack_require__(260);
 	
 	var topicsActionCreators = _interopRequireWildcard(_topicPicker);
 	
@@ -40455,7 +40458,7 @@
 	
 	var _utilsJoinPrefixedRules2 = _interopRequireDefault(_utilsJoinPrefixedRules);
 	
-	var _utilsIsPrefixedValue = __webpack_require__(266);
+	var _utilsIsPrefixedValue = __webpack_require__(267);
 	
 	var _utilsIsPrefixedValue2 = _interopRequireDefault(_utilsIsPrefixedValue);
 	
@@ -40635,7 +40638,7 @@
 	
 	var _utilsJoinPrefixedRules2 = _interopRequireDefault(_utilsJoinPrefixedRules);
 	
-	var _utilsIsPrefixedValue = __webpack_require__(266);
+	var _utilsIsPrefixedValue = __webpack_require__(267);
 	
 	var _utilsIsPrefixedValue2 = _interopRequireDefault(_utilsIsPrefixedValue);
 	
@@ -40716,7 +40719,7 @@
 	
 	var _utilsCapitalizeString2 = _interopRequireDefault(_utilsCapitalizeString);
 	
-	var _utilsIsPrefixedValue = __webpack_require__(266);
+	var _utilsIsPrefixedValue = __webpack_require__(267);
 	
 	var _utilsIsPrefixedValue2 = _interopRequireDefault(_utilsIsPrefixedValue);
 	
@@ -41753,7 +41756,7 @@
 	
 	var _enhancer2 = _interopRequireDefault(_enhancer);
 	
-	var _styleKeeper = __webpack_require__(270);
+	var _styleKeeper = __webpack_require__(271);
 	
 	var _styleKeeper2 = _interopRequireDefault(_styleKeeper);
 	
@@ -41847,7 +41850,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _styleKeeper = __webpack_require__(270);
+	var _styleKeeper = __webpack_require__(271);
 	
 	var _styleKeeper2 = _interopRequireDefault(_styleKeeper);
 	
@@ -41921,7 +41924,7 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var _cssRuleSetToString = __webpack_require__(268);
+	var _cssRuleSetToString = __webpack_require__(269);
 	
 	var _cssRuleSetToString2 = _interopRequireDefault(_cssRuleSetToString);
 	
@@ -42076,7 +42079,7 @@
 	});
 	exports.default = keyframes;
 	
-	var _cssRuleSetToString = __webpack_require__(268);
+	var _cssRuleSetToString = __webpack_require__(269);
 	
 	var _cssRuleSetToString2 = _interopRequireDefault(_cssRuleSetToString);
 	
@@ -42084,7 +42087,7 @@
 	
 	var _hash2 = _interopRequireDefault(_hash);
 	
-	var _prefixer = __webpack_require__(269);
+	var _prefixer = __webpack_require__(270);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -42355,7 +42358,7 @@
 	});
 	exports.default = prefixPlugin;
 	
-	var _prefixer = __webpack_require__(269);
+	var _prefixer = __webpack_require__(270);
 	
 	function prefixPlugin(_ref // eslint-disable-line no-shadow
 	) {
@@ -42885,7 +42888,7 @@
 	
 	var _extends = _assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var ReactDebugTool = __webpack_require__(276);
+	var ReactDebugTool = __webpack_require__(277);
 	var warning = __webpack_require__(4);
 	var alreadyWarned = false;
 	
@@ -43391,13 +43394,13 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var React = __webpack_require__(41);
-	var ReactDefaultInjection = __webpack_require__(277);
-	var ReactCompositeComponent = __webpack_require__(275);
+	var ReactDefaultInjection = __webpack_require__(278);
+	var ReactCompositeComponent = __webpack_require__(276);
 	var ReactReconciler = __webpack_require__(63);
 	var ReactUpdates = __webpack_require__(30);
 	
 	var emptyObject = __webpack_require__(76);
-	var getNextDebugID = __webpack_require__(279);
+	var getNextDebugID = __webpack_require__(280);
 	var invariant = __webpack_require__(3);
 	
 	var NoopInternalComponent = function () {
@@ -43540,7 +43543,7 @@
 	var SyntheticEvent = __webpack_require__(40);
 	var ReactShallowRenderer = __webpack_require__(900);
 	
-	var findDOMNode = __webpack_require__(278);
+	var findDOMNode = __webpack_require__(279);
 	var invariant = __webpack_require__(3);
 	
 	var topLevelTypes = EventConstants.topLevelTypes;
@@ -44100,7 +44103,7 @@
 	var CSSCore = __webpack_require__(835);
 	var ReactTransitionEvents = __webpack_require__(909);
 	
-	var onlyChild = __webpack_require__(282);
+	var onlyChild = __webpack_require__(283);
 	
 	var TICK = 17;
 	
@@ -44267,7 +44270,7 @@
 	
 	var ExecutionEnvironment = __webpack_require__(16);
 	
-	var getVendorPrefixedEventName = __webpack_require__(280);
+	var getVendorPrefixedEventName = __webpack_require__(281);
 	
 	var endEvents = [];
 	
@@ -44576,8 +44579,8 @@
 	
 	'use strict';
 	
-	var KeyEscapeUtils = __webpack_require__(281);
-	var traverseAllChildren = __webpack_require__(283);
+	var KeyEscapeUtils = __webpack_require__(282);
+	var traverseAllChildren = __webpack_require__(284);
 	var warning = __webpack_require__(4);
 	
 	var ReactComponentTreeHook;
@@ -44653,7 +44656,7 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(261);
+	var content = __webpack_require__(262);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(74)(content, {});
@@ -44662,8 +44665,8 @@
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(261, function() {
-				var newContent = __webpack_require__(261);
+			module.hot.accept(262, function() {
+				var newContent = __webpack_require__(262);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -44681,7 +44684,7 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(264);
+	var content = __webpack_require__(265);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(74)(content, {});
@@ -44690,8 +44693,8 @@
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(264, function() {
-				var newContent = __webpack_require__(264);
+			module.hot.accept(265, function() {
+				var newContent = __webpack_require__(265);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -44707,7 +44710,7 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(265);
+	var content = __webpack_require__(266);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(74)(content, {});
@@ -44716,8 +44719,8 @@
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(265, function() {
-				var newContent = __webpack_require__(265);
+			module.hot.accept(266, function() {
+				var newContent = __webpack_require__(266);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});

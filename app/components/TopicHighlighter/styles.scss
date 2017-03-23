@@ -42,3 +42,17 @@
     margin: 2em;
   }
 }
+
+// Override Pybossa theme
+.container .row {
+  margin-left: $topic-picker-fixed-width !important;
+  padding-left: 0px;
+}
+
+.container .row h1 {
+  font-size: 16px;
+}
+
+footer {
+  margin-top: 0px !important;
+}

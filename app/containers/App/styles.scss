@@ -7,7 +7,8 @@ body {
   font-size: 16px;
 }
 
-// Move below Crowdcrafting fixed header
 #react-root {
-  margin-top: $pybossa-header-height;
+//  Move below Crowdcrafting fixed header
+//  Don't need for newest version
+//  margin-top: $pybossa-header-height;
 }
