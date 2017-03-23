@@ -1,9 +1,16 @@
 @import 'app/styles/_variables.scss';
 
 .quiz {
+  // In case we need to position child highlighter_container 'absolute' on scroll
+  position: relative;
   width: 90%;
-  margin: 0 auto;
-  margin-top: 150px;
+  // newest Pybossa has container with h1 title that pushes us down
+  //  margin-top: $pybossa-header-height;
+  margin-bottom: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 15px;
+  padding-bottom: 15px;
 
   &__next {
     margin-top: 20px;

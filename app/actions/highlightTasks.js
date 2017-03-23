@@ -52,8 +52,6 @@ function presentTask(dispatch, getState) {
     dispatch(storeProject(task.project));
     dispatch(storeArticle(task.article));
     dispatch(storeTopics(task.topics));
-    // Dispatch an action to clear any existing highlights
-    // dispatch(XXXX);
     dispatch({type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue});
     dispatch({type: 'CURRENT_HIGHLIGHT_TASK', taskId});
 

@@ -50,7 +50,7 @@ export class TopicHighlighter extends Component {
   // component, rather than jamming code specific to this layout
   // down into the called components.
   handleScroll() {
-    let navbar = document.querySelector('nav.navbar');
+    let navbar = document.querySelector('.navbar');
     let footer = document.querySelector('footer');
     let topicPicker = document.querySelector('.topic-picker-wrapper');
     let getRect = (el) => el.getBoundingClientRect();
@@ -77,7 +77,10 @@ export class TopicHighlighter extends Component {
   // ES2016 property initializer syntax. So the arrow function
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
-    this.props.saveAndNext(this.props.highlights);
+    window.scrollTo(0, 0);
+    // Send copy for async save
+    this.props.saveAndNext(Object.assign({}, this.props.highlights));
+    this.props.clearHighlights();
   }
 
   render() {

@@ -38,7 +38,7 @@ $topic-picker-nav-width: 25%;
 .instructions {
   position: fixed;
   bottom: 0;
-  left: 250px;
+  left: $topic-picker-fixed-width;
   right: 0px;
   padding: 1em;
   font-size: 0.9em;

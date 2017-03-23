@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as articleActionCreators from 'actions/article';
 import * as topicsActionCreators from 'actions/topicPicker';
 import * as projectActionCreators from 'actions/project';
+import * as highlightActionCreators from 'actions/highlight';
 
 // Actions for MockTopicHighlighter
 import * as taskActionCreators from 'actions/highlightTasks';
@@ -16,6 +17,7 @@ const assembledActionCreators = Object.assign(
     articleActionCreators,
     topicsActionCreators,
     projectActionCreators,
+    highlightActionCreators,
     taskActionCreators
 );
 
