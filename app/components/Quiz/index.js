@@ -2,8 +2,25 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import Question from 'components/Question';
+import HighlightTool from 'components/HighlightTool';
 
 import { styles } from './styles.scss';
+
+const COLOR_OPTIONS = [
+  'rgb(241,96,97)',
+  'rgb(253,212,132)',
+  'rgb(175,215,146)',
+  'rgb(168,210,191)',
+  'rgb(255,153,000)',
+  'rgb(102,000,153)',
+  'rgb(000,153,153)',
+  'rgb(255,102,255)',
+  'rgb(000,051,153)',
+  'rgb(153,000,204)',
+  'rgb(70,194,64)',
+  'rgb(94,242,188)'
+];
+
 
 export class Quiz extends Component {
   constructor(props) {
@@ -15,7 +32,8 @@ export class Quiz extends Component {
     onSaveAndNext: React.PropTypes.func,
     answer_selected: React.PropTypes.object,
     queue: React.PropTypes.array,
-    review: React.PropTypes.bool
+    review: React.PropTypes.bool,
+    color_id: React.PropTypes.object
   }
 
   // Babel plugin transform-class-properties allows us to use
@@ -25,6 +43,7 @@ export class Quiz extends Component {
     window.scrollTo(0, 0) 
     this.props.setReview(false);
     this.props.saveAndNext(this.props.answer_selected);
+    this.props.colorSelected(0, 0, '', -1);
   }
 
   dispQuestion(question, showButton) { 
@@ -149,13 +168,19 @@ export class Quiz extends Component {
   }
 
   mapHighlights(highlights) {
-    return highlights.map((elem, i) => {
-      return (
-        <div key={i} style={{ "marginBottom": "10px"}}>
-          <div> { '...' + elem[2] + '...' } </div>
-        </div>
-      );
-    });
+    var topic = [];
+    var text = '';
+    for(var i = 0; i < COLOR_OPTIONS.length; i++) {
+      topic.push({id: i});
+    }
+    for(var i = 0; i < highlights.length; i++) {
+      text += '...' + highlights[i][2] + '...';
+    }
+    var c_id = this.props.color_id.color_id != undefined ? this.props.color_id.color_id : -1;
+    console.log(c_id);
+    return (
+      <HighlightTool text={text} colors={COLOR_OPTIONS} topics={topic} currentTopicId={c_id}/>
+    );
   }
 
   render() {
@@ -164,11 +189,36 @@ export class Quiz extends Component {
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 
     var saveAndNextButton = this.props.review ? <button onClick={ this.onSaveAndNext }>Save and Next</button> : <div></div>;
+    var highlighter_style = {
+      "position": "fixed",
+      "right": "10px",
+      "top": "100px"
+    };
+    var highlighter_container = {
+      "float": "left",
+      "height": "600px",
+      "position": "relative",
+      "width": "50%",
+      "display": "inline-block",
+      "padding-right": "58px",
+    };
+    var answer_container = {
+      "float": "left",
+      "height": "800px",
+      "position": "relative",
+      "width": "50%",
+      "display": "inline-block",
+      "padding-left": "13px",
+    }
 
     return (
-      <div className="quiz" >
-        <div> { this.mapHighlights(highlights) }</div> 
-        <div>
+      <div className="quiz clearfix" >
+        <div style={highlighter_container}> 
+          <div> { this.mapHighlights(highlights) }</div> 
+        </div> 
+
+
+        <div style={answer_container}>
           { question_list }
           { saveAndNextButton }
         </div>

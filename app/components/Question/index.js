@@ -10,11 +10,20 @@ import { updateQueue, removeElemQueue } from '../../actions/quizTasks';
 import { styles } from './styles.scss';
 import 'react-dates/lib/css/_datepicker.css';
 
-const COLOR_OPTIONS = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00',
-          '#ffff33','#a65628','#f781bf','#999999','#8dd3c7',
-          '#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462',
-          '#b3de69','#fccde5','#d9d9d9','#bc80bd','#ccebc5',
-          '#ffed6f'];
+const COLOR_OPTIONS = [
+  'rgb(241,96,97)',
+  'rgb(253,212,132)',
+  'rgb(175,215,146)',
+  'rgb(168,210,191)',
+  'rgb(255,153,000)',
+  'rgb(102,000,153)',
+  'rgb(000,153,153)',
+  'rgb(255,102,255)',
+  'rgb(000,051,153)',
+  'rgb(153,000,204)',
+  'rgb(70,194,64)',
+  'rgb(94,242,188)'
+];
 
 const TYPES = {
   RADIO: 'RADIO',
@@ -49,8 +58,8 @@ const mapDispatchToProps = dispatch => {
     removeAnswer: (type, q_id, a_id) => {
       dispatch(answerRemoved(type, q_id, a_id))
     },
-    setColor: (q_id, a_id, color) => {
-      dispatch(colorSelected(q_id, a_id, color))
+    setColor: (q_id, a_id, color, c_id) => {
+      dispatch(colorSelected(q_id, a_id, color, c_id))
     },
     queueUpdate: (questions, type) => {
       dispatch(updateQueue(questions, type))
@@ -104,9 +113,9 @@ const Question = React.createClass({
               <div key={elem.id}
                 style={{ "color": colorText }}>
                 <div style={ style } 
-                    onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
+                    onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i], i) }}} />
                 <input type="radio" name={controlname} checked={ this.checkInArray(elem.id) }
-                  onChange={ () => { this.radioOnClick(elem, COLOR_OPTIONS[i]) }} />
+                  onChange={ () => { this.radioOnClick(elem, i) }} />
                 { " " + elem.answer_content }
                 { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
               </div>
@@ -134,13 +143,13 @@ const Question = React.createClass({
     return next_question;
   },
 
-  radioOnClick: function(answer, color) {
+  radioOnClick: function(answer, color_id) {
     if(this.checkInArray(answer.id)) {
       this.props.queueRemove(this.findNextQuestions(answer));
     } else {
       this.props.queueUpdate(answer.next_questions, TYPES.RADIO);
     }
-    this.props.setColor(this.props.question.id, answer.id, color);
+    this.props.setColor(this.props.question.id, answer.id, COLOR_OPTIONS[color_id], color_id);
     this.props.selectAnswer(TYPES.RADIO, this.props.question.id, answer.id, answer.text);
   },
 
@@ -163,12 +172,12 @@ const Question = React.createClass({
             <div key={elem.id}
               style={{ "color": colorText, "margin": 10 }}>
               <div style={ style } 
-                  onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i]) }}} />
+                  onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i], i) }}} />
               <span style={{ "verticalAlign": "middle" }}>
                 <input type="checkbox" 
                     name={controlname}
                     checked={ this.checkInArray(elem.id) }
-                    onChange={ () => { this.checkboxOnClick(type, elem, COLOR_OPTIONS[i]) }} />
+                    onChange={ () => { this.checkboxOnClick(type, elem, i) }} />
                 { " " + elem.answer_content }
                 { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
               </span>
@@ -179,8 +188,9 @@ const Question = React.createClass({
     );
   },
 
-  checkboxOnClick: function(type, answer, color) {
+  checkboxOnClick: function(type, answer, color_id) {
     var next_topic = {};
+    var color = COLOR_OPTIONS[color_id];
     for(var i = 0; i < this.props.currTask.topictree.length; i++) {
       var temp = this.props.currTask.topictree[i];
       if(temp.id == answer.next_question) {
@@ -191,7 +201,7 @@ const Question = React.createClass({
     if(this.checkInArray(answer.id)) {
       this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id);
       if(this.props.color && this.props.color.answer_id == answer.id) {
-        this.props.setColor(-1, -1, '');
+        this.props.setColor(-1, -1, '', -1);
       }
       if(type = TYPES.SELECT_SUBTOPIC) {
         this.props.queueRemove(next_topic.questions);
@@ -199,7 +209,7 @@ const Question = React.createClass({
         this.props.queueRemove(this.findNextQuestions(answer));
       }
     } else {
-      this.props.setColor(this.props.question.id, answer.id, color);
+      this.props.setColor(this.props.question.id, answer.id, color, color_id);
       this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id, answer.answer_content);
       if(type == TYPES.SELECT_SUBTOPIC) {
         this.props.queueUpdate(next_topic.questions, TYPES.SELECT_SUBTOPIC);

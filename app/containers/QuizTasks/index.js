@@ -23,7 +23,8 @@ const mapStateToProps = state => {
     question_id: state.quiz.curr_question_id,
     answer_selected: state.quiz.answer_selected,
     saveAndNext: state.quiz.saveAndNext,
-    review: state.quiz.review
+    review: state.quiz.review,
+    color_id: state.quiz.highlighter_color
   }
 };
 
