@@ -4,6 +4,7 @@ import django
 django.setup()
 from django.db import connection
 from django.conf import settings
+from django.db import transaction
 
 import logging
 logger = logging.getLogger(__name__)
@@ -341,48 +342,51 @@ def get_remote_taskrun_worker(profile_id=None, project_id=None, task_id=None, sa
     raise ImproperConfigForRemote(resp.text[:1024])
 
 def save_highlight_taskrun(task, taskrun):
-    taskrun_id = taskrun['id']
-    if ArticleHighlight.objects.filter(pybossa_id=taskrun_id).count():
-        # Previously saved this taskrun
-        return None
-    ah = ArticleHighlight.objects.create(
-        task=task, # safe - from our database, not Pybossa
-        article_id=task.info['article']['id'], # safe - from our database
-        pybossa_user_id=taskrun['user_id'],
-        pybossa_id=taskrun_id,
-        highlight_source=task.task_type,
-        info=taskrun
-    )
-
-    valid_topics_for_task = [ topic['id'] for topic in task.info['topics'] ]
-    highlights = taskrun['info']
-    # See thresher.views.collectQuizTasksForTopic for export code
-    # Our highlight_groups model allows us to aggregate a set
-    # of highlights for a given article, topic, and case_number.
-    # So let's aggregate accordingly.
-    sortkey = lambda x: (x['topic'], x['caseNum'])
-    hg_by_topic_case = sorted(highlights, key=sortkey)
-
-    for (topic_id, case_number), hg in groupby(hg_by_topic_case, key=sortkey):
-        # Verify this is a valid topic_id, since it is externally provided
-        if topic_id not in valid_topics_for_task:
-            raise InvalidTaskRun("Valid topic ids for task are %s, received %d" %
-                                 (str(valid_topics_for_task), topic_id))
-        hg_list = list(hg)
-        offsets=[ [x['start'], x['end'], x['text']] for x in hg_list ]
-        highlight_text=[ [x['text']] for x in hg_list ]
-        HighlightGroup.objects.create(
-            article_highlight=ah,
-            topic_id=topic_id,
-            case_number=case_number,
-            highlight_text=json.dumps(highlight_text),
-            offsets=json.dumps(offsets)
+    # If an exception occurs loading HighlightGroups, roll back everything
+    with transaction.atomic():
+        taskrun_id = taskrun['id']
+        if ArticleHighlight.objects.filter(pybossa_id=taskrun_id).count():
+            # Previously saved this taskrun
+            return None
+        ah = ArticleHighlight.objects.create(
+            task=task, # safe - from our database, not Pybossa
+            article_id=task.info['article']['id'], # safe - from our database
+            pybossa_user_id=taskrun['user_id'],
+            pybossa_id=taskrun_id,
+            highlight_source=task.task_type,
+            info=taskrun
         )
 
-    return ah
+        valid_topics_for_task = [ topic['id'] for topic in task.info['topics'] ]
+        highlights = taskrun['info']
+        # See thresher.views.collectQuizTasksForTopic for export code
+        # Our highlight_groups model allows us to aggregate a set
+        # of highlights for a given article, topic, and case_number.
+        # So let's aggregate accordingly.
+        sortkey = lambda x: (x['topic'], x['caseNum'])
+        hg_by_topic_case = sorted(highlights, key=sortkey)
+
+        for (topic_id, case_number), hg in groupby(hg_by_topic_case, key=sortkey):
+            # Verify this is a valid topic_id, since it is externally provided
+            if topic_id not in valid_topics_for_task:
+                raise InvalidTaskRun("Valid topic ids for task are %s, received %d" %
+                                     (str(valid_topics_for_task), topic_id))
+            hg_list = list(hg)
+            offsets=[ [x['start'], x['end'], x['text']] for x in hg_list ]
+            highlight_text=[ [x['text']] for x in hg_list ]
+            HighlightGroup.objects.create(
+                article_highlight=ah,
+                topic_id=topic_id,
+                case_number=case_number,
+                highlight_text=json.dumps(highlight_text),
+                offsets=json.dumps(offsets)
+            )
+
+        return ah
 
 def save_quiz_taskrun(task, taskrun):
-    return False
+    with transaction.atomic():
+        return False
 
 
 if __name__ == '__main__':
