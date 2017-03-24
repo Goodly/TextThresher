@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "806369dd325846d42812"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "fa841a34233567b47065"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -24385,7 +24385,11 @@
 	
 	  switch (action.type) {
 	    case 'CLEAR_HIGHLIGHTS':
-	      return Object.assign({}, state, { highlights: [] });
+	      return Object.assign({}, state, {
+	        highlights: [],
+	        selectedHighlight: [],
+	        caseMax: 1
+	      });
 	    case 'DESELECT_HIGHLIGHT':
 	      return Object.assign({}, state, { selectedHighlight: [] });
 	    case 'ADD_HIGHLIGHT':

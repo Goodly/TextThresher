@@ -78,8 +78,7 @@ export class TopicHighlighter extends Component {
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
     window.scrollTo(0, 0);
-    // Send copy for async save
-    this.props.saveAndNext(Object.assign({}, this.props.highlights));
+    this.props.saveAndNext(this.props.highlights);
     this.props.clearHighlights();
   }
 
