@@ -10,7 +10,7 @@ let taskSchema = new Schema('tasks');
 let taskList = { results: arrayOf(taskSchema) };
 
 function storeTasks(dispatch, pagedTasks) {
-  // Until back-end returns task ids, copy article id as the task id
+  // Django backend doesn't provide task ids, so copy article id as the task id
   pagedTasks.results = pagedTasks.results.map(
     (task) => ({...task, id: task.article.id})
   );
@@ -26,22 +26,6 @@ function storeTasks(dispatch, pagedTasks) {
   dispatch({type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue});
 }
 
-function postArticleHighlights(highlightsString, articleId) {
-  return (dispatch) => {
-    dispatch({ type: 'POST_HIGHLIGHTS'});
-
-    return fetch(`http://localhost:5000/api/postHighlights/${articleId}`, {
-        method: 'POST',
-        body: highlightsString
-      })
-      .then(response => response.json())
-      .then(
-        (response) => dispatch({ type: 'POST_HIGHLIGHTS_SUCCESS'}, response),
-        (error) => dispatch({ type: 'POST_HIGHLIGHTS_FAIL', error})
-      );
-  };
-}
-
 function presentTask(dispatch, getState) {
   const taskReducer = getState().highlightTasks;
   const taskDB = taskReducer.taskDatabase.entities.tasks;
@@ -53,7 +37,6 @@ function presentTask(dispatch, getState) {
     dispatch(storeArticle(task.article));
     dispatch(storeTopics(task.topics));
     dispatch({type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue});
-    dispatch({type: 'CURRENT_HIGHLIGHT_TASK', taskId});
 
     function onSaveAndNext(highlights) {
       // dispatch save highight action which will return a promise, so
@@ -62,7 +45,7 @@ function presentTask(dispatch, getState) {
       presentTask(dispatch, getState);
     }
     // Tricky part: We have loaded the task, now we also provide the
-    // callback that the U button can use to save the data and trigger
+    // callback that the UI button can use to save the data and trigger
     // loading the next task.
     dispatch(storeSaveAndNext(onSaveAndNext));
   } else {
@@ -70,10 +53,6 @@ function presentTask(dispatch, getState) {
     console.log('No more tasks.');
     throw new Error('No more tasks.');
   }
-}
-
-export function runNextTask() {
-  return (dispatch, getState) => presentTask(dispatch, getState);
 }
 
 export function fetchHighlightTasks(pageParam) {

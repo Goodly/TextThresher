@@ -1,24 +1,24 @@
-import { TopicHighlighter } from 'components/TopicHighlighter';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { TopicHighlighter } from 'components/TopicHighlighter';
+import { storeProject } from 'actions/project';
 import * as articleActionCreators from 'actions/article';
 import * as topicsActionCreators from 'actions/topicPicker';
-import * as projectActionCreators from 'actions/project';
 import * as highlightActionCreators from 'actions/highlight';
 
-// Actions for MockTopicHighlighter
-import * as taskActionCreators from 'actions/highlightTasks';
-// API for RealTopicHighlighter
+// Function to start MockTopicHighlighter data loading cycle
+import { fetchHighlightTasks } from 'actions/highlightTasks';
+// Function to start RealTopicHighlighter data loading cycle
 import runPybossaTasks from 'pybossa/highlight';
 
 const assembledActionCreators = Object.assign(
     {},
     articleActionCreators,
     topicsActionCreators,
-    projectActionCreators,
     highlightActionCreators,
-    taskActionCreators
+    { storeProject },
+    { fetchHighlightTasks }
 );
 
 const mapStateToProps = state => {

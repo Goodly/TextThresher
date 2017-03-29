@@ -1,15 +1,15 @@
-const initialState = Object.assign({
+const initialState = {
   taskDatabase: {},
   taskQueue: [],
-}, {});
+};
 
+// Note that this reducer is just used for the managing a
+// the MockQuiz queue of tasks that comes from Django directly.
+// This code does not get used when running on a Pybossa page.
 export function quizTasks(state = initialState, action) {
   switch (action.type) {
     case 'FETCH_QUIZ_TASKS':
-      return {
-        ...state,
-        taskQueue: [],
-      }
+      return Object.assign({}, initialState, { isFetching: true });
     case 'FETCH_QUIZ_TASKS_SUCCESS':
       return {
         ...state,

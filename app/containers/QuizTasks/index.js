@@ -5,9 +5,9 @@ import { Quiz } from 'components/Quiz';
 import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
 
-// Actions for MockQuiz
+// Function to start MockQuiz data loading cycle
 import { fetchQuizTasks } from 'actions/quizTasks';
-// API for RealQuiz
+// Function to start RealQuiz data loading cycle
 import runPybossaTasks from 'pybossa/quiz';
 
 const assembledActionCreators = Object.assign(

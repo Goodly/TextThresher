@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 
 import { SingleDatePicker } from 'react-dates';
 import moment from 'moment';
-import { answerSelected, answerRemoved, colorSelected } from '../../actions/quiz';
-import { updateQueue, removeElemQueue } from '../../actions/quizTasks';
+import { answerSelected, answerRemoved, colorSelected,
+         updateQueue, removeElemQueue } from '../../actions/quiz';
+
 
 /* component styles */
 import { styles } from './styles.scss';
