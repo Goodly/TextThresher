@@ -22,10 +22,7 @@ function getProjectName() {
   }
 }
 
-export default function runPybossaTasks(storeArticle,
-                                        storeProject,
-                                        storeTopics,
-                                        storeSave) {
+export default function fetchPybossaHighlights(container) {
   function loadUserProgress() {
     pybossa.userProgress(getProjectName()).done(function(data){
       // Dispatch this info to the redux store for display
@@ -48,9 +45,9 @@ export default function runPybossaTasks(storeArticle,
     if ( !$.isEmptyObject(task) ) {
       loadUserProgress();
       // Update redux store with info
-      storeProject(task.info.project);
-      storeTopics(task.info.topics);
-      storeArticle(task.info.article);
+      container.props.storeProject(task.info.project);
+      container.props.storeTopics(task.info.topics);
+      container.props.storeArticle(task.info.article);
 
       function onSaveAndNext(highlights) {
         pybossa.saveTask(task.id, highlights).done(function() {
@@ -61,11 +58,11 @@ export default function runPybossaTasks(storeArticle,
       // the store, we also provide this callback that the UI button
       // can use to call the function above to save the data and trigger
       // loading the next task with the deferred.resolve(task) call.
-      storeSave(onSaveAndNext);
+      container.props.storeSaveAndNext(onSaveAndNext);
     } else {
       // Displatch to store saying we are done with tasks
       // storeTasksDone() #TODO
-      storeSave( ()=> {} );
+      container.props.storeSaveAndNext( ()=> {} );
     }
   });
 

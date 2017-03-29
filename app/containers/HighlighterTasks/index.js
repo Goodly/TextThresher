@@ -13,9 +13,9 @@ import * as highlightActions from 'actions/highlight';
 import * as highlightTaskActions from 'actions/djangoHighlights';
 
 // Function to start MockTopicHighlighter data loading cycle
-import fetchHighlightTasks from 'django/highlight';
+import fetchDjangoHighlights from 'django/highlight';
 // Function to start RealTopicHighlighter data loading cycle
-import runPybossaTasks from 'pybossa/highlight';
+import fetchPybossaHighlights from 'pybossa/highlight';
 
 const assembledActionCreators = Object.assign(
     { storeProject },
@@ -53,7 +53,7 @@ export class MockHighlighter extends TopicHighlighter {
 
   componentDidMount() {
     super.componentDidMount();
-    fetchHighlightTasks(this);
+    fetchDjangoHighlights(this);
   }
 };
 
@@ -68,9 +68,6 @@ export class RealHighlighter extends TopicHighlighter {
 
   componentDidMount() {
     super.componentDidMount();
-    runPybossaTasks(this.props.storeArticle,
-                    this.props.storeProject,
-                    this.props.storeTopics,
-                    this.props.storeSaveAndNext);
+    fetchPybossaHighlights(this);
   }
 };

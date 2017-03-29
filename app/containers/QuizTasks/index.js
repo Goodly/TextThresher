@@ -11,9 +11,9 @@ import * as quizActions from 'actions/quiz';
 import * as quizTaskActions from 'actions/djangoQuiz';
 
 // Function to start MockQuiz data loading cycle
-import fetchQuizTasks from 'django/quiz';
+import fetchDjangoQuiz from 'django/quiz';
 // Function to start RealQuiz data loading cycle
-import runPybossaTasks from 'pybossa/quiz';
+import fetchPybossaQuiz from 'pybossa/quiz';
 
 const assembledActionCreators = Object.assign(
   { storeProject },
@@ -49,7 +49,7 @@ export class MockQuiz extends Quiz {
   }
 
   componentDidMount() {
-    fetchQuizTasks(this);
+    fetchDjangoQuiz(this);
   }
 };
 
@@ -63,8 +63,6 @@ export class RealQuiz extends Quiz {
   }
 
   componentDidMount() {
-    runPybossaTasks(this.props.storeQuizTask,
-                    this.props.storeProject,
-                    this.props.storeSaveAndNext);
+    fetchPybossaQuiz(this);
   }
 };
