@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a096086f6566a2b97cb8"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "69695e600a7d04ba8e44"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -57782,124 +57782,6 @@
 	  value: true
 	});
 	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	exports.fetchQuizTasks = fetchQuizTasks;
-	
-	var _project = __webpack_require__(119);
-	
-	var _quiz = __webpack_require__(259);
-	
-	var _normalizr = __webpack_require__(289);
-	
-	var _require = __webpack_require__(286)(),
-	    fetch = _require.fetch,
-	    Request = _require.Request,
-	    Response = _require.Response,
-	    Headers = _require.Headers;
-	
-	var taskSchema = new _normalizr.Schema('tasks');
-	var taskList = (0, _normalizr.arrayOf)(taskSchema);
-	
-	function storeTasks(dispatch, pagedTasks) {
-	  // Actually, the paged quiz endpoint isn't ready yet, this is already a task list
-	  // Django backend doesn't provide task ids, so copy article id as the task id
-	  pagedTasks = pagedTasks.map(function (task, index) {
-	    return _extends({}, task, { id: index * 10 + 5 });
-	  });
-	  // Normalize data structure and dispatch
-	  var taskDatabase = (0, _normalizr.normalize)(pagedTasks, taskList);
-	  // Replace or push task IDs to queue
-	  dispatch({ type: 'FETCH_QUIZ_TASKS_SUCCESS', taskDatabase: taskDatabase });
-	  // Make a copy of the unique task Ids collected by normalize
-	  var taskQueue = taskDatabase.result.slice();
-	  dispatch({ type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue: taskQueue });
-	}
-	
-	function presentTask(dispatch, getState) {
-	  var quizTasks = getState().quizTasks;
-	  var taskDB = quizTasks.taskDatabase.entities.tasks;
-	  var taskQueue = quizTasks.taskQueue.slice();
-	  if (taskQueue.length > 0) {
-	    var onSaveAndNext = function onSaveAndNext(answers) {
-	      // TODO: dispatch save quiz answers which will return a promise, so
-	      // promise.then( call this ) to load next task
-	      // or better, deep copy answers and don't wait to show next task
-	      presentTask(dispatch, getState);
-	    };
-	    // Tricky part: We have loaded the task, now we also provide the
-	    // callback that the UI button can use to save the data and trigger
-	    // loading the next task.
-	
-	
-	    var taskId = taskQueue.shift();
-	    var task = taskDB[taskId];
-	
-	    dispatch({ type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue: taskQueue });
-	    dispatch((0, _project.storeProject)(task.project));
-	    dispatch((0, _quiz.storeQuizTask)(task));
-	
-	    dispatch((0, _quiz.storeSaveAndNext)(onSaveAndNext));
-	  } else {
-	    // TODO: update store with done flag and show nicely in UI
-	    console.log('No more tasks.');
-	    throw new Error('No more tasks.');
-	  }
-	}
-	
-	function fetchQuizTasks() {
-	  return function (dispatch, getState) {
-	    dispatch({ type: 'FETCH_QUIZ_TASKS' });
-	    var host = "http://localhost:5000";
-	    return fetch(host + '/api/quiz_tasks/?format=json').then(function (response) {
-	      return response.json();
-	    }).then(function (pagedTasks) {
-	      storeTasks(dispatch, pagedTasks);
-	      presentTask(dispatch, getState);
-	    }, function (error) {
-	      return dispatch({ type: 'FETCH_QUIZ_TASKS_FAIL', error: error });
-	    });
-	  };
-	}
-	;
-	
-	var _temp = function () {
-	  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
-	    return;
-	  }
-	
-	  __REACT_HOT_LOADER__.register(fetch, 'fetch', '/home/norman/goodly/TextThresher/app/actions/quizTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(Request, 'Request', '/home/norman/goodly/TextThresher/app/actions/quizTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(Response, 'Response', '/home/norman/goodly/TextThresher/app/actions/quizTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(Headers, 'Headers', '/home/norman/goodly/TextThresher/app/actions/quizTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(taskSchema, 'taskSchema', '/home/norman/goodly/TextThresher/app/actions/quizTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(taskList, 'taskList', '/home/norman/goodly/TextThresher/app/actions/quizTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(storeTasks, 'storeTasks', '/home/norman/goodly/TextThresher/app/actions/quizTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(presentTask, 'presentTask', '/home/norman/goodly/TextThresher/app/actions/quizTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(fetchQuizTasks, 'fetchQuizTasks', '/home/norman/goodly/TextThresher/app/actions/quizTasks.js');
-	}();
-
-	;
-
-/***/ },
-/* 816 */,
-/* 817 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
 	var _react = __webpack_require__(8);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -58252,7 +58134,7 @@
 	;
 
 /***/ },
-/* 818 */
+/* 816 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58272,7 +58154,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _Question = __webpack_require__(817);
+	var _Question = __webpack_require__(815);
 	
 	var _Question2 = _interopRequireDefault(_Question);
 	
@@ -58585,10 +58467,10 @@
 	;
 
 /***/ },
+/* 817 */,
+/* 818 */,
 /* 819 */,
-/* 820 */,
-/* 821 */,
-/* 822 */
+/* 820 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58611,7 +58493,7 @@
 	
 	var _reactRedux = __webpack_require__(82);
 	
-	var _Quiz3 = __webpack_require__(818);
+	var _Quiz3 = __webpack_require__(816);
 	
 	var _project = __webpack_require__(119);
 	
@@ -58619,11 +58501,11 @@
 	
 	var quizActions = _interopRequireWildcard(_quiz);
 	
-	var _quizTasks = __webpack_require__(815);
+	var _quiz2 = __webpack_require__(822);
 	
-	var _quiz2 = __webpack_require__(824);
+	var _quiz3 = __webpack_require__(824);
 	
-	var _quiz3 = _interopRequireDefault(_quiz2);
+	var _quiz4 = _interopRequireDefault(_quiz3);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -58635,7 +58517,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var assembledActionCreators = Object.assign({ storeProject: _project.storeProject }, { fetchQuizTasks: _quizTasks.fetchQuizTasks }, quizActions);
+	var assembledActionCreators = Object.assign({ storeProject: _project.storeProject }, { fetchQuizTasks: _quiz2.fetchQuizTasks }, quizActions);
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
@@ -58685,7 +58567,7 @@
 	  _createClass(RealQuiz, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      (0, _quiz3.default)(this.props.storeQuizTask, this.props.storeProject, this.props.storeSaveAndNext);
+	      (0, _quiz4.default)(this.props.storeQuizTask, this.props.storeProject, this.props.storeSaveAndNext);
 	    }
 	  }]);
 	
@@ -58706,6 +58588,124 @@
 	  __REACT_HOT_LOADER__.register(MockQuiz, 'MockQuiz', '/home/norman/goodly/TextThresher/app/containers/QuizTasks/index.js');
 	
 	  __REACT_HOT_LOADER__.register(RealQuiz, 'RealQuiz', '/home/norman/goodly/TextThresher/app/containers/QuizTasks/index.js');
+	}();
+
+	;
+
+/***/ },
+/* 821 */,
+/* 822 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.fetchQuizTasks = fetchQuizTasks;
+	
+	var _project = __webpack_require__(119);
+	
+	var _quiz = __webpack_require__(259);
+	
+	var _normalizr = __webpack_require__(289);
+	
+	var _require = __webpack_require__(286)(),
+	    fetch = _require.fetch,
+	    Request = _require.Request,
+	    Response = _require.Response,
+	    Headers = _require.Headers;
+	
+	var taskSchema = new _normalizr.Schema('tasks');
+	var taskList = (0, _normalizr.arrayOf)(taskSchema);
+	
+	function storeTasks(dispatch, pagedTasks) {
+	  // Actually, the paged quiz endpoint isn't ready yet, this is already a task list
+	  // Django backend doesn't provide task ids, so copy article id as the task id
+	  pagedTasks = pagedTasks.map(function (task, index) {
+	    return _extends({}, task, { id: index * 10 + 5 });
+	  });
+	  // Normalize data structure and dispatch
+	  var taskDatabase = (0, _normalizr.normalize)(pagedTasks, taskList);
+	  // Replace or push task IDs to queue
+	  dispatch({ type: 'FETCH_QUIZ_TASKS_SUCCESS', taskDatabase: taskDatabase });
+	  // Make a copy of the unique task Ids collected by normalize
+	  var taskQueue = taskDatabase.result.slice();
+	  dispatch({ type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue: taskQueue });
+	}
+	
+	function presentTask(dispatch, getState) {
+	  var quizTasks = getState().quizTasks;
+	  var taskDB = quizTasks.taskDatabase.entities.tasks;
+	  var taskQueue = quizTasks.taskQueue.slice();
+	  if (taskQueue.length > 0) {
+	    var onSaveAndNext = function onSaveAndNext(answers) {
+	      // TODO: dispatch save quiz answers which will return a promise, so
+	      // promise.then( call this ) to load next task
+	      // or better, deep copy answers and don't wait to show next task
+	      presentTask(dispatch, getState);
+	    };
+	    // Tricky part: We have loaded the task, now we also provide the
+	    // callback that the UI button can use to save the data and trigger
+	    // loading the next task.
+	
+	
+	    var taskId = taskQueue.shift();
+	    var task = taskDB[taskId];
+	
+	    dispatch({ type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue: taskQueue });
+	    dispatch((0, _project.storeProject)(task.project));
+	    dispatch((0, _quiz.storeQuizTask)(task));
+	
+	    dispatch((0, _quiz.storeSaveAndNext)(onSaveAndNext));
+	  } else {
+	    // TODO: update store with done flag and show nicely in UI
+	    console.log('No more tasks.');
+	    throw new Error('No more tasks.');
+	  }
+	}
+	
+	function fetchQuizTasks() {
+	  return function (dispatch, getState) {
+	    dispatch({ type: 'FETCH_QUIZ_TASKS' });
+	    var host = "http://localhost:5000";
+	    return fetch(host + '/api/quiz_tasks/?format=json').then(function (response) {
+	      return response.json();
+	    }).then(function (pagedTasks) {
+	      storeTasks(dispatch, pagedTasks);
+	      presentTask(dispatch, getState);
+	    }, function (error) {
+	      return dispatch({ type: 'FETCH_QUIZ_TASKS_FAIL', error: error });
+	    });
+	  };
+	}
+	;
+	
+	var _temp = function () {
+	  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+	    return;
+	  }
+	
+	  __REACT_HOT_LOADER__.register(fetch, 'fetch', '/home/norman/goodly/TextThresher/app/django/quiz.js');
+	
+	  __REACT_HOT_LOADER__.register(Request, 'Request', '/home/norman/goodly/TextThresher/app/django/quiz.js');
+	
+	  __REACT_HOT_LOADER__.register(Response, 'Response', '/home/norman/goodly/TextThresher/app/django/quiz.js');
+	
+	  __REACT_HOT_LOADER__.register(Headers, 'Headers', '/home/norman/goodly/TextThresher/app/django/quiz.js');
+	
+	  __REACT_HOT_LOADER__.register(taskSchema, 'taskSchema', '/home/norman/goodly/TextThresher/app/django/quiz.js');
+	
+	  __REACT_HOT_LOADER__.register(taskList, 'taskList', '/home/norman/goodly/TextThresher/app/django/quiz.js');
+	
+	  __REACT_HOT_LOADER__.register(storeTasks, 'storeTasks', '/home/norman/goodly/TextThresher/app/django/quiz.js');
+	
+	  __REACT_HOT_LOADER__.register(presentTask, 'presentTask', '/home/norman/goodly/TextThresher/app/django/quiz.js');
+	
+	  __REACT_HOT_LOADER__.register(fetchQuizTasks, 'fetchQuizTasks', '/home/norman/goodly/TextThresher/app/django/quiz.js');
 	}();
 
 	;
@@ -62149,7 +62149,7 @@
 	
 	var _App2 = _interopRequireDefault(_App);
 	
-	var _QuizTasks = __webpack_require__(822);
+	var _QuizTasks = __webpack_require__(820);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	

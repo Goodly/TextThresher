@@ -6,7 +6,7 @@ import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
 
 // Function to start MockQuiz data loading cycle
-import { fetchQuizTasks } from 'actions/quizTasks';
+import { fetchQuizTasks } from 'django/quiz';
 // Function to start RealQuiz data loading cycle
 import runPybossaTasks from 'pybossa/quiz';
 

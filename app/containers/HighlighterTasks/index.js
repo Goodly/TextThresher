@@ -8,7 +8,7 @@ import * as topicsActionCreators from 'actions/topicPicker';
 import * as highlightActionCreators from 'actions/highlight';
 
 // Function to start MockTopicHighlighter data loading cycle
-import { fetchHighlightTasks } from 'actions/highlightTasks';
+import { fetchHighlightTasks } from 'django/highlight';
 // Function to start RealTopicHighlighter data loading cycle
 import runPybossaTasks from 'pybossa/highlight';
 

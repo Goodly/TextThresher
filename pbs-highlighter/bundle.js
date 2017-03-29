@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a096086f6566a2b97cb8"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "69695e600a7d04ba8e44"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -38675,129 +38675,6 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	exports.fetchHighlightTasks = fetchHighlightTasks;
-	
-	var _project = __webpack_require__(119);
-	
-	var _article = __webpack_require__(297);
-	
-	var _topicPicker = __webpack_require__(260);
-	
-	var _normalizr = __webpack_require__(289);
-	
-	var _require = __webpack_require__(286)(),
-	    fetch = _require.fetch,
-	    Request = _require.Request,
-	    Response = _require.Response,
-	    Headers = _require.Headers;
-	
-	var taskSchema = new _normalizr.Schema('tasks');
-	var taskList = { results: (0, _normalizr.arrayOf)(taskSchema) };
-	
-	function storeTasks(dispatch, pagedTasks) {
-	  // Django backend doesn't provide task ids, so copy article id as the task id
-	  pagedTasks.results = pagedTasks.results.map(function (task) {
-	    return _extends({}, task, { id: task.article.id });
-	  });
-	  // Normalize data structure and dispatch
-	  var taskDatabase = (0, _normalizr.normalize)(pagedTasks, taskList);
-	  // Replace or push task IDs to queue
-	  dispatch({ type: 'FETCH_HIGHLIGHT_TASKS_SUCCESS',
-	    pagedTasks: pagedTasks,
-	    taskDatabase: taskDatabase
-	  });
-	  // Make a copy of the unique task Ids collected by normalize
-	  var taskQueue = taskDatabase.result.results.slice();
-	  dispatch({ type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue: taskQueue });
-	}
-	
-	function presentTask(dispatch, getState) {
-	  var taskReducer = getState().highlightTasks;
-	  var taskDB = taskReducer.taskDatabase.entities.tasks;
-	  var taskQueue = taskReducer.taskQueue.slice();
-	  if (taskQueue.length > 0) {
-	    var onSaveAndNext = function onSaveAndNext(highlights) {
-	      // dispatch save highight action which will return a promise, so
-	      // promise.then( call this ) to load next task
-	      // or better, deep copy highlights and don't wait to show next task
-	      presentTask(dispatch, getState);
-	    };
-	    // Tricky part: We have loaded the task, now we also provide the
-	    // callback that the UI button can use to save the data and trigger
-	    // loading the next task.
-	
-	
-	    var taskId = taskQueue.shift();
-	    var task = taskDB[taskId];
-	    dispatch((0, _project.storeProject)(task.project));
-	    dispatch((0, _article.storeArticle)(task.article));
-	    dispatch((0, _topicPicker.storeTopics)(task.topics));
-	    dispatch({ type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue: taskQueue });
-	
-	    dispatch((0, _article.storeSaveAndNext)(onSaveAndNext));
-	  } else {
-	    // TODO: update store with done flag and show nicely in UI
-	    console.log('No more tasks.');
-	    throw new Error('No more tasks.');
-	  }
-	}
-	
-	function fetchHighlightTasks(pageParam) {
-	  return function (dispatch, getState) {
-	    dispatch({ type: 'FETCH_HIGHLIGHT_TASKS' });
-	    var host = "http://localhost:5000";
-	    var pageParam = pageParam ? pageParam : '';
-	    return fetch(host + ('/api/highlighter_tasks2/?format=json' + pageParam)).then(function (response) {
-	      return response.json();
-	    }).then(function (pagedTasks) {
-	      storeTasks(dispatch, pagedTasks);
-	      presentTask(dispatch, getState);
-	    }, function (error) {
-	      return dispatch({ type: 'FETCH_HIGHLIGHT_TASKS_FAIL', error: error });
-	    });
-	  };
-	}
-	;
-	
-	var _temp = function () {
-	  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
-	    return;
-	  }
-	
-	  __REACT_HOT_LOADER__.register(fetch, 'fetch', '/home/norman/goodly/TextThresher/app/actions/highlightTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(Request, 'Request', '/home/norman/goodly/TextThresher/app/actions/highlightTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(Response, 'Response', '/home/norman/goodly/TextThresher/app/actions/highlightTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(Headers, 'Headers', '/home/norman/goodly/TextThresher/app/actions/highlightTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(taskSchema, 'taskSchema', '/home/norman/goodly/TextThresher/app/actions/highlightTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(taskList, 'taskList', '/home/norman/goodly/TextThresher/app/actions/highlightTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(storeTasks, 'storeTasks', '/home/norman/goodly/TextThresher/app/actions/highlightTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(presentTask, 'presentTask', '/home/norman/goodly/TextThresher/app/actions/highlightTasks.js');
-	
-	  __REACT_HOT_LOADER__.register(fetchHighlightTasks, 'fetchHighlightTasks', '/home/norman/goodly/TextThresher/app/actions/highlightTasks.js');
-	}();
-
-	;
-
-/***/ },
-/* 815 */,
-/* 816 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	
@@ -38868,9 +38745,9 @@
 	;
 
 /***/ },
-/* 817 */,
-/* 818 */,
-/* 819 */
+/* 815 */,
+/* 816 */,
+/* 817 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38900,9 +38777,9 @@
 	
 	var _HighlightTool2 = _interopRequireDefault(_HighlightTool);
 	
-	var _TopicPicker = __webpack_require__(820);
+	var _TopicPicker = __webpack_require__(818);
 	
-	var _Project = __webpack_require__(816);
+	var _Project = __webpack_require__(814);
 	
 	var _Project2 = _interopRequireDefault(_Project);
 	
@@ -39075,7 +38952,7 @@
 	;
 
 /***/ },
-/* 820 */
+/* 818 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39299,7 +39176,7 @@
 	;
 
 /***/ },
-/* 821 */
+/* 819 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39324,7 +39201,7 @@
 	
 	var _reactRedux = __webpack_require__(82);
 	
-	var _TopicHighlighter3 = __webpack_require__(819);
+	var _TopicHighlighter3 = __webpack_require__(817);
 	
 	var _project = __webpack_require__(119);
 	
@@ -39340,11 +39217,11 @@
 	
 	var highlightActionCreators = _interopRequireWildcard(_highlight);
 	
-	var _highlightTasks = __webpack_require__(814);
+	var _highlight2 = __webpack_require__(821);
 	
-	var _highlight2 = __webpack_require__(823);
+	var _highlight3 = __webpack_require__(823);
 	
-	var _highlight3 = _interopRequireDefault(_highlight2);
+	var _highlight4 = _interopRequireDefault(_highlight3);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -39356,7 +39233,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var assembledActionCreators = Object.assign({}, articleActionCreators, topicsActionCreators, highlightActionCreators, { storeProject: _project.storeProject }, { fetchHighlightTasks: _highlightTasks.fetchHighlightTasks });
+	var assembledActionCreators = Object.assign({}, articleActionCreators, topicsActionCreators, highlightActionCreators, { storeProject: _project.storeProject }, { fetchHighlightTasks: _highlight2.fetchHighlightTasks });
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
@@ -39406,7 +39283,7 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      _get(RealHighlighter.prototype.__proto__ || Object.getPrototypeOf(RealHighlighter.prototype), 'componentDidMount', this).call(this);
-	      (0, _highlight3.default)(this.props.storeArticle, this.props.storeProject, this.props.storeTopics, this.props.storeSaveAndNext);
+	      (0, _highlight4.default)(this.props.storeArticle, this.props.storeProject, this.props.storeTopics, this.props.storeSaveAndNext);
 	    }
 	  }]);
 	
@@ -39427,6 +39304,129 @@
 	  __REACT_HOT_LOADER__.register(MockHighlighter, 'MockHighlighter', '/home/norman/goodly/TextThresher/app/containers/HighlighterTasks/index.js');
 	
 	  __REACT_HOT_LOADER__.register(RealHighlighter, 'RealHighlighter', '/home/norman/goodly/TextThresher/app/containers/HighlighterTasks/index.js');
+	}();
+
+	;
+
+/***/ },
+/* 820 */,
+/* 821 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.fetchHighlightTasks = fetchHighlightTasks;
+	
+	var _project = __webpack_require__(119);
+	
+	var _article = __webpack_require__(297);
+	
+	var _topicPicker = __webpack_require__(260);
+	
+	var _normalizr = __webpack_require__(289);
+	
+	var _require = __webpack_require__(286)(),
+	    fetch = _require.fetch,
+	    Request = _require.Request,
+	    Response = _require.Response,
+	    Headers = _require.Headers;
+	
+	var taskSchema = new _normalizr.Schema('tasks');
+	var taskList = { results: (0, _normalizr.arrayOf)(taskSchema) };
+	
+	function storeTasks(dispatch, pagedTasks) {
+	  // Django backend doesn't provide task ids, so copy article id as the task id
+	  pagedTasks.results = pagedTasks.results.map(function (task) {
+	    return _extends({}, task, { id: task.article.id });
+	  });
+	  // Normalize data structure and dispatch
+	  var taskDatabase = (0, _normalizr.normalize)(pagedTasks, taskList);
+	  // Replace or push task IDs to queue
+	  dispatch({ type: 'FETCH_HIGHLIGHT_TASKS_SUCCESS',
+	    pagedTasks: pagedTasks,
+	    taskDatabase: taskDatabase
+	  });
+	  // Make a copy of the unique task Ids collected by normalize
+	  var taskQueue = taskDatabase.result.results.slice();
+	  dispatch({ type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue: taskQueue });
+	}
+	
+	function presentTask(dispatch, getState) {
+	  var taskReducer = getState().highlightTasks;
+	  var taskDB = taskReducer.taskDatabase.entities.tasks;
+	  var taskQueue = taskReducer.taskQueue.slice();
+	  if (taskQueue.length > 0) {
+	    var onSaveAndNext = function onSaveAndNext(highlights) {
+	      // dispatch save highight action which will return a promise, so
+	      // promise.then( call this ) to load next task
+	      // or better, deep copy highlights and don't wait to show next task
+	      presentTask(dispatch, getState);
+	    };
+	    // Tricky part: We have loaded the task, now we also provide the
+	    // callback that the UI button can use to save the data and trigger
+	    // loading the next task.
+	
+	
+	    var taskId = taskQueue.shift();
+	    var task = taskDB[taskId];
+	    dispatch((0, _project.storeProject)(task.project));
+	    dispatch((0, _article.storeArticle)(task.article));
+	    dispatch((0, _topicPicker.storeTopics)(task.topics));
+	    dispatch({ type: 'UPDATE_HIGHLIGHT_TASK_QUEUE', taskQueue: taskQueue });
+	
+	    dispatch((0, _article.storeSaveAndNext)(onSaveAndNext));
+	  } else {
+	    // TODO: update store with done flag and show nicely in UI
+	    console.log('No more tasks.');
+	    throw new Error('No more tasks.');
+	  }
+	}
+	
+	function fetchHighlightTasks(pageParam) {
+	  return function (dispatch, getState) {
+	    dispatch({ type: 'FETCH_HIGHLIGHT_TASKS' });
+	    var host = "http://localhost:5000";
+	    var pageParam = pageParam ? pageParam : '';
+	    return fetch(host + ('/api/highlighter_tasks2/?format=json' + pageParam)).then(function (response) {
+	      return response.json();
+	    }).then(function (pagedTasks) {
+	      storeTasks(dispatch, pagedTasks);
+	      presentTask(dispatch, getState);
+	    }, function (error) {
+	      return dispatch({ type: 'FETCH_HIGHLIGHT_TASKS_FAIL', error: error });
+	    });
+	  };
+	}
+	;
+	
+	var _temp = function () {
+	  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+	    return;
+	  }
+	
+	  __REACT_HOT_LOADER__.register(fetch, 'fetch', '/home/norman/goodly/TextThresher/app/django/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(Request, 'Request', '/home/norman/goodly/TextThresher/app/django/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(Response, 'Response', '/home/norman/goodly/TextThresher/app/django/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(Headers, 'Headers', '/home/norman/goodly/TextThresher/app/django/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(taskSchema, 'taskSchema', '/home/norman/goodly/TextThresher/app/django/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(taskList, 'taskList', '/home/norman/goodly/TextThresher/app/django/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(storeTasks, 'storeTasks', '/home/norman/goodly/TextThresher/app/django/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(presentTask, 'presentTask', '/home/norman/goodly/TextThresher/app/django/highlight.js');
+	
+	  __REACT_HOT_LOADER__.register(fetchHighlightTasks, 'fetchHighlightTasks', '/home/norman/goodly/TextThresher/app/django/highlight.js');
 	}();
 
 	;
@@ -44786,7 +44786,7 @@
 	
 	var _App2 = _interopRequireDefault(_App);
 	
-	var _HighlighterTasks = __webpack_require__(821);
+	var _HighlighterTasks = __webpack_require__(819);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
