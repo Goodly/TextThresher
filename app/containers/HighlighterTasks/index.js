@@ -10,7 +10,7 @@ import * as topicActions from 'actions/topicPicker';
 import * as highlightActions from 'actions/highlight';
 
 // These actions are only used on MockHighlighter, to store tasks from Django
-import * as highlightTaskActions from 'actions/highlightTasks';
+import * as highlightTaskActions from 'actions/djangoHighlights';
 
 // Function to start MockTopicHighlighter data loading cycle
 import fetchHighlightTasks from 'django/highlight';
@@ -32,7 +32,7 @@ const mapStateToProps = state => {
     currentTopicId: state.topicPicker.currentTopicId,
     topics: state.topicPicker.topics,
     highlights: state.highlight.highlights,
-    djangoHighlightTasks: state.highlightTasks
+    djangoHighlightTasks: state.djangoHighlightTasks
   };
 }
 

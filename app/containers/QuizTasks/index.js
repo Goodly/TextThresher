@@ -8,7 +8,7 @@ import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
 
 // These actions are only used on MockHighlighter, to store tasks from Django
-import * as quizTaskActions from 'actions/quizTasks';
+import * as quizTaskActions from 'actions/djangoQuiz';
 
 // Function to start MockQuiz data loading cycle
 import fetchQuizTasks from 'django/quiz';
@@ -30,7 +30,7 @@ const mapStateToProps = state => {
     saveAndNext: state.quiz.saveAndNext,
     review: state.quiz.review,
     color_id: state.quiz.highlighter_color,
-    djangoQuizTasks: state.quizTasks
+    djangoQuizTasks: state.djangoQuizTasks
   }
 };
 

@@ -4,17 +4,17 @@ import { topicPicker } from './topicPicker';
 import { quiz } from './quiz';
 import { project } from './project.js';
 import { highlight } from './highlight';
-import { highlightTasks } from './highlightTasks';
-import { quizTasks } from './quizTasks';
+import { djangoHighlightTasks } from './djangoHighlights';
+import { djangoQuizTasks } from './djangoQuiz';
 
 const rootReducer = combineReducers({
   article,
   topicPicker,
   project,
   highlight,
-  highlightTasks,
+  djangoHighlightTasks,
   quiz,
-  quizTasks
+  djangoQuizTasks
 });
 
 export default rootReducer;
