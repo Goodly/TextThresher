@@ -2,20 +2,25 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { Quiz } from 'components/Quiz';
+
+// actions
 import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
 
+// These actions are only used on MockHighlighter, to store tasks from Django
+import * as quizTaskActions from 'actions/quizTasks';
+
 // Function to start MockQuiz data loading cycle
-import { fetchQuizTasks } from 'django/quiz';
+import fetchQuizTasks from 'django/quiz';
 // Function to start RealQuiz data loading cycle
 import runPybossaTasks from 'pybossa/quiz';
 
 const assembledActionCreators = Object.assign(
   { storeProject },
-  { fetchQuizTasks },
-  quizActions,
+  quizActions
 );
 
+// djangoQuizTasks only used by MockHighlighter
 const mapStateToProps = state => {
   return {
     currTask: state.quiz.currTask,
@@ -24,13 +29,19 @@ const mapStateToProps = state => {
     answer_selected: state.quiz.answer_selected,
     saveAndNext: state.quiz.saveAndNext,
     review: state.quiz.review,
-    color_id: state.quiz.highlighter_color
+    color_id: state.quiz.highlighter_color,
+    djangoQuizTasks: state.quizTasks
   }
 };
 
 @connect (
   mapStateToProps,
-  dispatch => bindActionCreators(assembledActionCreators, dispatch)
+  dispatch => bindActionCreators(
+    Object.assign({},
+                  assembledActionCreators,
+                  quizTaskActions
+                 ),
+    dispatch)
 )
 export class MockQuiz extends Quiz {
   constructor(props) {
@@ -38,7 +49,7 @@ export class MockQuiz extends Quiz {
   }
 
   componentDidMount() {
-    this.props.fetchQuizTasks();
+    fetchQuizTasks(this);
   }
 };
 

@@ -2,38 +2,49 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { TopicHighlighter } from 'components/TopicHighlighter';
+
+// actions
 import { storeProject } from 'actions/project';
-import * as articleActionCreators from 'actions/article';
-import * as topicsActionCreators from 'actions/topicPicker';
-import * as highlightActionCreators from 'actions/highlight';
+import * as articleActions from 'actions/article';
+import * as topicActions from 'actions/topicPicker';
+import * as highlightActions from 'actions/highlight';
+
+// These actions are only used on MockHighlighter, to store tasks from Django
+import * as highlightTaskActions from 'actions/highlightTasks';
 
 // Function to start MockTopicHighlighter data loading cycle
-import { fetchHighlightTasks } from 'django/highlight';
+import fetchHighlightTasks from 'django/highlight';
 // Function to start RealTopicHighlighter data loading cycle
 import runPybossaTasks from 'pybossa/highlight';
 
 const assembledActionCreators = Object.assign(
-    {},
-    articleActionCreators,
-    topicsActionCreators,
-    highlightActionCreators,
     { storeProject },
-    { fetchHighlightTasks }
+    articleActions,
+    topicActions,
+    highlightActions
 );
 
+// djangoHighlightTasks only used by MockHighlighter
 const mapStateToProps = state => {
   return {
     article: state.article.article,
     saveAndNext: state.article.saveAndNext,
     currentTopicId: state.topicPicker.currentTopicId,
     topics: state.topicPicker.topics,
-    highlights: state.highlight.highlights
+    highlights: state.highlight.highlights,
+    djangoHighlightTasks: state.highlightTasks
   };
 }
 
 @connect (
   mapStateToProps,
-  dispatch => bindActionCreators(assembledActionCreators, dispatch)
+  dispatch => bindActionCreators(
+    Object.assign({},
+                  assembledActionCreators,
+                  highlightTaskActions
+                 ),
+    dispatch
+  )
 )
 export class MockHighlighter extends TopicHighlighter {
   constructor(props) {
@@ -42,7 +53,7 @@ export class MockHighlighter extends TopicHighlighter {
 
   componentDidMount() {
     super.componentDidMount();
-    this.props.fetchHighlightTasks();
+    fetchHighlightTasks(this);
   }
 };
 

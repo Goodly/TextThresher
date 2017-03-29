@@ -1,12 +1,14 @@
+// This code does not get used when running on a Pybossa page.
+// Used only by app/django/quiz to manage a queue of tasks retrieved from Django
+// It could be private state of app/django/quiz.js, but this way
+// we can use ReduxTools to inspect the data.
+
 const initialState = {
   pagedTasks: {},
   taskDatabase: {},
   taskQueue: []
 };
 
-// Note that this reducer is just used for the managing a
-// the MockHighlighter queue of tasks that comes from Django directly.
-// This code does not get used when running on a Pybossa page.
 export function highlightTasks(state = initialState, action) {
   switch (action.type) {
     case 'FETCH_HIGHLIGHT_TASKS':
@@ -15,7 +17,8 @@ export function highlightTasks(state = initialState, action) {
       return {
         ...state,
         pagedTasks: action.pagedTasks,
-        taskDatabase: action.taskDatabase
+        taskDatabase: action.taskDatabase,
+        isFetching: false
       }
     case 'UPDATE_HIGHLIGHT_TASK_QUEUE':
       return {

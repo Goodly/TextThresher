@@ -54,12 +54,7 @@ export function quiz(state = initialState, action) {
         queue: []
       }
     case 'FETCH_QUESTION':
-      return {
-        ...state,
-        question: {
-          isFetching: true
-        }
-      }
+      return Object.assign({}, initialState, { isFetching: true });
     case 'FETCH_TASK_SUCCESS':
       return {
         ...state,

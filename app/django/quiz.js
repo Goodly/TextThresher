@@ -1,50 +1,49 @@
-const { fetch, Request, Response, Headers } = require('fetch-ponyfill')();
+// This code is only used with 'npm run dev' for getting tasks from Django
+// It never runs on Pybossa!
 
-import { storeProject } from 'actions/project';
-import { storeQuizTask, storeSaveAndNext } from 'actions/quiz';
+const { fetch, Request, Response, Headers } = require('fetch-ponyfill')();
 
 import { normalize, Schema, arrayOf } from 'normalizr';
 
 let taskSchema = new Schema('tasks');
 let taskList = arrayOf(taskSchema);
 
-function storeTasks(dispatch, pagedTasks) {
+function storeTasks(container, pagedTasks) {
   // Actually, the paged quiz endpoint isn't ready yet, this is already a task list
   // Django backend doesn't provide task ids, so copy article id as the task id
   pagedTasks = pagedTasks.map(
     (task, index) => ({...task, id: index*10+5})
   );
-  // Normalize data structure and dispatch
+  // Normalize data structure
   const taskDatabase = normalize(pagedTasks, taskList);
   // Replace or push task IDs to queue
-  dispatch({type: 'FETCH_QUIZ_TASKS_SUCCESS', taskDatabase});
+  container.props.storeQuizTasksDB(pagedTasks, taskDatabase);
   // Make a copy of the unique task Ids collected by normalize
   let taskQueue = taskDatabase.result.slice();
-  dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
+  container.props.storeQuizQueue(taskQueue);
 }
 
-function presentTask(dispatch, getState) {
-  const quizTasks = getState().quizTasks;
-  const taskDB = quizTasks.taskDatabase.entities.tasks;
-  let taskQueue = quizTasks.taskQueue.slice();
+function presentTask(container) {
+  const taskStore = container.props.djangoQuizTasks;
+  const taskDB = taskStore.taskDatabase.entities.tasks;
+  let taskQueue = taskStore.taskQueue.slice();
   if (taskQueue.length > 0) {
     const taskId = taskQueue.shift();
     const task = taskDB[taskId];
+    container.props.storeQuizQueue(taskQueue);
 
-    dispatch({type: 'UPDATE_QUIZ_TASK_QUEUE', taskQueue});
-    dispatch(storeProject(task.project));
-    dispatch(storeQuizTask(task));
+    container.props.storeProject(task.project);
+    container.props.storeQuizTask(task);
 
     function onSaveAndNext(answers) {
-      // TODO: dispatch save quiz answers which will return a promise, so
-      // promise.then( call this ) to load next task
-      // or better, deep copy answers and don't wait to show next task
-      presentTask(dispatch, getState);
+      // If we cared to implement saving to the mock back-end, we would
+      // do it here.
+      presentTask(container);
     }
     // Tricky part: We have loaded the task, now we also provide the
     // callback that the UI button can use to save the data and trigger
     // loading the next task.
-    dispatch(storeSaveAndNext(onSaveAndNext));
+    container.props.storeSaveAndNext(onSaveAndNext);
   } else {
     // TODO: update store with done flag and show nicely in UI
     console.log('No more tasks.');
@@ -52,18 +51,16 @@ function presentTask(dispatch, getState) {
   }
 }
 
-export function fetchQuizTasks() {
-  return (dispatch, getState) => {
-    dispatch({type: 'FETCH_QUIZ_TASKS'});
-    let host = "http://localhost:5000";
-    return fetch(host + `/api/quiz_tasks/?format=json`)
-      .then(response => response.json())
-      .then(
-        pagedTasks => {
-          storeTasks(dispatch, pagedTasks);
-          presentTask(dispatch, getState);
-        },
-        error => dispatch({type: 'FETCH_QUIZ_TASKS_FAIL', error})
-      )
-  };
+export default function fetchQuizTasks(container) {
+  container.props.initQuizTasks();
+  let host = "http://localhost:5000";
+  return fetch(host + `/api/quiz_tasks/?format=json`)
+    .then(response => response.json())
+    .then(
+      pagedTasks => {
+        storeTasks(container, pagedTasks);
+        presentTask(container);
+      },
+      error => container.props.errorQuizTasks(error)
+    )
 }

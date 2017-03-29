@@ -112,7 +112,7 @@ const TopicPickerComponent = React.createClass({
 
   propTypes: {
     topics: React.PropTypes.object.isRequired,
-    topicStyle: React.PropTypes.object.isRequired,
+    topicStyle: React.PropTypes.string.isRequired,
     currentTopicId: React.PropTypes.number.isRequired,
     onActivateTopic: React.PropTypes.func.isRequired,
   },
