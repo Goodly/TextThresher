@@ -6,6 +6,7 @@ import { Quiz } from 'components/Quiz';
 // actions
 import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
+import * as highlightActions from 'actions/highlight';
 
 // These actions are only used on MockHighlighter, to store tasks from Django
 import * as quizTaskActions from 'actions/djangoQuiz';
@@ -17,7 +18,8 @@ import fetchPybossaQuiz from 'pybossa/quiz';
 
 const assembledActionCreators = Object.assign(
   { storeProject },
-  quizActions
+  quizActions,
+  highlightActions
 );
 
 // djangoQuizTasks only used by MockHighlighter

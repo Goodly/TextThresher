@@ -45,6 +45,7 @@ export class Quiz extends Component {
     this.props.setReview(false);
     this.props.clearAnswers();
     this.props.colorSelected();
+    this.props.clearHighlights();
   }
 
   dispQuestion(question, showButton) { 
