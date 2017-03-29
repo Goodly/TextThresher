@@ -1,7 +1,7 @@
-const initialState = Object.assign({
+const initialState = {
   name : "",
   instructions : ""
-}, {});
+};
 
 
 export function project(state = initialState, action) {

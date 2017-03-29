@@ -2,13 +2,11 @@ import merge from '../components/HighlightTool/merge';
 import overlap from '../components/HighlightTool/overlap';
 import mergeHighlights from '../components/HighlightTool/mergeHighlights';
 
-
-
-const initialState = Object.assign({
+const initialState = {
   highlights: [],
   selectedHighlight: [],
   caseMax: 1,
-});
+};
 
 export function highlight(state = initialState, action) {
   switch (action.type) {

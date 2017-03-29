@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "0762c240b6c93a346ede"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a096086f6566a2b97cb8"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -18931,11 +18931,11 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var initialState = Object.assign({
+	var initialState = {
 	  highlights: [],
 	  selectedHighlight: [],
 	  caseMax: 1
-	});
+	};
 	
 	function highlight() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
@@ -19107,10 +19107,10 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	exports.project = project;
-	var initialState = Object.assign({
+	var initialState = {
 	  name: "",
 	  instructions: ""
-	}, {});
+	};
 	
 	function project() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
@@ -19396,13 +19396,13 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	exports.topicPicker = topicPicker;
-	var initialState = Object.assign({
+	var initialState = {
 	  topics: {
 	    results: []
 	  },
 	  currentTopicId: 0,
 	  lookupTopicById: { '0': [0, { instructions: '' }] }
-	}, {});
+	};
 	
 	function indexTopicById(topicList) {
 	  var lookup = {};

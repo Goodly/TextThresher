@@ -1,10 +1,10 @@
-const initialState = Object.assign({
+const initialState = {
   topics: {
     results: []
   },
   currentTopicId: 0,
   lookupTopicById: { '0': [0, { instructions: '' }] }
-}, {});
+};
 
 function indexTopicById(topicList) {
   var lookup = {};
