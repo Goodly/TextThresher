@@ -7,7 +7,7 @@
     "url": "git@github.com:Goodly/TextThresher.git"
   },
   "scripts": {
-    "dev":   "NODE_ENV=development DEBUG=dev node --harmony ./webpack/dev-server.js",
+    "dev": "NODE_ENV=development DEBUG=dev node --harmony ./webpack/dev-server.js",
     "serve": "NODE_ENV=development DEBUG=dev webpack-dev-server --config webpack.config.js",
     "build": "NODE_ENV=development DEBUG=dev WEBPACK=cleandist webpack --progress --stats --config webpack.config.js",
     "build:watch": "NODE_ENV=development DEBUG=dev WEBPACK=cleandist webpack --progress --stats --config webpack.config.js --watch",
@@ -63,6 +63,7 @@
     "identity-obj-proxy": "^3.0.0",
     "immutable": "^3.8.1",
     "imports-loader": "^0.6.3",
+    "intro.js": "^2.5.0",
     "jest": "^18.1.0",
     "json-loader": "^0.5.1",
     "moment": "^2.15.2",
