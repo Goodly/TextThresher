@@ -1,6 +1,9 @@
 import React from 'react';
 import overlap from './overlap';
 import mergeHighlights from './mergeHighlights';
+import HandleEnd from './Handles/HandleEnd';
+import HandleStart from './Handles/HandleStart';
+
 
 function getOffset(node, targetNode, result={done: false,
                                              articleText: false,
@@ -115,11 +118,11 @@ const HighlightTool = React.createClass({
         topics: [],
         source: activeSources.slice(0),
         selected: false,
-        //handleLeft: null,
-        //handleRight: null
+        handleLeft: null,
+        handleRight: null
       };
 
-      /*&if (i.type === 'start') {
+      if (i.type === 'start') {
         processed.handleRight = {
           type: 'start',
           source: i.source
@@ -129,7 +132,7 @@ const HighlightTool = React.createClass({
           type: 'end',
           source: i.source
         }
-      }*/
+      }
 
       //end of last is start of next
       processed.start = start;
@@ -316,10 +319,31 @@ const HighlightTool = React.createClass({
         var extentResult = getOffset(this.articleRef, extent);
         end += extentResult.offset;
       }
+      var editStart = 0;
+      var editEnd = 0;
+      for (var i = 0; i < this.props.highlights.length; i++) {
+        var h = this.props.highlights[i];
+        if (start > h.start) {
+          editStart += 2;
+        }
+
+        if (start > h.end) {
+          editStart += 2;
+        }
+
+        if (end > h.start) {
+          editEnd += 2;
+        }
+
+        if (end > h.end) {
+          editEnd += 2;
+        }
+      }
+      start -= editStart;
+      end -= editEnd;
       var ends = this.wordCorrection(start, end);
       start = ends[0];
       end = ends[1];
-
 
       var temp_text = this.props.text;
       var new_text = this.props.text.slice(start, end);
@@ -375,6 +399,7 @@ const HighlightTool = React.createClass({
   },
 
   handleSelect: function(source, e) {
+    console.log("HANDLESELECT")
     if (source.length != 0) {
       this.props.selectHighlight(source);
       e.nativeEvent.preventDefault();
@@ -383,7 +408,15 @@ const HighlightTool = React.createClass({
   },
 
   handleCase: function(source, e, i) {
-    this.props.changeCaseHighlight(source, source.caseNum + i);
+    console.log("HANDLE CASE");
+    console.log(source)
+    console.log(i)
+
+    var newCase = source.caseNum + i;
+    if (newCase == 0) {
+      newCase = 1;
+    }
+    this.props.changeCaseHighlight(source, newCase);
     e.nativeEvent.preventDefault();
     e.nativeEvent.stopPropagation();
   },
@@ -422,22 +455,177 @@ const HighlightTool = React.createClass({
               }
             }
           }
-          var minus_case = curHL.source.caseNum - 1;
+          /*var minus_case = curHL.source.caseNum - 1;
           var plus_case = curHL.source.caseNum + 1;
           if (minus_case == 0) {
             minus_case = 1;
+          }*/
+          //console.log("Highlighter Span")
+          //console.log(curHL)
+
+
+          /*if (curHL.handleRight.type == 'end') {
+            var handleEnd = (
+              <HandleEnd
+                highlight={curHL.handleRight.source}
+                color={this.mergeColors([curHL.handleRight.source.topic], curHL.selected)}
+                caseNum={curHL.handleRight.source.caseNum}
+                caseMax={this.props.caseMax}
+                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}
+              />
+            );
+            var handleStart = (
+              <HandleStart
+                highlight={curHL.handleRight.source}
+                color={this.mergeColors([curHL.handleRight.source.topic],curHL.selected)}
+                caseNum={curHL.handleRight.source.caseNum}
+                caseMax={this.props.caseMax}
+                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}
+                />
+            );
+            var handleUp = {
+              "top": "-13px",
+              "width": "19px",
+              "height": "45px",
+              "left": "0",
+              "marginLeft": "-10px",
+              "position": "absolute",
+              "zIndex": "10",
+              "cursor": "pointer",
+              "backgroundColor": "black",
+            }
+
+            var handleDown = {
+              "bottom": "-13px",
+              "width": "19px",
+              "height": "45px",
+              "marginRight": "-10px",
+              "marginTop": "-5px",
+              "position": "absolute",
+              "zIndex": "10",
+              "cursor": "pointer",
+              "right": "0px",
+              "backgroundColor": "black",
+            }
+
+            return (
+              <span key={i}
+                source = {curHL.source}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                title={topics}>
+
+
+                  {handleStart}
+                  <div style={handleUp} onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}/>
+                  <div style={handleDown} onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}/>
+
+                  <span className="articleText"
+                    style={{position: 'relative'}}
+                    onClick={(e) => {this.handleSelect(curHL.source, e)}}>
+
+                    {text.substring(curHL.start, curHL.end)}
+
+                  </span>
+
+                  {handleEnd}
+
+                </span>
+            );
+          }*/
+          if (curHL.handleRight.type == 'start') {
+            console.log("START")
+            var handleEnd = (
+              <HandleEnd
+                highlight={curHL.handleRight.source}
+                color={this.mergeColors([curHL.handleRight.source.topic],  highlights[i+1].selected)}
+                caseNum={curHL.handleRight.source.caseNum}
+                caseMax={this.props.caseMax}
+              />
+            );
+
+            var handleDown = {
+              "bottom": "-13px",
+              "width": "19px",
+              "height": "45px",
+              "marginRight": "-10px",
+              "marginTop": "-5px",
+              "position": "absolute",
+              "zIndex": "10",
+              "cursor": "pointer",
+              "right": "0px",
+              //"backgroundColor": "black",
+            }
+            //                <div style={handleDown} onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}/>
+
+
+            return (
+              <span key={i}
+                source = {curHL.source}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                title={topics}
+                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}
+                >
+
+
+                <span className="articleText" style={{position: 'relative'}}>
+                  {text.substring(curHL.start, curHL.end)}
+                  {handleEnd}
+                </span>
+                </span>
+            );
+          }
+          else if (curHL.handleRight.type == 'end') {
+
+            var handleStart = (
+              <HandleStart
+                highlight={curHL.handleRight.source}
+                color={this.mergeColors([curHL.handleRight.source.topic],curHL.selected)}
+                caseNum={curHL.handleRight.source.caseNum}
+                caseMax={this.props.caseMax}
+                />
+            );
+
+            var handleUp = {
+              "top": "-13px",
+              "width": "19px",
+              "height": "45px",
+              "left": "0",
+              "marginLeft": "-10px",
+              "position": "absolute",
+              "zIndex": "10",
+              "cursor": "pointer",
+              //"backgroundColor": "black",
+            }
+
+            //                <div style={handleUp} onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}/>
+            //                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}>
+
+            return (
+              <span key={i}
+                source = {curHL.source}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                title={topics}
+                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}>
+
+                  <span className="articleText" style={{position: 'relative'}}>
+                    {text.substring(curHL.start, curHL.end)}
+                    {handleStart}
+                  </span>
+                </span>
+            );
           }
 
-          return (
-            <span key={i}
-              className="articleText"
-              onClick={this.handleSelect.bind(this, curHL.source)}
-              style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
-              title={topics}>
-              {text.substring(curHL.start, curHL.end)}
-            </span>
-          );
-
+          else {
+            return (
+              <span key={i}
+                className="articleText"
+                onClick={this.handleSelect.bind(this, curHL.source)}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                title={topics}>
+                {text.substring(curHL.start, curHL.end)}
+              </span>
+            );
+          }
         })}
 
         <span key="tail" className="articleText">
