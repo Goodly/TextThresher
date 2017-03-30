@@ -1,6 +1,9 @@
 import React from 'react';
 import overlap from './overlap';
 import mergeHighlights from './mergeHighlights';
+import HandleEnd from './Handles/HandleEnd';
+import HandleStart from './Handles/HandleStart';
+
 
 function getOffset(node, targetNode, result={done: false,
                                              articleText: false,
@@ -115,11 +118,11 @@ const HighlightTool = React.createClass({
         topics: [],
         source: activeSources.slice(0),
         selected: false,
-        //handleLeft: null,
-        //handleRight: null
+        handleLeft: null,
+        handleRight: null
       };
 
-      /*&if (i.type === 'start') {
+      if (i.type === 'start') {
         processed.handleRight = {
           type: 'start',
           source: i.source
@@ -129,7 +132,7 @@ const HighlightTool = React.createClass({
           type: 'end',
           source: i.source
         }
-      }*/
+      }
 
       //end of last is start of next
       processed.start = start;
@@ -383,7 +386,15 @@ const HighlightTool = React.createClass({
   },
 
   handleCase: function(source, e, i) {
-    this.props.changeCaseHighlight(source, source.caseNum + i);
+    console.log("HANDLE CASE");
+    console.log(source)
+    console.log(i)
+
+    var newCase = source.caseNum + i;
+    if (newCase == 0) {
+      newCase = 1;
+    }
+    this.props.changeCaseHighlight(source, newCase);
     e.nativeEvent.preventDefault();
     e.nativeEvent.stopPropagation();
   },
@@ -422,22 +433,75 @@ const HighlightTool = React.createClass({
               }
             }
           }
-          var minus_case = curHL.source.caseNum - 1;
+          /*var minus_case = curHL.source.caseNum - 1;
           var plus_case = curHL.source.caseNum + 1;
           if (minus_case == 0) {
             minus_case = 1;
+          }*/
+          console.log("Highlighter Span")
+          console.log(curHL)
+
+
+
+          if (curHL.handleRight.type == 'start') {
+            console.log("START")
+            var handleEnd = (
+              <HandleEnd
+                highlight={curHL.handleRight.source}
+                color={this.mergeColors([curHL.handleRight.source.topic],  highlights[i+1].selected)}
+                caseNum={curHL.handleRight.source.caseNum}
+                caseMax={this.props.caseMax}
+              />
+            );
+
+            return (
+              <span key={i}
+                source = {curHL.source}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                title={topics}
+                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.handleRight.source, e)}}
+                >
+                <span className="articleText" style={{position: 'relative'}}>
+                  {text.substring(curHL.start, curHL.end)}
+                  {handleEnd}
+                </span>
+                </span>
+            );
           }
+          else if (curHL.handleRight.type == 'end') {
 
-          return (
-            <span key={i}
-              className="articleText"
-              onClick={this.handleSelect.bind(this, curHL.source)}
-              style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
-              title={topics}>
-              {text.substring(curHL.start, curHL.end)}
-            </span>
-          );
+            var handleStart = (
+              <HandleStart
+                highlight={curHL.handleRight.source}
+                color={this.mergeColors([curHL.handleRight.source.topic],curHL.selected)}
+                caseNum={curHL.handleRight.source.caseNum}
+                caseMax={this.props.caseMax}
+                />
+            );
 
+            return (
+              <span key={i}
+                source = {curHL.source}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                title={topics}
+                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}>
+                  <span className="articleText" style={{position: 'relative'}}>
+                    {text.substring(curHL.start, curHL.end)}
+                    {handleStart}
+                  </span>
+                </span>
+            );
+          } else {
+            return (
+              <span key={i}
+                className="articleText"
+                onClick={this.handleSelect.bind(this, curHL.source)}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                title={topics}>
+                {text.substring(curHL.start, curHL.end)}
+              </span>
+            );
+          }
         })}
 
         <span key="tail" className="articleText">

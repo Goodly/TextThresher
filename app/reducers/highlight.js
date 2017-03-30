@@ -2,20 +2,18 @@ import merge from '../components/HighlightTool/merge';
 import overlap from '../components/HighlightTool/overlap';
 import mergeHighlights from '../components/HighlightTool/mergeHighlights';
 
-const initialState = {
+
+
+const initialState = Object.assign({
   highlights: [],
   selectedHighlight: [],
   caseMax: 1,
-};
+});
 
 export function highlight(state = initialState, action) {
   switch (action.type) {
     case 'CLEAR_HIGHLIGHTS':
-      return Object.assign({}, state, {
-        highlights:[],
-        selectedHighlight: [],
-        caseMax: 1,
-      });
+      return Object.assign({}, state, {highlights:[]});
     case 'DESELECT_HIGHLIGHT':
       return Object.assign({}, state, {selectedHighlight:[]});
     case 'ADD_HIGHLIGHT':
@@ -65,16 +63,24 @@ export function highlight(state = initialState, action) {
       var new_state = kept;
       return Object.assign({}, state, { highlights: new_state, selectedHighlight: []});
     case 'CHANGE_CASE_HIGHLIGHT':
+      console.log("CHANGE CASE REDUCER")
+      console.log(action)
+      console.log(state)
+
 
       var new_highlights = [];
       var caseMax = 0;
       for (var i = 0; i < state.highlights.length; i++) {
-        var highlight = state.highlight[i];
-        if (highlight.text.localeCompare(action.highlight.text) && highlight.top == action.highlight.top) { //equally may not work
-          highlight.caseNum = action.caseNum;
-        }
-        if (hightlight.caseNum > caseMax) {
-          caseMax = highlight.caseNum;
+        var highlight = state.highlights[i];
+        console.log("COMPARE SIDE BY SIDE")
+        console.log(highlight)
+        console.log(action.highlight)
+        console.log(highlight.text.localeCompare(action.highlight.text))
+        console.log(highlight.topic == action.highlight.topic)
+        if (highlight.text.localeCompare(action.highlight.text) == 0 && highlight.topic == action.highlight.topic) {
+          highlight.caseNum = action.caseNum
+          console.log("HIGHLIGHT CASE CHANGED")
+          console.log(highlight)
         }
         new_highlights.push(highlight);
       }
