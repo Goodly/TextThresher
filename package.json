@@ -39,6 +39,7 @@
     "babel-require": "^1.0.1",
     "babel-runtime": "^6.23.0",
     "caniuse-db": "^1.0.30000624",
+    "color": "^1.0.3",
     "colors": "^1.1.2",
     "css-loader": "^0.26.0",
     "csswring": "^5.1.0",
