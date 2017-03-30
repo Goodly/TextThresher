@@ -9,17 +9,12 @@ import Project from 'components/Project';
 
 import { styles } from './styles.scss';
 
+// Two different strategies - the topic picker has additional classnames attached
+// so that we can apply the sass variable $pybossa-header-height
+// The second one gets a dynamic style since just need to change 'position'
 var scrollStyles = {
-  'topicFixed': {
-    position: 'fixed',
-    top: '70px',
-    bottom: 'auto'
-  },
-  'topicAbsolute': {
-    position: 'absolute',
-    top: 'auto',
-    bottom: '0px'
-  },
+  'topicFixed': 'topic-picker-fixed',
+  'topicAbsolute': 'topic-picker-absolute',
   'instrFixed': {
     position: 'fixed'
   },

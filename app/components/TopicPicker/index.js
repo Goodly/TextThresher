@@ -112,7 +112,7 @@ const TopicPickerComponent = React.createClass({
 
   propTypes: {
     topics: React.PropTypes.object.isRequired,
-    topicStyle: React.PropTypes.object.isRequired,
+    topicStyle: React.PropTypes.string.isRequired,
     currentTopicId: React.PropTypes.number.isRequired,
     onActivateTopic: React.PropTypes.func.isRequired,
   },
@@ -137,7 +137,7 @@ const TopicPickerComponent = React.createClass({
     var instructions = full_inst.length > 500 ? full_inst.substring(0,500) + "..." : full_inst;
 
     return (
-      <div className='topic-picker-wrapper' style={this.props.topicStyle}>
+      <div className={`topic-picker-wrapper ${this.props.topicStyle}`}>
         <div className='topic-picker'>
           <ul className='topic-picker__nav'>
             {list}

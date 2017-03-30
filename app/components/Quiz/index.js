@@ -41,9 +41,11 @@ export class Quiz extends Component {
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
     window.scrollTo(0, 0) 
-    this.props.setReview(false);
     this.props.saveAndNext(this.props.answer_selected);
-    this.props.colorSelected(0, 0, '', -1);
+    this.props.setReview(false);
+    this.props.clearAnswers();
+    this.props.colorSelected();
+    this.props.clearHighlights();
   }
 
   dispQuestion(question, showButton) { 

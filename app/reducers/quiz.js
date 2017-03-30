@@ -1,4 +1,4 @@
-const initialState = Object.assign({
+const initialState = {
   currTask: null,
   queue: [-1],
   review: false,
@@ -6,7 +6,40 @@ const initialState = Object.assign({
   answer_selected: {},
   highlighter_color: {},
   saveAndNext: null
-}, {});
+};
+
+// helper function to initialize queue
+function addNonContingentQuestions(questions) {
+
+  var contained = new Set();
+  for(var i = 0; i < questions.length; i++) {
+    for(var k = 0; k < questions[i].answers.length; k++) {
+      contained.add(questions[i].answers[k].next_question);
+    }
+  }
+
+  var to_return = [];
+  for(var i = 0; i < questions.length; i++) {
+    if(!contained.has(questions[i].id)) {
+      to_return.push(questions[i].id);
+    }
+  }
+  return to_return.sort((a, b) => { return a.id - b.id; });
+}
+
+function initQueue(currTask) {
+  var topictree = currTask.topictree;
+  var topic = {};
+  for(var i = 0; i < topictree.length; i++) {
+    if(topictree[i].id == currTask.topTopicId) {
+      topic = topictree[i];
+      break;
+    }
+  }
+  var to_return = [-1];
+  to_return = to_return.concat(addNonContingentQuestions(topic.questions));
+  return to_return;
+}
 
 export function quiz(state = initialState, action) {
   console.log(action);
@@ -21,16 +54,12 @@ export function quiz(state = initialState, action) {
         queue: []
       }
     case 'FETCH_QUESTION':
-      return {
-        ...state,
-        question: {
-          isFetching: true
-        }
-      }
+      return Object.assign({}, initialState, { isFetching: true });
     case 'FETCH_TASK_SUCCESS':
       return {
         ...state,
-        currTask: action.task
+        currTask: action.task,
+        questions: initQueue(action.task)
       }
     case 'ANSWER_SELECTED':
       var temp = Object.assign({}, state.answer_selected);
@@ -73,25 +102,33 @@ export function quiz(state = initialState, action) {
         review: action.review
       }
     case 'COLOR_SELECTED':
-      var assign_dict = { question_id: action.question_id, answer_id: action.answer_id, color: action.color, color_id: action.color_id };
       return {
         ...state,
-        highlighter_color: assign_dict
-      }
-    case 'UPDATE_QUEUE':
-      var new_queue = Object.assign([], state.queue);
-      var ind = new_queue.indexOf(state.curr_question_id);
-      for(var i = 0; i < action.questions.length; i++) {
-        if(state.queue.indexOf(action.questions[i]) == -1) {
-          new_queue.splice(ind + i + 1, 0, action.questions[i]);
+        highlighter_color: {
+          question_id: action.question_id,
+          answer_id: action.answer_id,
+          color: action.color,
+          color_id: action.color_id
         }
       }
+    case 'UPDATE_QUEUE':
+      var questions = action.questions;
+      if(action.question_type == 'SELECT_SUBTOPIC') {
+        questions = addNonContingentQuestions(questions);
+      }
+      var new_queue = state.queue.slice();
+      var ind = new_queue.indexOf(state.curr_question_id);
+      for(var i = 0; i < questions.length; i++) {
+        if(state.queue.indexOf(questions[i]) == -1) {
+          new_queue.splice(ind + i + 1, 0, questions[i]);
+        }
+      };
       return {
         ...state,
         queue: new_queue
       }
     case 'REMOVE_QUEUE':
-      var new_queue = Object.assign([], state.queue);
+      var new_queue = state.queue.slice();
       for(var i = 0; i < action.questions.length; i++) {
         var ind = new_queue.indexOf(action.questions[i].id);
         if(ind != -1) {

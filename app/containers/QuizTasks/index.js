@@ -2,20 +2,27 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { Quiz } from 'components/Quiz';
+
+// actions
 import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
+import * as highlightActions from 'actions/highlight';
 
-// Actions for MockQuiz
-import { fetchQuizTasks } from 'actions/quizTasks';
-// API for RealQuiz
-import runPybossaTasks from 'pybossa/quiz';
+// These actions are only used on MockHighlighter, to store tasks from Django
+import * as quizTaskActions from 'actions/djangoQuiz';
+
+// Function to start MockQuiz data loading cycle
+import fetchDjangoQuiz from 'django/quiz';
+// Function to start RealQuiz data loading cycle
+import fetchPybossaQuiz from 'pybossa/quiz';
 
 const assembledActionCreators = Object.assign(
   { storeProject },
-  { fetchQuizTasks },
   quizActions,
+  highlightActions
 );
 
+// djangoQuizTasks only used by MockHighlighter
 const mapStateToProps = state => {
   return {
     currTask: state.quiz.currTask,
@@ -24,13 +31,19 @@ const mapStateToProps = state => {
     answer_selected: state.quiz.answer_selected,
     saveAndNext: state.quiz.saveAndNext,
     review: state.quiz.review,
-    color_id: state.quiz.highlighter_color
+    color_id: state.quiz.highlighter_color,
+    djangoQuizTasks: state.djangoQuizTasks
   }
 };
 
 @connect (
   mapStateToProps,
-  dispatch => bindActionCreators(assembledActionCreators, dispatch)
+  dispatch => bindActionCreators(
+    Object.assign({},
+                  assembledActionCreators,
+                  quizTaskActions
+                 ),
+    dispatch)
 )
 export class MockQuiz extends Quiz {
   constructor(props) {
@@ -38,7 +51,7 @@ export class MockQuiz extends Quiz {
   }
 
   componentDidMount() {
-    this.props.fetchQuizTasks();
+    fetchDjangoQuiz(this);
   }
 };
 
@@ -52,8 +65,6 @@ export class RealQuiz extends Quiz {
   }
 
   componentDidMount() {
-    runPybossaTasks(this.props.storeQuizTask,
-                    this.props.storeProject,
-                    this.props.storeSaveAndNext);
+    fetchPybossaQuiz(this);
   }
 };

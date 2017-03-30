@@ -7,9 +7,20 @@
   padding-bottom: 100px;
 }
 
+// Classname used to find the topic-picker by handleScroll
 .topic-picker-wrapper {
+}
+
+.topic-picker-fixed {
   position: fixed;
   top: $pybossa-header-height;
+  bottom: auto;
+}
+
+.topic-picker-absolute {
+  position: absolute;
+  top: auto;
+  bottom: 0px;
 }
 
 .loading {
