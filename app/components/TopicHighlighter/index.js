@@ -8,6 +8,7 @@ import { TopicPicker, TopicInstruction }  from 'components/TopicPicker';
 import Project from 'components/Project';
 
 import { styles } from './styles.scss';
+import { introJs } from 'intro.js/intro.js';
 
 // Two different strategies - the topic picker has additional classnames attached
 // so that we can apply the sass variable $pybossa-header-height
@@ -29,12 +30,52 @@ export class TopicHighlighter extends Component {
     this.handleScroll = this.handleScroll.bind(this);
     this.state = {
       instrStyle: scrollStyles.instrFixed,
-      topicStyle: scrollStyles.topicFixed
+      topicStyle: scrollStyles.topicFixed,
+      intro: introJs()
     };
   }
 
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
+    var steps = [
+      {
+        'element': '#article-container',
+        'intro': 'Thank you for joining the project! Before you start, skim through the text provided -- you\'ll sort it into different topics later.',
+      },
+      {
+        'element': '.topic-picker-wrapper',
+        'intro': 'Now, look at these tabs on the left and read through the topic descriptions. These describe what you will be looking for in the text.',
+        'position': 'right',
+      },
+      {
+        'element': '.instructions',
+        'intro': 'Here are some more detailed instructions about each topic. Currently, it\'s describing more about the first selected topic.',
+        'position': 'top',
+      },
+      {
+        'element': '#article-container',
+        'intro': 'Then, we return to the article! Highlight the places in the article that fall into the first topic.',
+        'position': 'left',
+      },
+      {
+        'element': '.topic-picker-wrapper',
+        'intro': 'When you are finished highlighting text about the first topic, move onto the second topic. (You can always return to previous topics if you come across more relevant words or phrases -- just click on the topic tab and continue highlighting.) Remember: each topic has its own color highlighter, so be sure that the you are highlighting text in the corresponding color for each topic.',
+        'position': 'right',
+      },
+      {
+        'element': '#article-container',
+        'intro': 'Repeat this process for every remaining topic.',
+        'position': 'left',
+      },
+      {
+        'element': '.save-and-next',
+        'intro': 'When you’re finished, take a minute to scan your work and ensure that you’ve highlighted all the relevant pieces of text in each topic’s corresponding color. Add and remove highlighting as necessary before pressing "Save and next" to submit your work. Thank you for your contribution to this project!',
+        'position': 'left',
+      },
+    ];
+
+    this.state.intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5 });
+    this.state.intro.start();
   }
 
   componentWillUnmount() {
@@ -110,10 +151,10 @@ export class TopicHighlighter extends Component {
                     topics={this.props.topics.results}
                     colors={colors}
                     currentTopicId={this.props.currentTopicId}
-                  />
+                    />
                   
                 </div>
-                <button onClick={this.onSaveAndNext}>Save and Next</button>
+                <button onClick={this.onSaveAndNext} className='save-and-next'>Save and Next</button>
               </div>
             </ReactCSSTransitionsGroup>
             <TopicInstruction instrStyle={this.state.instrStyle} />
