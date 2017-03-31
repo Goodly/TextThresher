@@ -44,7 +44,7 @@ RUN rm -rf /var/lib/apt/lists/*
 WORKDIR /home
 RUN git clone https://github.com/Goodly/NLP-hints nlp_hints
 WORKDIR /home/nlp_hints
-RUN mvn compile
+RUN mvn clean compile
 
 WORKDIR /home/nlp_worker
 COPY ./nlp_hints/requirements.txt .

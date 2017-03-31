@@ -20,7 +20,7 @@ create a Unix group called docker and add users to it:
 
 Once installed, start the Docker application (if on a Mac), then go to the project directory and run:
 
-0. `docker-compose build`
+0. `docker-compose build --no-cache`
 1. `docker-compose up -d`
 2. `./init_docker.sh`
 3. `npm install`
@@ -54,6 +54,7 @@ To refresh your containers, first stop and remove them with:
 |5.| `npm install`         | package.json changes     |
 |6.| `bower install`       | bower.json changes       |
 |7.| `npm run dev`         | webpack changes          |
+|7.| `npm run build`       | after any changes to front-end code |
 
 To view a browsable interface for the queries, navigate to `localhost:5000/api/`.
 
@@ -63,27 +64,3 @@ and the
 [Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd).
 Other install options for Redux DevTools are discussed in
 [Redux DevTools Extension README](https://github.com/zalmoxisus/redux-devtools-extension).
-
-**Mac Note:** If you encounter an error that the module `text-highlighter/src/TextHighlighter` cannot be found, you will need to update brew by running `brew update`.
-
-# To deploy
-
-In the project dictory, run `docker-compose start` and `npm run deploy`. The output files will be written to the `dist` folder.
-
-**NOTE:** this command currently currently not fully functional and needs to be upgraded. Running `npm run dev` instead will show the most recent version of the code.
-
-To deploy the backend to Heroku:
-
-- push the code to Heroku `git push heroku`
-
-- Reset the db with `heroku pg:reset postgres --confirm text-thresher`
-
-- Prepare the database. You have two options.
-
-- To initialize the database but not load data, run `heroku run python manage.py syncdb`
-
-- To initialize the database with a copy of your local data, verify that your
-local postgres database has data and works when you run the app locally,
-then run `heroku pg:push LOCAL_DB_NAME postgres`
-
-- Visit the [application](http://text-thresher.herokuapp.com/api/) to make sure it worked.
