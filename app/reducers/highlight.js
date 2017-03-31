@@ -63,24 +63,12 @@ export function highlight(state = initialState, action) {
       var new_state = kept;
       return Object.assign({}, state, { highlights: new_state, selectedHighlight: []});
     case 'CHANGE_CASE_HIGHLIGHT':
-      console.log("CHANGE CASE REDUCER")
-      console.log(action)
-      console.log(state)
-
-
       var new_highlights = [];
       var caseMax = 0;
       for (var i = 0; i < state.highlights.length; i++) {
         var highlight = state.highlights[i];
-        console.log("COMPARE SIDE BY SIDE")
-        console.log(highlight)
-        console.log(action.highlight)
-        console.log(highlight.text.localeCompare(action.highlight.text))
-        console.log(highlight.topic == action.highlight.topic)
         if (highlight.text.localeCompare(action.highlight.text) == 0 && highlight.topic == action.highlight.topic) {
           highlight.caseNum = action.caseNum
-          console.log("HIGHLIGHT CASE CHANGED")
-          console.log(highlight)
         }
         new_highlights.push(highlight);
       }
