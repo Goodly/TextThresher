@@ -5,6 +5,8 @@ import Question from 'components/Question';
 import HighlightTool from 'components/HighlightTool';
 
 import { styles } from './styles.scss';
+
+const style = require('intro.js/introjs.css');
 import { introJs } from 'intro.js/intro.js';
 
 const COLOR_OPTIONS = [

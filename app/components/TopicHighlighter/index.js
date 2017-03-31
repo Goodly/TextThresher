@@ -8,6 +8,8 @@ import { TopicPicker, TopicInstruction }  from 'components/TopicPicker';
 import Project from 'components/Project';
 
 import { styles } from './styles.scss';
+
+const style = require('intro.js/introjs.css');
 import { introJs } from 'intro.js/intro.js';
 
 // Two different strategies - the topic picker has additional classnames attached
@@ -30,8 +32,7 @@ export class TopicHighlighter extends Component {
     this.handleScroll = this.handleScroll.bind(this);
     this.state = {
       instrStyle: scrollStyles.instrFixed,
-      topicStyle: scrollStyles.topicFixed,
-      intro: introJs()
+      topicStyle: scrollStyles.topicFixed
     };
   }
 
@@ -74,8 +75,9 @@ export class TopicHighlighter extends Component {
       },
     ];
 
-    this.state.intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5 });
-    this.state.intro.start();
+    var intro = introJs();
+    intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5 });
+    intro.start();
   }
 
   componentWillUnmount() {
