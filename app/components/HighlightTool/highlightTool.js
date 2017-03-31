@@ -455,7 +455,83 @@ const HighlightTool = React.createClass({
               }
             }
           }
+          /*var minus_case = curHL.source.caseNum - 1;
+          var plus_case = curHL.source.caseNum + 1;
+          if (minus_case == 0) {
+            minus_case = 1;
+          }*/
+          //console.log("Highlighter Span")
+          //console.log(curHL)
 
+
+          /*if (curHL.handleRight.type == 'end') {
+            var handleEnd = (
+              <HandleEnd
+                highlight={curHL.handleRight.source}
+                color={this.mergeColors([curHL.handleRight.source.topic], curHL.selected)}
+                caseNum={curHL.handleRight.source.caseNum}
+                caseMax={this.props.caseMax}
+                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}
+              />
+            );
+            var handleStart = (
+              <HandleStart
+                highlight={curHL.handleRight.source}
+                color={this.mergeColors([curHL.handleRight.source.topic],curHL.selected)}
+                caseNum={curHL.handleRight.source.caseNum}
+                caseMax={this.props.caseMax}
+                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}
+                />
+            );
+            var handleUp = {
+              "top": "-13px",
+              "width": "19px",
+              "height": "45px",
+              "left": "0",
+              "marginLeft": "-10px",
+              "position": "absolute",
+              "zIndex": "10",
+              "cursor": "pointer",
+              "backgroundColor": "black",
+            }
+
+            var handleDown = {
+              "bottom": "-13px",
+              "width": "19px",
+              "height": "45px",
+              "marginRight": "-10px",
+              "marginTop": "-5px",
+              "position": "absolute",
+              "zIndex": "10",
+              "cursor": "pointer",
+              "right": "0px",
+              "backgroundColor": "black",
+            }
+
+            return (
+              <span key={i}
+                source = {curHL.source}
+                style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
+                title={topics}>
+
+
+                  {handleStart}
+                  <div style={handleUp} onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}/>
+                  <div style={handleDown} onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}/>
+
+                  <span className="articleText"
+                    style={{position: 'relative'}}
+                    onClick={(e) => {this.handleSelect(curHL.source, e)}}>
+
+                    {text.substring(curHL.start, curHL.end)}
+
+                  </span>
+
+                  {handleEnd}
+
+                </span>
+            );
+          }*/
           if (curHL.handleRight.type == 'start') {
             console.log("START")
             var handleEnd = (
@@ -467,12 +543,30 @@ const HighlightTool = React.createClass({
               />
             );
 
+            var handleDown = {
+              "bottom": "-13px",
+              "width": "19px",
+              "height": "45px",
+              "marginRight": "-10px",
+              "marginTop": "-5px",
+              "position": "absolute",
+              "zIndex": "10",
+              "cursor": "pointer",
+              "right": "0px",
+              //"backgroundColor": "black",
+            }
+            //                <div style={handleDown} onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}/>
+
+
             return (
               <span key={i}
                 source = {curHL.source}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
                 title={topics}
-                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.handleRight.source, e)}}>
+                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}
+                >
+
+
                 <span className="articleText" style={{position: 'relative'}}>
                   {text.substring(curHL.start, curHL.end)}
                   {handleEnd}
@@ -491,12 +585,28 @@ const HighlightTool = React.createClass({
                 />
             );
 
+            var handleUp = {
+              "top": "-13px",
+              "width": "19px",
+              "height": "45px",
+              "left": "0",
+              "marginLeft": "-10px",
+              "position": "absolute",
+              "zIndex": "10",
+              "cursor": "pointer",
+              //"backgroundColor": "black",
+            }
+
+            //                <div style={handleUp} onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}/>
+            //                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}>
+
             return (
               <span key={i}
                 source = {curHL.source}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
                 title={topics}
                 onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}>
+
                   <span className="articleText" style={{position: 'relative'}}>
                     {text.substring(curHL.start, curHL.end)}
                     {handleStart}
