@@ -5,6 +5,7 @@ import Question from 'components/Question';
 import HighlightTool from 'components/HighlightTool';
 
 import { styles } from './styles.scss';
+import { introJs } from 'intro.js/intro.js';
 
 const COLOR_OPTIONS = [
   'rgb(241,96,97)',
@@ -34,6 +35,38 @@ export class Quiz extends Component {
     queue: React.PropTypes.array,
     review: React.PropTypes.bool,
     color_id: React.PropTypes.object
+  }
+
+  componentDidMount() {
+    var steps = [
+      {
+        'element': '.highlights',
+        'intro': 'Thank you for joining the project! Before you begin, read through the text provided. Focus in particular on the bold text -- you’ll be answering questions about it later.',
+        'position': 'bottom',
+      },
+      {
+        'element': '.quiz-questions',
+        'intro': 'Next, read and answer the first question presented below the text. Selecting an answer will enable the highlighting tool.',
+        'position': 'left',
+      },
+      {
+        'element': '.highlights',
+        'intro': 'Please highlight all relevant words and phrases of the text that justify your answer -- make sure to include every piece of the text which support the answer you chose. When you’ve finished highlighting all relevant text to justify your answer, please check your work, then press "Next" to move onto the next question.',
+        'position': 'bottom',
+      },
+      {
+        'element': '.quiz',
+        'intro': 'Repeat this process for all of the remaining questions.',
+      },
+      {
+        'element': '.review-button',
+        'intro': 'Look over all your answers and move onto the next set of questions by clicking "Review" and "Save and Next". Thank you for contributing to this project!',
+      }
+    ];
+
+    var intro = introJs();
+    intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5 });
+    intro.start();
   }
 
   // Babel plugin transform-class-properties allows us to use
@@ -100,7 +133,7 @@ export class Quiz extends Component {
       </div>
       : <div></div>;
     var last_button = last_question && showButton ? 
-      <button type="button" onClick={() => { this.props.setReview(true) }}> { "Review" } </button> 
+      <button type="button" className="review-button" onClick={() => { this.props.setReview(true) }}> { "Review" } </button> 
       : <div></div>;
     return (
       <div key={-1}>
@@ -115,7 +148,7 @@ export class Quiz extends Component {
     var topic = this.props.currTask ? this.props.currTask.topictree : [];
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
     var last_button = last_question ? 
-      <button type="button" onClick={() => { this.props.setReview(true) }}> { "Review" } </button> 
+      <button type="button" className="review-button" onClick={() => { this.props.setReview(true) }}> { "Review" } </button> 
       : <div></div>;
 
     if(this.props.question_id == -1) {
@@ -203,11 +236,11 @@ export class Quiz extends Component {
 
     return (
       <div className="quiz clearfix" >
-        <div style={highlighter_container}> 
+        <div className="highlights" style={highlighter_container}>
           <div> { this.mapHighlights(highlights) }</div> 
         </div> 
 
-        <div style={answer_container}>
+        <div className="quiz-questions" style={answer_container}>
           { question_list }
           { saveAndNextButton }
         </div>

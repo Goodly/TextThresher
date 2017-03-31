@@ -13,4 +13,4 @@ render(
   document.getElementById('react-root')
 );
 
-introJs().start();
+// introJs().start();

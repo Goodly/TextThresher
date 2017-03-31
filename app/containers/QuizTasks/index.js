@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { Quiz } from 'components/Quiz';
 
+import { introJs } from 'intro.js/intro.js';
+
 // actions
 import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
@@ -51,6 +53,7 @@ export class MockQuiz extends Quiz {
   }
 
   componentDidMount() {
+    super.componentDidMount();
     fetchDjangoQuiz(this);
   }
 };
