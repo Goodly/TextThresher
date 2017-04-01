@@ -12,25 +12,16 @@ import { introJs } from 'intro.js/intro.js';
 import { kelly_colors } from 'utils/colors';
 const COLOR_OPTIONS = kelly_colors;
 
-const EXTRA_WORDS = 12;
-const re_whitespace = /\s+/;
-
-// Given an article and a highlight string, add up to extraWords on both sides
-function contextWords(article, offset, extraWords) {
-  var start = offset[0];
-  var end = offset[1];
-  var highlighted = article.substring(start, end);
-  if (highlighted.toLowerCase() != offset[2].toLowerCase()) {
-    console.log("Bad offsets. Looking for '"+offset[2]+"'. Found '"+highlighted+"'");
-  };
-  var before = article.substring(0, start).split(re_whitespace).slice(-extraWords);
-  var after = article.substring(end).split(re_whitespace, extraWords);
-  return [before.join(' '), highlighted, after.join(' ')]
-}
+import { contextWords, getQuestionHints } from 'components/Quiz/contextWords';
+import { EXTRA_WORDS, SPECIAL_DISP_ID } from 'components/Quiz/contextWords';
 
 export class Quiz extends Component {
   constructor(props) {
     super(props);
+    // These are used to build a map of answer_ids to the progressively built color table.
+    // First two are for original highlights and NLP hints display.
+    this.answer_colors = ['rgb(200,200,200)', 'rgb(225,225,225)'];
+    this.answer_ids = [{id: SPECIAL_DISP_ID}, {id: SPECIAL_DISP_ID + 1 }];
   }
 
   static propTypes = {
@@ -79,11 +70,13 @@ export class Quiz extends Component {
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
     window.scrollTo(0, 0) 
-    this.props.saveAndNext(this.props.answer_selected);
+    var saveAnswer = Object.assign({}, this.props.answer_selected);
     this.props.setReview(false);
     this.props.clearAnswers();
     this.props.colorSelected();
     this.props.clearHighlights();
+    // This loads gray lightlights so must go after clearHighlights
+    this.props.saveAndNext(saveAnswer);
   }
 
   dispQuestion(question, showButton) { 
@@ -207,20 +200,31 @@ export class Quiz extends Component {
   }
 
   mapHighlights(highlights) {
-    var topic = [];
     var text = '';
     var article = this.props.currTask != undefined ? this.props.currTask.article.text : '';
-    for(var i = 0; i < COLOR_OPTIONS.length; i++) {
-      topic.push({id: i});
-    }
     for(var i = 0; i < highlights.length; i++) {
       var triplet = contextWords(article, highlights[i], EXTRA_WORDS);
       text += '...' + triplet.join(' ') + '...';
     }
     var c_id = this.props.color_id.color_id != undefined ? this.props.color_id.color_id : -1;
-    console.log(c_id);
+    var ans_id = this.props.color_id.answer_id != undefined ? this.props.color_id.answer_id : -1;
+    // We have to tag the highlights with the answer_id.
+    // So each time we add an answer, we have to add its color and the
+    // id for that color to these two arrays.
+    if (ans_id >= 0 && c_id >= 0) {
+      // Parallel array map.
+      this.answer_colors.push(COLOR_OPTIONS[c_id]);
+      this.answer_ids.push({id: ans_id});
+    };
+    var hints_for_allQs = this.props.currTask != undefined ? this.props.currTask.hints : [];
+    var hints_offsets = getQuestionHints(this.props.question_id, hints_for_allQs).offsets;
+    // HighlightTool could be modified to take hints_for_question
     return (
-      <HighlightTool text={text} colors={COLOR_OPTIONS} topics={topic} currentTopicId={c_id}/>
+      <HighlightTool text={text}
+                     colors={this.answer_colors}
+                     topics={this.answer_ids}
+                     currentTopicId={ans_id}
+                     hints_offsets={hints_offsets} />
     );
   }
 

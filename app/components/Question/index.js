@@ -229,7 +229,7 @@ const Question = React.createClass({
     var dateChangeHandler = (date) => {
       this.setState({ date });
       const question_id = this.props.question.id;
-      const answer_id = 1000 + question_id; // omg, emergency answer id for tagging highlights
+      const answer_id = 1500 + question_id; // omg, emergency answer id for tagging highlights
       this.props.setColor(question_id, answer_id, colorText, color_id);
       this.props.selectAnswer(TYPES.DATETIME, question_id, answer_id, date);
     };
@@ -255,7 +255,7 @@ const Question = React.createClass({
     str = this.state.value ? this.state.value : '';
     var changeHandler = (event) => {
       const question_id = this.props.question.id;
-      const answer_id = 1000 + question_id; // omg, emergency answer id for tagging highlights
+      const answer_id = 1500 + question_id; // omg, emergency answer id for tagging highlights
       this.props.setColor(question_id, answer_id, colorText, color_id);
       this.props.selectAnswer(type, question_id, answer_id, event.target.value);
       this.setState({value: event.target.value});
