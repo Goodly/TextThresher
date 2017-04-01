@@ -417,8 +417,8 @@ const HighlightTool = React.createClass({
   },
 
   handleKeyDown: function(e) {
-    e.preventDefault();
-    if (e.keyCode == 8 || e.keyCode == 46) {
+    if (e.keyCode == 46) {
+      e.preventDefault();
       if (this.props.selectedHighlight) {
         if (this.props.selectedHighlight.length > 0) {
           this.props.deleteHighlight(this.props.selectedHighlight);
