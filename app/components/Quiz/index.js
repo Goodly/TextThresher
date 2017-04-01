@@ -31,6 +31,9 @@ function contextWords(article, offset, extraWords) {
 export class Quiz extends Component {
   constructor(props) {
     super(props);
+    // These are used to build a map of answer_ids to the progressively built color table.
+    this.answer_colors = [];
+    this.answer_ids = [];
   }
 
   static propTypes = {
@@ -207,20 +210,24 @@ export class Quiz extends Component {
   }
 
   mapHighlights(highlights) {
-    var topic = [];
     var text = '';
     var article = this.props.currTask != undefined ? this.props.currTask.article.text : '';
-    for(var i = 0; i < COLOR_OPTIONS.length; i++) {
-      topic.push({id: i});
-    }
     for(var i = 0; i < highlights.length; i++) {
       var triplet = contextWords(article, highlights[i], EXTRA_WORDS);
       text += '...' + triplet.join(' ') + '...';
     }
     var c_id = this.props.color_id.color_id != undefined ? this.props.color_id.color_id : -1;
-    console.log(c_id);
+    var ans_id = this.props.color_id.answer_id != undefined ? this.props.color_id.answer_id : -1;
+    // We have to tag the highlights with the answer_id.
+    // So each time we add an answer, we have to add its color and the
+    // id for that color to these two arrays.
+    if (ans_id >= 0 && c_id >= 0) {
+      // Parallel array map.
+      this.answer_colors.push(COLOR_OPTIONS[c_id]);
+      this.answer_ids.push({id: ans_id});
+    };
     return (
-      <HighlightTool text={text} colors={COLOR_OPTIONS} topics={topic} currentTopicId={c_id}/>
+      <HighlightTool text={text} colors={this.answer_colors} topics={this.answer_ids} currentTopicId={ans_id}/>
     );
   }
 
