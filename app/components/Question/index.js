@@ -11,20 +11,8 @@ import { answerSelected, answerRemoved, colorSelected,
 import { styles } from './styles.scss';
 import 'react-dates/lib/css/_datepicker.css';
 
-const COLOR_OPTIONS = [
-  'rgb(241,96,97)',
-  'rgb(253,212,132)',
-  'rgb(175,215,146)',
-  'rgb(168,210,191)',
-  'rgb(255,153,000)',
-  'rgb(102,000,153)',
-  'rgb(000,153,153)',
-  'rgb(255,102,255)',
-  'rgb(000,051,153)',
-  'rgb(153,000,204)',
-  'rgb(70,194,64)',
-  'rgb(94,242,188)'
-];
+import { kelly_colors } from 'utils/colors';
+const COLOR_OPTIONS = kelly_colors;
 
 const TYPES = {
   RADIO: 'RADIO',
@@ -71,6 +59,22 @@ const mapDispatchToProps = dispatch => {
   };
 }
 
+function renderInkWell(color, selected, clickHandler) {
+  var style = {
+    "display": "inline-block",
+    "borderRadius": 15,
+    "width": 30,
+    "height": 30,
+    "marginRight": 5,
+    "verticalAlign": "middle",
+    "backgroundColor": color
+  };
+  if (color !='' && selected) {
+    style["border"] = "2px solid black";
+  };
+  return <div style={ style } onClick={ clickHandler } />
+}
+
 const Question = React.createClass({
   displayname: 'Question',
 
@@ -99,30 +103,29 @@ const Question = React.createClass({
   mapToRadio: function(arr, controlname="controlgroup") {
     return (
       <form>
-        { arr.map((elem, i) => 
+        { arr.map((elem, i) =>
           {
             var colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
-            var style = { "display": "inline-block", 
-              "borderRadius": 15,
-              "width": 30, 
-              "height": 30, 
-              "backgroundColor": COLOR_OPTIONS[i] };
-            if(this.props.color && this.props.color.answer_id == elem.id) {
-              style["border"] = "2px solid black";
-            } 
+            var selected = this.props.color && this.props.color.answer_id == elem.id;
+            var clickHandler = () => {
+              if (colorText) {
+                this.props.setColor(this.props.question.id, elem.id, colorText, i);
+              };
+            };
             return (
               <div key={elem.id}
                 style={{ "color": colorText }}>
-                <div style={ style } 
-                    onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i], i) }}} />
-                <input type="radio" name={controlname} checked={ this.checkInArray(elem.id) }
-                  onChange={ () => { this.radioOnClick(elem, i) }} />
-                { " " + elem.answer_content }
-                { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
+                { renderInkWell(colorText, selected, clickHandler) }
+                <span style={{ "verticalAlign": "middle" }}>
+                  <input type="radio" name={controlname} checked={ this.checkInArray(elem.id) }
+                    onChange={ () => { this.radioOnClick(elem, i) }} />
+                  { " " + elem.answer_content }
+                  { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
+                </span>
               </div>
             );
-          }) 
-        }
+          }
+        )}
       </form>
     );
   },
@@ -158,22 +161,21 @@ const Question = React.createClass({
     return (
       <form>
         { arr.map((elem, i) => {
-          let colorText = this.checkInArray(elem.id) ? COLOR_OPTIONS[i] : '';
-          var style = { "display": "inline-block", 
-            "width": 30, 
-            "height": 30, 
-            "backgroundColor": COLOR_OPTIONS[i], 
-            "verticalAlign": "middle",
-            "marginRight": 5,
-            "borderRadius": 15 };
-          if(this.props.color && this.props.color.answer_id == elem.id) {
-            style["border"] = "2px solid black";
-          } 
+          let colorText = '';
+          // Only show color well if question not SELECT_SUBTOPIC and answer is selected
+          if (type != TYPES.SELECT_SUBTOPIC && this.checkInArray(elem.id)) {
+            colorText = COLOR_OPTIONS[i];
+          };
+          var selected = this.props.color && this.props.color.answer_id == elem.id;
+          var clickHandler = () => {
+            if (colorText) {
+              this.props.setColor(this.props.question.id, elem.id, colorText, i);
+            };
+          };
           return (
             <div key={elem.id}
               style={{ "color": colorText, "margin": 10 }}>
-              <div style={ style } 
-                  onClick={() => { if(colorText) { this.props.setColor(this.props.question.id, elem.id, COLOR_OPTIONS[i], i) }}} />
+              { renderInkWell(colorText, selected, clickHandler) }
               <span style={{ "verticalAlign": "middle" }}>
                 <input type="checkbox" 
                     name={controlname}
@@ -204,7 +206,7 @@ const Question = React.createClass({
       if(this.props.color && this.props.color.answer_id == answer.id) {
         this.props.setColor(-1, -1, '', -1);
       }
-      if(type = TYPES.SELECT_SUBTOPIC) {
+      if(type == TYPES.SELECT_SUBTOPIC) {
         this.props.queueRemove(next_topic.questions);
       } else {
         this.props.queueRemove(this.findNextQuestions(answer));
@@ -221,33 +223,56 @@ const Question = React.createClass({
   },
 
   dateTimeInput: function() {
-    var colorText = COLOR_OPTIONS[0];
+    // Use 2nd to last color for date highlights
+    const color_id = COLOR_OPTIONS.length - 2;
+    const colorText = COLOR_OPTIONS[color_id];
+    var dateChangeHandler = (date) => {
+      this.setState({ date });
+      const question_id = this.props.question.id;
+      const answer_id = 1000 + question_id; // omg, emergency answer id for tagging highlights
+      this.props.setColor(question_id, answer_id, colorText, color_id);
+      this.props.selectAnswer(TYPES.DATETIME, question_id, answer_id, date);
+    };
     return (
       <form>
+        { renderInkWell(colorText, true, ()=>{}) }
         <SingleDatePicker
           id={ this.props.question.id.toString() }
           isOutsideRange={ () => {} }
           date={this.state.date}
           focused={this.state.focused}
-          onDateChange={(date) => { this.setState({ date }); this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, 0, date); }}
+          onDateChange={dateChangeHandler}
           onFocusChange={({ focused }) => { this.setState({ focused }); }} />
       </form>
     );
   },
 
   textInput: function(type, controlname="textinput") {
-    var colorText = COLOR_OPTIONS[0];
+    // Use last color for text highlights
+    const color_id = COLOR_OPTIONS.length - 1;
+    const colorText = COLOR_OPTIONS[color_id];
     var str = this.props.answers[this.props.question.id] ? this.props.answers[this.props.question.id][0].text : '';
+    str = this.state.value ? this.state.value : '';
+    var changeHandler = (event) => {
+      const question_id = this.props.question.id;
+      const answer_id = 1000 + question_id; // omg, emergency answer id for tagging highlights
+      this.props.setColor(question_id, answer_id, colorText, color_id);
+      this.props.selectAnswer(type, question_id, answer_id, event.target.value);
+      this.setState({value: event.target.value});
+      console.log("typed "+event.target.value);
+    };
     return (
       <form>
+        { renderInkWell(colorText, true, ()=>{}) }
         <input type="text" name={controlname} style={{ color: colorText }}
             value={str}
-            onChange={(event) => { this.props.selectAnswer(type, this.props.question.id, 0, event.target.value) } }/>
+            onChange={changeHandler} />
       </form>
     );
   },
 
   mapQuestionAnswers: function() {
+    // TODO: NG: what's this?
     if(this.props.question.id == 1) {
       return this.mapToCheckbox(this.props.question.answers);
     } else if(this.props.question.id == 2) {
@@ -278,7 +303,7 @@ const Question = React.createClass({
     const mapped_answers = this.props.question ? this.mapQuestionAnswers() :  <div></div> ;
     return (
       <div className={`${styles}`}>
-        <span style={{"paddingRight": 10}}> {this.props.question.question_number} </span>
+        <span style={{"paddingRight": 10}}> {this.props.question.question_number}.</span>
         { /* <span style={{ "fontSize": "80%", "color": "red" }}> { this.props.question.id } </span> */ }
         {this.props.question.question_text}
         { mapped_answers }
