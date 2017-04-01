@@ -216,11 +216,15 @@ export class Quiz extends Component {
       this.answer_colors.push(COLOR_OPTIONS[c_id]);
       this.answer_ids.push({id: ans_id});
     };
-    var hints = this.props.currTask != undefined ? this.props.currTask.hints : [];
-    var hints_for_question = getQuestionHints(this.props.question_id, hints);
+    var hints_for_allQs = this.props.currTask != undefined ? this.props.currTask.hints : [];
+    var hints_offsets = getQuestionHints(this.props.question_id, hints_for_allQs).offsets;
     // HighlightTool could be modified to take hints_for_question
     return (
-      <HighlightTool text={text} colors={this.answer_colors} topics={this.answer_ids} currentTopicId={ans_id}/>
+      <HighlightTool text={text}
+                     colors={this.answer_colors}
+                     topics={this.answer_ids}
+                     currentTopicId={ans_id}
+                     hints_offsets={hints_offsets} />
     );
   }
 
