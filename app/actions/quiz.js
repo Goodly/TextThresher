@@ -1,3 +1,7 @@
+import { contextWords, getQuestionHints } from 'components/Quiz/contextWords';
+import { EXTRA_WORDS, SPECIAL_DISP_ID } from 'components/Quiz/contextWords';
+import { addHighlight } from 'actions/highlight';
+
 export function clearAnswers() {
   return {
     type: 'CLEAR_ANSWERS',
@@ -9,6 +13,8 @@ export function activeQuestion(q_id) {
     type: 'UPDATE_ACTIVE_QUESTION',
     q_id
   };
+  // Stuff the NLP hints into the highlighter for display.
+  var hints = task.hints;
 }
 
 export function setReview(review) {
@@ -19,9 +25,26 @@ export function setReview(review) {
 }
 
 export function storeQuizTask(task) {
-  return {
-    type: 'FETCH_TASK_SUCCESS',
-    task,
+  return (dispatch, getState) => {
+    dispatch({
+      type: 'FETCH_TASK_SUCCESS',
+      task,
+    });
+    // Show original highlights in gray.
+    // A truly horrible hacky hack because new offsets have to be derived for
+    // shortened text.
+    var offsets = task.highlights[0].offsets;
+    var article = task.article.text;
+    var text = '';
+    offsets.forEach( (offset) => {
+      var triplet = contextWords(article, offset, EXTRA_WORDS);
+      triplet[1] = triplet[1].toLowerCase();
+      var fromIndex = text.length;
+      text += '...' + triplet.join(' ') + '...';
+      var start = text.indexOf(offset[2], fromIndex);
+      var end = start + offset[2].length;
+      dispatch(addHighlight(start, end, offset[2], SPECIAL_DISP_ID, ""));
+    });
   };
 }
 

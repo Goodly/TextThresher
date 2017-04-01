@@ -12,37 +12,16 @@ import { introJs } from 'intro.js/intro.js';
 import { kelly_colors } from 'utils/colors';
 const COLOR_OPTIONS = kelly_colors;
 
-const EXTRA_WORDS = 12;
-const re_whitespace = /\s+/;
-
-// Given an article and a highlight string, add up to extraWords on both sides
-function contextWords(article, offset, extraWords) {
-  var start = offset[0];
-  var end = offset[1];
-  var highlighted = article.substring(start, end);
-  if (highlighted.toLowerCase() != offset[2].toLowerCase()) {
-    console.log("Bad offsets. Looking for '"+offset[2]+"'. Found '"+highlighted+"'");
-  };
-  var before = article.substring(0, start).split(re_whitespace).slice(-extraWords);
-  var after = article.substring(end).split(re_whitespace, extraWords);
-  return [before.join(' '), highlighted, after.join(' ')];
-}
-
-function getQuestionHints(question_id, hints) {
-  for (var i = 1; i < hints.length; i++) {
-    if (hints[i].question == question_id) {
-      return hints[i];
-    };
-  };
-  return {offsets: []}
-}
+import { contextWords, getQuestionHints } from 'components/Quiz/contextWords';
+import { EXTRA_WORDS, SPECIAL_DISP_ID } from 'components/Quiz/contextWords';
 
 export class Quiz extends Component {
   constructor(props) {
     super(props);
     // These are used to build a map of answer_ids to the progressively built color table.
-    this.answer_colors = [];
-    this.answer_ids = [];
+    // First two are for original highlights and NLP hints display.
+    this.answer_colors = ['rgb(200,200,200)', 'rgb(225,225,225)'];
+    this.answer_ids = [{id: SPECIAL_DISP_ID}, {id: SPECIAL_DISP_ID + 1 }];
   }
 
   static propTypes = {
@@ -91,11 +70,13 @@ export class Quiz extends Component {
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
     window.scrollTo(0, 0) 
-    this.props.saveAndNext(this.props.answer_selected);
+    var saveAnswer = Object.assign({}, this.props.answer_selected);
     this.props.setReview(false);
     this.props.clearAnswers();
     this.props.colorSelected();
     this.props.clearHighlights();
+    // This loads gray lightlights so must go after clearHighlights
+    this.props.saveAndNext(saveAnswer);
   }
 
   dispQuestion(question, showButton) { 
@@ -237,6 +218,7 @@ export class Quiz extends Component {
     };
     var hints = this.props.currTask != undefined ? this.props.currTask.hints : [];
     var hints_for_question = getQuestionHints(this.props.question_id, hints);
+    // HighlightTool could be modified to take hints_for_question
     return (
       <HighlightTool text={text} colors={this.answer_colors} topics={this.answer_ids} currentTopicId={ans_id}/>
     );
