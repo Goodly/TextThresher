@@ -12,6 +12,22 @@ import { introJs } from 'intro.js/intro.js';
 import { kelly_colors } from 'utils/colors';
 const COLOR_OPTIONS = kelly_colors;
 
+const EXTRA_WORDS = 12;
+const re_whitespace = /\s+/;
+
+// Given an article and a highlight string, add up to extraWords on both sides
+function contextWords(article, offset, extraWords) {
+  var start = offset[0];
+  var end = offset[1];
+  var highlighted = article.substring(start, end);
+  if (highlighted.toLowerCase() != offset[2].toLowerCase()) {
+    console.log("Bad offsets. Looking for '"+offset[2]+"'. Found '"+highlighted+"'");
+  };
+  var before = article.substring(0, start).split(re_whitespace).slice(-extraWords);
+  var after = article.substring(end).split(re_whitespace, extraWords);
+  return [before.join(' '), highlighted, after.join(' ')]
+}
+
 export class Quiz extends Component {
   constructor(props) {
     super(props);
@@ -193,11 +209,13 @@ export class Quiz extends Component {
   mapHighlights(highlights) {
     var topic = [];
     var text = '';
+    var article = this.props.currTask != undefined ? this.props.currTask.article.text : '';
     for(var i = 0; i < COLOR_OPTIONS.length; i++) {
       topic.push({id: i});
     }
     for(var i = 0; i < highlights.length; i++) {
-      text += '...' + highlights[i][2] + '...';
+      var triplet = contextWords(article, highlights[i], EXTRA_WORDS);
+      text += '...' + triplet.join(' ') + '...';
     }
     var c_id = this.props.color_id.color_id != undefined ? this.props.color_id.color_id : -1;
     console.log(c_id);
@@ -225,7 +243,9 @@ export class Quiz extends Component {
     return (
       <div className="quiz clearfix" >
         <div className="highlights" style={highlighter_container}>
-          <div> { this.mapHighlights(highlights) }</div> 
+          <div className="quizHighlighter">
+            { this.mapHighlights(highlights) }
+          </div>
         </div> 
 
         <div className="quiz-questions" style={answer_container}>
