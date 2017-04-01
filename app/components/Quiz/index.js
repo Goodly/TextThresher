@@ -25,7 +25,16 @@ function contextWords(article, offset, extraWords) {
   };
   var before = article.substring(0, start).split(re_whitespace).slice(-extraWords);
   var after = article.substring(end).split(re_whitespace, extraWords);
-  return [before.join(' '), highlighted, after.join(' ')]
+  return [before.join(' '), highlighted, after.join(' ')];
+}
+
+function getQuestionHints(question_id, hints) {
+  for (var i = 1; i < hints.length; i++) {
+    if (hints[i].question == question_id) {
+      return hints[i];
+    };
+  };
+  return {offsets: []}
 }
 
 export class Quiz extends Component {
@@ -226,6 +235,8 @@ export class Quiz extends Component {
       this.answer_colors.push(COLOR_OPTIONS[c_id]);
       this.answer_ids.push({id: ans_id});
     };
+    var hints = this.props.currTask != undefined ? this.props.currTask.hints : [];
+    var hints_for_question = getQuestionHints(this.props.question_id, hints);
     return (
       <HighlightTool text={text} colors={this.answer_colors} topics={this.answer_ids} currentTopicId={ans_id}/>
     );
