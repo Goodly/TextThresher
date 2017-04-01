@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "eaac20a28ac2a3be5572"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a53be79a2f75893e42f0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -21209,9 +21209,9 @@
 	
 	          return _react2.default.createElement(
 	            'span',
-	            { key: i
-	              // invalid attrib: source = {curHL.source}
-	              , style: { backgroundColor: _this.mergeColors(curHL.topics, curHL.selected), position: "relative" },
+	            { key: i,
+	              source: curHL.source,
+	              style: { backgroundColor: _this.mergeColors(curHL.topics, curHL.selected), position: "relative" },
 	              title: topics,
 	              onClick: function onClick(e) {
 	                _this.handleCase(curHL.handleRight.source, e, 1);_this.handleSelect(curHL.source, e);
@@ -21528,8 +21528,7 @@
 	var initialState = Object.assign({
 	  highlights: [],
 	  selectedHighlight: [],
-	  caseMax: 1,
-	  contextWordNum: 12
+	  caseMax: 1
 	});
 	
 	function highlight() {

@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "eaac20a28ac2a3be5572"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a53be79a2f75893e42f0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -19941,7 +19941,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".quiz {\n  position: relative;\n  width: 90%;\n  margin-bottom: 0px;\n  margin-left: auto;\n  margin-right: auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n  min-height: 300px;\n}\n\n.quiz__next {\n  margin-top: 20px;\n  float: right;\n  font-family: \"Avenir Next\", \"Montserrat\", sans-serif;\n  font-weight: bold;\n  color: #333;\n}\n\n.quiz__next[disabled] {\n  color: #ededed;\n}\n\n.quiz__question .quiz__context {\n  font-size: 14pt;\n}\n\n.quiz__question .quiz__context span {\n  color: #CCC;\n}\n\n.quiz__question .quiz__context .highlighted {\n  color: #333;\n  font-style: italic;\n}\n\n.prompt {\n  position: relative;\n  opacity: 0;\n  left: 30%;\n  margin-top: 25px;\n  text-align: center;\n  transition: opacity 1s ease;\n}\n\n.prompt.active {\n  opacity: 1;\n}\n", "", {"version":3,"sources":["/./app/components/Quiz/app/components/Quiz/app/components/Quiz/styles.scss","/./app/components/Quiz/app/components/Quiz/app/styles/_variables.scss"],"names":[],"mappings":"AAEA;EAEE,mBAAkB;EAClB,WAAU;EACV,mBAAkB;EAClB,kBAAiB;EACjB,mBAAkB;EAClB,kBAAiB;EACjB,qBAAoB;EACpB,kBAAiB;CA4BlB;;AA1BC;EACE,iBAAgB;EAChB,aAAY;EACZ,qDCd6C;EDe7C,kBAAiB;EACjB,YCTiB;CDclB;;AAVD;EAQI,eCXkB;CDYnB;;AAGH;EAEI,gBAAe;CAShB;;AAXH;EAIM,YAAW;CACZ;;AALL;EAQM,YAAW;EACX,mBAAkB;CACnB;;AAMP;EACE,mBAAkB;EAClB,WAAU;EAEV,UAAS;EACT,iBAAgB;EAChB,mBAAkB;EAClB,4BAA2B;CAK5B;;AAZD;EASI,WAAU;CACX","file":"styles.scss","sourcesContent":["@import 'app/styles/_variables.scss';\n\n.quiz {\n  // In case we need to position child highlighter_container 'absolute' on scroll\n  position: relative;\n  width: 90%;\n  margin-bottom: 0px;\n  margin-left: auto;\n  margin-right: auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n  min-height: 300px;\n\n  &__next {\n    margin-top: 20px;\n    float: right;\n    font-family: $font-ui;\n    font-weight: bold;\n    color: $offblack;\n\n    &[disabled] {\n      color: $offwhite;\n    }\n  }\n\n  &__question {\n    .quiz__context {\n      font-size: 14pt;\n      span {\n        color: #CCC;\n      }\n\n      .highlighted {\n        color: #333;\n        font-style: italic;\n      }\n    }\n\n  }\n}\n\n.prompt {\n  position: relative;\n  opacity: 0;\n  //top: 50px;\n  left: 30%;\n  margin-top: 25px;\n  text-align: center;\n  transition: opacity 1s ease;\n  &.active {\n    opacity: 1;\n  }\n\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n$topic-picker-fixed-width: 250px;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 60px;\n"],"sourceRoot":"webpack://"}]);
+	exports.push([module.id, ".quiz {\n  position: relative;\n  width: 90%;\n  margin-bottom: 0px;\n  margin-left: auto;\n  margin-right: auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n  min-height: 700px;\n}\n\n.quiz__next {\n  margin-top: 20px;\n  float: right;\n  font-family: \"Avenir Next\", \"Montserrat\", sans-serif;\n  font-weight: bold;\n  color: #333;\n}\n\n.quiz__next[disabled] {\n  color: #ededed;\n}\n\n.quiz__question .quiz__context {\n  font-size: 14pt;\n}\n\n.quiz__question .quiz__context span {\n  color: #CCC;\n}\n\n.quiz__question .quiz__context .highlighted {\n  color: #333;\n  font-style: italic;\n}\n\n.quizHighlighter {\n  line-height: 2.2;\n}\n\n.prompt {\n  position: relative;\n  opacity: 0;\n  left: 30%;\n  margin-top: 25px;\n  text-align: center;\n  transition: opacity 1s ease;\n}\n\n.prompt.active {\n  opacity: 1;\n}\n", "", {"version":3,"sources":["/./app/components/Quiz/app/components/Quiz/app/components/Quiz/styles.scss","/./app/components/Quiz/app/components/Quiz/app/styles/_variables.scss"],"names":[],"mappings":"AAEA;EAEE,mBAAkB;EAClB,WAAU;EACV,mBAAkB;EAClB,kBAAiB;EACjB,mBAAkB;EAClB,kBAAiB;EACjB,qBAAoB;EACpB,kBAAiB;CA4BlB;;AA1BC;EACE,iBAAgB;EAChB,aAAY;EACZ,qDCd6C;EDe7C,kBAAiB;EACjB,YCTiB;CDclB;;AAVD;EAQI,eCXkB;CDYnB;;AAGH;EAEI,gBAAe;CAShB;;AAXH;EAIM,YAAW;CACZ;;AALL;EAQM,YAAW;EACX,mBAAkB;CACnB;;AAMP;EACE,iBACF;CAAE;;AAEF;EACE,mBAAkB;EAClB,WAAU;EAEV,UAAS;EACT,iBAAgB;EAChB,mBAAkB;EAClB,4BAA2B;CAK5B;;AAZD;EASI,WAAU;CACX","file":"styles.scss","sourcesContent":["@import 'app/styles/_variables.scss';\n\n.quiz {\n  // In case we need to position child highlighter_container 'absolute' on scroll\n  position: relative;\n  width: 90%;\n  margin-bottom: 0px;\n  margin-left: auto;\n  margin-right: auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n  min-height: 700px;\n\n  &__next {\n    margin-top: 20px;\n    float: right;\n    font-family: $font-ui;\n    font-weight: bold;\n    color: $offblack;\n\n    &[disabled] {\n      color: $offwhite;\n    }\n  }\n\n  &__question {\n    .quiz__context {\n      font-size: 14pt;\n      span {\n        color: #CCC;\n      }\n\n      .highlighted {\n        color: #333;\n        font-style: italic;\n      }\n    }\n\n  }\n}\n\n.quizHighlighter {\n  line-height: 2.2\n}\n\n.prompt {\n  position: relative;\n  opacity: 0;\n  //top: 50px;\n  left: 30%;\n  margin-top: 25px;\n  text-align: center;\n  transition: opacity 1s ease;\n  &.active {\n    opacity: 1;\n  }\n\n}\n","// TYPOGRAPHY\n$font-newspaper: georgia, 'PT Serif', serif;\n$font-ui: 'Avenir Next', 'Montserrat', sans-serif;\n\n// ANIMATIONS\n$transition-fast: 0.3s ease;\n$transition-slow: 0.6s ease;\n\n// COLORS\n$offblack      : #333;\n$offwhite      : #ededed;\n$red_accent    : #F16061;\n$yellow_accent : #FDD484;\n$green_accent  : #AFD792;\n$blue_accent   : #a8d2bf;\n\n$topic-picker-fixed-width: 250px;\n\n// Page layout with Pybossa header\n$pybossa-header-height: 60px;\n"],"sourceRoot":"webpack://"}]);
 	
 	// exports
 
@@ -26514,9 +26514,9 @@
 	
 	          return _react2.default.createElement(
 	            'span',
-	            { key: i
-	              // invalid attrib: source = {curHL.source}
-	              , style: { backgroundColor: _this.mergeColors(curHL.topics, curHL.selected), position: "relative" },
+	            { key: i,
+	              source: curHL.source,
+	              style: { backgroundColor: _this.mergeColors(curHL.topics, curHL.selected), position: "relative" },
 	              title: topics,
 	              onClick: function onClick(e) {
 	                _this.handleCase(curHL.handleRight.source, e, 1);_this.handleSelect(curHL.source, e);
@@ -26833,8 +26833,7 @@
 	var initialState = Object.assign({
 	  highlights: [],
 	  selectedHighlight: [],
-	  caseMax: 1,
-	  contextWordNum: 12
+	  caseMax: 1
 	});
 	
 	function highlight() {
@@ -60770,6 +60769,22 @@
 	
 	var COLOR_OPTIONS = _colors.kelly_colors;
 	
+	var EXTRA_WORDS = 12;
+	var re_whitespace = /\s+/;
+	
+	// Given an article and a highlight string, add up to extraWords on both sides
+	function contextWords(article, offset, extraWords) {
+	  var start = offset[0];
+	  var end = offset[1];
+	  var highlighted = article.substring(start, end);
+	  if (highlighted.toLowerCase() != offset[2].toLowerCase()) {
+	    console.log("Bad offsets. Looking for '" + offset[2] + "'. Found '" + highlighted + "'");
+	  };
+	  var before = article.substring(0, start).split(re_whitespace).slice(-extraWords);
+	  var after = article.substring(end).split(re_whitespace, extraWords);
+	  return [before.join(' '), highlighted, after.join(' ')];
+	}
+	
 	var Quiz = exports.Quiz = function (_Component) {
 	  _inherits(Quiz, _Component);
 	
@@ -61010,11 +61025,13 @@
 	    value: function mapHighlights(highlights) {
 	      var topic = [];
 	      var text = '';
+	      var article = this.props.currTask != undefined ? this.props.currTask.article.text : '';
 	      for (var i = 0; i < COLOR_OPTIONS.length; i++) {
 	        topic.push({ id: i });
 	      }
 	      for (var i = 0; i < highlights.length; i++) {
-	        text += '...' + highlights[i][2] + '...';
+	        var triplet = contextWords(article, highlights[i], EXTRA_WORDS);
+	        text += '...' + triplet.join(' ') + '...';
 	      }
 	      var c_id = this.props.color_id.color_id != undefined ? this.props.color_id.color_id : -1;
 	      console.log(c_id);
@@ -61050,8 +61067,7 @@
 	          { className: 'highlights', style: highlighter_container },
 	          _react2.default.createElement(
 	            'div',
-	            null,
-	            ' ',
+	            { className: 'quizHighlighter' },
 	            this.mapHighlights(highlights)
 	          )
 	        ),
@@ -61084,6 +61100,12 @@
 	  }
 	
 	  __REACT_HOT_LOADER__.register(COLOR_OPTIONS, 'COLOR_OPTIONS', '/home/norman/goodly/TextThresher/app/components/Quiz/index.js');
+	
+	  __REACT_HOT_LOADER__.register(EXTRA_WORDS, 'EXTRA_WORDS', '/home/norman/goodly/TextThresher/app/components/Quiz/index.js');
+	
+	  __REACT_HOT_LOADER__.register(re_whitespace, 're_whitespace', '/home/norman/goodly/TextThresher/app/components/Quiz/index.js');
+	
+	  __REACT_HOT_LOADER__.register(contextWords, 'contextWords', '/home/norman/goodly/TextThresher/app/components/Quiz/index.js');
 	
 	  __REACT_HOT_LOADER__.register(Quiz, 'Quiz', '/home/norman/goodly/TextThresher/app/components/Quiz/index.js');
 	}();
