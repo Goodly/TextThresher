@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "03ff068a42c8da9e0b6b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "228b37ec1ecbdb097168"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -15317,7 +15317,9 @@
 	});
 	var colors = exports.colors = ['rgb(241,96,97)', 'rgb(253,212,132)', 'rgb(175,215,146)', 'rgb(168,210,191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
 	
-	var kelly_colors = exports.kelly_colors = ['rgb(255, 179, 0)', 'rgb(255, 104, 0)', 'rgb(166, 189, 215)', 'rgb(193, 0, 32)', 'rgb(206, 162, 98)', 'rgb(129, 112, 102)', 'rgb(0, 125, 52)', 'rgb(246, 118, 142)', 'rgb(0, 83, 138)', 'rgb(255, 122, 92)', 'rgb(83, 55, 122)', 'rgb(255, 142, 0)', 'rgb(179, 40, 81)', 'rgb(244, 200, 0)', 'rgb(127, 24, 13)', 'rgb(147, 170, 0)', 'rgb(89, 51, 21)', 'rgb(128, 62, 117)', 'rgb(241, 58, 19)', 'rgb(35, 44, 22)'];
+	// added 3 of above colors to these rgb kelly_colors
+	var kelly_colors = exports.kelly_colors = ['rgb(255, 179, 0)', 'rgb(255, 104, 0)', 'rgb(166, 189, 215)', 'rgb(193, 0, 32)', 'rgb(206, 162, 98)', 'rgb(129, 112, 102)', 'rgb(0, 125, 52)', 'rgb(246, 118, 142)', 'rgb(0, 83, 138)', 'rgb(255, 122, 92)', 'rgb(83, 55, 122)', 'rgb(255, 142, 0)', 'rgb(179, 40, 81)', 'rgb(244, 200, 0)', 'rgb(127, 24, 13)', 'rgb(147, 170, 0)', 'rgb(35, 44, 22)', 'rgb(89, 51, 21)', 'rgb(128, 62, 117)', 'rgb(241, 58, 19)', 'rgb(241,96,97)', 'rgb(253,212,132)', // date highlights - uses 2nd to last
+	'rgb(175,215,146)'];
 	
 	var kelly_color_hex = ['#FFB300', // Vivid Yellow
 	'#FF6800', // Vivid Orange
@@ -26369,8 +26371,8 @@
 	  },
 	
 	  handleKeyDown: function handleKeyDown(e) {
-	    e.preventDefault();
-	    if (e.keyCode == 8 || e.keyCode == 46) {
+	    if (e.keyCode == 46) {
+	      e.preventDefault();
 	      if (this.props.selectedHighlight) {
 	        if (this.props.selectedHighlight.length > 0) {
 	          this.props.deleteHighlight(this.props.selectedHighlight);
@@ -60673,14 +60675,11 @@
 	    var color_id = COLOR_OPTIONS.length - 1;
 	    var colorText = COLOR_OPTIONS[color_id];
 	    var str = this.props.answers[this.props.question.id] ? this.props.answers[this.props.question.id][0].text : '';
-	    str = this.state.value ? this.state.value : '';
 	    var changeHandler = function changeHandler(event) {
 	      var question_id = _this4.props.question.id;
 	      var answer_id = 1500 + question_id; // omg, emergency answer id for tagging highlights
 	      _this4.props.setColor(question_id, answer_id, colorText, color_id);
 	      _this4.props.selectAnswer(type, question_id, answer_id, event.target.value);
-	      _this4.setState({ value: event.target.value });
-	      console.log("typed " + event.target.value);
 	    };
 	    return _react2.default.createElement(
 	      'form',
