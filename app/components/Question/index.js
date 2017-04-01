@@ -252,14 +252,11 @@ const Question = React.createClass({
     const color_id = COLOR_OPTIONS.length - 1;
     const colorText = COLOR_OPTIONS[color_id];
     var str = this.props.answers[this.props.question.id] ? this.props.answers[this.props.question.id][0].text : '';
-    str = this.state.value ? this.state.value : '';
     var changeHandler = (event) => {
       const question_id = this.props.question.id;
       const answer_id = 1500 + question_id; // omg, emergency answer id for tagging highlights
       this.props.setColor(question_id, answer_id, colorText, color_id);
       this.props.selectAnswer(type, question_id, answer_id, event.target.value);
-      this.setState({value: event.target.value});
-      console.log("typed "+event.target.value);
     };
     return (
       <form>

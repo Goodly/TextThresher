@@ -13,6 +13,7 @@ export const colors = [
   'rgb(94,242,188)'
 ];
 
+// added 3 of above colors to these rgb kelly_colors
 export const kelly_colors = [
   'rgb(255, 179, 0)',
   'rgb(255, 104, 0)',
@@ -30,10 +31,13 @@ export const kelly_colors = [
   'rgb(244, 200, 0)',
   'rgb(127, 24, 13)',
   'rgb(147, 170, 0)',
+  'rgb(35, 44, 22)',
   'rgb(89, 51, 21)',
   'rgb(128, 62, 117)',
   'rgb(241, 58, 19)',
-  'rgb(35, 44, 22)'
+  'rgb(241,96,97)',
+  'rgb(253,212,132)', // date highlights - uses 2nd to last
+  'rgb(175,215,146)', // text highlights - uses last
 ];
 
 const kelly_color_hex = [
