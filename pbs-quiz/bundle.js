@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "2404dfe423b8a95d0d15"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3839b406cf91e949325c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -60755,6 +60755,8 @@
 	  render: function render() {
 	    // TODO: use actual question type fetched from the backend
 	    var mapped_answers = this.props.question ? this.mapQuestionAnswers() : _react2.default.createElement('div', null);
+	    var question_number = this.props.question.question_number;
+	    var question_label = question_number > 0 ? String(question_number) + '.' : '';
 	    return _react2.default.createElement(
 	      'div',
 	      { className: '' + _styles.styles },
@@ -60762,8 +60764,7 @@
 	        'span',
 	        { style: { "paddingRight": 10 } },
 	        ' ',
-	        this.props.question.question_number,
-	        '.'
+	        question_label
 	      ),
 	      this.props.question.question_text,
 	      mapped_answers

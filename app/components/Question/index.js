@@ -298,9 +298,11 @@ const Question = React.createClass({
   render() {
     // TODO: use actual question type fetched from the backend
     const mapped_answers = this.props.question ? this.mapQuestionAnswers() :  <div></div> ;
+    const question_number = this.props.question.question_number;
+    const question_label = question_number > 0 ? (String(question_number)+'.') : '';
     return (
       <div className={`${styles}`}>
-        <span style={{"paddingRight": 10}}> {this.props.question.question_number}.</span>
+        <span style={{"paddingRight": 10}}> {question_label}</span>
         { /* <span style={{ "fontSize": "80%", "color": "red" }}> { this.props.question.id } </span> */ }
         {this.props.question.question_text}
         { mapped_answers }
