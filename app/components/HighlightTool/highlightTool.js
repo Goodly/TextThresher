@@ -579,12 +579,12 @@ const HighlightTool = React.createClass({
         })}
 
         <span key="tail" className="articleText">
-          // Need to render tail using article relative start,end
-          // in order to place hints correctly in tail.
           {getHintedText(tail, 0, tail.length, this.props.hints_offsets)}
         </span>
       </div>
     );
+    // Need to render tail using article relative start,end
+    // in order to place hints correctly in tail.
   }
 });
 

@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "3839b406cf91e949325c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "df55351fcb0cd81e6c59"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -26545,10 +26545,11 @@
 	      _react2.default.createElement(
 	        'span',
 	        { key: 'tail', className: 'articleText' },
-	        '// Need to render tail using article relative start,end // in order to place hints correctly in tail.',
 	        getHintedText(tail, 0, tail.length, this.props.hints_offsets)
 	      )
 	    );
+	    // Need to render tail using article relative start,end
+	    // in order to place hints correctly in tail.
 	  }
 	});
 	
