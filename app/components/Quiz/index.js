@@ -22,6 +22,12 @@ export class Quiz extends Component {
     // First two are for original highlights and NLP hints display.
     this.answer_colors = ['rgb(200,200,200)', 'rgb(225,225,225)'];
     this.answer_ids = [{id: SPECIAL_DISP_ID}, {id: SPECIAL_DISP_ID + 1 }];
+    
+    this.handleScroll = this.handleScroll.bind(this);
+    this.state = {
+      highlightsStyle: 'highlights-fixed',
+    };
+
   }
 
   static propTypes = {
@@ -34,6 +40,7 @@ export class Quiz extends Component {
   }
 
   componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
     var steps = [
       {
         'element': '.highlights',
@@ -230,17 +237,38 @@ export class Quiz extends Component {
     );
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll() {
+    let navbar = document.querySelector('.navbar');
+    let footer = document.querySelector('footer');
+    let highlights = document.querySelector('.highlights');
+    let getRect = (el) => el.getBoundingClientRect();
+    let footerTop = getRect(footer).top;
+
+    // Check if topic picker should start scrolling
+    if (footerTop - 1 < getRect(highlights).bottom) {
+      this.setState({ highlightsStyle: 'highlights-absolute'});
+    };
+    // Check if topic picker should stop scrolling
+    if (getRect(highlights).top > getRect(navbar).height) {
+      this.setState({ highlightsStyle: 'highlights-fixed'});
+    };
+  }
+
   render() {
 
     var highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 
     var saveAndNextButton = this.props.review ? <button onClick={ this.onSaveAndNext }>Save and Next</button> : <div></div>;
-    var highlighter_container = {
-      "position": "fixed",
-      "left": "15px",
-      "width": "450px",
-    };
+    // var highlighter_container = {
+    //   "position": "fixed",
+    //   "left": "15px",
+    //   "width": "450px",
+    // };
     var answer_container = {
       "marginLeft": "450px",
       "paddingLeft": "15px"
@@ -248,7 +276,7 @@ export class Quiz extends Component {
 
     return (
       <div className="quiz clearfix" >
-        <div className="highlights" style={highlighter_container}>
+        <div className={`highlights ${this.state.highlightsStyle}`}>
           <div className="quizHighlighter">
             { this.mapHighlights(highlights) }
           </div>
