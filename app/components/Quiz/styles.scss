@@ -39,6 +39,24 @@
   }
 }
 
+
+.highlights {
+  left: 15px;
+  width: 450px;
+}
+
+.highlights-fixed {
+  position: fixed;
+  bottom: auto;
+}
+
+.highlights-absolute {
+  left: -30px;
+  position: absolute;
+  top: auto;
+  bottom: 0px;
+}
+
 .quizHighlighter {
   line-height: 2.2
 }
