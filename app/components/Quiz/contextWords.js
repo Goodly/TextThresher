@@ -11,7 +11,7 @@ export function contextWords(article, offset, extraWords) {
   };
   // Parser sending sometimes sends bad offsets, so re-locate within article.
   highlighted = offset[2];
-  var start = article.toLowerCase().indexOf(highlighted);
+  var start = article.indexOf(highlighted);
   if (start == -1) {
     console.log("Highlighted text not in article: '"+highlighted+"'");
     return ["", highlighted, ""];
