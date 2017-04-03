@@ -53,7 +53,7 @@ def import_archive(filename, owner_profile_id, with_annotations=False):
 def import_article(article, filename, owner_profile_id, with_annotations):
     owner_profile = UserProfile.objects.get(pk=owner_profile_id)
     annotated_article = parse_article(article, filename)
-    article_obj = load_article(annotated_article, owner_profile)
+    article_obj = load_article(annotated_article)
     if article_obj and with_annotations:
         load_annotations(annotated_article, article_obj, owner_profile)
     return article_obj.id
