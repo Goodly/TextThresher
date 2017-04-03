@@ -101,8 +101,8 @@ def parse_article(raw_text, path):
         if tua_id not in tuas[tua_type]:
             tuas[tua_type][tua_id] = []
 
-        tua_text = clean_text[tua_span[0]:tua_span[1]].strip().lower()
-        if (tua_text != tua_body.strip().lower()):
+        tua_text = clean_text[tua_span[0]:tua_span[1]].strip()
+        if (tua_text.lower() != tua_body.strip().lower()):
             raise ArticleParseError(
                 "Reconstructed clean text didn't match TUA body!",
                 ArticleParseError.TEXT_ERROR)

@@ -38,12 +38,13 @@ export function storeQuizTask(task) {
     var text = '';
     offsets.forEach( (offset) => {
       var triplet = contextWords(article, offset, EXTRA_WORDS);
-      triplet[1] = triplet[1].toLowerCase();
       var fromIndex = text.length;
       text += '...' + triplet.join(' ') + '...';
       var start = text.indexOf(offset[2], fromIndex);
-      var end = start + offset[2].length;
-      dispatch(addHighlight(start, end, offset[2], SPECIAL_DISP_ID, ""));
+      if (start != -1) {
+        var end = start + offset[2].length;
+        dispatch(addHighlight(start, end, offset[2], SPECIAL_DISP_ID, ""));
+      };
     });
   };
 }
