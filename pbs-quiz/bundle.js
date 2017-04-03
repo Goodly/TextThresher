@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "df55351fcb0cd81e6c59"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ba2e9a549cb6546cf81b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -25626,12 +25626,13 @@
 	    var text = '';
 	    offsets.forEach(function (offset) {
 	      var triplet = (0, _contextWords.contextWords)(article, offset, _contextWords.EXTRA_WORDS);
-	      triplet[1] = triplet[1].toLowerCase();
 	      var fromIndex = text.length;
 	      text += '...' + triplet.join(' ') + '...';
 	      var start = text.indexOf(offset[2], fromIndex);
-	      var end = start + offset[2].length;
-	      dispatch((0, _highlight.addHighlight)(start, end, offset[2], _contextWords.SPECIAL_DISP_ID, ""));
+	      if (start != -1) {
+	        var end = start + offset[2].length;
+	        dispatch((0, _highlight.addHighlight)(start, end, offset[2], _contextWords.SPECIAL_DISP_ID, ""));
+	      };
 	    });
 	  };
 	}
@@ -26598,7 +26599,7 @@
 	  };
 	  // Parser sending sometimes sends bad offsets, so re-locate within article.
 	  highlighted = offset[2];
-	  var start = article.toLowerCase().indexOf(highlighted);
+	  var start = article.indexOf(highlighted);
 	  if (start == -1) {
 	    console.log("Highlighted text not in article: '" + highlighted + "'");
 	    return ["", highlighted, ""];
