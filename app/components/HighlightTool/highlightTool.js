@@ -13,20 +13,25 @@ function getHintedText(text, start, end, hints_offsets) {
   };
   hints_offsets = hints_offsets.slice();
   if (1) {
-    hints_offsets.push([1,6,"Denver"]);
-    hints_offsets.push([0,9,"Saturday"]);
+    hints_offsets.push([1,6,"police"]);
+    hints_offsets.push([2,9,"protesters"]);
+    hints_offsets.push([3,9,"Protester"]);
+    hints_offsets.push([4,9,"protesters"]);
+    hints_offsets.push([5,9,"occupy"]);
+    hints_offsets.push([6,9,"officals"]);
+    hints_offsets.push([7,9,"officer"]);
   }
   var fromIndex = 0;
   var output = [];
   hints_offsets = hints_offsets.sort( (a,b) => (a[0] - b[0]) );
   hints_offsets.forEach( (offset) => {
-    var start=subtext.indexOf(offset[2], fromIndex);
-    if (start >= 0) {
-      output.push(subtext.substring(fromIndex, start));
-      var end = start + offset[2].length;
-      var hint = offset[2];
-      output.push(<i key={start}>{hint}</i>);
-      fromIndex = end;
+    var hintText = offset[2];
+    var hintStart=subtext.indexOf(hintText, fromIndex);
+    // Only look for hints that are supposed to be in this subtext
+    if ((hintStart >= 0) && (offset[1] > start) && (offset[0] < end)) {
+      output.push(subtext.substring(fromIndex, hintStart));
+      output.push(<i key={hintStart}>{hintText}</i>);
+      fromIndex = hintStart + hintText.length;
     };
   });
   output.push(subtext.substring(fromIndex));
@@ -578,6 +583,8 @@ const HighlightTool = React.createClass({
         </span>
       </div>
     );
+    // Need to render tail using article relative start,end
+    // in order to place hints correctly in tail.
   }
 });
 

@@ -277,8 +277,11 @@ class ArticleHighlight(models.Model):
                         through_fields=('article_highlight', 'topic'))
 
     def __unicode__(self):
-        return ("id %d for article id %d by Pybossa user %d" %
-                (self.id, self.article.id, self.pybossa_user_id))
+        desc = ("id %d for article id %d" %
+                (self.id, self.article.id))
+        if self.pybossa_user_id:
+            desc += " by Pybossa user %d" % self.pybossa_user_id
+        return desc
 
 
 # This is used to store HLTR taskruns retrieved from Pybossa
@@ -315,12 +318,12 @@ class HighlightGroup(models.Model):
             topic_name = self.topic.name
         else:
             topic_name = "NLP"
-        return ("id %d article id %d "
-                "Topic %s and Case %d "
-                "created by %d") % (self.id,
-                 self.article_highlight.article.id,
-                 topic_name, self.case_number,
-                 self.article_highlight.pybossa_user_id)
+        desc = (("id %d article id %d Topic %s and Case %d ") %
+                (self.id, self.article_highlight.article.id,
+                topic_name, self.case_number))
+        if self.article_highlight.pybossa_user_id:
+            desc += " by Pybossa user %d" % self.article_highlight.pybossa_user_id
+        return desc
 
 
 # A submitted answer to a question
