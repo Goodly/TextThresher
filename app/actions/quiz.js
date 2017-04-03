@@ -77,6 +77,12 @@ export function colorSelected(question_id=0, answer_id=0, color='', color_id=-1)
   };
 }
 
+export function resetQueue() {
+  return {
+    type: 'RESET_QUEUE',
+  };
+}
+
 export function storeSaveAndNext(saveAndNext) {
   return {
     type: 'POST_QUIZ_CALLBACK',

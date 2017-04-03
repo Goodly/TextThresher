@@ -75,6 +75,7 @@ export class Quiz extends Component {
     this.props.clearAnswers();
     this.props.colorSelected();
     this.props.clearHighlights();
+    this.props.resetQueue();
     // This loads gray lightlights so must go after clearHighlights
     this.props.saveAndNext(saveAnswer);
   }
@@ -185,6 +186,7 @@ export class Quiz extends Component {
   }
 
   dispReview() {
+
     return this.props.currTask.topictree.map((elem, i) => {
       var question = i == 0 ? this.generateSubQuestion(this.props.currTask.topictree, false) : <div></div>;
         return (<div key={elem.id} style={{

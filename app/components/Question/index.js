@@ -120,7 +120,7 @@ const Question = React.createClass({
                   <input type="radio" name={controlname} checked={ this.checkInArray(elem.id) }
                     onChange={ () => { this.radioOnClick(elem, i) }} />
                   { " " + elem.answer_content }
-                  { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
+                  { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_questions } </span> */ }
                 </span>
               </div>
             );
@@ -182,7 +182,7 @@ const Question = React.createClass({
                     checked={ this.checkInArray(elem.id) }
                     onChange={ () => { this.checkboxOnClick(type, elem, i) }} />
                 { " " + elem.answer_content }
-                { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_question } </span> */ }
+                { /* <span style={{ "fontSize": "80%", "color": "red" }}> { elem.next_questions } </span> */ }
               </span>
             </div>
           );

@@ -14,7 +14,9 @@ function addNonContingentQuestions(questions) {
   var contained = new Set();
   for(var i = 0; i < questions.length; i++) {
     for(var k = 0; k < questions[i].answers.length; k++) {
-      contained.add(questions[i].answers[k].next_question);
+      for(var j = 0; j < questions[i].answers[k].next_questions.length; j++) {
+        contained.add(questions[i].answers[k].next_questions[j]);
+      }
     }
   }
 
@@ -24,7 +26,7 @@ function addNonContingentQuestions(questions) {
       to_return.push(questions[i].id);
     }
   }
-  return to_return.sort((a, b) => { return a.id - b.id; });
+  return to_return.sort((a, b) => { return a - b; });
 }
 
 function initQueue(currTask) {
@@ -56,6 +58,9 @@ export function quiz(state = initialState, action) {
     case 'FETCH_QUESTION':
       return Object.assign({}, initialState, { isFetching: true });
     case 'FETCH_TASK_SUCCESS':
+      for(var i = 0; i < action.task.topictree.length; i++) {
+        action.task.topictree[i].questions = action.task.topictree[i].questions.sort((a, b) => a.question_number - b.question_number);
+      }
       return {
         ...state,
         currTask: action.task,
@@ -138,6 +143,11 @@ export function quiz(state = initialState, action) {
       return {
         ...state,
         queue: new_queue
+      }
+    case 'RESET_QUEUE':
+      return {
+        ...state,
+        queue: [-1]
       }
     case 'UPDATE_ACTIVE_QUESTION':
       return {
