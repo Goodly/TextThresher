@@ -45,8 +45,12 @@
   width: 450px;
 }
 
+
+// change to 'static' until bug in event listener found
+// position: 'fixed' when scroll testing for footer bump
 .highlights-fixed {
-  position: fixed;
+  position: static;
+  float: left;
   bottom: auto;
 }
 
