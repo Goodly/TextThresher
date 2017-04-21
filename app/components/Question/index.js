@@ -174,7 +174,7 @@ const Question = React.createClass({
           };
           return (
             <div key={elem.id}
-              style={{ "color": colorText, "margin": 10 }}>
+              style={{ "color": colorText }}>
               { renderInkWell(colorText, selected, clickHandler) }
               <span style={{ "verticalAlign": "middle" }}>
                 <input type="checkbox" 
@@ -269,25 +269,25 @@ const Question = React.createClass({
   },
 
   mapQuestionAnswers: function() {
-    // TODO: NG: what's this?
-    if(this.props.question.id == 1) {
-      return this.mapToCheckbox(this.props.question.answers);
-    } else if(this.props.question.id == 2) {
-      return this.dateTimeInput();
-    }
     var answer_list = this.props.question.answers.sort((a, b) => { return a.id - b.id; });
     switch (this.props.question.question_type) {
       case TYPES.RADIO:
+        console.log('picked RADIO');
         return this.mapToRadio(answer_list)
       case TYPES.CHECKBOX:
+        console.log('picked CHECKBOX');
         return this.mapToCheckbox(answer_list, TYPES.CHECKBOX)
       case TYPES.SELECT_SUBTOPIC:
+        console.log('picked SELECT_SUBTOPIC');
         return this.mapToCheckbox(answer_list, TYPES.SELECT_SUBTOPIC)
       case TYPES.DATETIME:
+        console.log('picked DATETIME');
         return this.dateTimeInput();
       case TYPES.TEXT:
+        console.log('picked TEXT');
         return this.textInput(TYPES.TEXT);
       case TYPES.TIME:
+        console.log('picked TIME');
         return this.textInput(TYPES.TIME);
       default:
         console.log('unsupported answer type: ' + this.props.question.question_type + ', should be: RADIO, CHECKBOX, DATETIME or TEXT');

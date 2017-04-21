@@ -101,10 +101,12 @@ export class Quiz extends Component {
         break;
       }
     }
+    var next_button = next_id == question.id ? <div></div> :
+        <button type="button" onClick={() => { this.props.activeQuestion(next_id); this.props.colorSelected({}); }}>{ "Next" }</button>;
     var button = showButton ?  
       <div>
-        <button type="button" onClick={() => { this.props.activeQuestion(prev_id) }}> { "Prev" }</button>
-        <button type="button" onClick={() => { this.props.activeQuestion(next_id) }}>{ "Next" }</button>
+        <button type="button" onClick={() => { this.props.activeQuestion(prev_id); this.props.colorSelected({}); }}> { "Prev" }</button>
+        { next_button }
       </div>
       : <div></div>;
     return (
@@ -134,12 +136,11 @@ export class Quiz extends Component {
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
     var button = showButton ? 
       <div>
-        <button type="button" onClick={() => {this.props.activeQuestion(-1)}}> { "Prev" }</button>
         <button type="button" onClick={() => {this.props.activeQuestion(next_id)}}> {"Next"} </button>
       </div>
       : <div></div>;
     var last_button = last_question && showButton ? 
-      <button type="button" className="review-button" onClick={() => { this.props.setReview(true) }}> { "Review" } </button> 
+      <button type="button" className="review-button" onClick={() => { this.props.setReview(true); this.props.colorSelected({}); }}> { "Review" } </button> 
       : <div></div>;
     return (
       <div key={-1}>
@@ -154,7 +155,7 @@ export class Quiz extends Component {
     var topic = this.props.currTask ? this.props.currTask.topictree : [];
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
     var last_button = last_question ? 
-      <button type="button" className="review-button" onClick={() => { this.props.setReview(true) }}> { "Review" } </button> 
+      <button type="button" className="review-button" onClick={() => { this.props.setReview(true); this.props.colorSelected({}); }}> { "Review" } </button> 
       : <div></div>;
 
     if(this.props.question_id == -1) {
@@ -225,8 +226,11 @@ export class Quiz extends Component {
       this.answer_colors.push(COLOR_OPTIONS[c_id]);
       this.answer_ids.push({id: ans_id});
     };
+    console.log('LOG', ans_id, this.answer_ids);
+
     var hints_for_allQs = this.props.currTask != undefined ? this.props.currTask.hints : [];
     var hints_offsets = getQuestionHints(this.props.question_id, hints_for_allQs).offsets;
+
     // HighlightTool could be modified to take hints_for_question
     return (
       <HighlightTool text={text}
