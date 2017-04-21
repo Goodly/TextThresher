@@ -67,6 +67,12 @@ a.actual-name {
     color: #fff;
 }
 
+.login-text {
+    text-decoration: none;
+    color: #fff;
+    word-spacing: 5px;
+}
+
 .content-container {
     width: 600px;
     padding: 20px 40px;
