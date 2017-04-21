@@ -94,8 +94,8 @@ class TopicsSchemaParser(object):
             # Create the topic with the values in topic_args
             topic = Topic.objects.create(**topic_args)
             self.load_questions(questions, topic)
-        self.load_next_question()
-        self.load_dependencies()
+        # self.load_next_question()
+        # self.load_dependencies_old()
 
     def load_next_question(self):
         """
@@ -128,6 +128,53 @@ class TopicsSchemaParser(object):
             answer.save()
 
     def load_dependencies(self):
+        """
+        Loads dependencies into targeted answers.
+        """
+        for dep in self.dep:
+            topic_obj = Topic.objects.filter(parent=self.topic_obj, 
+                                             order=dep.topic)[0]
+            question_obj = Question.objects.filter(topic=topic_obj,
+                                               question_number=dep.question)[0]
+            next_question_obj = Question.objects.filter(topic=topic_obj, 
+                                question_number=dep.next_question)[0]
+            if dep.answer == '*':
+                # For the new parse_schema.py, it uses '*' for 'any' answers
+                # Get all the answers of the source question
+                answer_objs = Answer.objects.filter(question=question_obj)
+            else:
+                # Normally, we only have one answer for one Dependency
+                # Still store this object in a list for code reuse
+                answer_objs = Answer.objects.filter(question=question_obj, 
+                                                answer_number=dep.answer)
+            for answer_obj in answer_objs:
+                # next_questions is an array stored as text
+                next_questions_arr = answer_obj.next_questions
+                next_q_id = str(next_question.id)
+                # Manipulate the array as text
+                if next_questions_arr == "[]":
+                    next_questions_arr = "[" + next_q_id + "]"
+                else:
+                    next_questions_arr = (next_questions_arr[:-1] + "," 
+                                          + next_q_id + "]")
+                answer_obj.next_questions = next_questions_arr
+                answer_obj.save()
+
+    def test_load_dependencies(self):
+        """
+        Prints out all the questions (topics, actually) involved in the dep
+        """
+        topic_objs = []
+        for dep in self.dep:
+            topic_obj = Topic.objects.filter(parent=self.topic_obj, 
+                                             order=dep.topic)[0]
+            if topic_obj not in topic_objs:
+                topic_objs.append(topic_obj)
+        import pprint
+        for topic in topic_objs:
+            pprint.pprint(topic)
+
+    def load_dependencies_old(self):
         """
         Loads dependencies into targeted answers.
         """
@@ -205,6 +252,8 @@ def load_schema(schema):
                                        schema=schema['topics'],
                                        dependencies=schema['dependencies'])
     schema_parser.load_topics()
+    schema_parser.load_dependencies()
+    test_load_dependencies()
     return schema_obj.id
 
 def load_article(article):
