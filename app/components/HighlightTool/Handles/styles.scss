@@ -5,9 +5,10 @@
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-bottom: 15px solid;
-  right: -10px;
+  right: -3px;
   bottom: -40px;
   cursor: pointer;
+  transform: rotate(-90deg)
 }
 .start-arrow-down {
   position: absolute;
@@ -17,16 +18,18 @@
   border-right: 10px solid transparent;
   border-top: 15px solid;
   top: -5px;
-  right: -10px;
+  right: -3px;
   font-size: 12;
   cursor: pointer;
+  transform: rotate(90deg)
 }
 .start-arrow-up-icon {
   position: absolute;
-  bottom: -22px;
+  bottom: -24px;
   left: -3px;
   color: white;
   font-size: 13px;
+  transform: rotate(90deg)
 }
 .start-arrow-down-icon {
   position: absolute;
@@ -34,6 +37,7 @@
   left: -4.5px;
   color: white;
   font-size: 16px;
+  transform: rotate(90deg)
 }
 .end-arrow-up {
   position: absolute;
@@ -43,8 +47,9 @@
   border-right: 10px solid transparent;
   border-bottom: 15px solid;
   bottom: -40px;
-  right: -10px;
+  right: -17px;
   cursor: pointer;
+  transform: rotate(90deg);
 }
 .end-arrow-down {
   position: absolute;
@@ -54,9 +59,10 @@
   border-right: 10px solid transparent;
   border-top: 15px solid;
   top: -5px;
-  right: -10px;
+  right: -17px;
   font-size: 12px;
   cursor: pointer;
+  transform: rotate(-90deg);
 }
 .end-arrow-up-icon {
   position: absolute;
@@ -64,6 +70,7 @@
   left: -2px;
   color: white;
   font-size: 13px;
+  transform: rotate(-90deg);
 }
 .end-arrow-down-icon {
   position: absolute;
@@ -71,4 +78,5 @@
   left: -2.5px;
   color: white;
   font-size: 13px;
+  transform: rotate(90deg);
 }

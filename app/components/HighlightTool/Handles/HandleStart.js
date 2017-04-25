@@ -5,7 +5,8 @@ import style from "./styles.scss";
 export default class HandleStart extends Component {
   render() {
     var arrowup = {
-      borderBottom: "15px solid " + this.props.color
+      borderBottom: "15px solid " + this.props.color,
+      
     }
 
     var arrowdown = {

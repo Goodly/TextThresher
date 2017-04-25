@@ -511,7 +511,6 @@ const HighlightTool = React.createClass({
                 onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}
                 >
 
-
                 <span className="articleText" style={{position: 'relative'}}>
                   {getHintedText(text, curHL.start, curHL.end, this.props.hints_offsets)}
                   {handleEnd}
