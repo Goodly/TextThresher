@@ -514,7 +514,7 @@ const HighlightTool = React.createClass({
             }
 
             return (
-              <span key={i}
+              <span key={curHL.start}
 // invalid attrib: source = {curHL.source}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
                 title={topics}
@@ -552,7 +552,7 @@ const HighlightTool = React.createClass({
               //"backgroundColor": "black",
             }
             return (
-              <span key={i}
+              <span key={curHL.start}
 // invalid attrib: source = {curHL.source}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
                 title={topics}
@@ -567,7 +567,7 @@ const HighlightTool = React.createClass({
           }
           else {
             return (
-              <span key={i}
+              <span key={curHL.start}
                 className="articleText"
                 onClick={this.handleSelect.bind(this, curHL.source)}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
@@ -578,7 +578,7 @@ const HighlightTool = React.createClass({
           }
         })}
 
-        <span key="tail" className="articleText">
+        <span key={text.length - tail.length} className="articleText">
           {getHintedText(tail, 0, tail.length, this.props.hints_offsets)}
         </span>
       </div>
