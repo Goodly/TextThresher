@@ -11,18 +11,9 @@ function getHintedText(text, start, end, hints_offsets) {
   if ( ! Array.isArray(hints_offsets)) {
     return subtext;
   };
-  hints_offsets = hints_offsets.slice();
-  if (1) {
-    hints_offsets.push([1,6,"police"]);
-    hints_offsets.push([2,9,"protesters"]);
-    hints_offsets.push([3,9,"Protester"]);
-    hints_offsets.push([4,9,"protesters"]);
-    hints_offsets.push([5,9,"occupy"]);
-    hints_offsets.push([6,9,"officals"]);
-    hints_offsets.push([7,9,"officer"]);
-  }
   var fromIndex = 0;
   var output = [];
+  hints_offsets = hints_offsets.slice(); // Make a copy
   hints_offsets = hints_offsets.sort( (a,b) => (a[0] - b[0]) );
   hints_offsets.forEach( (offset) => {
     var hintText = offset[2];
