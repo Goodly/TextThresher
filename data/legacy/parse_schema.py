@@ -142,10 +142,17 @@ def print_data(output):
     print "Here's the current parsed data:"
     import pprint; pprint.pprint(output)
 
+def print_dependencies(output):
+    print "Print dependencies:"
+    import pprint; pprint.pprint(output['dependencies'])
+
+
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('filename', nargs=1)
     args = arg_parser.parse_args()
     
     output = parse_schema(args.filename[0])
-    print_data(output)
+    # print_data(output)
+    print_dependencies(output)
+
