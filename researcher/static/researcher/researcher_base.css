@@ -56,6 +56,12 @@ a.actual-name {
     color: #ffc;
 }
 
+.slash {
+    float: left;
+    margin-left: 10px;
+    color: white;
+}
+
 .logout {
     float: right;
     margin-left: 10px;
@@ -65,6 +71,22 @@ a.actual-name {
     text-decoration: none;
     word-spacing: 5px;
     color: #fff;
+}
+
+.logout-text:hover {
+    color: #fff;
+    cursor: pointer;
+}
+
+.login-text {
+    text-decoration: none;
+    color: #fff;
+    word-spacing: 5px;
+}
+
+.login-text:hover {
+    color: #fff;
+    cursor: pointer;
 }
 
 .content-container {

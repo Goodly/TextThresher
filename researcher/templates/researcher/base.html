@@ -36,7 +36,7 @@
         {% if user.is_anonymous %}
           <div class="login">
             <p>
-              <a href="{% url 'admin:login' %}?next={{ request.get_full_path|urlencode }}">
+              <a href="{% url 'admin:login' %}?next={{ request.get_full_path|urlencode }}" class="login-text">
                 Login
               </a>
             </p>
