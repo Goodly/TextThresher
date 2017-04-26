@@ -465,7 +465,9 @@ const HighlightTool = React.createClass({
     }*/
 
     return (
-      <div onKeyDown={this.handleKeyDown} ref={(ref) => this.articleRef = ref } onMouseUp={this.handleClick}>
+      <div onKeyDown={this.handleKeyDown} ref={(ref) => this.articleRef = ref }
+           onMouseUp={this.handleClick}
+           className="article-click-box">
         {Array(highlights.length).fill().map((_,i) => {
           var curHL = highlights[i];
           start = curHL.end;
