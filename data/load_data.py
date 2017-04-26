@@ -150,7 +150,7 @@ class TopicsSchemaParser(object):
             for answer_obj in answer_objs:
                 # next_questions is an array stored as text
                 next_questions_arr = answer_obj.next_questions
-                next_q_id = str(next_question.id)
+                next_q_id = str(next_question_obj.id)
                 # Manipulate the array as text
                 if next_questions_arr == "[]":
                     next_questions_arr = "[" + next_q_id + "]"
@@ -159,58 +159,7 @@ class TopicsSchemaParser(object):
                                           + next_q_id + "]")
                 answer_obj.next_questions = next_questions_arr
                 answer_obj.save()
-
-    def test_load_dependencies(self):
-        """
-        Prints out all the questions (topics, actually) involved in the dep
-        """
-        topic_objs = []
-        for dep in self.dep:
-            topic_obj = Topic.objects.filter(parent=self.topic_obj, 
-                                             order=dep.topic)[0]
-            if topic_obj not in topic_objs:
-                topic_objs.append(topic_obj)
-        import pprint
-        for topic in topic_objs:
-            pprint.pprint(topic)
-
-    def load_dependencies_old(self):
-        """
-        Loads dependencies into targeted answers.
-        """
-        topics = Topic.objects.filter(parent=self.topic_obj)
-        for dep in self.dep:
-            topic = topics.filter(order=dep.topic)
-            question = Question.objects.filter(topic=topic,
-                                               question_number=dep.question)[0]
-            answers = Answer.objects.filter(
-                question=question)
-            next_question = Question.objects.filter(
-                topic=topic, question_number=dep.next_question)[0]
-            next_question_answers = Answer.objects.filter(
-                question=next_question)
-
-            next_question.default_next = question.default_next
-            next_question.save()
-
-            # First we populate the contingency question's answers with the
-            # default next answer
-            next_question_default_next_id = next_question.default_next.id
-            for answer in next_question_answers:
-                answer.next_questions = "[" + str(next_question_default_next_id) + "]"
-                answer.save()
-
-            # Now we point the current question's answer to the next question
-            if dep.answer == '*':
-                answers = answers
-            else:
-                answers = answers.filter(answer_number=dep.answer)
-            next_question_id = next_question.id
-            for answer in answers:
-                answer.next_questions = (answer.next_questions[:-1] + "," +
-                                         str(next_question_id) + "]")
-                answer.save()
-
+            
 def load_schema(schema):
     schema_name = schema['title']
     # old schemas don't have a 'parent' for schemas
@@ -253,7 +202,6 @@ def load_schema(schema):
                                        dependencies=schema['dependencies'])
     schema_parser.load_topics()
     schema_parser.load_dependencies()
-    test_load_dependencies()
     return schema_obj.id
 
 def load_article(article):
