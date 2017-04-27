@@ -11,18 +11,9 @@ function getHintedText(text, start, end, hints_offsets) {
   if ( ! Array.isArray(hints_offsets)) {
     return subtext;
   };
-  hints_offsets = hints_offsets.slice();
-  if (1) {
-    hints_offsets.push([1,6,"police"]);
-    hints_offsets.push([2,9,"protesters"]);
-    hints_offsets.push([3,9,"Protester"]);
-    hints_offsets.push([4,9,"protesters"]);
-    hints_offsets.push([5,9,"occupy"]);
-    hints_offsets.push([6,9,"officals"]);
-    hints_offsets.push([7,9,"officer"]);
-  }
   var fromIndex = 0;
   var output = [];
+  hints_offsets = hints_offsets.slice(); // Make a copy
   hints_offsets = hints_offsets.sort( (a,b) => (a[0] - b[0]) );
   hints_offsets.forEach( (offset) => {
     var hintText = offset[2];
@@ -474,7 +465,9 @@ const HighlightTool = React.createClass({
     }*/
 
     return (
-      <div onKeyDown={this.handleKeyDown} ref={(ref) => this.articleRef = ref } onMouseUp={this.handleClick}>
+      <div onKeyDown={this.handleKeyDown} ref={(ref) => this.articleRef = ref }
+           onMouseUp={this.handleClick}
+           className="article-click-box">
         {Array(highlights.length).fill().map((_,i) => {
           var curHL = highlights[i];
           start = curHL.end;
@@ -514,7 +507,7 @@ const HighlightTool = React.createClass({
             }
 
             return (
-              <span key={i}
+              <span key={curHL.start}
 // invalid attrib: source = {curHL.source}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
                 title={topics}
@@ -552,7 +545,7 @@ const HighlightTool = React.createClass({
               //"backgroundColor": "black",
             }
             return (
-              <span key={i}
+              <span key={curHL.start}
 // invalid attrib: source = {curHL.source}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
                 title={topics}
@@ -567,7 +560,7 @@ const HighlightTool = React.createClass({
           }
           else {
             return (
-              <span key={i}
+              <span key={curHL.start}
                 className="articleText"
                 onClick={this.handleSelect.bind(this, curHL.source)}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
@@ -578,7 +571,7 @@ const HighlightTool = React.createClass({
           }
         })}
 
-        <span key="tail" className="articleText">
+        <span key={text.length - tail.length} className="articleText">
           {getHintedText(tail, 0, tail.length, this.props.hints_offsets)}
         </span>
       </div>

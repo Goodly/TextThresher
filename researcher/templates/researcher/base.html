@@ -56,8 +56,9 @@
           </div>
           <div class="logout">
             <p>
+              /
               <a href="{% url 'admin:logout' %}?next={{ request.get_full_path|urlencode }}" class="logout-text">
-                / LOGOUT
+                Logout
               </a>
             </p>
           </div>
