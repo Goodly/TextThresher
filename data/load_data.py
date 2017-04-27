@@ -106,8 +106,7 @@ class TopicsSchemaParser(object):
         """
         topics = Topic.objects.filter(parent=self.topic_obj)
         for topic in topics:
-            questions = Question.objects.filter(topic=topic,
-                                                contingency=False) \
+            questions = Question.objects.filter(topic=topic) \
                                         .order_by('question_number')
             for i in range(len(questions) - 1):
                 self.write_answers(questions[i], questions[i + 1])
@@ -120,7 +119,6 @@ class TopicsSchemaParser(object):
         next_question: the next_question curr_question should point to by
                        default
         """
-        curr_question.default_next = next_question
         curr_question.save()
         answers = Answer.objects.filter(question=curr_question)
         for answer in answers:
