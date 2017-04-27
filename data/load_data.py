@@ -323,3 +323,8 @@ if __name__ == '__main__':
         print "Finished loading schemas"
     if args.article_dir:
         load_article_dir(args.article_dir, args.with_annotations)
+    if args.with_annotations:
+        print "Loaded existing annotations: highlights for %d articles" % (
+              ArticleHighlight.objects.count())
+    else:
+        print "Annotations (article highlights) not loaded."
