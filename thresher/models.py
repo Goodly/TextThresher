@@ -201,13 +201,9 @@ class Question(models.Model):
     question_type = models.CharField(max_length=10,
                                      choices=QUESTION_TYPE_CHOICES)
 
-    # Whether the question is a contingency one or not
-    contingency = models.BooleanField(default=False)
-
-    # The default next question (for mandatory questions)
-    default_next = models.ForeignKey("self",
-                                     related_name="next_default",
-                                     on_delete=models.SET_NULL, null=True)
+    # just like [Answer]next_questions, used for questions without choices
+    # such as text and dates. Could be used for 'if 01.02.any' as well.
+    next_questions = JSONField(default=list())
 
     class Meta:
         unique_together = ("topic", "question_text")
