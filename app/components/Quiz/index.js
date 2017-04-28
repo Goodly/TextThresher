@@ -36,7 +36,8 @@ export class Quiz extends Component {
     answer_selected: React.PropTypes.object,
     queue: React.PropTypes.array,
     review: React.PropTypes.bool,
-    color_id: React.PropTypes.object
+    color_id: React.PropTypes.object,
+    done: React.PropTypes.bool,
   }
 
   componentDidMount() {
@@ -134,7 +135,7 @@ export class Quiz extends Component {
     };
     var next_id = this.props.queue.length > 1 ? this.props.queue[1] : -1;
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
-    var button = showButton ? 
+    var button = showButton && !last_question ? 
       <div>
         <button type="button" onClick={() => {this.props.activeQuestion(next_id)}}> {"Next"} </button>
       </div>
@@ -263,6 +264,9 @@ export class Quiz extends Component {
   }
 
   render() {
+    if(this.props.done) {
+      return <div>Thank you for contributing to the project!</div>
+    }
 
     var highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();

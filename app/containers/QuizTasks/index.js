@@ -32,7 +32,8 @@ const mapStateToProps = state => {
     saveAndNext: state.quiz.saveAndNext,
     review: state.quiz.review,
     color_id: state.quiz.highlighter_color,
-    djangoQuizTasks: state.djangoQuizTasks
+    djangoQuizTasks: state.djangoQuizTasks,
+    done: state.quiz.done,
   }
 };
 

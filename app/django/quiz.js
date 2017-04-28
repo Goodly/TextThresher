@@ -46,8 +46,9 @@ function presentTask(container) {
     container.props.storeSaveAndNext(onSaveAndNext);
   } else {
     // TODO: update store with done flag and show nicely in UI
-    console.log('No more tasks.');
-    throw new Error('No more tasks.');
+    // console.log('No more tasks.');
+    // throw new Error('No more tasks.');
+    container.props.storeTasksDone();
   }
 }
 

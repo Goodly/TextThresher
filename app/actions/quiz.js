@@ -49,6 +49,12 @@ export function storeQuizTask(task) {
   };
 }
 
+export function storeTasksDone() {
+  return {
+    type: 'TASK_DONE',
+  }
+}
+
 export function answerSelected(question_type, question_id, answer_id, text) {
   return {
     type: 'ANSWER_SELECTED',

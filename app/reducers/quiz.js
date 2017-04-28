@@ -5,7 +5,8 @@ const initialState = {
   curr_question_id: -1,
   answer_selected: {},
   highlighter_color: {},
-  saveAndNext: null
+  saveAndNext: null,
+  done: false,
 };
 
 // helper function to initialize queue
@@ -13,6 +14,11 @@ function addNonContingentQuestions(questions) {
 
   var contained = new Set();
   for(var i = 0; i < questions.length; i++) {
+    // add in next_question from Question
+    for(var k = 0; k < questions[i].next_questions.length; k++) {
+      contained.add(questions[i].next_questions[k]);
+    }
+    // add in next_question from Answers
     for(var k = 0; k < questions[i].answers.length; k++) {
       for(var j = 0; j < questions[i].answers[k].next_questions.length; j++) {
         contained.add(questions[i].answers[k].next_questions[j]);
@@ -64,7 +70,8 @@ export function quiz(state = initialState, action) {
       return {
         ...state,
         currTask: action.task,
-        questions: initQueue(action.task)
+        questions: initQueue(action.task),
+        done: false
       }
     case 'ANSWER_SELECTED':
       var temp = Object.assign({}, state.answer_selected);
@@ -148,6 +155,11 @@ export function quiz(state = initialState, action) {
       return {
         ...state,
         queue: [-1]
+      }
+    case 'TASK_DONE':
+      return {
+        ...state,
+        done: true
       }
     case 'UPDATE_ACTIVE_QUESTION':
       return {

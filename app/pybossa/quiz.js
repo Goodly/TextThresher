@@ -58,7 +58,7 @@ export default function fetchPybossaQuiz(container) {
       container.props.storeSaveAndNext(onSaveAndNext);
     } else {
       // Displatch to store saying we are done with tasks
-      // storeTasksDone() #TODO
+      storeTasksDone(); 
       container.props.storeSaveAndNext( ()=>{} );
     }
   });
