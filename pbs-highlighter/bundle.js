@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9a42fad45e4af829543b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "b7a4048a68be1b5f0d0e"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -10758,9 +10758,13 @@
 	});
 	var colors = exports.colors = ['rgb(241,96,97)', 'rgb(253,212,132)', 'rgb(175,215,146)', 'rgb(168,210,191)', 'rgb(255,153,000)', 'rgb(102,000,153)', 'rgb(000,153,153)', 'rgb(255,102,255)', 'rgb(000,051,153)', 'rgb(153,000,204)', 'rgb(70,194,64)', 'rgb(94,242,188)'];
 	
-	// added 3 of above colors to these rgb kelly_colors
-	var kelly_colors = exports.kelly_colors = ['rgb(255, 179, 0)', 'rgb(255, 104, 0)', 'rgb(166, 189, 215)', 'rgb(193, 0, 32)', 'rgb(206, 162, 98)', 'rgb(129, 112, 102)', 'rgb(0, 125, 52)', 'rgb(246, 118, 142)', 'rgb(0, 83, 138)', 'rgb(255, 122, 92)', 'rgb(83, 55, 122)', 'rgb(255, 142, 0)', 'rgb(179, 40, 81)', 'rgb(244, 200, 0)', 'rgb(127, 24, 13)', 'rgb(147, 170, 0)', 'rgb(35, 44, 22)', 'rgb(89, 51, 21)', 'rgb(128, 62, 117)', 'rgb(241, 58, 19)', 'rgb(241,96,97)', 'rgb(253,212,132)', // date highlights - uses 2nd to last
-	'rgb(175,215,146)'];
+	// This started out as Kelly categorical colors, but has
+	// been revised to a set of distinguishable colors when
+	// used to highlight reversed (white) text.
+	var kelly_colors = exports.kelly_colors = ['rgb(241,96,97)', 'rgb(253,212,132)', 'rgb(175,215,146)', 'rgb(166, 189, 215)', 'rgb(206, 162, 98)', 'rgb(255,153,000)', 'rgb(255,102,255)', 'rgb(94,242,188)', 'rgb(000,153,153)', 'rgb(193, 0, 32)', 'rgb(255, 104, 0)', 'rgb(246, 118, 142)', 'rgb(255, 142, 0)', 'rgb(168,210,191)', 'rgb(179, 40, 81)', 'rgb(244, 200, 0)', 'rgb(147, 170, 0)', 'rgb(128, 62, 117)', 'rgb(129, 112, 102)', 'rgb(0, 125, 52)', 'rgb(102,000,153)', // following too dark for black text
+	'rgb(127, 24, 13)', 'rgb(000,051,153)', 'rgb(0, 83, 138)', 'rgb(83, 55, 122)', 'rgb(35, 44, 22)', 'rgb(89, 51, 21)', 'rgb(153,000,204)', // end of too dark
+	'rgb(255, 179, 0)', // date highlights - uses 2nd to last
+	'rgb(70,194,64)'];
 	
 	var kelly_color_hex = ['#FFB300', // Vivid Yellow
 	'#FF6800', // Vivid Orange

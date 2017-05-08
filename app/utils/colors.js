@@ -13,31 +13,40 @@ export const colors = [
   'rgb(94,242,188)'
 ];
 
-// added 3 of above colors to these rgb kelly_colors
+// This started out as Kelly categorical colors, but has
+// been revised to a set of distinguishable colors when
+// used to highlight reversed (white) text.
 export const kelly_colors = [
-  'rgb(255, 179, 0)',
-  'rgb(255, 104, 0)',
+  'rgb(241,96,97)',
+  'rgb(253,212,132)',
+  'rgb(175,215,146)',
   'rgb(166, 189, 215)',
-  'rgb(193, 0, 32)',
   'rgb(206, 162, 98)',
-  'rgb(129, 112, 102)',
-  'rgb(0, 125, 52)',
+  'rgb(255,153,000)',
+  'rgb(255,102,255)',
+  'rgb(94,242,188)',
+  'rgb(000,153,153)',
+  'rgb(193, 0, 32)',
+  'rgb(255, 104, 0)',
   'rgb(246, 118, 142)',
-  'rgb(0, 83, 138)',
-  'rgb(255, 122, 92)',
-  'rgb(83, 55, 122)',
   'rgb(255, 142, 0)',
+  'rgb(168,210,191)',
   'rgb(179, 40, 81)',
   'rgb(244, 200, 0)',
-  'rgb(127, 24, 13)',
   'rgb(147, 170, 0)',
+  'rgb(128, 62, 117)',
+  'rgb(129, 112, 102)',
+  'rgb(0, 125, 52)',
+  'rgb(102,000,153)', // following too dark for black text
+  'rgb(127, 24, 13)',
+  'rgb(000,051,153)',
+  'rgb(0, 83, 138)',
+  'rgb(83, 55, 122)',
   'rgb(35, 44, 22)',
   'rgb(89, 51, 21)',
-  'rgb(128, 62, 117)',
-  'rgb(241, 58, 19)',
-  'rgb(241,96,97)',
-  'rgb(253,212,132)', // date highlights - uses 2nd to last
-  'rgb(175,215,146)', // text highlights - uses last
+  'rgb(153,000,204)', // end of too dark
+  'rgb(255, 179, 0)', // date highlights - uses 2nd to last
+  'rgb(70,194,64)', // text highlights - uses last
 ];
 
 const kelly_color_hex = [
