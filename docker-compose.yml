@@ -28,10 +28,7 @@ services:
     command: ["python", "data/rqworker.py"]
 
   nlp_hints:
-    # python:2.7-slim
-    build:
-      context: ./docker
-      dockerfile: ./nlp_hints/Dockerfile
+    image: teamforecast/nlp_hints:latest
     depends_on:
       - django_rq
 
