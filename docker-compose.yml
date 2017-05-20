@@ -28,7 +28,7 @@ services:
     command: ["python", "data/rqworker.py"]
 
   nlp_hints:
-    image: teamforecast/nlp_hints:1.0.0
+    image: teamforecast/nlp_hints:latest
     depends_on:
       - django_rq
 
