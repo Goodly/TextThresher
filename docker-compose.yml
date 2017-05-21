@@ -6,12 +6,10 @@ services:
       - db
       - django_rq
     build:
-      context: ./docker
-      dockerfile: ./thresher_api/Dockerfile
+      context: .
+      dockerfile: ./docker/thresher_api/Dockerfile
     ports:
       - "5000:5000"
-    volumes:
-      - .:/home/thresher
 
   import_export_worker:
     # Same image as thresher_api
@@ -19,12 +17,8 @@ services:
     depends_on:
       - django_rq
     build:
-      context: ./docker
-      dockerfile: ./thresher_api/Dockerfile
-    volumes:
-      - .:/home/thresher
-    environment:
-      PYTHONPATH: /home/thresher
+      context: .
+      dockerfile: ./docker/thresher_api/Dockerfile
     command: ["python", "data/rqworker.py"]
 
   nlp_hints:
