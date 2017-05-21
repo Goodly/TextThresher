@@ -1,0 +1,9 @@
+version: '2'
+services:
+  thresher_api:
+    volumes:
+      - .:/home/thresher
+
+  import_export_worker:
+    volumes:
+      - .:/home/thresher
