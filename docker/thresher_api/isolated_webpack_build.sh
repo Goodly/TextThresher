@@ -1,10 +1,8 @@
 #!/bin/bash
-cd /home/webpack_build
+cd $WEBPACK_ISOLATED_DIR
 
-# Create the directories that receive build output
+# Create the directory that receives build output
 mkdir dist
-mkdir pbs-highlighter
-mkdir pbs-quiz
 
 ln -s /home/thresher/.babelrc .
 ln -s /home/thresher/.bowerrc .
