@@ -19,7 +19,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/thresher_api/Dockerfile
-    command: ["python", "data/rqworker.py"]
+    command: ["python", "/home/thresher/data/rqworker.py"]
 
   nlp_hints:
     image: teamforecast/nlp_hints:latest
