@@ -4,6 +4,7 @@ import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import OnBuildPlugin from 'on-build-webpack';
+import CleanWebpackPlugin from 'clean-webpack-plugin';
 import child_process from 'child_process';
 
 const PROTOCOL = 'http';
@@ -12,22 +13,21 @@ const WEBPACK_HOSTNAME = process.env.WEBPACK_HOSTNAME || 'localhost';
 const WEBPACK_PORT = parseInt(process.env.WEBPACK_PORT, 10) || 3001;
 const PUBLIC_PATH = `${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}/`;
 
-if (process.env.WEBPACK === 'cleandist') {
-  // clean 'dist/' dir and copy files from the 'app/staticroot/' dir
-  require('./utils/clean-dist')();
-  require('./utils/copy-to-dist')();
-  // give webpack stats a blank line to work with
-  console.log('\n');
+// Default to building outside container using host mounted dir and tools
+var buildDir = path.resolve(__dirname, '..');
+// This is only set inside the container
+if (process.env.WEBPACK_ISOLATED_DIR) {
+  buildDir = process.env.WEBPACK_ISOLATED_DIR;
 };
 
 const PATHS = {
-  app: path.resolve(__dirname, '../app'),
-  dist: path.resolve(__dirname, '../dist'),
-  highlight: path.resolve(__dirname, '../pbs-highlighter'),
-  quiz: path.resolve(__dirname, '../pbs-quiz'),
-  staticRoot: path.resolve(__dirname, '../app/staticroot'),
-  vendorPath: path.resolve(__dirname, '../vendor'),
-  bowerPath: path.resolve(__dirname, '../vendor/bower_components')
+  app: path.resolve(buildDir, './app'),
+  dist: path.resolve(buildDir, './dist'),
+  highlight: path.resolve(buildDir, './pbs-highlighter'),
+  quiz: path.resolve(buildDir, './pbs-quiz'),
+  staticRoot: path.resolve(buildDir, './app/staticroot'),
+  vendorPath: path.resolve(buildDir, './vendor'),
+  bowerPath: path.resolve(buildDir, './vendor/bower_components')
 };
 
 function resolveBowerPath(componentPath) {
@@ -37,13 +37,8 @@ function resolveBowerPath(componentPath) {
 function execCmd(command) {
   console.log('\n');
   console.log(command);
-  try {
-    child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
-  } catch (err) {
-    console.log('\n******* BUILD FAILED');
-    console.log(err.message);
-    console.log('*******');
-  };
+  // If err, throw and halt immediately.
+  child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
 };
 
 export default {
@@ -63,7 +58,7 @@ export default {
       chunkModules: false
     }
   },
-  context: path.join(__dirname, '../'),
+  context: buildDir,
   devtool: '#source-map',
   entry: {
     app: [
@@ -98,7 +93,7 @@ export default {
     preLoaders: [
       {
         test: /\.js$/,
-        include: path.join(__dirname, '../app'),
+        include: PATHS.app,
         loaders: [] // ['eslint-loader']
       }
     ],
@@ -125,7 +120,7 @@ export default {
       },
       {
         test: /\.(svg|ttf)$/,
-        include: path.join(__dirname, '../app/styles/fonts'),
+        include: path.resolve(buildDir, './app/styles/fonts'),
         loader: "file-loader"
       },
       {
@@ -136,6 +131,12 @@ export default {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(['dist'], {
+      root: PATHS.buildDir,
+      verbose: true,
+      dry: false,
+      exclude: []
+    }),
     new HtmlWebpackPlugin({
       title: 'TextThresher',
       template: './app/templates/index_template.html',
@@ -144,11 +145,11 @@ export default {
       filename: 'index.html',
     }),
     new OnBuildPlugin(function () {
-      if (process.env.WEBPACK === 'cleandist') {
-        execCmd(`cp ${PATHS.dist}/highlight.bundle.js ${PATHS.highlight}/bundle.js`);
-        execCmd(`cp ${PATHS.dist}/quiz.bundle.js ${PATHS.quiz}/bundle.js`);
-        console.log('\n');
-      }
+      // copy files from the 'app/staticroot/' dir
+      execCmd(`cp -arv ${PATHS.app}/staticroot/* ${PATHS.dist}`); // */
+      execCmd(`cp -av ${PATHS.dist}/highlight.bundle.js ${PATHS.highlight}/bundle.js`);
+      execCmd(`cp -av ${PATHS.dist}/quiz.bundle.js ${PATHS.quiz}/bundle.js`);
+      console.log('\n');
     }),
     new webpack.NoErrorsPlugin(),
 //  new webpack.optimize.DedupePlugin(),

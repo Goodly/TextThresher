@@ -2,14 +2,17 @@ version: '2'
 services:
   thresher_api:
     # python:2.7-slim installs postgres 9.4 client
-    depends_on:
-      - db
-      - django_rq
     build:
       context: .
       dockerfile: ./docker/thresher_api/Dockerfile
     ports:
       - "5000:5000"
+    depends_on:
+      - db
+      - django_rq
+    environment:
+      DATABASE_URL: 'postgres://zz:testonly3UkM429Yp@db:5432/thresher'
+      SECRET_KEY: 'testonlyZTnB25g,jyH7N9:EiAH5shE8K20B93Q9qtOgwgX!FSo1FwGS-zv;MX;C'
 
   import_export_worker:
     # Same image as thresher_api
@@ -19,7 +22,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/thresher_api/Dockerfile
-    command: ["python", "data/rqworker.py"]
+    environment:
+      DATABASE_URL: 'postgres://zz:testonly3UkM429Yp@db:5432/thresher'
+    command: ["python", "/home/thresher/data/rqworker.py"]
 
   nlp_hints:
     image: teamforecast/nlp_hints:latest
@@ -46,6 +51,6 @@ services:
 #    - ./_postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=zz
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=testonly3UkM429Yp
       - POSTGRES_DB=thresher
 #    - PGDATA=/var/lib/postgresql/data/pgdata

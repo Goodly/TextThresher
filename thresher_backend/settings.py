@@ -13,10 +13,13 @@ from django.contrib import admin
 admin.site.site_header = 'TextThresher Admin'
 admin.site.site_title = 'TextThresher Site Admin'
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HIGHLIGHTER_BUNDLE_JS = os.path.join(BASE_DIR, 'pbs-highlighter/bundle.js')
-QUIZ_BUNDLE_JS = os.path.join(BASE_DIR, 'pbs-quiz/bundle.js')
+# Dockerfile sets WEBPACK_ISOLATED_DIR to the isolated build, not the
+# host mounted volume. Devs should 'npm run build' inside the container only.
+if os.environ.get("WEBPACK_ISOLATED_DIR"):
+    BASE_DIR = os.environ.get("WEBPACK_ISOLATED_DIR")
+HIGHLIGHTER_BUNDLE_JS = os.path.join(BASE_DIR, 'dist/highlight.bundle.js')
+QUIZ_BUNDLE_JS = os.path.join(BASE_DIR, 'dist/quiz.bundle.js')
 
 # REST Framework settings
 REST_FRAMEWORK = {
@@ -36,6 +39,8 @@ REST_FRAMEWORK = {
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'yfxov0&1l8#ouo-f6_(_gigpewf72_a84srnlk%f#11$xzai5e'
+if os.environ.get("SECRET_KEY"):
+    SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -94,6 +99,8 @@ WSGI_APPLICATION = 'thresher_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+CONN_MAX_AGE=0
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -101,9 +108,16 @@ DATABASES = {
         'USER': 'zz',
         'PASSWORD': '',
         'HOST': 'db',
-        'PORT': '5432'
+        'PORT': '5432',
+        'CONN_MAX_AGE': CONN_MAX_AGE
     }
 }
+
+# Use environment variable to set database connection if available
+if os.environ.get("DATABASE_URL"):
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(conn_max_age=CONN_MAX_AGE)
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -134,16 +148,8 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Heroku setup
-
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# get the database info from heroku if available
-if os.environ.get("DATABASE_URL"):
-    import dj_database_url
-    DATABASES['default'] = dj_database_url.config()
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
