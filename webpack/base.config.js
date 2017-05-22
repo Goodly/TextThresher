@@ -23,8 +23,6 @@ if (process.env.WEBPACK_ISOLATED_DIR) {
 const PATHS = {
   app: path.resolve(buildDir, './app'),
   dist: path.resolve(buildDir, './dist'),
-  highlight: path.resolve(buildDir, './pbs-highlighter'),
-  quiz: path.resolve(buildDir, './pbs-quiz'),
   staticRoot: path.resolve(buildDir, './app/staticroot'),
   vendorPath: path.resolve(buildDir, './vendor'),
   bowerPath: path.resolve(buildDir, './vendor/bower_components')
@@ -131,6 +129,7 @@ export default {
     ]
   },
   plugins: [
+    // BUG: This seems to be using __dirname instead of PATHS.buildDir
     new CleanWebpackPlugin(['dist'], {
       root: PATHS.buildDir,
       verbose: true,
@@ -147,8 +146,6 @@ export default {
     new OnBuildPlugin(function () {
       // copy files from the 'app/staticroot/' dir
       execCmd(`cp -arv ${PATHS.app}/staticroot/* ${PATHS.dist}`); // */
-      execCmd(`cp -av ${PATHS.dist}/highlight.bundle.js ${PATHS.highlight}/bundle.js`);
-      execCmd(`cp -av ${PATHS.dist}/quiz.bundle.js ${PATHS.quiz}/bundle.js`);
       console.log('\n');
     }),
     new webpack.NoErrorsPlugin(),
