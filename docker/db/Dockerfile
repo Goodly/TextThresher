@@ -12,5 +12,8 @@ RUN apt-get install -q -y less vim-tiny
 
 RUN rm -rf /var/lib/apt/lists/*
 
+WORKDIR /scripts
+COPY ./db/reset_pybossa_db.sh .
+
 WORKDIR /docker-entrypoint-initdb.d
 COPY ./db/init-user-db.sh .
