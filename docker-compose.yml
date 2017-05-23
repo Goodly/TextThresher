@@ -27,7 +27,7 @@ services:
     command: ["python", "/home/thresher/data/rqworker.py"]
 
   nlp_hints:
-    image: teamforecast/nlp_hints:latest
+    image: goodly/nlp_hints:latest
     depends_on:
       - django_rq
 
@@ -36,7 +36,7 @@ services:
 
   pybossa:
     # ubuntu:14.04 installs postgres 9.4 client
-    image: teamforecast/pybossa:latest
+    image: goodly/pybossa:latest
     depends_on:
       - db
     ports:
