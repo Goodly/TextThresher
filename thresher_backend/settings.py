@@ -14,10 +14,10 @@ admin.site.site_header = 'TextThresher Admin'
 admin.site.site_title = 'TextThresher Site Admin'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Dockerfile sets WEBPACK_ISOLATED_DIR to the isolated build, not the
+# Dockerfile sets WEBPACK_BUILD_DIR to the isolated build, not the
 # host mounted volume. Devs should 'npm run build' inside the container only.
-if os.environ.get("WEBPACK_ISOLATED_DIR"):
-    BASE_DIR = os.environ.get("WEBPACK_ISOLATED_DIR")
+if os.environ.get("WEBPACK_BUILD_DIR"):
+    BASE_DIR = os.environ.get("WEBPACK_BUILD_DIR")
 HIGHLIGHTER_BUNDLE_JS = os.path.join(BASE_DIR, 'dist/highlight.bundle.js')
 QUIZ_BUNDLE_JS = os.path.join(BASE_DIR, 'dist/quiz.bundle.js')
 
