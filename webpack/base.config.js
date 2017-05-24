@@ -14,18 +14,19 @@ const WEBPACK_PORT = parseInt(process.env.WEBPACK_PORT, 10) || 3001;
 const PUBLIC_PATH = `${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}/`;
 
 // Default to building outside container using host mounted dir and tools
-var buildDir = path.resolve(__dirname, '..');
+var buildPath = path.resolve(__dirname, '..');
 // This is only set inside the container
-if (process.env.WEBPACK_ISOLATED_DIR) {
-  buildDir = process.env.WEBPACK_ISOLATED_DIR;
+if (process.env.WEBPACK_BUILD_DIR) {
+  buildPath = path.resolve(process.env.WEBPACK_BUILD_DIR);
 };
 
 const PATHS = {
-  app: path.resolve(buildDir, './app'),
-  dist: path.resolve(buildDir, './dist'),
-  staticRoot: path.resolve(buildDir, './app/staticroot'),
-  vendorPath: path.resolve(buildDir, './vendor'),
-  bowerPath: path.resolve(buildDir, './vendor/bower_components')
+  buildPath: buildPath,
+  app: path.resolve(buildPath, './app'),
+  dist: path.resolve(buildPath, './dist'),
+  staticRoot: path.resolve(buildPath, './app/staticroot'),
+  vendorPath: path.resolve(buildPath, './vendor'),
+  bowerPath: path.resolve(buildPath, './vendor/bower_components')
 };
 
 function resolveBowerPath(componentPath) {
@@ -56,7 +57,7 @@ export default {
       chunkModules: false
     }
   },
-  context: buildDir,
+  context: PATHS.buildPath,
   devtool: '#source-map',
   entry: {
     app: [
@@ -98,7 +99,7 @@ export default {
     loaders: [
       {
         test: /\.json$/,
-        loader: 'json'
+        loader: 'json-loader'
       },
       {
         test: /\.css$/,
@@ -110,7 +111,7 @@ export default {
       },
       {
         test: /\.jpg$/,
-        loader: 'file'
+        loader: 'file-loader'
       },
       {
         test: /\.(jpe?g|png|gif|woff(2)?|eot|otf)$/,
@@ -118,20 +119,22 @@ export default {
       },
       {
         test: /\.(svg|ttf)$/,
-        include: path.resolve(buildDir, './app/styles/fonts'),
-        loader: "file-loader"
+        include: path.resolve(buildPath, './app/styles/fonts'),
+        loader: 'file-loader'
       },
       {
         test: /\.js$/,
         include: [/app/, /test/],
-        loaders: ["babel-loader?cacheDirectory=true"],
+        loader: 'babel-loader',
+        query: {
+          cacheDirectory: true,
+        },
       }
     ]
   },
   plugins: [
-    // BUG: This seems to be using __dirname instead of PATHS.buildDir
-    new CleanWebpackPlugin(['dist'], {
-      root: PATHS.buildDir,
+    new CleanWebpackPlugin(['dist/*'], {
+      root: PATHS.buildPath,
       verbose: true,
       dry: false,
       exclude: []

@@ -1,11 +1,6 @@
 version: '2'
 services:
   thresher_api:
-    environment:
-      - WEBPACK_PORT=3000
-      - WEBPACK_LISTEN_IP=0.0.0.0
-    ports:
-      - "3000:3000"
     volumes:
       - .:/home/thresher
 

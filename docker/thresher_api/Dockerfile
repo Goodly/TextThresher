@@ -8,13 +8,12 @@ COPY /docker/bashrc_to_docker /root/.bashrc
 # ARG vars exist only during build and can be overridden by --build-args
 ARG DEBIAN_FRONTEND=noninteractive
 
-# git a dependency of bower
+# git is a dependency of bower
 RUN apt-get update -q && apt-get install -q -y \
         gcc \
         gettext \
         postgresql-client libpq-dev \
-        git \
-        less
+        vim git curl less psmisc
 
 RUN rm -rf /var/lib/apt/lists/*
 
@@ -28,16 +27,9 @@ RUN pip install ipython
 ARG USER=thresher
 ARG USER_ID=9000
 ARG GROUP_ID=9000
-ARG HOME=/home/webpack_build
+ARG HOME=/home/thresher
 RUN groupadd -g ${GROUP_ID} ${USER} && \
       useradd --shell /bin/bash --home ${HOME} -u ${USER_ID} -g ${GROUP_ID} ${USER}
-COPY /docker/bashrc_to_docker ${HOME}/.bashrc
-
-ENV PYTHONPATH /home/thresher
-# note: Development config mounts a host volume on this path.
-WORKDIR /home/thresher
-COPY / /home/thresher
-RUN chown -R ${USER}:${USER} /home/thresher
 
 WORKDIR /home/download
 # https://nodejs.org/dist/v6.10.3/node-v6.10.3-linux-x64.tar.xz
@@ -52,16 +44,32 @@ RUN tar -C /usr/local --strip-components 1 -xf ${NODE_FILE}
 WORKDIR /var/www
 RUN chown ${USER}:${USER} /var/www
 
-WORKDIR /home/webpack_build
-RUN chown ${USER}:${USER} /home/webpack_build
-# have to install -g as root
+ENV PYTHONPATH /home/thresher
+# note: Development config mounts the git repo root on this path.
+# Copy minimal files needed to bower install and npm install to try
+# and re-use cache
+WORKDIR /home/thresher
+COPY /package.json /home/thresher
+COPY /bower.json /home/thresher
+COPY /.bowerrc /home/thresher
+RUN chown -R ${USER}:${USER} /home/thresher
+
+ENV WEBPACK_BUILD_DIR /home/thresher
+WORKDIR /home/thresher
+# have to be root to install -g
 RUN npm install -g bower
 USER ${USER}
-WORKDIR /home/webpack_build
-ENV WEBPACK_ISOLATED_DIR /home/webpack_build
-RUN /home/thresher/docker/thresher_api/isolated_webpack_build.sh
-RUN npm run deploy
+RUN npm install
+RUN bower install
 
+# Now copy the rest of the repo into the image - any file change breaks build cache
+COPY / /home/thresher
+USER root
+RUN chown -R ${USER}:${USER} /home/thresher
+USER ${USER}
+RUN npm run deploy:quiet
+
+COPY /docker/bashrc_to_docker ${HOME}/.bashrc
 EXPOSE 5000
 
 CMD ["gunicorn", "-b", ":5000", "-w", "10", "--error-logfile", "-", \

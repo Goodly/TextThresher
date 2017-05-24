@@ -6,11 +6,14 @@ services:
       context: .
       dockerfile: ./docker/thresher_api/Dockerfile
     ports:
+      - "3001:3001"
       - "5000:5000"
     depends_on:
       - db
       - django_rq
     environment:
+      WEBPACK_PORT: "3001"
+      WEBPACK_LISTEN_IP: "0.0.0.0"
       DATABASE_URL: 'postgres://zz:testonly3UkM429Yp@db:5432/thresher'
       SECRET_KEY: 'testonlyZTnB25g,jyH7N9:EiAH5shE8K20B93Q9qtOgwgX!FSo1FwGS-zv;MX;C'
 
@@ -27,7 +30,7 @@ services:
     command: ["python", "/home/thresher/data/rqworker.py"]
 
   nlp_hints:
-    image: teamforecast/nlp_hints:latest
+    image: goodly/nlp_hints:latest
     depends_on:
       - django_rq
 
@@ -36,7 +39,7 @@ services:
 
   pybossa:
     # ubuntu:14.04 installs postgres 9.4 client
-    image: teamforecast/pybossa:latest
+    image: goodly/pybossa:latest
     depends_on:
       - db
     ports:
