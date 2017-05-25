@@ -1,7 +1,7 @@
 {
   "name": "annotator-custom-editor",
   "dependencies": {
-    "bootstrap": "~3.3.5",
-    "modernizr": "~2.8.3"
+    "bootstrap": "~3.3.7",
+    "modernizr": "~3.5.0"
   }
 }
