@@ -26,11 +26,6 @@ const PATHS = {
   dist: path.resolve(buildPath, './dist'),
   staticRoot: path.resolve(buildPath, './app/staticroot'),
   vendorPath: path.resolve(buildPath, './vendor'),
-  bowerPath: path.resolve(buildPath, './vendor/bower_components')
-};
-
-function resolveBowerPath(componentPath) {
-  return path.resolve(PATHS.bowerPath, componentPath);
 };
 
 function execCmd(command) {
@@ -74,10 +69,7 @@ export default {
     ],
   },
   resolve: {
-    alias: {
-      modernizr: resolveBowerPath('modernizr/modernizr.js'),
-    },
-    root: [PATHS.app, PATHS.bowerPath],
+    root: [PATHS.app],
     modulesDirectories: ['node_modules', 'web_modules'],
     extensions: ['', '.js', '.jsx']
   },
@@ -155,7 +147,7 @@ export default {
 //  new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin()
   ],
-  noParse: [/node_modules/, new RegExp(PATHS.bowerPath)],
+  noParse: [/node_modules/],
   externals: {
     'cheerio': 'window',
     'react/addons': true,
