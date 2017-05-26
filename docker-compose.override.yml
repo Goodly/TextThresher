@@ -3,7 +3,11 @@ services:
   thresher_api:
     volumes:
       - .:/home/thresher
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
 
   import_export_worker:
     volumes:
       - .:/home/thresher
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
