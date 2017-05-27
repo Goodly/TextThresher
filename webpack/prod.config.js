@@ -4,7 +4,6 @@ console.log('Building with prod.config.js');
 /* eslint camelcase: 0 */
 
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // TODO: pipe in stats
 // var writeStats = require('./utils/write-stats');
@@ -19,6 +18,10 @@ config.plugins.push(
       BROWSER: JSON.stringify(true),
       NODE_ENV: JSON.stringify('production')
     }
+  }),
+
+  new webpack.LoaderOptionsPlugin({
+    minimize: true
   }),
 
   // optimizations

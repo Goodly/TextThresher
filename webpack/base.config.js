@@ -69,9 +69,8 @@ export default {
     ],
   },
   resolve: {
-    root: [PATHS.app],
-    modulesDirectories: ['node_modules', 'web_modules'],
-    extensions: ['', '.js', '.jsx']
+    modules: [PATHS.app, 'node_modules'],
+    extensions: ['.js', '.jsx']
   },
   output: {
     path: PATHS.dist,
@@ -81,46 +80,85 @@ export default {
     publicPath: PUBLIC_PATH
   },
   module: {
-    preLoaders: [
-      {
-        test: /\.js$/,
-        include: PATHS.app,
-        loaders: [] // ['eslint-loader']
-      }
-    ],
-    loaders: [
-      {
-        test: /\.json$/,
-        loader: 'json-loader'
-      },
+    rules: [
       {
         test: /\.css$/,
-        loaders: [ 'style-loader', 'css-loader' ]
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader'
+          }
+        ]
       },
       {
         test: /\.scss$/,
-        loader: 'style!css?sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap'
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'autoprefixer-loader',
+            options: {
+              browsers: 'last 2 version'
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              outputStyle: 'expanded',
+              sourceMap: true
+            }
+          }
+        ]
       },
       {
         test: /\.jpg$/,
-        loader: 'file-loader'
+        use: [
+          {
+            loader: 'file-loader'
+          }
+        ]
       },
       {
         test: /\.(jpe?g|png|gif|woff(2)?|eot|otf)$/,
-        loader: "url?limit=10000&name=[sha512:hash:base64:7].[ext]"
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: '10000',
+              name: "[sha512:hash:base64:7].[ext]"
+            }
+          }
+        ]
       },
       {
         test: /\.(svg|ttf)$/,
         include: path.resolve(buildPath, './app/styles/fonts'),
-        loader: 'file-loader'
+        use: [
+          {
+            loader: 'file-loader'
+          }
+        ]
       },
       {
         test: /\.js$/,
         include: [/app/, /test/],
-        loader: 'babel-loader',
-        query: {
-          cacheDirectory: true,
-        },
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+            }
+          }
+        ],
       }
     ]
   },
@@ -143,11 +181,8 @@ export default {
       execCmd(`cp -arv ${PATHS.app}/staticroot/* ${PATHS.dist}`); // */
       console.log('\n');
     }),
-    new webpack.NoErrorsPlugin(),
-//  new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
   ],
-  noParse: [/node_modules/],
   externals: {
     'cheerio': 'window',
     'react/addons': true,
