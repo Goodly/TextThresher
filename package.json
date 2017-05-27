@@ -7,6 +7,7 @@
     "url": "git@github.com:Goodly/TextThresher.git"
   },
   "scripts": {
+    "lint": "eslint",
     "dev": "NODE_ENV=development DEBUG=dev node --harmony ./webpack/dev-server.js",
     "serve": "NODE_ENV=development DEBUG=dev webpack-dev-server --config webpack.config.js",
     "build": "NODE_ENV=development DEBUG=dev webpack --config webpack.config.js --progress",

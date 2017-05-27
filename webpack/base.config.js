@@ -159,6 +159,25 @@ export default {
             }
           }
         ],
+      },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        include: [PATHS.app],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+            }
+          },
+          {
+            loader: 'eslint-loader',
+            options: {
+              cache: true
+            }
+          }
+        ],
       }
     ]
   },
