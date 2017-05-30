@@ -35,7 +35,7 @@ function execCmd(command) {
   child_process.execSync(command, { cwd: PATHS.dist, timeout: 5000 });
 };
 
-export default {
+const config = {
   devServer: {
     contentBase: [PATHS.staticRoot, PATHS.vendorPath],
     publicPath: PUBLIC_PATH,
@@ -190,3 +190,38 @@ export default {
     'react/lib/ReactContext': true
   }
 };
+// See https://webpack.js.org/configuration/devtool/#devtool
+// cheap-module-source-map is 5% smaller and 5 seconds vs 9 seconds
+// on my AWS t2.medium
+// eslint-disable-next-line no-process-env
+if (process.env.INLINE) {
+  // Inline pushes quiz.bundle.js over 5MB, the Pybossa upload limit
+  config.devtool = 'inline-source-map'
+}
+
+// eslint-disable-next-line no-process-env
+if (process.env.ESLINT) {
+  config.module.rules.unshift(
+    {
+      enforce: 'pre',
+      test: /\.js$/,
+      include: [PATHS.app],
+      use: [
+        {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+          }
+        },
+        {
+          loader: 'eslint-loader',
+          options: {
+            cache: true
+          }
+        }
+      ],
+    }
+  );
+}
+
+module.exports = config;
