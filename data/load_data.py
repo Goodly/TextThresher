@@ -17,7 +17,7 @@ from django.core.exceptions import ValidationError
 from data import init_defaults
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
-from data.legacy.parse_schema import parse_schema as old_parse_schema
+from data.parse_schema_v2 import parse_schema as parse_schema_v2
 
 from thresher.models import (Project, Article, Topic, HighlightGroup,
                              ArticleHighlight, Question, Answer,
@@ -208,6 +208,8 @@ def load_article(article):
     try: # Catch duplicate article ids and assign new ids.
         existing_article = Article.objects.get(article_number=new_id)
         if article['text'] != existing_article.text:
+            # Using ORM sort in inner loop just to find new max id...fix this.
+            # This is not running in parallel or anything.
             max_id = Article.objects.all().order_by('-article_number')[0].article_number
             new_id = max_id + 1 if max_id >= HIGH_ID else HIGH_ID
             print "NEW ID!", new_id
@@ -276,10 +278,10 @@ def load_schema_dir(dirpath):
     for schema_file in schema_files:
         load_schema(parse_schema(os.path.join(dirpath, schema_file)))
 
-def load_old_schema_dir(dirpath):
+def load_schema_v2_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
     for schema_file in schema_files:
-        load_schema(old_parse_schema(os.path.join(dirpath, schema_file)))
+        load_schema(parse_schema_v2(os.path.join(dirpath, schema_file)))
 
 def load_article_dir(dirpath, with_annotations=False):
     for article_filename in os.listdir(dirpath):
@@ -294,13 +296,13 @@ def load_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-s', '--schema-dir',
-        help='The directory holding raw schema files for the TUA types')
+        help='Directory holding schemas in version 1 format.')
     parser.add_argument(
-        '-o', '--old-schema-dir',
-        help='The directory holding old schema files')
+        '-v2', '--schema-v2-dir',
+        help='Directory holding schema files in version 2 format.')
     parser.add_argument(
         '-d', '--article-dir',
-        help='directory with articles to load')
+        help='Directory with articles to load')
     parser.add_argument(
         '-a', '--with-annotations',
         default=False,
@@ -316,15 +318,15 @@ if __name__ == '__main__':
     created_by = init_defaults.createNick(groups=[researchers])
     args = load_args()
     if args.schema_dir:
+        print "Loading schemas in version 1 format"
         load_schema_dir(args.schema_dir)
-    if args.old_schema_dir:
-        print "Loading Old Schemas"
-        load_old_schema_dir(args.old_schema_dir)
+        print "Finished loading schemas"
+    if args.schema_v2_dir:
+        print "Loading schemas in version 2 format"
+        load_schema_v2_dir(args.schema_v2_dir)
         print "Finished loading schemas"
     if args.article_dir:
         load_article_dir(args.article_dir, args.with_annotations)
     if args.with_annotations:
         print "Loaded existing annotations: highlights for %d articles" % (
               ArticleHighlight.objects.count())
-    else:
-        print "Annotations (article highlights) not loaded."

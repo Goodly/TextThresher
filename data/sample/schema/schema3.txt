@@ -1,5 +1,0 @@
-title: Camp
-
-Instructions: This topic includes all information describing Occupy encampments, including camp facilities, demographics, activities, General Assemblies, difficulties, and more. If words or phrases describe the camp and happenings at the camp, highlight them with this topic. EXCLUDE information about major protester- or police-initiated events that occur at the camp. Such information should be highlighted with the Protester or Police topic highlighters.
-
-glossary: major event: A major event.

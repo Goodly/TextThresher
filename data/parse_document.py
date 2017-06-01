@@ -6,20 +6,6 @@ import sys
 from datetime import date
 
 # This file is in the data folder.
-DATA_FOLDER = os.path.dirname(os.path.abspath(__file__))
-
-#SUCCESS_FOLDER = "DecidingForceArticles"
-ARTICLE_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceArticles")
-FILENAME_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/filename")
-HEADER_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/header")
-TEXT_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/text")
-DUPLICATES_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/duplicates")
-WARNING_FOLDER = os.path.join(DATA_FOLDER, "DecidingForceErrors/warning")
-#ARTICLE_FOLDER = "DecidingForceArticles_Sample/"
-
-# List of known duplicates
-DUPLICATES_FILE = os.path.join(DATA_FOLDER,"duplicates.txt")
-
 # Format of the article filenames.
 # Example: 1000BethlehemPA-LehighValleyLive-02.txt
 FILENAME_RE = (r'^(?P<article_number>\d+)' # article number
@@ -81,12 +67,6 @@ def parse_document(path):
 def parse_article(raw_text, path):
     # extract info from the file name
     article_number, city, state, periodical, periodical_code = parse_filename(path)
-
-
-    # don't parse known duplicates
-    if article_number in parse_duplicates():
-        raise ArticleParseError("Article %s is known duplicate!" % article_number,
-                                ArticleParseError.DUPLICATE_ERROR)
 
     # extract info from the header and remove it from the text
     (clean_text, date_published, annotators, version) = parse_header(raw_text)
@@ -395,10 +375,6 @@ def parse_filename(filename):
         raise ArticleParseError('Bad File Name: ' + raw_name,
                                 ArticleParseError.FILENAME_ERROR)
 
-def parse_duplicates():
-    with open(DUPLICATES_FILE, 'r') as dup_f:
-        return dup_f.readlines()
-
 def parse_documents(directory_path, error_directory_paths):
     data = []
     for file_path in os.listdir(directory_path):
@@ -417,6 +393,15 @@ def parse_documents(directory_path, error_directory_paths):
     return data
 
 if __name__ == '__main__':
+    DATA_FOLDER = os.path.dirname(os.path.abspath(__file__))
+    ARTICLE_FOLDER = os.path.join(DATA_FOLDER, "sample/articles")
+    OUTPUT_FOLDER = os.path.join(DATA_FOLDER, "DocumentsParsed")
+    FILENAME_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DocumentErrors/filename")
+    HEADER_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DocumentErrors/header")
+    TEXT_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DocumentErrors/text")
+    DUPLICATES_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DocumentErrors/duplicates")
+    WARNING_FOLDER = os.path.join(DATA_FOLDER, "DocumentErrors/warning")
+
     error_dirs = {
         ArticleParseError.FILENAME_ERROR : FILENAME_ERROR_FOLDER,
         ArticleParseError.HEADER_ERROR : HEADER_ERROR_FOLDER,
@@ -425,12 +410,12 @@ if __name__ == '__main__':
         ArticleParseError.BRACKET_WARNING: WARNING_FOLDER
     }
 
-    outfile = os.path.join(DATA_FOLDER, "articles.json")
+    outfile = os.path.join(OUTPUT_FOLDER, "articles.json")
     if len(sys.argv) > 1:
         data = []
         file_path = sys.argv[1]
         file_name, ext = os.path.splitext(os.path.basename(file_path))
-        outfile = os.path.join(DATA_FOLDER, os.path.basename(file_name) + ".json")
+        outfile = os.path.join(OUTPUT_FOLDER, os.path.basename(file_name) + ".json")
         try:
             data.append(parse_document(file_path))
         except ArticleParseError as e:

@@ -17,7 +17,6 @@ from researcher.forms import SendTasksForm
 from data.load_data import load_article, load_annotations, load_schema
 from data.parse_document import parse_article
 from data.parse_schema import parse_schema
-from data.legacy.parse_schema import parse_schema as old_parse_schema
 
 from data.pybossa_api import create_remote_project, delete_remote_project
 from data.pybossa_api import generate_highlight_tasks_worker
@@ -64,7 +63,7 @@ def import_schema(schema_contents, owner_profile_id):
     with tempfile.NamedTemporaryFile(delete=True) as schema_file:
         schema_file.write(schema_contents)
         schema_file.flush()
-        schema_id = load_schema(old_parse_schema(schema_file.name))
+        schema_id = load_schema(parse_schema(schema_file.name))
         return schema_id
 
 class UploadArticlesView(PermissionRequiredMixin, View):
