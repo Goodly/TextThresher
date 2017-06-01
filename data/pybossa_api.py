@@ -167,7 +167,7 @@ def testCreateRemoteHighlighterTasks():
     article_ids = list(Article.objects.all().values_list('id', flat=True))
     topic_ids = list(Topic.objects.filter(parent=None)
                      .values_list('id', flat=True))
-    project_id = Project.objects.get(name__exact="Deciding Force Highlighter").id
+    project_id = Project.objects.get(name__exact="Highlighter").id
     generate_highlight_tasks_worker.delay(profile_id=profile_id,
                                           article_ids=article_ids,
                                           topic_ids=topic_ids,
@@ -207,7 +207,7 @@ def testCreateRemoteQuizTasks():
     article_ids = list(Article.objects.all().values_list('id', flat=True))
     topic_ids = list(Topic.objects.filter(parent=None)
                      .values_list('id', flat=True))
-    project_id = Project.objects.get(name__exact="Deciding Force Quiz").id
+    project_id = Project.objects.get(name__exact="Quiz").id
     generate_quiz_tasks_worker.delay(profile_id=profile_id,
                                      article_ids=article_ids,
                                      topic_ids=topic_ids,
@@ -285,7 +285,7 @@ def create_remote_task_worker(profile_id=None, project_id=None, task=None, n_ans
 
 def testGetHighlighterTaskRuns():
     profile_id = UserProfile.objects.get(user__username="nick").id
-    project_id = Project.objects.get(name__exact="Deciding Force Highlighter").id
+    project_id = Project.objects.get(name__exact="Highlighter").id
     generate_get_taskruns_worker.delay(profile_id=profile_id,
                                        project_id=project_id)
 
