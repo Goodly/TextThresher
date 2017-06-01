@@ -54,7 +54,7 @@ def import_article(article, filename, owner_profile_id, with_annotations):
     annotated_article = parse_article(article, filename)
     article_obj = load_article(annotated_article)
     if article_obj and with_annotations:
-        load_annotations(annotated_article, article_obj, owner_profile)
+        load_annotations(annotated_article, article_obj)
     return article_obj.id
 
 @django_rq.job('file_importer', timeout=60, result_ttl=24*3600)
