@@ -165,7 +165,7 @@ class HighlightTasks(GenericAPIView):
 
         # Pagination code is derived from rest_framework.mixins.ListModelMixin
         # and rest_framework.generics.GenericAPIView:get_serializer
-        project = Project.objects.get(name__exact="Deciding Force Highlighter")
+        project = Project.objects.get(name__exact="Highlighter")
         topics = Topic.objects.filter(parent=None)
 
         articles = self.filter_queryset(self.get_queryset()).order_by("id")
@@ -307,7 +307,7 @@ def quiz_tasks(request):
         taskList = collectQuizTasks(
             articles = Article.objects.filter(id__lte=20),
             topics = Topic.objects.filter(df_schemas),
-            project = Project.objects.get(name__exact="Deciding Force Quiz")
+            project = Project.objects.get(name__exact="Quiz")
         )
         logger.info("Collected %d quiz tasks." % len(taskList))
         return Response(taskList)
