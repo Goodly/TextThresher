@@ -15,9 +15,7 @@
     "deploy": "NODE_ENV=production webpack --config webpack.config.js --progress",
     "deploy:quiet": "NODE_ENV=production webpack --config webpack.config.js --bail",
     "test": "node node_modules/.bin/jest",
-    "test:watch": "npm run test -- --watch",
-    "tasks:highlighter": "curl http://localhost:5000/api/highlighter_tasks/?format=json | python -m json.tool > pbs-highlighter/highlighter_tasks.json",
-    "tasks:quiz": "curl http://localhost:5000/api/quiz_tasks/?format=json | python -m json.tool > pbs-quiz/quiz_tasks.json"
+    "test:watch": "npm run test -- --watch"
   },
   "author": "",
   "license": "MIT",

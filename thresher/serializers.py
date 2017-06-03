@@ -48,7 +48,7 @@ class SubmittedAnswerSerializer(serializers.ModelSerializer):
 
 class HighlightGroupSerializer(serializers.ModelSerializer):
     # Keep HighlightGroup metadata
-    offsets = JSONSerializerField()      # Should we use OffsetFieldSerializer instead of this?
+    offsets = JSONSerializerField()
     submitted_answers = SubmittedAnswerSerializer(many=True)
 
     class Meta:
@@ -95,6 +95,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             Answer.objects.create(question=question, **answer)
         return question
 
+
 class NLPQuestionSerializer(serializers.Serializer):
     ID = serializers.SerializerMethodField()
     Question = serializers.SerializerMethodField()
@@ -104,46 +105,6 @@ class NLPQuestionSerializer(serializers.Serializer):
 
     def get_Question(self, obj):
         return obj.question_text
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    # Getting info from User model
-    username = serializers.SerializerMethodField()
-
-    # Custom fields
-    experience_score = serializers.DecimalField(max_digits=5, decimal_places=3)
-    accuracy_score = serializers.DecimalField(max_digits=5, decimal_places=3)
-    users_highlights = ArticleHighlightSerializer(many=True)
-    submitted_answers = SubmittedAnswerSerializer(many=True)
-
-    def get_username(self, obj):
-        return obj.user.username
-
-    class Meta:
-        model = UserProfile
-        fields = ('id', 'username',
-                  'experience_score', 'accuracy_score', 'users_highlights',
-                  'submitted_answers')
-
-
-## Custom fields for the serializers ##
-
-class OffsetField(serializers.Field):
-#    def __init__(self, offsets, *args, **kwargs):
-#        serializers.Field.__init__(*args, **kwargs)
-#        self.offsets = offsets
-
-    # Override
-    def to_representation(self, obj):
-        ret = {"selector": {"@type": "MultiplePositionTextSelector"}}
-        ret["selector"]["offsets"] = [{"start": start, "end": end} for (start, end) in self.offsets]
-
-        return ret
-
-    # Override
-    def to_internal_value(self, data):
-        ret = json.loads(data) # Convert to Python dict
-        return json.dumps(ret["offsets"]) # Convert back to native form of offsets, a JSON object
-
 
 
 class TopicSerializer(serializers.ModelSerializer):
