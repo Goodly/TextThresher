@@ -146,16 +146,8 @@ class TopicsSchemaParser(object):
                 answer_objs = Answer.objects.filter(question=question_obj, 
                                                 answer_number=dep.answer)
             for answer_obj in answer_objs:
-                # next_questions is an array stored as text
-                next_questions_arr = answer_obj.next_questions
-                next_q_id = str(next_question_obj.id)
-                # Manipulate the array as text
-                if next_questions_arr == "[]":
-                    next_questions_arr = "[" + next_q_id + "]"
-                else:
-                    next_questions_arr = (next_questions_arr[:-1] + "," 
-                                          + next_q_id + "]")
-                answer_obj.next_questions = next_questions_arr
+                # next_questions is an array
+                answer_obj.next_questions.append(next_question_obj.id)
                 answer_obj.save()
             
 def load_schema(schema):

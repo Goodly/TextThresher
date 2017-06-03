@@ -133,7 +133,7 @@ class Topic(models.Model):
     order = models.IntegerField(null=True)
 
     # Glossary related to the topic under analysis
-    glossary = models.TextField() # as a JSON map
+    glossary = JSONField(default={}) # as a JSON map
 
     instructions = models.TextField()
 
@@ -201,9 +201,20 @@ class Question(models.Model):
     question_type = models.CharField(max_length=10,
                                      choices=QUESTION_TYPE_CHOICES)
 
+    # Question type
+    HINT_TYPE_CHOICES = (
+            ('NONE', 'No hint'),
+            ('WHO', 'Who'),
+            ('WHAT', 'What'),
+            ('WHEN', 'When'),
+    )
+    hint_type = models.CharField(max_length=10,
+                                 choices=HINT_TYPE_CHOICES,
+                                 default='NONE')
+
     # just like [Answer]next_questions, used for questions without choices
     # such as text and dates. Could be used for 'if 01.02.any' as well.
-    next_questions = JSONField(default=list())
+    next_questions = JSONField(default=[])
 
     class Meta:
         unique_together = ("topic", "question_text")
@@ -228,7 +239,7 @@ class Answer(models.Model):
     answer_content = models.TextField()
 
     # Contingent questions as an array of question IDs
-    next_questions = models.TextField(default="[]")
+    next_questions = JSONField(default=[])
 
     class Meta:
         unique_together = ("answer_number", "question")
@@ -284,10 +295,7 @@ class ArticleHighlight(models.Model):
 class HighlightGroup(models.Model):
 
     # The highlighted text (stored as JSON array of offset tuples)
-    offsets = models.TextField()
-
-    # Highlighted text
-    highlight_text = models.TextField()
+    offsets = JSONField(default=[])
 
     # User assigned case number for this text
     case_number = models.IntegerField(db_index=True)
@@ -351,9 +359,7 @@ class NLPHints(models.Model):
                                  related_name="hints",
                                  on_delete=models.CASCADE)
     # The highlighted text (stored as JSON array of offset tuples)
-    highlight_text = models.TextField()
-    # The highlighted text (stored as JSON array of offset tuples)
-    offsets = models.TextField()
+    offsets = JSONField(default=[])
 
     def __unicode__(self):
         return ("id %d article id %d question id %d") % (self.id,

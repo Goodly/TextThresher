@@ -47,14 +47,9 @@ class SubmittedAnswerSerializer(serializers.ModelSerializer):
         return submitted_answer
 
 class HighlightGroupSerializer(serializers.ModelSerializer):
-    # Keep HighlightGroup metadata
-    offsets = JSONSerializerField()
-    submitted_answers = SubmittedAnswerSerializer(many=True)
-
     class Meta:
         model = HighlightGroup
-        fields = ('id', 'offsets', 'case_number',
-                  'topic', 'submitted_answers')
+        fields = ('id', 'offsets', 'case_number', 'topic')
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
     highlights = HighlightGroupSerializer(many=True)
@@ -64,17 +59,13 @@ class ArticleHighlightSerializer(serializers.ModelSerializer):
         fields = ('id', 'highlights', 'created_by', 'highlight_source')
 
 class ArticleSerializer(serializers.ModelSerializer):
-    annotators = JSONSerializerField()
-
     class Meta:
         model = Article
         fields = ('id', 'article_number', 'text', 'date_published', 'city_published',
                   'state_published', 'periodical', 'periodical_code',
-                  'parse_version', 'annotators')
+                  'parse_version')
 
 class AnswerSerializer(serializers.ModelSerializer):
-    next_questions = JSONSerializerField()
-
     class Meta:
         model = Answer
         fields = ('id', 'answer_number', 'answer_content', 'next_questions')
@@ -86,7 +77,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'question_number', 'question_type', 'question_text',
-                  'next_questions', 'answers')
+                  'next_questions', 'hint_type', 'answers')
 
     def create(self, validated_data):
         answers = validated_data.pop('answers')
@@ -108,10 +99,8 @@ class NLPQuestionSerializer(serializers.Serializer):
 
 
 class TopicSerializer(serializers.ModelSerializer):
-        # A nested serializer for all the questions
+    # A nested serializer for all the questions
     questions = QuestionSerializer(many=True)
-
-    glossary = JSONSerializerField()
 
     class Meta:
         model = Topic
@@ -120,15 +109,11 @@ class TopicSerializer(serializers.ModelSerializer):
                   'questions')
 
 class RootTopicSerializer(serializers.ModelSerializer):
-    glossary = JSONSerializerField()
-
     class Meta:
         model = Topic
         fields = ('id', 'name', 'order', 'glossary', 'instructions')
 
 class NLPHintSerializer(serializers.ModelSerializer):
-    offsets = JSONSerializerField()
-
     class Meta:
         model = NLPHints
         fields = ('id', 'article', 'question', 'offsets')
