@@ -24,7 +24,6 @@ def nlp_load(annotations):
             NLPHints.objects.create(
                 article_id = article_id,
                 question_id = question_id,
-                highlight_text = json.dumps(highlightList),
-                offsets = json.dumps(offsetList)
+                offsets = offsetList
             )
     return True

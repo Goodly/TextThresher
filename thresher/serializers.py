@@ -7,6 +7,8 @@ from models import (Article, Topic, Question, Answer,
 
 
 # Custom JSON field
+# All JSON now using native JSONB fields in Postgres.
+# Just keeping this function for reference.
 class JSONSerializerField(serializers.Field):
     """
     A field which seralizes text fields into valid JSON

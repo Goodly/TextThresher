@@ -188,7 +188,7 @@ def load_schema(schema):
         parent=parent,
         name=schema_name,
         instructions=schema['instructions'],
-        glossary=json.dumps(schema['glossary'])
+        glossary=schema['glossary']
     )
     try:
         schema_obj.save()
@@ -277,9 +277,8 @@ def load_annotations(article, article_obj):
 
         for tua_id, offset_list in tuas.iteritems():
             try:
-                highlight = HighlightGroup.objects.create(offsets=json.dumps(offset_list),
+                highlight = HighlightGroup.objects.create(offsets=offset_list,
                                                           case_number=tua_id,
-                                                          highlight_text="placeholder",
                                                           topic=topic,
                                                           article_highlight=article_highlight)
 

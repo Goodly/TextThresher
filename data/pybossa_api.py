@@ -373,13 +373,11 @@ def save_highlight_taskrun(task, taskrun):
                                      (str(valid_topics_for_task), topic_id))
             hg_list = list(hg)
             offsets=[ [x['start'], x['end'], x['text']] for x in hg_list ]
-            highlight_text=[ [x['text']] for x in hg_list ]
             HighlightGroup.objects.create(
                 article_highlight=ah,
                 topic_id=topic_id,
                 case_number=case_number,
-                highlight_text=json.dumps(highlight_text),
-                offsets=json.dumps(offsets)
+                offsets=offsets
             )
 
         return ah
