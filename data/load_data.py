@@ -10,6 +10,7 @@ django.setup()
 import argparse
 import json
 import fnmatch
+from datetime import date
 
 from django.core.management import call_command
 from django.core.management.color import no_style
@@ -236,16 +237,14 @@ def load_article(article):
     except Article.DoesNotExist: # Not a duplicate.
         pass
 
+    date_published=article['metadata']['date_published']
+    if isinstance(date_published, date):
+        # JSON Serializer doesn't like dates
+        article['metadata']['date_published']=date_published.isoformat()
     article_obj = Article(
         article_number=new_id,
         text=article['text'],
-        date_published=article['metadata']['date_published'],
-        city_published=article['metadata']['city'],
-        state_published=article['metadata']['state'],
-        periodical=article['metadata']['periodical'],
-        periodical_code=int(article['metadata']['periodical_code']),
-        parse_version=article['metadata']['version'],
-        annotators=json.dumps(article['metadata']['annotators']),
+        metadata=article['metadata']
     )
     article_obj.save()
     print "article id %d numbered %s" % (article_obj.id,

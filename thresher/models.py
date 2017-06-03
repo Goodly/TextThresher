@@ -106,13 +106,7 @@ class Article(models.Model):
     text = models.TextField()
 
     # metadata
-    date_published = models.DateField(null=True)
-    city_published = models.CharField(max_length=1000)
-    state_published = models.CharField(max_length=2, null=True)
-    periodical = models.CharField(max_length=1000)
-    periodical_code = models.IntegerField()
-    parse_version = models.CharField(max_length=5, null=True)
-    annotators = models.CharField(max_length=1000) # as a JSON list
+    metadata = JSONField(default={}) # as a JSON map
 
     def __unicode__(self):
         return "id %d: numbered %d, %s, %s (%s)" % (

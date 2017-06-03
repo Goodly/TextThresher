@@ -63,9 +63,7 @@ class ArticleHighlightSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = ('id', 'article_number', 'text', 'date_published', 'city_published',
-                  'state_published', 'periodical', 'periodical_code',
-                  'parse_version')
+        fields = ('id', 'article_number', 'text', 'metadata')
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
