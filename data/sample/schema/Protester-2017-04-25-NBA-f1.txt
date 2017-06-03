@@ -52,8 +52,8 @@ title: Protester
  
 if 1.01.05, then 1.02
 if 1.01.08, then 1.03
-if 1.01.11, then 1.05
-if 1.01.12, then 1.06
+if 1.01.10, then 1.05
+if 1.01.11, then 1.06
 if 1.03.any, then 1.04
  
 2.01 mc Which of the following information does the text give about the event's location?
