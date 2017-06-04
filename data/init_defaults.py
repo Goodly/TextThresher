@@ -93,9 +93,10 @@ def createNick(username="nick", email="nick@example.com", password="bidsatdoe", 
         logger.info("Created researcher '%s', password '%s'." % (username, password))
     return u.userprofile
 
-def createHighlighterProject():
+def createHighlighterProject(owner_profile):
     (project, created) =  Project.objects.get_or_create(
         short_name="Highlighter",
+        owner_profile=owner_profile,
         defaults = {
             "name": "Highlighter",
             "task_type": "HLTR",
@@ -107,9 +108,10 @@ def createHighlighterProject():
         logger.info("Created project '%s'" % project.name)
     return project
 
-def createQuizProject():
+def createQuizProject(owner_profile):
     (project, created) =  Project.objects.get_or_create(
         short_name="Quiz",
+        owner_profile=owner_profile,
         defaults = {
             "name": "Quiz",
             "task_type": "QUIZ",
@@ -123,6 +125,6 @@ def createQuizProject():
 if __name__ == '__main__':
     createSuperUser()
     researchers = createThresherGroup()
-    createNick(groups=[researchers])
-    createHighlighterProject()
-    createQuizProject()
+    owner_profile = createNick(groups=[researchers])
+    createHighlighterProject(owner_profile)
+    createQuizProject(owner_profile)

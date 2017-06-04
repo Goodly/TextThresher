@@ -9,14 +9,6 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-from django.contrib.auth.models import AbstractUser
-
-# CustomUser must be done on very first migration. Stub in a CustomUser because
-# very likely to need it if authentication takes place externally.
-# See https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#auth-custom-user
-#class CustomUser(AbstractUser):
-#    pass
-
 # Use OneToOneFields to add attributes to User
 class UserProfile(models.Model):
     # Add link to User model
@@ -45,8 +37,8 @@ TASK_TYPE = (
 
 class Project(models.Model):
     # max_length matches Pybossa db
-    owner = models.ForeignKey(UserProfile, related_name="projects",
-                              on_delete=models.PROTECT)
+    owner_profile = models.ForeignKey(UserProfile, related_name="projects",
+                                      on_delete=models.PROTECT)
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     instructions = models.TextField()
@@ -230,7 +222,7 @@ class Question(models.Model):
     next_questions = JSONField(default=[])
 
     class Meta:
-        unique_together = ("topic", "question_text")
+        unique_together = ("topic", "question_number")
 
     def __unicode__(self):
         return "id %d numbered %d type %s in topic %s" % (
@@ -255,7 +247,7 @@ class Answer(models.Model):
     next_questions = JSONField(default=[])
 
     class Meta:
-        unique_together = ("answer_number", "question")
+        unique_together = ("question", "answer_number")
 
     def __unicode__(self):
         return ("id %d numbered %d Answer %s for Question %s "
@@ -388,6 +380,9 @@ class NLPHints(models.Model):
                                  choices=HINT_TYPE_CHOICES)
     # The highlighted text (stored as JSON array of offset tuples)
     offsets = JSONField(default=[])
+
+    class Meta:
+        unique_together = ("article", "hint_type")
 
     def __unicode__(self):
         return ("id %d article id %d question id %d") % (self.id,
