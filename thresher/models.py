@@ -119,9 +119,8 @@ class Article(models.Model):
     metadata = JSONField(default={}) # as a JSON map
 
     def __unicode__(self):
-        return "id %d: numbered %d, %s, %s (%s)" % (
-            self.id, self.article_number, self.city_published,
-            self.state_published, self.periodical)
+        return "id %d: numbered %d" % (
+            self.id, self.article_number)
 
 
 # Topics that are either parents of leaf topics, or leaf topics with questions.
