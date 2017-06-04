@@ -197,12 +197,13 @@ class SendTasksView(PermissionRequiredMixin, View):
             project = bound_form.cleaned_data['project']
             project_id = project.id
             job = None
-            if not project.pybossa_id:
-                job = create_remote_project(request.user.userprofile, project)
             if bound_form.cleaned_data['add_nlp_hints']:
                 generator = generate_nlp_tasks_worker.delay
             else:
-                generator = self.get_task_generator(project)
+                if not project.pybossa_id:
+                    job = create_remote_project(request.user.userprofile, project)
+                    generator = self.get_task_generator(project)
+
             generator(profile_id=profile_id,
                       article_ids=article_ids,
                       topic_ids=topic_ids,

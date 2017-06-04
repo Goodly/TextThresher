@@ -379,5 +379,5 @@ class NLPHints(models.Model):
         unique_together = ("article", "hint_type")
 
     def __unicode__(self):
-        return ("id %d article id %d question id %d") % (self.id,
-                self.article_id, self.question_id)
+        return ("id %d article id %d hint type %s") % (self.id,
+                self.article_id, self.hint_type)

@@ -9,16 +9,16 @@ HINT_TYPE_CHOICES = (
 
 # nlp_exporter uses for requesting all available hints from NLP-Hints service
 QUESTION_TYPES = (
-    { 'ID': 1, 'Question': 'Where' },
-    { 'ID': 2, 'Question': 'Who' },
-    { 'ID': 3, 'Question': 'How many' },
-    { 'ID': 4, 'Question': 'When' }
+    { 'ID': 1, 'Question': 'Where did it happen?' },
+    { 'ID': 2, 'Question': 'Who was there?' },
+    { 'ID': 3, 'Question': 'How many were there?' },
+    { 'ID': 4, 'Question': 'When did it happen?' }
 )
 
 # nlp_importer uses for mapping question_id back to hint_type
 QUESTION_TO_HINT_TYPE = {
-    '1': 'WHERE',
-    '2': 'WHO',
-    '3': 'HOW MANY',
-    '2': 'WHEN'
+    1: 'WHERE',
+    2: 'WHO',
+    3: 'HOW MANY',
+    4: 'WHEN'
 }
