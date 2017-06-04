@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+
+# Retrieve user model set by AUTH_USER_MODEL in settings.py
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 from thresher.models import (UserProfile, Project, Article,
                              ArticleHighlight, HighlightGroup,
                              Topic, Question, Answer,
@@ -27,6 +31,7 @@ class NewUserAdmin(UserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, NewUserAdmin)
 
+admin.site.register(UserProfile)
 admin.site.register(Project)
 admin.site.register(Article)
 admin.site.register(ArticleHighlight)

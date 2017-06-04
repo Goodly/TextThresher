@@ -1,19 +1,27 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from requests.compat import urljoin, urlparse
 from urlparse import urlunsplit
 from django.urls import reverse
 
-# User doing the annotating - uses OneToOneFields to add attributes to django.contrib.auth.User
-class UserProfile(models.Model):
-    # Add link to default User model
-    user = models.OneToOneField(User)
+# Retrieve user model set by AUTH_USER_MODEL in settings.py
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
-    # Metadata
-    experience_score = models.DecimalField(max_digits=5, decimal_places=3)
-    accuracy_score = models.DecimalField(max_digits=5, decimal_places=3)
+from django.contrib.auth.models import AbstractUser
+
+# CustomUser must be done on very first migration. Stub in a CustomUser because
+# very likely to need it if authentication takes place externally.
+# See https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#auth-custom-user
+#class CustomUser(AbstractUser):
+#    pass
+
+# Use OneToOneFields to add attributes to User
+class UserProfile(models.Model):
+    # Add link to User model
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     # URLField uses django.core.validators.URLValidator
     # However, it requires a TLD, and won't accept a local hostname like
     # http://pybossa - such as provided by Docker's local virtual network
@@ -25,6 +33,11 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return "%s" % self.user.username
 
+class Contributor(models.Model):
+    pybossa_user_id = models.IntegerField(null=True)
+    experience_score = models.FloatField()
+    accuracy_score = models.FloatField()
+
 TASK_TYPE = (
     ('HLTR', 'Highlighter'),
     ('QUIZ', 'Quiz'),
@@ -32,6 +45,8 @@ TASK_TYPE = (
 
 class Project(models.Model):
     # max_length matches Pybossa db
+    owner = models.ForeignKey(UserProfile, related_name="projects",
+                              on_delete=models.PROTECT)
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     instructions = models.TextField()
@@ -44,6 +59,7 @@ class Project(models.Model):
     # UUID format is 36 chars including hyphens
     pybossa_secret_key = models.CharField(blank=True, max_length=36, default="")
     pybossa_created = models.DateTimeField(null=True)
+    pybossa_project_password = models.CharField(blank=True, max_length=36, default="")
 
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
@@ -114,11 +130,18 @@ class Article(models.Model):
             self.state_published, self.periodical)
 
 
+HINT_TYPE_CHOICES = (
+        ('NONE', 'No hint'),
+        ('WHO', 'Who'),
+        ('WHAT', 'What'),
+        ('WHEN', 'When'),
+)
+
 # Topics that are either parents of leaf topics, or leaf topics with questions.
 class Topic(models.Model):
     # an id of its parent topic
     parent = models.ForeignKey("self", related_name="subtopics",
-                               on_delete=models.SET_NULL, null=True)
+                               on_delete=models.PROTECT, null=True)
 
     # The name of the topic
     name = models.TextField()
@@ -130,6 +153,10 @@ class Topic(models.Model):
     glossary = JSONField(default={}) # as a JSON map
 
     instructions = models.TextField()
+
+    hint_type = models.CharField(max_length=10,
+                                 choices=HINT_TYPE_CHOICES,
+                                 default='NONE')
 
     def validate_unique(self, exclude=None):
         qs = Topic.objects.filter(name=self.name)
@@ -171,7 +198,6 @@ class Topic(models.Model):
         return topicQuery[:]
 
 
-# Question
 class Question(models.Model):
     # The question number the content is related to
     question_number = models.IntegerField()
@@ -195,13 +221,6 @@ class Question(models.Model):
     question_type = models.CharField(max_length=10,
                                      choices=QUESTION_TYPE_CHOICES)
 
-    # Question type
-    HINT_TYPE_CHOICES = (
-            ('NONE', 'No hint'),
-            ('WHO', 'Who'),
-            ('WHAT', 'What'),
-            ('WHEN', 'When'),
-    )
     hint_type = models.CharField(max_length=10,
                                  choices=HINT_TYPE_CHOICES,
                                  default='NONE')
@@ -215,7 +234,7 @@ class Question(models.Model):
 
     def __unicode__(self):
         return "id %d numbered %d type %s in topic %s" % (
-            self.id, self.question_number, self.question_type, self.topic.name)
+            self.id, self.question_number, self.hint_type, self.topic.name)
 
 
 # Possible answers for a given question
@@ -251,12 +270,12 @@ class Answer(models.Model):
 # This is used to store HLTR taskruns retrieved from Pybossa
 class ArticleHighlight(models.Model):
     article = models.ForeignKey(Article,
-                                related_name="users_highlights",
+                                related_name="highlight_taskruns",
                                 on_delete=models.CASCADE)
     task = models.ForeignKey(Task,
                              null=True,
-                             related_name="users_highlights",
-                             on_delete=models.SET_NULL)
+                             related_name="highlight_taskruns",
+                             on_delete=models.CASCADE)
     # Source of the highlight
     HIGHLIGHT_SOURCE_CHOICES = (
         ('HLTR', 'Highlighter'),
@@ -266,7 +285,10 @@ class ArticleHighlight(models.Model):
                                                 max_length=4)
     # Allow null to avoid making changes to test data loader in data.load_data
     # Pybossa id of taskrun contributor
-    pybossa_user_id = models.IntegerField(null=True)
+    pybossa_user_id = models.ForeignKey(Contributor,
+                                        null=True,
+                                        related_name="highlight_taskruns",
+                                        on_delete=models.CASCADE)
     # Taskrun id
     pybossa_id = models.IntegerField(null=True, db_index=True)
     # Complete taskrun as returned by Pybossa
@@ -303,14 +325,6 @@ class HighlightGroup(models.Model):
                                           related_name="highlights",
                                           on_delete=models.CASCADE)
 
-    @property
-    def questions(self):
-        """
-        A property to access all the submitted answers in this highlight group
-        """
-        answers = list(SubmittedAnswer.objects.filter(highlight_group=self))
-        return answers
-
     def __unicode__(self):
         if self.topic:
             topic_name = self.topic.name
@@ -324,8 +338,32 @@ class HighlightGroup(models.Model):
         return desc
 
 
+class QuizTaskRun(models.Model):
+    # Pybossa id of taskrun contributor
+    pybossa_user_id = models.ForeignKey(Contributor,
+                                        related_name="quiz_taskruns",
+                                        on_delete=models.CASCADE)
+
+    # Taskrun id
+    pybossa_id = models.IntegerField(null=True, db_index=True)
+    task = models.ForeignKey(Task,
+                             related_name="quiz_taskruns",
+                             on_delete=models.CASCADE)
+
+    # Complete taskrun as returned by Pybossa
+    info = JSONField()
+
+    def __unicode__(self):
+        return ("id %d pybossa taskrun id %d pybossa user id %d") % (self.id,
+                self.pybossa_id, self.quiz.pybossa_user_id)
+
+
 # A submitted answer to a question
 class SubmittedAnswer(models.Model):
+    quiz = models.ForeignKey(QuizTaskRun,
+                             related_name="submitted_answers",
+                             on_delete=models.CASCADE)
+
     # The highlight group this answer is part of
     highlight_group = models.ForeignKey(HighlightGroup,
                                         related_name="submitted_answers",
@@ -335,23 +373,19 @@ class SubmittedAnswer(models.Model):
                                  related_name="submitted_answers",
                                  on_delete=models.CASCADE)
 
-    user_submitted = models.ForeignKey(UserProfile,
-                                       related_name="submitted_answers",
-                                       on_delete=models.CASCADE)
     answer = models.TextField()
 
     def __unicode__(self):
-        return ("id %d question id %d user %s") % (self.id,
-                question.id, self.user_submitted.user.username)
+        return ("id %d question id %d pybossa user id %d") % (self.id,
+                self.question.id, self.quiz.pybossa_user_id)
 
 
 class NLPHints(models.Model):
     article = models.ForeignKey(Article,
                                 related_name="hints",
                                 on_delete=models.CASCADE)
-    question = models.ForeignKey(Question,
-                                 related_name="hints",
-                                 on_delete=models.CASCADE)
+    hint_type = models.CharField(max_length=10,
+                                 choices=HINT_TYPE_CHOICES)
     # The highlighted text (stored as JSON array of offset tuples)
     offsets = JSONField(default=[])
 

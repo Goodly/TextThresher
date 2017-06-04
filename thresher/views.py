@@ -3,7 +3,6 @@ logger = logging.getLogger(__name__)
 
 from itertools import groupby
 
-from django.contrib.auth.models import User
 from django.db.models import Prefetch
 from django.db.models import prefetch_related_objects
 from django.db.models import Q
@@ -120,16 +119,16 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
                  % (len(topicHints), topic.id))
 
     # Set up Prefetch that will cache just the highlights matching
-    # this topic to article.users_highlights[n].highlightsForTopic
+    # this topic to article.highlight_taskruns[n].highlightsForTopic
     topicHighlights = (HighlightGroup.objects.filter(topic=topic)
                        .prefetch_related("submitted_answers"))
-    fetchHighlights = Prefetch("users_highlights__highlights",
+    fetchHighlights = Prefetch("highlight_taskruns__highlights",
                                queryset=topicHighlights,
                                to_attr="highlightsForTopic")
     # Find articles highlighted with the topic within the provided queryset
     # distinct is essential after prefetch_related chained method
     articles = (articles
-                .filter(users_highlights__highlights__topic=topic)
+                .filter(highlight_taskruns__highlights__topic=topic)
                 .prefetch_related(fetchHighlights)
                 .prefetch_related(fetchHints)
                 .order_by("id")
@@ -148,7 +147,7 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
         # but safest to code as if there could be more than one.
 
         highlights = [ hg
-                       for ah in article.users_highlights.all()
+                       for ah in article.highlight_taskruns.all()
                        for hg in ah.highlightsForTopic
         ]
         # At this point, we are processing one topic for one article

@@ -1,5 +1,4 @@
 import json
-from django.contrib.auth.models import User
 from rest_framework import serializers
 from models import (Article, Topic, Question, Answer,
                     HighlightGroup, SubmittedAnswer, NLPHints,
