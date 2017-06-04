@@ -6,7 +6,7 @@ require('babel-register');
 /* eslint complexity: [1, 3] */
 function get_config() {
   // eslint-disable-next-line no-process-env
-  switch (process.env.NODE_ENV) {
+  switch (process.env.TTBUILD) {
     case 'production':
       return 'prod.config.js';
     default:

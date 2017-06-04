@@ -1,4 +1,4 @@
-'use strict';
+require('babel-register');
 
 console.log('Building with dev.config.js\n');
 var webpack = require('webpack');
@@ -13,13 +13,7 @@ config.entry.app.unshift(
 );
 
 config.plugins.push(
-  new webpack.HotModuleReplacementPlugin(),
-  new webpack.DefinePlugin({
-    'process.env': {
-      BROWSER: JSON.stringify(true),
-      NODE_ENV: JSON.stringify('development')
-    }
-  })
+  new webpack.HotModuleReplacementPlugin()
 );
 
 module.exports = config
