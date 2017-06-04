@@ -86,6 +86,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         return question
 
 
+# Used to export questions in format recognized by NLP-Hints program
 class NLPQuestionSerializer(serializers.Serializer):
     ID = serializers.SerializerMethodField()
     Question = serializers.SerializerMethodField()
@@ -94,7 +95,7 @@ class NLPQuestionSerializer(serializers.Serializer):
         return obj.id
 
     def get_Question(self, obj):
-        return obj.question_text
+        return obj.hint_type
 
 
 class TopicSerializer(serializers.ModelSerializer):

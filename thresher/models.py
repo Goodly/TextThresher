@@ -9,6 +9,8 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
+from data.nlp_hint_types import HINT_TYPE_CHOICES
+
 # Use OneToOneFields to add attributes to User
 class UserProfile(models.Model):
     # Add link to User model
@@ -121,13 +123,6 @@ class Article(models.Model):
             self.id, self.article_number, self.city_published,
             self.state_published, self.periodical)
 
-
-HINT_TYPE_CHOICES = (
-        ('NONE', 'No hint'),
-        ('WHO', 'Who'),
-        ('WHAT', 'What'),
-        ('WHEN', 'When'),
-)
 
 # Topics that are either parents of leaf topics, or leaf topics with questions.
 class Topic(models.Model):

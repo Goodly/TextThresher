@@ -26,6 +26,7 @@ from serializers import (ProjectSerializer,
                          NLPQuestionSerializer,
                          NLPHintSerializer)
 
+from data.nlp_hint_types import QUESTION_TYPES
 
 def collectHighlightTasks(articles=None, topics=None, project=None):
 
@@ -105,18 +106,17 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
 
     # getTopicTree returns the topic with all levels of its subtopic tree
     topictree = topic.getTopicTree()
-    prefetch_related_objects(topictree, "questions__answers")
 
     # Prefetching uses one query per related table to populate caches.
     # This helps us avoid per row queries when looping over rows.
-    # Put all the Hints for this article for this root topic and subtopics in
-    # article.hintsForTopic
-    topicHints = NLPHints.objects.filter(question__topic_id__in=topictree)
+    prefetch_related_objects(topictree, "questions__answers")
+
+    # Set up the prefetch to retrieve all available hints for each article
+    allHints = NLPHints.objects.all()
     fetchHints = Prefetch("hints",
-                          queryset=topicHints,
-                          to_attr="hintsForTopic")
-    logger.info("Found %d topicHints for root topic %d"
-                 % (len(topicHints), topic.id))
+                          queryset=allHints,
+                          to_attr="allHints")
+    logger.info("Found %d hints" % (len(allHints),))
 
     # Set up Prefetch that will cache just the highlights matching
     # this topic to article.highlight_taskruns[n].highlightsForTopic
@@ -167,7 +167,7 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
                "article": ArticleSerializer(article, many=False).data,
                "highlights": HighlightGroupSerializer(
                                  hg_case_group, many=True).data,
-               "hints": NLPHintSerializer(article.hintsForTopic, many=True).data,
+               "hints": NLPHintSerializer(article.allHints, many=True).data,
             })
 
     return taskList
@@ -205,19 +205,10 @@ def quiz_tasks(request):
         return Response(taskList)
 
 def collectNLPTasks(articles=None, topics=None):
-    questions = []
-    for root in topics:
-        topictree = root.getTopicTree()
-        prefetch_related_objects(topictree, "questions")
-        for topic in topictree:
-            nlp_input_format = NLPQuestionSerializer(topic.questions.all(),
-                                                     many=True)
-            questions.extend(nlp_input_format.data)
-
     taskList = [{
                   "article_id": article.id,
                   "Topic Text": article.text,
-                  "Questions": questions
+                  "Questions": QUESTION_TYPES
                 }
         for article in articles
     ]
