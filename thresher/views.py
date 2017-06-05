@@ -197,7 +197,7 @@ def quiz_tasks(request):
         df_schemas = Q(name="Protester") | Q(name="City")
         df_schemas |=  Q(name="Camp") | Q(name="Police")
         taskList = collectQuizTasks(
-            articles = Article.objects.filter(id__lte=20),
+            articles = Article.objects.filter(id__lte=1),
             topics = Topic.objects.filter(df_schemas),
             project = Project.objects.get(name__exact="Quiz")
         )

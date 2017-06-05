@@ -116,4 +116,4 @@ class RootTopicSerializer(serializers.ModelSerializer):
 class NLPHintSerializer(serializers.ModelSerializer):
     class Meta:
         model = NLPHints
-        fields = ('id', 'article', 'question', 'offsets')
+        fields = ('id', 'article', 'hint_type', 'offsets')
