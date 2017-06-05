@@ -361,6 +361,9 @@ class SubmittedAnswer(models.Model):
 
     answer = models.TextField()
 
+    # highlighted text (stored as JSON array of offset tuples)
+    offsets = JSONField(default=[])
+
     def __unicode__(self):
         return ("id %d question id %d pybossa user id %d") % (self.id,
                 self.question.id, self.quiz.pybossa_user_id)
