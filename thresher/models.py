@@ -271,10 +271,10 @@ class ArticleHighlight(models.Model):
                                                 max_length=4)
     # Allow null to avoid making changes to test data loader in data.load_data
     # Pybossa id of taskrun contributor
-    pybossa_user_id = models.ForeignKey(Contributor,
-                                        null=True,
-                                        related_name="highlight_taskruns",
-                                        on_delete=models.CASCADE)
+    contributor = models.ForeignKey(Contributor,
+                                    null=True,
+                                    related_name="highlight_taskruns",
+                                    on_delete=models.CASCADE)
     # Taskrun id
     pybossa_id = models.IntegerField(null=True, db_index=True)
     # Complete taskrun as returned by Pybossa
@@ -326,9 +326,9 @@ class HighlightGroup(models.Model):
 
 class QuizTaskRun(models.Model):
     # Pybossa id of taskrun contributor
-    pybossa_user_id = models.ForeignKey(Contributor,
-                                        related_name="quiz_taskruns",
-                                        on_delete=models.CASCADE)
+    contributor = models.ForeignKey(Contributor,
+                                    related_name="quiz_taskruns",
+                                    on_delete=models.CASCADE)
 
     # Taskrun id
     pybossa_id = models.IntegerField(null=True, db_index=True)
