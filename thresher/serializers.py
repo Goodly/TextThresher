@@ -57,7 +57,7 @@ class ArticleHighlightSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ArticleHighlight
-        fields = ('id', 'highlights', 'created_by', 'highlight_source')
+        fields = ('id', 'highlights', 'created_by')
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:

@@ -254,8 +254,7 @@ def load_article(article):
 def load_annotations(article, article_obj):
     # In future usage, the articles being imported will not be highlighted
     # already and thus won't have 'annotators'.
-    article_highlight = ArticleHighlight.objects.create(article=article_obj,
-                                                        highlight_source='HLTR')
+    article_highlight = ArticleHighlight.objects.create(article=article_obj)
 
     for tua_type, tuas in article['tuas'].iteritems():
         try:

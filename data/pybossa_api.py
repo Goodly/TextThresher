@@ -353,7 +353,6 @@ def save_highlight_taskrun(task, taskrun):
             article_id=task.info['article']['id'], # safe - from our database
             pybossa_user_id=taskrun['user_id'],
             pybossa_id=taskrun_id,
-            highlight_source=task.task_type,
             info=taskrun
         )
 

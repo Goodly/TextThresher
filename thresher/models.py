@@ -262,13 +262,6 @@ class ArticleHighlight(models.Model):
                              null=True,
                              related_name="highlight_taskruns",
                              on_delete=models.CASCADE)
-    # Source of the highlight
-    HIGHLIGHT_SOURCE_CHOICES = (
-        ('HLTR', 'Highlighter'),
-        ('QUIZ', 'Quiz'),
-    )
-    highlight_source = models.CharField(choices=HIGHLIGHT_SOURCE_CHOICES,
-                                                max_length=4)
     # Allow null to avoid making changes to test data loader in data.load_data
     # Pybossa id of taskrun contributor
     contributor = models.ForeignKey(Contributor,
