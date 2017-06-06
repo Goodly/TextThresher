@@ -373,6 +373,8 @@ class NLPHints(models.Model):
 
     class Meta:
         unique_together = ("article", "hint_type")
+        verbose_name = "NLP hint"
+        verbose_name_plural = "NLP hints"
 
     def __unicode__(self):
         return ("id %d article id %d hint type %s") % (self.id,
