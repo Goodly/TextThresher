@@ -16,9 +16,9 @@ from requests.compat import urljoin
 import iso8601
 import django_rq
 
-from thresher.models import Article, Topic, Project, UserProfile, Task
-from thresher.models import ArticleHighlight, HighlightGroup
-from thresher.views import collectHighlightTasks, collectQuizTasks
+from thresher.models import (Article, Topic, Project, UserProfile,
+                             Task, ArticleHighlight, HighlightGroup)
+from data.task_collector import collectHighlightTasks, collectQuizTasks
 from data import init_defaults
 
 class InvalidTaskType(Exception):
