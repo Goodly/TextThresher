@@ -17,7 +17,9 @@ import iso8601
 import django_rq
 
 from thresher.models import (Article, Topic, Project, UserProfile,
-                             Task, ArticleHighlight, HighlightGroup)
+                             Task, Contributor,
+                             ArticleHighlight, HighlightGroup)
+
 from data.task_collector import collectHighlightTasks, collectQuizTasks
 from data import init_defaults
 
@@ -348,10 +350,19 @@ def save_highlight_taskrun(task, taskrun):
         if ArticleHighlight.objects.filter(pybossa_id=taskrun_id).count():
             # Previously saved this taskrun
             return None
+
+        (contributor, created) = Contributor.objects.get_or_create(
+            pybossa_user_id=taskrun['user_id'],
+            defaults = {
+              'accuracy_score': 0.0,
+              'experience_score': 0.0
+            }
+        )
+
         ah = ArticleHighlight.objects.create(
             task=task, # safe - from our database, not Pybossa
             article_id=task.info['article']['id'], # safe - from our database
-            pybossa_user_id=taskrun['user_id'],
+            contributor=contributor,
             pybossa_id=taskrun_id,
             info=taskrun
         )

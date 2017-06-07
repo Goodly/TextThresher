@@ -7,7 +7,7 @@ User = get_user_model()
 
 from thresher.models import (UserProfile, Project, Article,
                              Topic, Question, Answer,
-                             Contributor,
+                             Contributor, Task,
                              ArticleHighlight, HighlightGroup,
                              QuizTaskRun, SubmittedAnswer,
                              NLPHints)

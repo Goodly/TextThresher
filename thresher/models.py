@@ -28,9 +28,18 @@ class UserProfile(models.Model):
         return "%s" % self.user.username
 
 class Contributor(models.Model):
-    pybossa_user_id = models.IntegerField(null=True)
+    pybossa_user_id = models.IntegerField(null=True, db_index=True, unique=True)
     experience_score = models.FloatField()
     accuracy_score = models.FloatField()
+
+    def __unicode__(self):
+        return "id {} pybossa user id {} experience score {} accuracy score {}".format(
+                self.id,
+                self.pybossa_user_id,
+                self.experience_score,
+                self.accuracy_score
+        )
+
 
 TASK_TYPE = (
     ('HLTR', 'Highlighter'),
@@ -99,7 +108,7 @@ class Task(models.Model):
     pybossa_state = models.CharField(max_length=16) # 'ongoing' or 'completed'
 
     def __unicode__(self):
-        return "id %d task type: %s pybossa_id: %d" % (self.id, self.task_type, self.pybossa_project_id)
+        return "id %d task type: %s pybossa_id: %d" % (self.id, self.task_type, self.pybossa_id)
 
     def get_remote_URL(self):
         if task.project.pybossa_url:
