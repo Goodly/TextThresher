@@ -69,7 +69,7 @@
           <div class="form-label">
             NLP Hints
           </div>
-          <div class="form-selector" id="ending-article-id">
+          <div class="form-selector">
             {{ form.add_nlp_hints }}
             <span class="nlp-hints-label">
               {{ form.add_nlp_hints.label }}
@@ -80,7 +80,25 @@
           </div>
         </div>
 
-        <!-- {{ form.as_p }} -->
+        {% if form.debug_presenter.value %}
+          <div class="form-container">
+            <div class="form-label">
+              Debug flag active
+            </div>
+            <div class="form-selector">
+              {{ form.debug_server }}
+            </div>
+            <div class="form-hint">
+              {{ form.debug_server.help_text }}
+            </div>
+          </div>
+        {% endif %}
+
+        {{ form.debug_presenter }}
+
+        {% comment %}
+          <!-- {{ form.as_p }} -->
+        {% endcomment %}
         {% csrf_token %}
         <button type="submit" class="submit">
           Send Tasks
