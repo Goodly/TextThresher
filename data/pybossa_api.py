@@ -35,7 +35,7 @@ class ImproperConfigForRemote(Exception):
 class InvalidTaskRun(Exception):
     pass
 
-def create_remote_project(profile, project):
+def create_or_update_remote_project(profile, project):
     """
     This functions enqueues the worker to create a project on a remote
     Pybossa server.
@@ -45,12 +45,13 @@ def create_remote_project(profile, project):
     # models for later use.
     # Note: If for some reason the profile or project records disappear
     # by the time the worker runs, then we WANT the worker to fail.
-    return create_remote_project_worker.delay(profile_id=profile.id, project_id=project.id)
+    return create_or_update_remote_project_worker.delay(profile_id=profile.id, project_id=project.id)
 
 @django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
-def create_remote_project_worker(profile_id=None, project_id=None):
+def create_or_update_remote_project_worker(profile_id=None, project_id=None):
     profile = UserProfile.objects.get(pk=profile_id)
     url = urljoin(profile.pybossa_url, "/api/project")
+
     params = {'api_key': profile.pybossa_api_key}
 
     project = Project.objects.get(pk=project_id)
@@ -58,15 +59,23 @@ def create_remote_project_worker(profile_id=None, project_id=None):
     payload = {
         "name": project.name,
         "short_name": project.short_name,
-        "description": "Add project description here.",
+        "description": project.instructions,
         "info": {
           "task_presenter": getPresenter(bundlePath)
         }
     }
     headers = {'content-type': 'application/json'}
-    resp = requests.post(url, params=params,
-                         headers=headers, timeout=30,
-                         json=payload)
+    if not project.pybossa_id:
+        # Create with POST
+        resp = requests.post(url, params=params,
+                             headers=headers, timeout=30,
+                             json=payload)
+    else:
+        # Update with PUT
+        url += "/%d" % project.pybossa_id
+        resp = requests.put(url, params=params,
+                            headers=headers, timeout=30,
+                            json=payload)
     try:
         # If presenter > 5MB, Will get a 413 Request Entity Too Large
         # from NGINX as HTML which will cause json parser to throw ValueError
@@ -148,10 +157,10 @@ def testCreateRemoteProjects():
     profile = init_defaults.createNick(groups=[researchers])
 
     hproject = init_defaults.createHighlighterProject()
-    create_remote_project(profile, hproject)
+    create_or_update_remote_project(profile, hproject)
 
     qproject = init_defaults.createQuizProject()
-    create_remote_project(profile, qproject)
+    create_or_update_remote_project(profile, qproject)
 
 def testDeleteRemoteProjects():
     researchers = init_defaults.createThresherGroup()
