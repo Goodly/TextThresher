@@ -15,7 +15,7 @@ from researcher.forms import SendTasksForm
 from data.document_importer import import_archive
 from data.schema_importer import import_schema
 
-from data.pybossa_api import create_remote_project, delete_remote_project
+from data.pybossa_api import create_or_update_remote_project, delete_remote_project
 from data.pybossa_api import generate_highlight_tasks_worker
 from data.pybossa_api import generate_quiz_tasks_worker
 from data.pybossa_api import generate_get_taskruns_worker
@@ -167,8 +167,7 @@ class SendTasksView(PermissionRequiredMixin, View):
             if bound_form.cleaned_data['add_nlp_hints']:
                 generator = generate_nlp_tasks_worker.delay
             else:
-                if not project.pybossa_id:
-                    job = create_remote_project(request.user.userprofile, project)
+                job = create_or_update_remote_project(request.user.userprofile, project)
                 generator = self.get_task_generator(project)
 
             generator(profile_id=profile_id,
