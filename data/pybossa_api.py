@@ -16,9 +16,11 @@ from requests.compat import urljoin
 import iso8601
 import django_rq
 
-from thresher.models import Article, Topic, Project, UserProfile, Task
-from thresher.models import ArticleHighlight, HighlightGroup
-from thresher.views import collectHighlightTasks, collectQuizTasks
+from thresher.models import (Article, Topic, Project, UserProfile,
+                             Task, Contributor,
+                             ArticleHighlight, HighlightGroup)
+
+from data.task_collector import collectHighlightTasks, collectQuizTasks
 from data import init_defaults
 
 class InvalidTaskType(Exception):
@@ -348,12 +350,20 @@ def save_highlight_taskrun(task, taskrun):
         if ArticleHighlight.objects.filter(pybossa_id=taskrun_id).count():
             # Previously saved this taskrun
             return None
+
+        (contributor, created) = Contributor.objects.get_or_create(
+            pybossa_user_id=taskrun['user_id'],
+            defaults = {
+              'accuracy_score': 0.0,
+              'experience_score': 0.0
+            }
+        )
+
         ah = ArticleHighlight.objects.create(
             task=task, # safe - from our database, not Pybossa
             article_id=task.info['article']['id'], # safe - from our database
-            pybossa_user_id=taskrun['user_id'],
+            contributor=contributor,
             pybossa_id=taskrun_id,
-            highlight_source=task.task_type,
             info=taskrun
         )
 
@@ -373,13 +383,11 @@ def save_highlight_taskrun(task, taskrun):
                                      (str(valid_topics_for_task), topic_id))
             hg_list = list(hg)
             offsets=[ [x['start'], x['end'], x['text']] for x in hg_list ]
-            highlight_text=[ [x['text']] for x in hg_list ]
             HighlightGroup.objects.create(
                 article_highlight=ah,
                 topic_id=topic_id,
                 case_number=case_number,
-                highlight_text=json.dumps(highlight_text),
-                offsets=json.dumps(offsets)
+                offsets=offsets
             )
 
         return ah

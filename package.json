@@ -8,16 +8,14 @@
   },
   "scripts": {
     "lint": "eslint",
-    "dev": "NODE_ENV=development DEBUG=dev node --harmony ./webpack/dev-server.js",
-    "serve": "NODE_ENV=development DEBUG=dev webpack-dev-server --config webpack.config.js",
-    "build": "NODE_ENV=development DEBUG=dev webpack --config webpack.config.js --progress",
-    "build:quiet": "NODE_ENV=development DEBUG=dev webpack --config webpack.config.js --bail",
-    "deploy": "NODE_ENV=production webpack --config webpack.config.js --progress",
-    "deploy:quiet": "NODE_ENV=production webpack --config webpack.config.js --bail",
+    "dev": "NODE_ENV=development node --harmony ./webpack/dev-server.js",
+    "serve": "NODE_ENV=development webpack-dev-server --config webpack.config.js",
+    "build": "NODE_ENV=development CLEANDIST=true webpack --config webpack.config.js --progress",
+    "build:quiet": "NODE_ENV=development CLEANDIST=true webpack --config webpack.config.js --bail",
+    "deploy": "NODE_ENV=production CLEANDIST=true webpack --config webpack.config.js --progress",
+    "deploy:quiet": "NODE_ENV=production CLEANDIST=true webpack --config webpack.config.js --bail",
     "test": "node node_modules/.bin/jest",
-    "test:watch": "npm run test -- --watch",
-    "tasks:highlighter": "curl http://localhost:5000/api/highlighter_tasks/?format=json | python -m json.tool > pbs-highlighter/highlighter_tasks.json",
-    "tasks:quiz": "curl http://localhost:5000/api/quiz_tasks/?format=json | python -m json.tool > pbs-quiz/quiz_tasks.json"
+    "test:watch": "npm run test -- --watch"
   },
   "author": "",
   "license": "MIT",

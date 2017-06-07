@@ -1,5 +1,3 @@
-'use strict';
-
 import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -163,11 +161,10 @@ const config = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(['dist/*'], {
-      root: PATHS.buildPath,
-      verbose: true,
-      dry: false,
-      exclude: []
+    new webpack.DefinePlugin({
+      'process.env': {
+        BROWSER: JSON.stringify(true),
+      }
     }),
     new HtmlWebpackPlugin({
       title: 'TextThresher',
@@ -175,11 +172,6 @@ const config = {
       chunks: ['app'],
       chunksSortMode: 'dependency',
       filename: 'index.html',
-    }),
-    new OnBuildPlugin(function () {
-      // copy files from the 'app/staticroot/' dir
-      execCmd(`cp -arv ${PATHS.app}/staticroot/* ${PATHS.dist}`); // */
-      console.log('\n');
     }),
     new webpack.NoEmitOnErrorsPlugin(),
   ],
@@ -222,6 +214,23 @@ if (process.env.ESLINT) {
       ],
     }
   );
+}
+
+// Don't clean dist if we are just running webpack server with 'npm run dev'
+if (process.env.CLEANDIST) {
+  config.plugins.push(
+    new CleanWebpackPlugin(['dist/*'], {
+      root: PATHS.buildPath,
+      verbose: true,
+      dry: false,
+      exclude: []
+    }),
+    new OnBuildPlugin(function () {
+      // copy files from the 'app/staticroot/' dir
+      execCmd(`cp -arv ${PATHS.app}/staticroot/* ${PATHS.dist}`); // */
+      console.log('\n');
+    })
+  )
 }
 
 module.exports = config;

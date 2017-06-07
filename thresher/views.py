@@ -1,150 +1,29 @@
 import logging
 logger = logging.getLogger(__name__)
 
-from itertools import groupby
-
-from django.contrib.auth.models import User
-from django.db.models import Prefetch
-from django.db.models import prefetch_related_objects
 from django.db.models import Q
 
-from rest_framework import routers, viewsets
-from rest_framework.decorators import list_route, api_view
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 
-from models import (Project,  UserProfile, Article, Topic, Question, Answer,
-                    ArticleHighlight, HighlightGroup, NLPHints)
-from serializers import (UserProfileSerializer, ArticleSerializer,
-                         TopicSerializer, HighlightGroupSerializer,
-                         ProjectSerializer, QuestionSerializer,
-                         NLPQuestionSerializer, NLPHintSerializer,
-                         ArticleHighlightSerializer, RootTopicSerializer,
-                         SubmittedAnswerSerializer)
+from models import (Project,
+                    Article,
+                    Topic,
+                    HighlightGroup,
+                    NLPHints)
 
-# Views for serving the API
-
-class ProjectViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-
-class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-
-class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all().order_by('id')
-    serializer_class = ArticleSerializer
-
-class TopicViewSet(viewsets.ModelViewSet):
-    queryset = Topic.objects.filter(parent=None)
-    serializer_class = RootTopicSerializer
-
-class HighlightGroupViewSet(viewsets.ModelViewSet):
-    queryset = HighlightGroup.objects.all()
-    serializer_class = HighlightGroupSerializer
-
-    def create(self, request, *args, **kwargs):
-        if isinstance(request.DATA, list):
-            serializer = HighlightGroupSerializer(data=request.DATA, many=True)
-            if serializer.is_valid():
-                self.object = serializer.save(force_insert=True)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        else:
-            return super(HighlightGroupViewSet, self).create(request, *args, **kwargs)
-
-class ArticleHighlightViewSet(viewsets.ModelViewSet):
-    queryset = ArticleHighlight.objects.all()
-    serializer_class = ArticleHighlightSerializer
-
-@api_view(['GET'])
-def topic(request, id):
-    """
-    /topics/id \n
-    Gets all the information associated with a specific topic.
-    """
-    if request.method == 'GET':
-        topics = Topic.objects.get(id=id)
-        serializer = TopicSerializer(topics, many=False)
-        return Response(serializer.data)
-
-@api_view(['GET'])
-def child_topics(request, id):
-    """
-    /topics/id/children \n
-    Gets all the child topics of a topic.
-    """
-    if request.method == 'GET':
-        topics = Topic.objects.get(parent=Topic.objects.get(id=id))
-        serializer = TopicSerializer(topics, many=False)
-        return Response(serializer.data)
-
-
-@api_view(['GET'])
-def questions(request):
-    """
-    /question
-    Gets all the questions.
-    """
-    if request.method == 'GET':
-        questions = Question.objects.all()
-        serializer = QuestionSerializer(questions, many=True)
-        return Response(serializer.data)
-
-@api_view(['GET'])
-def question(request, id):
-    """
-    /question/id
-    Gets a specific question.
-    """
-    if request.method == 'GET':
-        question = Question.objects.get(id=id)
-        serializer = QuestionSerializer(question, many=False)
-        return Response(serializer.data)
-
-@api_view(['GET'])
-def next_question(request, id, ans_num):
-    """
-    /question/id/ans_num
-    Gets the next question based on the ans_num
-    """
-    if request.method == 'GET':
-        question = Question.objects.get(id=id)
-        answer = Answer.objects.get(question=question, answer_number=ans_num)
-        # TODO: assuming that user wants the first "next question"
-        next_question_array_text = answer.next_questions
-        if len(next_question_array_text) > 0:
-            next_question_first_text = next_question_array_text.split(",")[0]
-            next_question_first_text = next_question_first_text[2:]
-            next_question = int(next_question_first_text)
-        else:
-            return Response("{'next_question': 'null'}", 
-                            status=status.HTTP_404_NOT_FOUND)
-        serializer = QuestionSerializer(next_question, many=False)
-        return Response(serializer.data)
-
-
-def collectHighlightTasks(articles=None, topics=None, project=None):
-
-    project_data = ProjectSerializer(project, many=False).data
-    topics_data = RootTopicSerializer(topics, many=True).data
-    return [{ "project": project_data,
-              "topics": topics_data,
-              "article":
-                  ArticleSerializer(article, many=False).data
-           } for article in articles ]
-
+from data.task_collector import (collectNLPTasks,
+                                 collectHighlightTasks,
+                                 collectQuizTasks)
 
 class HighlightTasks(GenericAPIView):
     # GenericAPIView assists by providing the pagination settings
     # and helpful pagination API
 
     """
-    /highlighter_tasks2
+    /highlighter_tasks
 
     Provides highlight tasks as an array of objects, where each object has
     all the information to set up the highlight_tool for a task:
@@ -177,108 +56,23 @@ class HighlightTasks(GenericAPIView):
         tasks = collectHighlightTasks(articles, topics, project)
         return Response(tasks)
 
-
-class HighlightTasksNoPage(HighlightTasks):
-    """
-    /highlighter_tasks
-
-    Provides highlight tasks as an array of objects, where each object has
-    all the information to set up the highlight_tool for a task:
-
-    1. the project description
-    2. the topics to use
-    3. the article to highlight
-
-    This endpoint is **not paginated**, as it will be used for bulk export
-    to Pybossa.
-    """
-
-    pagination_class = None
-
 # This shows how to do additional filtering if needed...
 #    def get_queryset(self):
-#        articles = super(HighlightTasksNoPage, self).get_queryset()
+#        articles = super(HighlightTasks, self).get_queryset()
 #        return articles.filter(
 #            id__in=[9, 11, 38, 53, 55, 202, 209, 236, 259]
 #        ).order_by('id')
 
-def collectQuizTasks(articles=None, topics=None, project=None):
-    taskList = []
-    for topic in topics:
-        taskList.extend(collectQuizTasksForTopic(articles, topic, project))
-    return taskList
 
-def collectQuizTasksForTopic(articles=None, topic=None, project=None):
-    taskList = []
+# This shows how to subclass the above endpoint and make it unpaginated, in case you
+# want to download a large batch of tasks. Would be a bad idea on a public facing API.
+class HighlightTasksNoPage(HighlightTasks):
+    """
+    This endpoint is **not paginated**
+    """
 
-    # getTopicTree returns the topic with all levels of its subtopic tree
-    topictree = topic.getTopicTree()
-    prefetch_related_objects(topictree, "questions__answers")
+    pagination_class = None
 
-    # Prefetching uses one query per related table to populate caches.
-    # This helps us avoid per row queries when looping over rows.
-    # Put all the Hints for this article for this root topic and subtopics in
-    # article.hintsForTopic
-    topicHints = NLPHints.objects.filter(question__topic_id__in=topictree)
-    fetchHints = Prefetch("hints",
-                          queryset=topicHints,
-                          to_attr="hintsForTopic")
-    logger.info("Found %d topicHints for root topic %d"
-                 % (len(topicHints), topic.id))
-
-    # Set up Prefetch that will cache just the highlights matching
-    # this topic to article.users_highlights[n].highlightsForTopic
-    topicHighlights = (HighlightGroup.objects.filter(topic=topic)
-                       .prefetch_related("submitted_answers"))
-    fetchHighlights = Prefetch("users_highlights__highlights",
-                               queryset=topicHighlights,
-                               to_attr="highlightsForTopic")
-    # Find articles highlighted with the topic within the provided queryset
-    # distinct is essential after prefetch_related chained method
-    articles = (articles
-                .filter(users_highlights__highlights__topic=topic)
-                .prefetch_related(fetchHighlights)
-                .prefetch_related(fetchHints)
-                .order_by("id")
-                .distinct())
-
-    project_data = ProjectSerializer(project, many=False).data
-    topictree_data = TopicSerializer(topictree, many=True).data
-
-    # With the prefetching config above, the loops below will
-    # be hitting caches. Only 8 queries should be issued against 8 tables,
-    # i.e. The query count will not be a function of number of rows returned.
-    for article in articles:
-        # Our prefetched highlightsForTopic is nested under
-        # the ArticleHightlight record, in HighlightGroup
-        # Not expecting more than one ArticleHighlight record
-        # but safest to code as if there could be more than one.
-
-        highlights = [ hg
-                       for ah in article.users_highlights.all()
-                       for hg in ah.highlightsForTopic
-        ]
-        # At this point, we are processing one topic for one article
-        # All the highlights for a given topic/case need to be in one task.
-        # Need to sort here instead of the above prefetch because we want
-        # to ignore the potential grouping effect if there was more than one
-        # ArticleHighlight in above list comprehension
-        # See data.pybossa_api.save_highlight_taskrun for import code
-        sortkey = lambda x: x.case_number
-        hg_by_case = sorted(highlights, key=sortkey)
-
-        for case_number, hg_case_group in groupby(hg_by_case, key=sortkey):
-            taskList.append({
-               "project": project_data,
-               "topTopicId": topic.id,
-               "topictree": topictree_data,
-               "article": ArticleSerializer(article, many=False).data,
-               "highlights": HighlightGroupSerializer(
-                                 hg_case_group, many=True).data,
-               "hints": NLPHintSerializer(article.hintsForTopic, many=True).data,
-            })
-
-    return taskList
 
 @api_view(['GET'])
 def quiz_tasks(request):
@@ -305,31 +99,12 @@ def quiz_tasks(request):
         df_schemas = Q(name="Protester") | Q(name="City")
         df_schemas |=  Q(name="Camp") | Q(name="Police")
         taskList = collectQuizTasks(
-            articles = Article.objects.filter(id__lte=20),
+            articles = Article.objects.filter(id__lte=1),
             topics = Topic.objects.filter(df_schemas),
             project = Project.objects.get(name__exact="Quiz")
         )
         logger.info("Collected %d quiz tasks." % len(taskList))
         return Response(taskList)
-
-def collectNLPTasks(articles=None, topics=None):
-    questions = []
-    for root in topics:
-        topictree = root.getTopicTree()
-        prefetch_related_objects(topictree, "questions")
-        for topic in topictree:
-            nlp_input_format = NLPQuestionSerializer(topic.questions.all(),
-                                                     many=True)
-            questions.extend(nlp_input_format.data)
-
-    taskList = [{
-                  "article_id": article.id,
-                  "Topic Text": article.text,
-                  "Questions": questions
-                }
-        for article in articles
-    ]
-    return taskList
 
 @api_view(['GET'])
 def NLP_tasks(request):
@@ -342,12 +117,3 @@ def NLP_tasks(request):
         # This endpoint is just for debugging use, so limit response size
         taskList = taskList[:10]
         return Response(taskList)
-
-# Register our viewsets with the router
-ROUTER = routers.DefaultRouter()
-ROUTER.register(r'projects', ProjectViewSet)
-ROUTER.register(r'users', UserProfileViewSet)
-ROUTER.register(r'articles', ArticleViewSet)
-ROUTER.register(r'topics', TopicViewSet)
-ROUTER.register(r'highlight_groups', HighlightGroupViewSet)
-ROUTER.register(r'article_highlights', ArticleHighlightViewSet)

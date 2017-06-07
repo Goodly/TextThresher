@@ -55,7 +55,7 @@ export default function fetchHighlightTasks(container, pageParam) {
   container.props.initHighlightTasks();
   let host = "http://localhost:5000";
   pageParam = pageParam ? pageParam : '';
-  return fetch(host + `/api/highlighter_tasks2/?format=json${pageParam}`)
+  return fetch(host + `/api/highlighter_tasks/?format=json${pageParam}`)
     .then(response => response.json())
     .then(pagedTasks => {
             storeTasks(container, pagedTasks);

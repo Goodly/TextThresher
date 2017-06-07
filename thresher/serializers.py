@@ -1,5 +1,4 @@
 import json
-from django.contrib.auth.models import User
 from rest_framework import serializers
 from models import (Article, Topic, Question, Answer,
                     HighlightGroup, SubmittedAnswer, NLPHints,
@@ -7,6 +6,8 @@ from models import (Article, Topic, Question, Answer,
 
 
 # Custom JSON field
+# All JSON now using native JSONB fields in Postgres.
+# Just keeping this function for reference.
 class JSONSerializerField(serializers.Field):
     """
     A field which seralizes text fields into valid JSON
@@ -47,34 +48,23 @@ class SubmittedAnswerSerializer(serializers.ModelSerializer):
         return submitted_answer
 
 class HighlightGroupSerializer(serializers.ModelSerializer):
-    # Keep HighlightGroup metadata
-    offsets = JSONSerializerField()      # Should we use OffsetFieldSerializer instead of this?
-    submitted_answers = SubmittedAnswerSerializer(many=True)
-
     class Meta:
         model = HighlightGroup
-        fields = ('id', 'offsets', 'case_number',
-                  'topic', 'submitted_answers')
+        fields = ('id', 'offsets', 'case_number', 'topic')
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
     highlights = HighlightGroupSerializer(many=True)
 
     class Meta:
         model = ArticleHighlight
-        fields = ('id', 'highlights', 'created_by', 'highlight_source')
+        fields = ('id', 'highlights', 'created_by')
 
 class ArticleSerializer(serializers.ModelSerializer):
-    annotators = JSONSerializerField()
-
     class Meta:
         model = Article
-        fields = ('id', 'article_number', 'text', 'date_published', 'city_published',
-                  'state_published', 'periodical', 'periodical_code',
-                  'parse_version', 'annotators')
+        fields = ('id', 'article_number', 'text', 'metadata')
 
 class AnswerSerializer(serializers.ModelSerializer):
-    next_questions = JSONSerializerField()
-
     class Meta:
         model = Answer
         fields = ('id', 'answer_number', 'answer_content', 'next_questions')
@@ -86,7 +76,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'question_number', 'question_type', 'question_text',
-                  'next_questions', 'answers')
+                  'next_questions', 'hint_type', 'answers')
 
     def create(self, validated_data):
         answers = validated_data.pop('answers')
@@ -95,6 +85,8 @@ class QuestionSerializer(serializers.ModelSerializer):
             Answer.objects.create(question=question, **answer)
         return question
 
+
+# Used to export questions in format recognized by NLP-Hints program
 class NLPQuestionSerializer(serializers.Serializer):
     ID = serializers.SerializerMethodField()
     Question = serializers.SerializerMethodField()
@@ -103,54 +95,12 @@ class NLPQuestionSerializer(serializers.Serializer):
         return obj.id
 
     def get_Question(self, obj):
-        return obj.question_text
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    # Getting info from User model
-    username = serializers.SerializerMethodField()
-
-    # Custom fields
-    experience_score = serializers.DecimalField(max_digits=5, decimal_places=3)
-    accuracy_score = serializers.DecimalField(max_digits=5, decimal_places=3)
-    users_highlights = ArticleHighlightSerializer(many=True)
-    submitted_answers = SubmittedAnswerSerializer(many=True)
-
-    def get_username(self, obj):
-        return obj.user.username
-
-    class Meta:
-        model = UserProfile
-        fields = ('id', 'username',
-                  'experience_score', 'accuracy_score', 'users_highlights',
-                  'submitted_answers')
-
-
-## Custom fields for the serializers ##
-
-class OffsetField(serializers.Field):
-#    def __init__(self, offsets, *args, **kwargs):
-#        serializers.Field.__init__(*args, **kwargs)
-#        self.offsets = offsets
-
-    # Override
-    def to_representation(self, obj):
-        ret = {"selector": {"@type": "MultiplePositionTextSelector"}}
-        ret["selector"]["offsets"] = [{"start": start, "end": end} for (start, end) in self.offsets]
-
-        return ret
-
-    # Override
-    def to_internal_value(self, data):
-        ret = json.loads(data) # Convert to Python dict
-        return json.dumps(ret["offsets"]) # Convert back to native form of offsets, a JSON object
-
+        return obj.hint_type
 
 
 class TopicSerializer(serializers.ModelSerializer):
-        # A nested serializer for all the questions
+    # A nested serializer for all the questions
     questions = QuestionSerializer(many=True)
-
-    glossary = JSONSerializerField()
 
     class Meta:
         model = Topic
@@ -159,15 +109,11 @@ class TopicSerializer(serializers.ModelSerializer):
                   'questions')
 
 class RootTopicSerializer(serializers.ModelSerializer):
-    glossary = JSONSerializerField()
-
     class Meta:
         model = Topic
         fields = ('id', 'name', 'order', 'glossary', 'instructions')
 
 class NLPHintSerializer(serializers.ModelSerializer):
-    offsets = JSONSerializerField()
-
     class Meta:
         model = NLPHints
-        fields = ('id', 'article', 'question', 'offsets')
+        fields = ('id', 'article', 'hint_type', 'offsets')

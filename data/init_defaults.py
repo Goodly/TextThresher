@@ -11,7 +11,11 @@ import django
 django.setup()
 from django.conf import settings
 
-from django.contrib.auth.models import User, Permission, Group
+# Retrieve user model set by AUTH_USER_MODEL in settings.py
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+from django.contrib.auth.models import Permission, Group
 from django.core.exceptions import ObjectDoesNotExist
 from thresher.models import UserProfile, Project
 
@@ -46,6 +50,13 @@ permissions = [
     u'add_nlphints',
     u'change_nlphints',
     u'delete_nlphints',
+    u'add_contributor',
+    u'change_contributor',
+    u'delete_contributor',
+    u'add_quiztaskrun',
+    u'change_quiztaskrun',
+    u'delete_quiztaskrun',
+    u'change_userprofile',
 ]
 
 def createSuperUser(username="norman", email="norman@example.com", password="bidsatdoe"):
@@ -53,10 +64,7 @@ def createSuperUser(username="norman", email="norman@example.com", password="bid
         u = User.objects.get(username=username)
     except ObjectDoesNotExist:
         u = User.objects.create_superuser(username, email, password)
-        profile = UserProfile.objects.get_or_create(
-            user=u,
-            defaults = {"experience_score": 0.5, "accuracy_score": 0.9}
-        )[0]
+        profile = UserProfile.objects.get_or_create(user=u)[0]
         logger.info("Created superuser %s, password '%s'." % (username, password))
     return u.userprofile
 
@@ -72,7 +80,7 @@ def createNick(username="nick", email="nick@example.com", password="bidsatdoe", 
     try:
         u = User.objects.get(username=username)
     except ObjectDoesNotExist:
-        u = User.objects.create_superuser('nick', 'nick@example.com', 'bidsatdoe')
+        u = User.objects.create_user('nick', 'nick@example.com', 'bidsatdoe')
         u.first_name = "Nick"
         u.last_name = "Adams"
         u.is_staff = True
@@ -80,15 +88,15 @@ def createNick(username="nick", email="nick@example.com", password="bidsatdoe", 
         u.save()
         profile = UserProfile.objects.get_or_create(
             user=u,
-            defaults = {"pybossa_url": "http://crowdcrafting.org",
-                        "experience_score": 0.98, "accuracy_score": 0.99}
+            defaults = {"pybossa_url": "http://pybossa"}
         )[0]
         logger.info("Created researcher '%s', password '%s'." % (username, password))
     return u.userprofile
 
-def createHighlighterProject():
+def createHighlighterProject(owner_profile):
     (project, created) =  Project.objects.get_or_create(
         short_name="Highlighter",
+        owner_profile=owner_profile,
         defaults = {
             "name": "Highlighter",
             "task_type": "HLTR",
@@ -100,9 +108,10 @@ def createHighlighterProject():
         logger.info("Created project '%s'" % project.name)
     return project
 
-def createQuizProject():
+def createQuizProject(owner_profile):
     (project, created) =  Project.objects.get_or_create(
         short_name="Quiz",
+        owner_profile=owner_profile,
         defaults = {
             "name": "Quiz",
             "task_type": "QUIZ",
@@ -116,6 +125,6 @@ def createQuizProject():
 if __name__ == '__main__':
     createSuperUser()
     researchers = createThresherGroup()
-    createNick(groups=[researchers])
-    createHighlighterProject()
-    createQuizProject()
+    owner_profile = createNick(groups=[researchers])
+    createHighlighterProject(owner_profile)
+    createQuizProject(owner_profile)

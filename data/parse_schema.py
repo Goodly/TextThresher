@@ -76,26 +76,12 @@ def parse_dependency(dependency, output):
     source_question_id = int(source_question_id)
     target_question = int(target_question)
 
-    # Handle the case "any" seperately
-    if source_answer_id == "any":
-        topic = [t for t in output['topics'] 
-                 if int(t['id']) == source_topic_id][0]
-        question = [q for q in topic['questions'] 
-                    if int(q['question_number']) == source_question_id][0]
-        for answer in question['answers']:
-            new_source_answer_id = int(answer['answer_number'])
-            output['dependencies'].append(Dependency(source_topic_id, 
-                                                     source_question_id, 
-                                                     new_source_answer_id, 
-                                                     target_question))
-
-    else:
-        source_answer_id = int(source_answer_id)
-
-        output['dependencies'].append(Dependency(source_topic_id, 
-                                                 source_question_id, 
-                                                 source_answer_id, 
-                                                 target_question))
+    # Do not convert source_answer_id to int, because value might be 'any'
+    # source_answer_id = int(source_answer_id)
+    output['dependencies'].append(Dependency(source_topic_id,
+                                             source_question_id,
+                                             source_answer_id,
+                                             target_question))
 
 
 def parse_question_entry(entry_id, data, output):

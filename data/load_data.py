@@ -1,18 +1,23 @@
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "thresher_backend.settings")
 
+import logging
+logger = logging.getLogger(__name__)
+
 import django
 django.setup()
 
 import argparse
 import json
 import fnmatch
+from datetime import date
 
 from django.core.management import call_command
 from django.core.management.color import no_style
-from django.db import connections, DEFAULT_DB_ALIAS, models
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
+
+from django.db.models import Max
 
 from data import init_defaults
 from data.parse_document import parse_document
@@ -20,10 +25,7 @@ from data.parse_schema import parse_schema
 from data.parse_schema_v2 import parse_schema as parse_schema_v2
 
 from thresher.models import (Project, Article, Topic, HighlightGroup,
-                             ArticleHighlight, Question, Answer,
-                             UserProfile)
-from django.contrib.auth import get_user_model
-User=get_user_model()
+                             ArticleHighlight, Question, Answer)
 
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
@@ -129,35 +131,49 @@ class TopicsSchemaParser(object):
         """
         Loads dependencies into targeted answers.
         """
+        # Report as many errors as possible to aid someone in
+        # debugging a schema. Don't bail on first error.
         for dep in self.dep:
-            topic_obj = Topic.objects.filter(parent=self.topic_obj, 
-                                             order=dep.topic)[0]
-            question_obj = Question.objects.filter(topic=topic_obj,
-                                               question_number=dep.question)[0]
-            next_question_obj = Question.objects.filter(topic=topic_obj, 
-                                question_number=dep.next_question)[0]
-            if dep.answer == '*':
-                # For the new parse_schema.py, it uses '*' for 'any' answers
-                # Get all the answers of the source question
-                answer_objs = Answer.objects.filter(question=question_obj)
+            try:
+                topic_obj = Topic.objects.get(parent=self.topic_obj,
+                                              order=dep.topic)
+            except Topic.DoesNotExist:
+                logger.error("%s\nDidn't find topic number %d" % (dep, dep.topic,))
+                continue
+
+            try:
+                question_obj = Question.objects.get(topic=topic_obj,
+                                                    question_number=dep.question)
+            except Question.DoesNotExist:
+                logger.error("%s\nDidn't find question number %d" % (dep, dep.question,))
+                continue
+
+            try:
+                next_question_obj = Question.objects.get(topic=topic_obj,
+                                    question_number=dep.next_question)
+            except Question.DoesNotExist:
+                logger.error("%s\nDidn't find next question number %d" % (dep, dep.next_question,))
+                continue
+
+            if dep.answer == 'any':
+                # Any answer to this question activates this next_question
+                # Note that text box and date questions do not have
+                # any Answer records to store next_questions, but still use .any
+                # e.g., where T is the topic number and Q is a question number:
+                # if T.Qx.any, then T.Qy
+                question_obj.next_questions.append(next_question_obj.id)
+                question_obj.save()
             else:
-                # Normally, we only have one answer for one Dependency
-                # Still store this object in a list for code reuse
-                answer_objs = Answer.objects.filter(question=question_obj, 
-                                                answer_number=dep.answer)
-            for answer_obj in answer_objs:
-                # next_questions is an array stored as text
-                next_questions_arr = answer_obj.next_questions
-                next_q_id = str(next_question_obj.id)
-                # Manipulate the array as text
-                if next_questions_arr == "[]":
-                    next_questions_arr = "[" + next_q_id + "]"
-                else:
-                    next_questions_arr = (next_questions_arr[:-1] + "," 
-                                          + next_q_id + "]")
-                answer_obj.next_questions = next_questions_arr
+                # This answer activates this next_question
+                try:
+                    answer_obj = Answer.objects.get(question=question_obj,
+                                                    answer_number=int(dep.answer))
+                except Answer.DoesNotExist:
+                    logger.error("%s\nDidn't find answer number %d" % (dep, dep.answer,))
+                    continue
+                answer_obj.next_questions.append(next_question_obj.id)
                 answer_obj.save()
-            
+
 def load_schema(schema):
     schema_name = schema['title']
     # old schemas don't have a 'parent' for schemas
@@ -173,7 +189,7 @@ def load_schema(schema):
         parent=parent,
         name=schema_name,
         instructions=schema['instructions'],
-        glossary=json.dumps(schema['glossary'])
+        glossary=schema['glossary']
     )
     try:
         schema_obj.save()
@@ -208,11 +224,12 @@ def load_article(article):
     try: # Catch duplicate article ids and assign new ids.
         existing_article = Article.objects.get(article_number=new_id)
         if article['text'] != existing_article.text:
-            # Using ORM sort in inner loop just to find new max id...fix this.
-            # This is not running in parallel or anything.
-            max_id = Article.objects.all().order_by('-article_number')[0].article_number
+            old_id = new_id
+            max_id = (Article.objects.all().aggregate(Max('article_number'))
+                      ['article_number__max'])
             new_id = max_id + 1 if max_id >= HIGH_ID else HIGH_ID
-            print "NEW ID!", new_id
+            logger.warn("Article ID {} already assigned. New id is {}. "
+                        "Recommend fixing source data".format(old_id, new_id))
         else:
             # we've already loaded this article, so don't process its TUAs.
             return
@@ -220,16 +237,14 @@ def load_article(article):
     except Article.DoesNotExist: # Not a duplicate.
         pass
 
+    date_published=article['metadata']['date_published']
+    if isinstance(date_published, date):
+        # JSON Serializer doesn't like dates
+        article['metadata']['date_published']=date_published.isoformat()
     article_obj = Article(
         article_number=new_id,
         text=article['text'],
-        date_published=article['metadata']['date_published'],
-        city_published=article['metadata']['city'],
-        state_published=article['metadata']['state'],
-        periodical=article['metadata']['periodical'],
-        periodical_code=int(article['metadata']['periodical_code']),
-        parse_version=article['metadata']['version'],
-        annotators=json.dumps(article['metadata']['annotators']),
+        metadata=article['metadata']
     )
     article_obj.save()
     print "article id %d numbered %s" % (article_obj.id,
@@ -239,8 +254,7 @@ def load_article(article):
 def load_annotations(article, article_obj):
     # In future usage, the articles being imported will not be highlighted
     # already and thus won't have 'annotators'.
-    article_highlight = ArticleHighlight.objects.create(article=article_obj,
-                                                        highlight_source='HLTR')
+    article_highlight = ArticleHighlight.objects.create(article=article_obj)
 
     for tua_type, tuas in article['tuas'].iteritems():
         try:
@@ -261,9 +275,8 @@ def load_annotations(article, article_obj):
 
         for tua_id, offset_list in tuas.iteritems():
             try:
-                highlight = HighlightGroup.objects.create(offsets=json.dumps(offset_list),
+                highlight = HighlightGroup.objects.create(offsets=offset_list,
                                                           case_number=tua_id,
-                                                          highlight_text="placeholder",
                                                           topic=topic,
                                                           article_highlight=article_highlight)
 
@@ -312,10 +325,10 @@ def load_args():
 
 if __name__ == '__main__':
     init_defaults.createSuperUser()
-    init_defaults.createHighlighterProject()
-    init_defaults.createQuizProject()
     researchers = init_defaults.createThresherGroup()
     created_by = init_defaults.createNick(groups=[researchers])
+    init_defaults.createHighlighterProject(created_by)
+    init_defaults.createQuizProject(created_by)
     args = load_args()
     if args.schema_dir:
         print "Loading schemas in version 1 format"

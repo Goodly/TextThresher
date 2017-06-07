@@ -7,6 +7,7 @@ django.setup()
 import json
 
 from thresher.models import NLPHints
+from data.nlp_hint_types import QUESTION_TO_HINT_TYPE
 
 def nlp_load(annotations):
     resultList = json.loads(annotations)
@@ -14,6 +15,7 @@ def nlp_load(annotations):
         article_id=result['article_id']
         for hint in result['Hints']:
             question_id = hint['qID']
+            hint_type = QUESTION_TO_HINT_TYPE[question_id]
             highlightList = hint['Highlights']
             offsetList = hint['Indices']
             # Store the text after its offset pair to make a triplet, e.g.:
@@ -23,8 +25,7 @@ def nlp_load(annotations):
                 offsetList[i].append(highlightList[i])
             NLPHints.objects.create(
                 article_id = article_id,
-                question_id = question_id,
-                highlight_text = json.dumps(highlightList),
-                offsets = json.dumps(offsetList)
+                hint_type = hint_type,
+                offsets = offsetList
             )
     return True
