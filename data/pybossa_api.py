@@ -35,7 +35,10 @@ class ImproperConfigForRemote(Exception):
 class InvalidTaskRun(Exception):
     pass
 
-def create_or_update_remote_project(profile, project):
+def create_or_update_remote_project(profile,
+                                    project,
+                                    debug_presenter=False,
+                                    debug_server=''):
     """
     This functions enqueues the worker to create a project on a remote
     Pybossa server.
@@ -45,23 +48,30 @@ def create_or_update_remote_project(profile, project):
     # models for later use.
     # Note: If for some reason the profile or project records disappear
     # by the time the worker runs, then we WANT the worker to fail.
-    return create_or_update_remote_project_worker.delay(profile_id=profile.id, project_id=project.id)
+    return create_or_update_remote_project_worker.delay(profile_id=profile.id,
+                                                        project_id=project.id,
+                                                        debug_presenter=debug_presenter,
+                                                        debug_server=debug_server)
 
 @django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
-def create_or_update_remote_project_worker(profile_id=None, project_id=None):
+def create_or_update_remote_project_worker(profile_id=None,
+                                           project_id=None,
+                                           debug_presenter=False,
+                                           debug_server=''):
     profile = UserProfile.objects.get(pk=profile_id)
     url = urljoin(profile.pybossa_url, "/api/project")
 
     params = {'api_key': profile.pybossa_api_key}
 
     project = Project.objects.get(pk=project_id)
-    bundlePath = getPresenterPath(project.task_type)
     payload = {
         "name": project.name,
         "short_name": project.short_name,
         "description": project.instructions,
         "info": {
-          "task_presenter": getPresenter(bundlePath)
+          "task_presenter": getPresenter(project.task_type,
+                                         debug_presenter,
+                                         debug_server)
         }
     }
     headers = {'content-type': 'application/json'}
@@ -135,21 +145,26 @@ def delete_remote_project_worker(profile_id=None, project_id=None):
     # Pybossa returns JSON if DELETE has error.
     raise ImproperConfigForRemote(resp.text)
 
-def getPresenterPath(task_type):
+def getPresenter(task_type, debug_presenter=False, debug_server=''):
     if task_type == "HLTR":
-        return settings.HIGHLIGHTER_BUNDLE_JS
+        bundle_path = settings.HIGHLIGHTER_BUNDLE_JS
+        url_path = settings.HIGHLIGHTER_BUNDLE_URLPATH
     elif task_type == "QUIZ":
-        return settings.QUIZ_BUNDLE_JS
+        bundle_path =  settings.QUIZ_BUNDLE_JS
+        url_path = settings.QUIZ_BUNDLE_URLPATH
     else:
         raise InvalidTaskType("Project task type must be 'HLTR' or 'QUIZ'")
 
-def getPresenter(bundlePath):
-    if os.path.isfile(bundlePath):
-        with open(bundlePath) as f:
-            js = f.read()
-        return "<script>\n%s\n</script>" % js
+    if debug_presenter:
+        url = urljoin(debug_server, url_path)
+        return '<script type="text/javascript" src="%s"></script>' % url
     else:
-        raise FileNotFound("Task Presenter bundle.js not found: %s" % (bundlePath))
+        if os.path.isfile(bundle_path):
+            with open(bundle_path) as f:
+                js = f.read()
+            return '<script>\n%s\n</script>' % js
+        else:
+            raise FileNotFound("Task Presenter bundle.js not found: %s" % (bundle_path))
 
 # Use our default user and projects to exercise the API.
 def testCreateRemoteProjects():

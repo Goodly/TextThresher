@@ -133,13 +133,14 @@ class SendTasksView(PermissionRequiredMixin, View):
     def get(self, request):
         agg = Article.objects.aggregate(Min('id'), Max('id'))
         initial = { 'starting_article_id': agg['id__min'],
-                    'ending_article_id': agg['id__max']
+                    'ending_article_id': agg['id__max'],
+                    'debug_presenter': request.GET.get("debugPresenter", False)
         }
         return render(
             request,
             self.template_name,
             {'form': self.form_class(initial=initial),
-             'user': request.user
+             'user': request.user,
             }
         )
 
@@ -167,7 +168,12 @@ class SendTasksView(PermissionRequiredMixin, View):
             if bound_form.cleaned_data['add_nlp_hints']:
                 generator = generate_nlp_tasks_worker.delay
             else:
-                job = create_or_update_remote_project(request.user.userprofile, project)
+                debug_presenter = bound_form.cleaned_data['debug_presenter']
+                debug_server = bound_form.cleaned_data['debug_server']
+                job = create_or_update_remote_project(request.user.userprofile,
+                                                      project,
+                                                      debug_presenter=debug_presenter,
+                                                      debug_server=debug_server)
                 generator = self.get_task_generator(project)
 
             generator(profile_id=profile_id,
