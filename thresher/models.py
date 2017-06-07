@@ -11,6 +11,7 @@ User = get_user_model()
 
 from data.nlp_hint_types import HINT_TYPE_CHOICES
 
+
 # Use OneToOneFields to add attributes to User
 class UserProfile(models.Model):
     # Add link to User model
@@ -26,6 +27,7 @@ class UserProfile(models.Model):
 
     def __unicode__(self):
         return "%s" % self.user.username
+
 
 class Contributor(models.Model):
     pybossa_user_id = models.IntegerField(null=True, db_index=True, unique=True)
@@ -91,6 +93,7 @@ class Project(models.Model):
     def get_local_remote_delete_URL(self):
         """ Return a link to the local page to delete the remote project."""
         return reverse('researcher:remote_project_delete', kwargs={"pk": self.id})
+
 
 class Task(models.Model):
     """
