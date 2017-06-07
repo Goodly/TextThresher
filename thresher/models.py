@@ -279,10 +279,11 @@ class ArticleHighlight(models.Model):
                         through_fields=('article_highlight', 'topic'))
 
     def __unicode__(self):
-        desc = ("id %d for article id %d" %
-                (self.id, self.article.id))
-        if self.pybossa_user_id:
-            desc += " by Pybossa user %d" % self.pybossa_user_id
+        desc = ("id %d for article id %d" % (self.id, self.article.id))
+        if self.pybossa_id:
+            desc += " pybossa taskrun id %d" % self.pybossa_id
+        if self.contributor:
+            desc += " by Pybossa user %d" % self.contributor.pybossa_user_id
         return desc
 
 
@@ -312,8 +313,8 @@ class HighlightGroup(models.Model):
         desc = (("id %d article id %d Topic %s and Case %d ") %
                 (self.id, self.article_highlight.article.id,
                 topic_name, self.case_number))
-        if self.article_highlight.pybossa_user_id:
-            desc += " by Pybossa user %d" % self.article_highlight.pybossa_user_id
+        if self.article_highlight.contributor:
+            desc += " by Pybossa user %d" % self.article_highlight.contributor.pybossa_user_id
         return desc
 
 
@@ -333,8 +334,12 @@ class QuizTaskRun(models.Model):
     info = JSONField()
 
     def __unicode__(self):
-        return ("id %d pybossa taskrun id %d pybossa user id %d") % (self.id,
-                self.pybossa_id, self.quiz.pybossa_user_id)
+        desc = ("id %d" % (self.id,))
+        if self.pybossa_id:
+            desc += " pybossa taskrun id %d" % self.pybossa_id
+        if self.contributor:
+            desc += " by Pybossa user %d" % self.contributor.pybossa_user_id
+        return desc
 
 
 # A submitted answer to a question

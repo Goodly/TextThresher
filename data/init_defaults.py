@@ -53,9 +53,9 @@ permissions = [
     u'add_contributor',
     u'change_contributor',
     u'delete_contributor',
-    u'add_quizktaskrun',
-    u'change_quizktaskrun',
-    u'delete_quizktaskrun',
+    u'add_quiztaskrun',
+    u'change_quiztaskrun',
+    u'delete_quiztaskrun',
     u'change_userprofile',
 ]
 
