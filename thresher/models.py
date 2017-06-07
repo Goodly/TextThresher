@@ -57,8 +57,8 @@ class Project(models.Model):
     instructions = models.TextField()
     task_type = models.CharField(max_length=4,
                                  choices=TASK_TYPE, default="HLTR")
-    # following fields are null unless remote Pybossa project has been created
-    pybossa_url = models.URLField(blank=True, default="")
+    # following fields are empty/null unless remote Pybossa project has been created
+    pybossa_url = models.CharField(blank=True, max_length=200, default="")
     pybossa_id = models.IntegerField(null=True)
     pybossa_owner_id = models.IntegerField(null=True)
     # UUID format is 36 chars including hyphens
