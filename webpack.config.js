@@ -10,7 +10,7 @@ function get_config() {
     case 'production':
       return 'prod.config.js';
     default:
-      return 'dev.config.js';
+      return 'base.config.js';
   }
 }
 

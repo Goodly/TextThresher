@@ -3,7 +3,7 @@ require('babel-register');
 console.log('Building with dev.config.js\n');
 var webpack = require('webpack');
 
-const config = require('./base.config');
+const config = require('../webpack.config.js');
 
 const PUBLIC_PATH = config.output.publicPath;
 
