@@ -20,11 +20,10 @@ create a Unix group called docker and add users to it:
 
 Once installed, start the Docker application (if on a Mac), then go to the project directory and run:
 
-0. `docker-compose build --no-cache`
-1. `docker-compose up -d`
-2. `./init_docker.sh`
-3. `npm install`
-4. `bower install`
+1. `docker-compose build --no-cache`
+2. `docker-compose up -d` # wait about 10 seconds
+3. `./init_docker.sh`
+4. `npm install`
 5. `npm run dev`
 
 You will only need to run the above commands once. Those will do the preliminary setup for the application by installing the dependencies and seeding the Docker containers to setup the database.
@@ -44,7 +43,7 @@ the steps and then test your work before submitting a pull request.
 
 To refresh your containers, first stop and remove them with:
 
-0. `docker-compose down`
+1. `docker-compose down`
 
 |Step |Command |Restart at this step when:|
 |---|---|---|
@@ -52,8 +51,7 @@ To refresh your containers, first stop and remove them with:
 |3.| `docker-compose up -d`| sample data changes      |
 |4.| `./init_docker.sh`    |                          |
 |5.| `npm install`         | package.json changes     |
-|6.| `bower install`       | bower.json changes       |
-|7.| `npm run dev`         | webpack changes          |
+|6.| `npm run dev`         | webpack changes          |
 |7.| `npm run build`       | after any changes to front-end code |
 
 To view a browsable interface for the queries, navigate to `localhost:5000/api/`.
