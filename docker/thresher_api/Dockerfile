@@ -8,7 +8,6 @@ COPY /docker/bashrc_to_docker /root/.bashrc
 # ARG vars exist only during build and can be overridden by --build-args
 ARG DEBIAN_FRONTEND=noninteractive
 
-# git is a dependency of bower
 RUN apt-get update -q && apt-get install -q -y \
         gcc \
         gettext \
@@ -46,21 +45,16 @@ RUN chown ${USER}:${USER} /var/www
 
 ENV PYTHONPATH /home/thresher
 # note: Development config mounts the git repo root on this path.
-# Copy minimal files needed to bower install and npm install to try
+# Copy minimal files needed to npm install to try
 # and re-use cache
 WORKDIR /home/thresher
 COPY /package.json /home/thresher
-COPY /bower.json /home/thresher
-COPY /.bowerrc /home/thresher
 RUN chown -R ${USER}:${USER} /home/thresher
 
 ENV WEBPACK_BUILD_DIR /home/thresher
 WORKDIR /home/thresher
-# have to be root to install -g
-RUN npm install -g bower
 USER ${USER}
 RUN npm install
-RUN bower install
 
 # Now copy the rest of the repo into the image - any file change breaks build cache
 COPY / /home/thresher

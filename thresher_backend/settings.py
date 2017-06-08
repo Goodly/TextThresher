@@ -157,8 +157,12 @@ USE_TZ = True
 STATICFILES_STORAGE='thresher_backend.storage.TTStaticFilesStorage'
 STATIC_ROOT = '/var/www/staticfiles'
 STATIC_URL = '/static/'
+# No longer copying from bower directories, since compiled modernizr no longer there.
+# Modernizr needs to be built with appropriate settings.
+# Copy Bootstrap and Modernizr as needed to appropriate Django static directory
+# e.g., researcher/static/researcher/
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "vendor")
+#   os.path.join(BASE_DIR, "vendor")
 ]
 
 verbose = ( "[%(asctime)s] %(levelname)s "
