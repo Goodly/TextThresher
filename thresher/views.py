@@ -96,11 +96,9 @@ def quiz_tasks(request):
         # Finding the cases for the four specified root topics in the
         # first 20 articles generates 46 tasks.
         # TODO: Could add paginated version of endpoint like HighlightTasks
-        df_schemas = Q(name="Protester") | Q(name="City")
-        df_schemas |=  Q(name="Camp") | Q(name="Police")
         taskList = collectQuizTasks(
             articles = Article.objects.filter(id__lte=1),
-            topics = Topic.objects.filter(df_schemas),
+            topics = Topic.objects.filter(parent=None),
             project = Project.objects.get(name__exact="Quiz")
         )
         logger.info("Collected %d quiz tasks." % len(taskList))
