@@ -84,7 +84,7 @@ export class Quiz extends Component {
     this.props.colorSelected();
     this.props.clearHighlights();
     this.props.resetQueue();
-    // This loads gray lightlights so must go after clearHighlights
+    // This loads gray highlights so must go after clearHighlights
     this.props.saveAndNext(saveAnswer);
   }
 
@@ -118,50 +118,12 @@ export class Quiz extends Component {
     );
   }
 
-  generateSubQuestion(topic, showButton) {
-    var answer_list = [];
-    for(var i = 0; i < topic.length; i++) {
-      if(topic[i].id != this.props.currTask.topTopicId) {
-        var temp_answer = { id: -2 - i, answer_number: 1, answer_content: topic[i].name, next_question: topic[i].id};
-        answer_list.push(temp_answer);
-      }
-    }
-    var sub_question = {
-      id: -1,
-      question_number: 0,
-      question_type: 'SELECT_SUBTOPIC',
-      question_text: 'Which of these subtopics are in the highlighted text?',
-      answers: answer_list
-    };
-    var next_id = this.props.queue.length > 1 ? this.props.queue[1] : -1;
-    var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
-    var button = showButton && !last_question ? 
-      <div>
-        <button type="button" onClick={() => {this.props.activeQuestion(next_id)}}> {"Next"} </button>
-      </div>
-      : <div></div>;
-    var last_button = last_question && showButton ? 
-      <button type="button" className="review-button" onClick={() => { this.props.setReview(true); this.props.colorSelected({}); }}> { "Review" } </button> 
-      : <div></div>;
-    return (
-      <div key={-1}>
-        <Question question={sub_question} />
-        { button }
-        { last_button }
-      </div>
-    );
-  }
-
   selectQuestion() {
     var topic = this.props.currTask ? this.props.currTask.topictree : [];
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
     var last_button = last_question ? 
       <button type="button" className="review-button" onClick={() => { this.props.setReview(true); this.props.colorSelected({}); }}> { "Review" } </button> 
       : <div></div>;
-
-    if(this.props.question_id == -1) {
-      return this.generateSubQuestion(topic, true);
-    }
 
     for(var i = 0; i < topic.length; i++) {
       for(var k = 0; k < topic[i].questions.length; k++) {
@@ -182,10 +144,10 @@ export class Quiz extends Component {
   mapQuestions(questions) {
     return (
       <div>
-        {questions.map((elem, i) => {
+        {questions.map((question, i) => {
           for(var j = 0; j < this.props.queue.length; j++) {
-            if(elem.id == this.props.queue[j]) {
-              return this.dispQuestion(elem, false);
+            if (question.id == this.props.queue[j]) {
+              return this.dispQuestion(question, false);
               break;
             }
           }
@@ -195,17 +157,14 @@ export class Quiz extends Component {
   }
 
   dispReview() {
-
-    return this.props.currTask.topictree.map((elem, i) => {
-      var question = i == 0 ? this.generateSubQuestion(this.props.currTask.topictree, false) : <div></div>;
-        return (<div key={elem.id} style={{
+    return this.props.currTask.topictree.map((topic, i) => {
+        return (<div key={topic.id} style={{
           "border": "2px solid black",
           "padding": "15px",
           "margin": "15px"
         }}>
-          <div> {elem.name} </div>
-          { question }
-          { this.mapQuestions(elem.questions) }
+          <div> {topic.name} </div>
+          { this.mapQuestions(topic.questions) }
         </div>);
     });
   }
@@ -227,7 +186,6 @@ export class Quiz extends Component {
       this.answer_colors.push(COLOR_OPTIONS[c_id]);
       this.answer_ids.push({id: ans_id});
     };
-    console.log('LOG', ans_id, this.answer_ids);
 
     var hints_for_allQs = this.props.currTask != undefined ? this.props.currTask.hints : [];
     var hints_offsets = getQuestionHints(this.props.question_id, hints_for_allQs).offsets;
