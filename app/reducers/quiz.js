@@ -9,49 +9,117 @@ const initialState = {
   done: false,
 };
 
-// helper function to initialize queue
-function addNonContingentQuestions(questions) {
+// Currently there is always a root topic with one or more sub-topics.
+// Also, for now the root topic does not start with any questions.
+// If there is more than one sub-topic, generate an initial question
+// asking which subtopics are in the text, and add that question to
+// the root topic.
+// Note we have to generate ids < 0 to avoid colliding with database ids.
+function addSubtopicQuestion(task) {
+  let topictree = task.topictree;
+  let answer_list = [];
+  let topTopic = null;
+  const { noncontingent } = questionSets(topictree);
+  // questions are sorted by id, so number subtopics like -6, -5, ..., -2
+  const start_id = -topictree.length - 2;
+  topictree.forEach( (topic, i) => {
+    if(topic.id !== task.topTopicId) {
+      let next_questions = topic.questions.map( (question) => question.id );
+      next_questions = next_questions.filter( (q_id) => noncontingent.has(q_id) );
+      answer_list.push({
+        id: start_id + i,
+        answer_number: i + 1,
+        answer_content: topic.name,
+        next_questions: next_questions
+      });
+    } else {
+      topTopic = topic;
+    };
+  });
+  let sub_question = {
+    id: -1,
+    question_number: 0,
+    question_type: 'SELECT_SUBTOPIC',
+    question_text: 'Which of these subtopics are in the highlighted text?',
+    answers: answer_list,
+    next_questions: []
+  };
+  topTopic.questions.unshift(sub_question);
+};
 
-  var contained = new Set();
-  for(var i = 0; i < questions.length; i++) {
-    // add in next_question from Question
-    for(var k = 0; k < questions[i].next_questions.length; k++) {
-      contained.add(questions[i].next_questions[k]);
-    }
-    // add in next_question from Answers
-    for(var k = 0; k < questions[i].answers.length; k++) {
-      for(var j = 0; j < questions[i].answers[k].next_questions.length; j++) {
-        contained.add(questions[i].answers[k].next_questions[j]);
+// Compute three sets:
+// The set of all question IDs
+// the set of all questions mentioned in 'next_questions' fields
+// and the set difference:
+// noncontingent = allQuestions - contingent
+// Also, create a map from question.id to next_questions that
+// doesn't require iterating over topictree.
+// Also, create a map from answer.id to next_questions for same reason.
+function questionSets(topictree) {
+  let contingent = new Set();
+  let allQuestions = [];
+  let lookupQuestionNext = {};
+  let lookupAnswerNext = {};
+  for (let t = 0; t < topictree.length; t++) {
+    let questions = topictree[t].questions;
+    for(let i = 0; i < questions.length; i++) {
+      allQuestions.push(questions[i].id);
+      let next_questions = questions[i].next_questions;
+      lookupQuestionNext[questions[i].id] = next_questions;
+      for(let k = 0; k < next_questions.length; k++) {
+        contingent.add(next_questions[k]);
+      }
+      // add in next_question from Answers
+      let answers = questions[i].answers;
+      for(let k = 0; k < answers.length; k++) {
+        let next_questions = answers[k].next_questions;
+        lookupAnswerNext[answers[k].id] = next_questions;
+        for(let j = 0; j < next_questions.length; j++) {
+          contingent.add(next_questions[j]);
+        }
       }
     }
   }
+  // Now calculate the set difference (allQuestions - contingent)
+  let noncontingent = allQuestions.filter(
+    (id) => ! contingent.has(id)
+  );
+  return {
+    contingent,
+    noncontingent: new Set(noncontingent),
+    allQuestions: new Set(allQuestions),
+    lookupQuestionNext,
+    lookupAnswerNext
+  };
+};
 
-  var to_return = [];
-  for(var i = 0; i < questions.length; i++) {
-    if(!contained.has(questions[i].id)) {
-      to_return.push(questions[i].id);
-    }
-  }
-  return to_return.sort((a, b) => { return a - b; });
+function updateQueue(currTask, answer_selected) {
+  const { noncontingent, lookupQuestionNext, lookupAnswerNext } =
+    questionSets(currTask.topictree);
+  let activeQuestions = new Set(noncontingent);
+  // Iterate over object to add questions activated by current answers
+  // based on current set of answers
+  for (let question_id in answer_selected) {
+    let next_questions = lookupQuestionNext[question_id];
+    let answerList = answer_selected[question_id];
+    answerList.forEach( (answer) => {
+      next_questions = next_questions.concat(lookupAnswerNext[answer.answer_id]);
+    });
+    next_questions.forEach( (question_id) => activeQuestions.add(question_id) );
+  };
+  let queue = Array.from(activeQuestions);
+  return queue.sort((a, b) => { return a - b; });
 }
 
-function initQueue(currTask) {
-  var topictree = currTask.topictree;
-  var topic = {};
-  for(var i = 0; i < topictree.length; i++) {
-    if(topictree[i].id == currTask.topTopicId) {
-      topic = topictree[i];
-      break;
-    }
+function sortQuestionsByNumber(topictree) {
+  for(let i = 0; i < topictree.length; i++) {
+    topictree[i].questions = topictree[i].questions.sort(
+      (a, b) => a.question_number - b.question_number
+    );
   }
-  var to_return = [-1];
-  to_return = to_return.concat(addNonContingentQuestions(topic.questions));
-  return to_return;
 }
 
 export function quiz(state = initialState, action) {
-  console.log(action);
-  console.log(state.queue);
   switch(action.type) {
     case 'CLEAR_ANSWERS':
       return {
@@ -64,13 +132,12 @@ export function quiz(state = initialState, action) {
     case 'FETCH_QUESTION':
       return Object.assign({}, initialState, { isFetching: true });
     case 'FETCH_TASK_SUCCESS':
-      for(var i = 0; i < action.task.topictree.length; i++) {
-        action.task.topictree[i].questions = action.task.topictree[i].questions.sort((a, b) => a.question_number - b.question_number);
-      }
+      addSubtopicQuestion(action.task);
+      sortQuestionsByNumber(action.task.topictree)
       return {
         ...state,
         currTask: action.task,
-        questions: initQueue(action.task),
+        queue: updateQueue(action.task, state.answer_selected),
         done: false
       }
     case 'ANSWER_SELECTED':
@@ -88,6 +155,7 @@ export function quiz(state = initialState, action) {
       }
       return {
           ...state,
+          queue: updateQueue(state.currTask, temp),
           answer_selected: temp
       }
     case 'ANSWER_REMOVED':
@@ -104,6 +172,7 @@ export function quiz(state = initialState, action) {
         temp[action.question_id].splice(ind, 1);
         return {
           ...state,
+          queue: updateQueue(state.currTask, temp),
           answer_selected: temp
         };
       }
@@ -122,34 +191,6 @@ export function quiz(state = initialState, action) {
           color: action.color,
           color_id: action.color_id
         }
-      }
-    case 'UPDATE_QUEUE':
-      var questions = action.questions;
-      if(action.question_type == 'SELECT_SUBTOPIC') {
-        questions = addNonContingentQuestions(questions);
-      }
-      var new_queue = state.queue.slice();
-      var ind = new_queue.indexOf(state.curr_question_id);
-      for(var i = 0; i < questions.length; i++) {
-        if(state.queue.indexOf(questions[i]) == -1) {
-          new_queue.splice(ind + i + 1, 0, questions[i]);
-        }
-      };
-      return {
-        ...state,
-        queue: new_queue
-      }
-    case 'REMOVE_QUEUE':
-      var new_queue = state.queue.slice();
-      for(var i = 0; i < action.questions.length; i++) {
-        var ind = new_queue.indexOf(action.questions[i].id);
-        if(ind != -1) {
-          new_queue.splice(ind, 1);
-        }
-      }
-      return {
-        ...state,
-        queue: new_queue
       }
     case 'RESET_QUEUE':
       return {

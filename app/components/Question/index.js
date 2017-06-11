@@ -50,12 +50,6 @@ const mapDispatchToProps = dispatch => {
     setColor: (q_id, a_id, color, c_id) => {
       dispatch(colorSelected(q_id, a_id, color, c_id))
     },
-    queueUpdate: (questions, type) => {
-      dispatch(updateQueue(questions, type))
-    },
-    queueRemove: (questions) => {
-      dispatch(removeElemQueue(questions))
-    }
   };
 }
 
@@ -130,29 +124,7 @@ const Question = React.createClass({
     );
   },
 
-  findNextQuestions: function(answer) {
-    var next_id = answer.next_questions;
-    var next_question = [];
-    for(var i = 0; i < next_id.length; i++) {
-      for(var j = 0; j < this.props.currTask.topictree.length; j++) {
-        var temp = this.props.currTask.topictree[j];
-        for(var k = 0; k < temp.questions.length; k++) {
-          if(temp.questions[k].id == next_id[i]) {
-            next_question.push(temp.questions[k]);
-            break;
-          }
-        }
-      }
-    }
-    return next_question;
-  },
-
   radioOnClick: function(answer, color_id) {
-    if(this.checkInArray(answer.id)) {
-      this.props.queueRemove(this.findNextQuestions(answer));
-    } else {
-      this.props.queueUpdate(answer.next_questions, TYPES.RADIO);
-    }
     this.props.setColor(this.props.question.id, answer.id, COLOR_OPTIONS[color_id], color_id);
     this.props.selectAnswer(TYPES.RADIO, this.props.question.id, answer.id, answer.text);
   },
@@ -206,19 +178,9 @@ const Question = React.createClass({
       if(this.props.color && this.props.color.answer_id == answer.id) {
         this.props.setColor(-1, -1, '', -1);
       }
-      if(type == TYPES.SELECT_SUBTOPIC) {
-        this.props.queueRemove(next_topic.questions);
-      } else {
-        this.props.queueRemove(this.findNextQuestions(answer));
-      }
     } else {
       this.props.setColor(this.props.question.id, answer.id, color, color_id);
       this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id, answer.answer_content);
-      if(type == TYPES.SELECT_SUBTOPIC) {
-        this.props.queueUpdate(next_topic.questions, TYPES.SELECT_SUBTOPIC);
-      } else {
-        this.props.queueUpdate(answer.next_questions, TYPES.CHECKBOX);
-      }
     }
   },
 
@@ -269,25 +231,20 @@ const Question = React.createClass({
   },
 
   mapQuestionAnswers: function() {
+    // TODO: Sort by answer number, not id
     var answer_list = this.props.question.answers.sort((a, b) => { return a.id - b.id; });
     switch (this.props.question.question_type) {
       case TYPES.RADIO:
-        console.log('picked RADIO');
         return this.mapToRadio(answer_list)
       case TYPES.CHECKBOX:
-        console.log('picked CHECKBOX');
         return this.mapToCheckbox(answer_list, TYPES.CHECKBOX)
       case TYPES.SELECT_SUBTOPIC:
-        console.log('picked SELECT_SUBTOPIC');
         return this.mapToCheckbox(answer_list, TYPES.SELECT_SUBTOPIC)
       case TYPES.DATETIME:
-        console.log('picked DATETIME');
         return this.dateTimeInput();
       case TYPES.TEXT:
-        console.log('picked TEXT');
         return this.textInput(TYPES.TEXT);
       case TYPES.TIME:
-        console.log('picked TIME');
         return this.textInput(TYPES.TIME);
       default:
         console.log('unsupported answer type: ' + this.props.question.question_type + ', should be: RADIO, CHECKBOX, DATETIME or TEXT');

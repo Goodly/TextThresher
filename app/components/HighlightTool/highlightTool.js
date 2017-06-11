@@ -315,8 +315,6 @@ const HighlightTool = React.createClass({
   },
 
   clearHighlights: function() {
-    //console.log("Running clear highlights")
-    //console.log(this.props.addHighlight())
     this.props.clearHighlights();
   },
 
@@ -483,7 +481,6 @@ const HighlightTool = React.createClass({
             }
           }
           if (curHL.handleRight.type == 'start') {
-            console.log("START")
             var handleEnd = (
               <HandleEnd
                 highlight={curHL.handleRight.source}

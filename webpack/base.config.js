@@ -9,7 +9,8 @@ const PROTOCOL = 'http';
 const WEBPACK_LISTEN_IP = process.env.WEBPACK_LISTEN_IP || 'localhost';
 const WEBPACK_HOSTNAME = process.env.WEBPACK_HOSTNAME || 'localhost';
 const WEBPACK_PORT = parseInt(process.env.WEBPACK_PORT, 10) || 3001;
-const PUBLIC_PATH = `${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}/`;
+const PUBLIC_HOST = `${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}/`;
+const PUBLIC_PATH = '/';
 
 // Default to building outside container using host mounted dir and tools
 var buildPath = path.resolve(__dirname, '..');
@@ -36,6 +37,7 @@ function execCmd(command) {
 const config = {
   devServer: {
     contentBase: [PATHS.staticRoot, PATHS.vendorPath],
+    public: PUBLIC_HOST,
     publicPath: PUBLIC_PATH,
     host: WEBPACK_LISTEN_IP,
     port: WEBPACK_PORT,
