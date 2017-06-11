@@ -19,11 +19,15 @@ function addSubtopicQuestion(task) {
   let topictree = task.topictree;
   let answer_list = [];
   let topTopic = null;
+  const { noncontingent } = questionSets(topictree);
+  // questions are sorted by id, so number subtopics like -6, -5, ..., -2
+  const start_id = -topictree.length - 2;
   topictree.forEach( (topic, i) => {
     if(topic.id !== task.topTopicId) {
       let next_questions = topic.questions.map( (question) => question.id );
+      next_questions = next_questions.filter( (q_id) => noncontingent.has(q_id) );
       answer_list.push({
-        id: -2 - i,
+        id: start_id + i,
         answer_number: i + 1,
         answer_content: topic.name,
         next_questions: next_questions
