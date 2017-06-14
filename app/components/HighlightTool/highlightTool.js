@@ -407,9 +407,11 @@ const HighlightTool = React.createClass({
   },
 
   handleKeyDown: function(e) {
+    // Don't steal backspace and delete key from input elements!
+    if (document.activeElement.nodeName === "INPUT") {
+      return;
+    };
     if (e.keyCode == 46 || e.keyCode == 8) {
-      // Definitely don't do something like go back to previous page!
-      e.preventDefault();
       if (this.props.selectedHighlight) {
         if (this.props.selectedHighlight.length > 0) {
           this.props.deleteHighlight(this.props.selectedHighlight);
