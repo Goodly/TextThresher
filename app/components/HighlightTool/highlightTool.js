@@ -143,7 +143,6 @@ const HighlightTool = React.createClass({
         topics: [],
         source: activeSources.slice(0),
         selected: false,
-        handleLeft: null,
         handleRight: null
       };
 
@@ -267,9 +266,6 @@ const HighlightTool = React.createClass({
     return 'rgba(' + Math.round(red) + ', ' + Math.round(green) + ', ' + Math.round(blue) + ', ' + opacity +')';
   },
 
-
-
-
   wordCorrection: function(start, end) {
     end -= 1;
     if (start > end) {
@@ -368,16 +364,16 @@ const HighlightTool = React.createClass({
       start = ends[0];
       end = ends[1];
 
-      var temp_text = this.props.text;
-      var new_text = this.props.text.slice(start, end);
       if (start > end) {
         var temp = start;
         start = end;
         end = temp;
       }
 
+      var new_text = this.props.text.slice(start, end);
       if (start !== end) {
         this.props.deselectHighlight();
+        // Reducer does a merge...does not factor in caseNum
         this.props.addHighlight(start, end, new_text, currentTopicId, this.props.text);
         var newHighlight = (
           { start: start,
@@ -386,6 +382,7 @@ const HighlightTool = React.createClass({
             topic: currentTopicId,
             caseNum: 1
           });
+        // Now another merge pass?
         var j = 0;
         while (j < this.props.highlights.length) {
           if (overlap(newHighlight, this.props.highlights[j])) {
@@ -407,12 +404,14 @@ const HighlightTool = React.createClass({
 
   componentDidMount: function() {
     document.addEventListener('keydown',this.handleKeyDown);
-    let HighlightContainer = document.getElementById('highlight');
   },
 
   handleKeyDown: function(e) {
-    if (e.keyCode == 46) {
-      e.preventDefault();
+    // Don't steal backspace and delete key from input elements!
+    if (document.activeElement.nodeName === "INPUT") {
+      return;
+    };
+    if (e.keyCode == 46 || e.keyCode == 8) {
       if (this.props.selectedHighlight) {
         if (this.props.selectedHighlight.length > 0) {
           this.props.deleteHighlight(this.props.selectedHighlight);
@@ -422,26 +421,17 @@ const HighlightTool = React.createClass({
   },
 
   handleSelect: function(source, e) {
-    console.log("HANDLESELECT")
     if (source.length != 0) {
       this.props.selectHighlight(source);
-      e.nativeEvent.preventDefault();
-      e.nativeEvent.stopPropagation();
     }
   },
 
   handleCase: function(source, e, i) {
-    console.log("HANDLE CASE");
-    console.log(source)
-    console.log(i)
-
     var newCase = source.caseNum + i;
     if (newCase == 0) {
       newCase = 1;
     }
     this.props.changeCaseHighlight(source, newCase);
-    e.nativeEvent.preventDefault();
-    e.nativeEvent.stopPropagation();
   },
 
   render() {
@@ -457,17 +447,11 @@ const HighlightTool = React.createClass({
     }
     var last_curHL;
 
-    /*if ( l > 0) {
-      //console.log(highlights[l - 1].end);
-      //console.log(text.length);
-    }*/
-
     return (
       <div onKeyDown={this.handleKeyDown} ref={(ref) => this.articleRef = ref }
            onMouseUp={this.handleClick}
            className="article-click-box">
-        {Array(highlights.length).fill().map((_,i) => {
-          var curHL = highlights[i];
+        {highlights.map( (curHL, i) => {
           start = curHL.end;
           var topics = []
           for (var j = 0; j < curHL.topics.length; j++) {
@@ -480,83 +464,69 @@ const HighlightTool = React.createClass({
               }
             }
           }
+          const source = curHL.handleRight.source;
+          // Highlight merge algorithm is supposed to merge overlapping highlights of same
+          // topic, so if this key is not unique, the merge algo needs work.
+          const reactKey = (String(curHL.start) + '.' + String(curHL.end) +'.' +
+                            String(source.topic) + '.' + String(source.caseNum));
           if (curHL.handleRight.type == 'start') {
             var handleEnd = (
               <HandleEnd
                 highlight={curHL.handleRight.source}
-                color={this.mergeColors([curHL.handleRight.source.topic],  highlights[i+1].selected)}
+                color={this.mergeColors([curHL.handleRight.source.topic], highlights[i+1].selected)}
                 caseNum={curHL.handleRight.source.caseNum}
                 caseMax={this.props.caseMax}
+                onClick={(e) => {
+                  this.handleCase(curHL.handleRight.source, e, -1);
+                }}
               />
             );
 
-            var handleDown = {
-              "bottom": "-13px",
-              "width": "19px",
-              "height": "45px",
-              "marginRight": "-10px",
-              "marginTop": "-5px",
-              "position": "absolute",
-              "zIndex": "10",
-              "cursor": "pointer",
-              "right": "0px",
-              //"backgroundColor": "black",
-            }
-
             return (
-              <span key={curHL.start}
-// invalid attrib: source = {curHL.source}
+              <span key={reactKey}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
                 title={topics}
-                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, -1);this.handleSelect(curHL.source, e)}}
-                >
-
+                onClick={(e) => {
+                  this.handleSelect(curHL.source, e)
+                }}
+              >
                 <span className="articleText" style={{position: 'relative'}}>
                   {getHintedText(text, curHL.start, curHL.end, this.props.hints_offsets)}
                   {handleEnd}
                 </span>
-                </span>
+              </span>
             );
-          }
-          else if (curHL.handleRight.type == 'end') {
+          } else if (curHL.handleRight.type == 'end') {
 
             var handleStart = (
               <HandleStart
                 highlight={curHL.handleRight.source}
-                color={this.mergeColors([curHL.handleRight.source.topic],curHL.selected)}
+                color={this.mergeColors([curHL.handleRight.source.topic], curHL.selected)}
                 caseNum={curHL.handleRight.source.caseNum}
                 caseMax={this.props.caseMax}
+                onClick={(e) => {
+                  this.handleCase(curHL.handleRight.source, e, 1);
+                }}
                 />
             );
 
-            var handleUp = {
-              "top": "-13px",
-              "width": "19px",
-              "height": "45px",
-              "left": "0",
-              "marginLeft": "-10px",
-              "position": "absolute",
-              "zIndex": "10",
-              "cursor": "pointer",
-              //"backgroundColor": "black",
-            }
             return (
-              <span key={curHL.start}
-// invalid attrib: source = {curHL.source}
+              <span key={reactKey}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
                 title={topics}
-                onClick={(e) => {this.handleCase(curHL.handleRight.source, e, 1);this.handleSelect(curHL.source, e)}}>
-
-                  <span className="articleText" style={{position: 'relative'}}>
-                    {getHintedText(text, curHL.start, curHL.end, this.props.hints_offsets)}
-                    {handleStart}
-                  </span>
+                onClick={(e) => {
+                  this.handleSelect(curHL.source, e)
+                }}
+              >
+                <span className="articleText" style={{position: 'relative'}}>
+                  {getHintedText(text, curHL.start, curHL.end, this.props.hints_offsets)}
+                  {handleStart}
                 </span>
+              </span>
             );
-          }
-          else {
+          } else {
             return (
-              <span key={curHL.start}
+              <span key={reactKey}
                 className="articleText"
                 onClick={this.handleSelect.bind(this, curHL.source)}
                 style={{backgroundColor: this.mergeColors(curHL.topics, curHL.selected), position: "relative"}}
@@ -567,7 +537,7 @@ const HighlightTool = React.createClass({
           }
         })}
 
-        <span key={text.length - tail.length} className="articleText">
+        <span key={String(text.length - tail.length) + '.' +String(text.length)} className="articleText">
           {getHintedText(tail, 0, tail.length, this.props.hints_offsets)}
         </span>
       </div>

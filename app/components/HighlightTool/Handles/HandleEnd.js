@@ -19,7 +19,9 @@ export default class HandleEnd extends Component {
     return (
         <span style={{position: 'absolute'}} >
           <div className="end-arrow-up" style={arrowup}>
-            <div className="end-arrow-up-icon">
+            <div className="end-arrow-up-icon"
+              onClick={this.props.onClick}
+            >
               {"-"}
             </div>
           </div>
