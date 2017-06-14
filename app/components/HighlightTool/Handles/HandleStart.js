@@ -21,7 +21,9 @@ export default class HandleStart extends Component {
           </div>
         </div>
         <div className="start-arrow-down" style={arrowdown}>
-          <div className="start-arrow-down-icon">
+          <div className="start-arrow-down-icon"
+            onClick={this.props.onClick}
+          >
             {"+"}
           </div>
         </div>
