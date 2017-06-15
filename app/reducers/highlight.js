@@ -2,8 +2,6 @@ import merge from '../components/HighlightTool/merge';
 import overlap from '../components/HighlightTool/overlap';
 import mergeHighlights from '../components/HighlightTool/mergeHighlights';
 
-
-
 const initialState = Object.assign({
   highlights: [],
   selectedHighlight: [],
@@ -79,6 +77,7 @@ export function highlight(state = initialState, action) {
   }
 }
 
+// Are these exports necessary, or just used for tests?
 module.exports = {
   overlap,
   merge,

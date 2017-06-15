@@ -153,7 +153,7 @@ export class TopicHighlighter extends Component {
                     topics={this.props.topics.results}
                     colors={colors}
                     currentTopicId={this.props.currentTopicId}
-                    />
+                  />
                   
                 </div>
                 <button onClick={this.onSaveAndNext} className='save-and-next'>Save and Next</button>

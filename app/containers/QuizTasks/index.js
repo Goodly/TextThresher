@@ -28,10 +28,11 @@ const mapStateToProps = state => {
     currTask: state.quiz.currTask,
     queue: state.quiz.queue,
     question_id: state.quiz.curr_question_id,
+    answer_id: state.quiz.curr_answer_id,
     answer_selected: state.quiz.answer_selected,
+    answer_colors: state.quiz.answer_colors,
     saveAndNext: state.quiz.saveAndNext,
     review: state.quiz.review,
-    color_id: state.quiz.highlighter_color,
     djangoQuizTasks: state.djangoQuizTasks,
     done: state.quiz.done,
   }
