@@ -58,10 +58,28 @@ class TopicsSchemaParser(object):
         answers: A list of answers
         question: The question that answers belongs to
         """
+        # In the Quiz front-end, tracking colors assigned to answers
+        # is vastly simplified if every question can be counted on to have
+        # at least one answer with a unique ID. So for
+        # question_type == 'TEXT' and 'DATETIME', create a dummy
+        # answer that will have a unique Answer id for color tracking.
+        if len(answers) == 0:
+            answers.append({
+                'answer_number': 1,
+                'question': question,
+                'answer_content': 'placeholder answer for ' + question.question_type
+            })
+            if question.question_type in ['RADIO', 'CHECKBOX']:
+                logger.error("Question number {} of type {} in topic '{}' "
+                             "should have answers."
+                             .format(question.question_number,
+                                     question.question_type,
+                                     question.topic.name
+                             )
+                )
+
         # find the corresponding topic and question ids
         for answer_args in answers:
-            # create the next question reference, it will be rewritten in
-            # load_next_question
             answer_args['question'] = question
             # Create the answer in the database
             answer = Answer.objects.create(**answer_args)
@@ -96,36 +114,6 @@ class TopicsSchemaParser(object):
             # Create the topic with the values in topic_args
             topic = Topic.objects.create(**topic_args)
             self.load_questions(questions, topic)
-        # self.load_next_question()
-        # self.load_dependencies_old()
-
-    def load_next_question(self):
-        """
-        Loads all mandatory next_questions to Answer objects.
-        If an answer does not point to another question, that
-        signals the end. Also populates each mandatory question
-        with a default next question.
-        """
-        topics = Topic.objects.filter(parent=self.topic_obj)
-        for topic in topics:
-            questions = Question.objects.filter(topic=topic) \
-                                        .order_by('question_number')
-            for i in range(len(questions) - 1):
-                self.write_answers(questions[i], questions[i + 1])
-
-    def write_answers(self, curr_question, next_question):
-        """
-        Helper method for load_next_question.
-        Writes the default next answer to the current question and its answers.
-        curr_question: the curr_question to be modified
-        next_question: the next_question curr_question should point to by
-                       default
-        """
-        curr_question.save()
-        answers = Answer.objects.filter(question=curr_question)
-        for answer in answers:
-            answer.next_question = next_question
-            answer.save()
 
     def load_dependencies(self):
         """

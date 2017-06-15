@@ -137,6 +137,6 @@ if __name__ == '__main__':
     args = arg_parser.parse_args()
     
     output = parse_schema(args.filename[0])
-    # print_data(output)
-    print_dependencies(output)
+    print_data(output)
+    # print_dependencies(output)
 
