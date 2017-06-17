@@ -11,9 +11,9 @@ The backend is supported by Docker. If you do not have it already, you will need
 * For OS X, go [here](https://docs.docker.com/docker-for-mac/).
 * For Windows, go [here](https://docs.docker.com/docker-for-windows/).
 * For Ubuntu and other Linux distributions, install
-[docker](https://docs.docker.com/engine/installation/linux/ubuntulinux/) and
+[docker](https://docs.docker.com/engine/installation/linux/ubuntu/) and
 [docker-compose](https://docs.docker.com/compose/install/).
-  To [avoid having to use sudo when you use the docker command](https://docs.docker.com/engine/installation/linux/ubuntulinux/#/create-a-docker-group),
+  To [avoid having to use sudo when you use the docker command](https://docs.docker.com/engine/installation/linux/linux-postinstall/),
 create a Unix group called docker and add users to it:
   1. `sudo groupadd docker`
   2. `sudo usermod -aG docker $USER`
