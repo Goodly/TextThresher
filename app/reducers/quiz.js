@@ -1,11 +1,18 @@
+import { kelly_colors } from 'utils/colors';
+const COLOR_OPTIONS = kelly_colors;
+
+// module level variable index over COLOR_OPTIONS
+var next_color_index = 0;
+
 const initialState = {
   currTask: null,
-  queue: [-1],
-  review: false,
   curr_question_id: -1,
+  queue: [-1],
+  curr_answer_id: -100,
   answer_selected: {},
-  highlighter_color: {},
+  answer_colors: new Map(),
   saveAndNext: null,
+  review: false,
   done: false,
 };
 
@@ -13,7 +20,8 @@ const initialState = {
 // Also, for now the root topic does not start with any questions.
 // If there is more than one sub-topic, generate an initial question
 // asking which subtopics are in the text, and add that question to
-// the root topic.
+// the root topic. Our generated initial question is given id -1.
+// So our queue starts out with question id -1.
 // Note we have to generate ids < 0 to avoid colliding with database ids.
 function addSubtopicQuestion(task) {
   let topictree = task.topictree;
@@ -124,10 +132,12 @@ export function quiz(state = initialState, action) {
     case 'CLEAR_ANSWERS':
       return {
         ...state,
-        answer_selected: {},
         curr_question_id: -1,
-        highlighter_color: {},
-        queue: []
+        queue: updateQueue(state.currTask, answer_selected),
+        curr_answer_id: -100,
+        answer_selected: {},
+        answer_colors: new Map(),
+        review: false
       }
     case 'FETCH_QUESTION':
       return Object.assign({}, initialState, { isFetching: true });
@@ -138,25 +148,34 @@ export function quiz(state = initialState, action) {
         ...state,
         currTask: action.task,
         queue: updateQueue(action.task, state.answer_selected),
+        review: false,
         done: false
       }
     case 'ANSWER_SELECTED':
-      var temp = Object.assign({}, state.answer_selected);
+      var answer_selected = Object.assign({}, state.answer_selected);
+      var answer_colors = new Map(state.answer_colors);
       var new_ans = {
         answer_id: action.answer_id,
         question_id: action.question_id,
         question_type: action.question_type,
-        text: action.text,
+        text: action.text
       };
-      if(temp[action.question_id] && action.question_type == 'CHECKBOX') {
-          temp[action.question_id].push(new_ans);
-      } else{
-        temp[action.question_id] = [new_ans];
+      if (answer_selected[action.question_id] && action.question_type == 'CHECKBOX') {
+        // TODO: If checkbox answer already saved, replace it.
+        answer_selected[action.question_id].push(new_ans);
+      } else {
+        answer_selected[action.question_id] = [new_ans];
       }
+      if (!answer_colors.has(action.answer_id)) {
+        var color = COLOR_OPTIONS[next_color_index++ % COLOR_OPTIONS.length];
+        answer_colors.set(action.answer_id, color);
+      };
       return {
-          ...state,
-          queue: updateQueue(state.currTask, temp),
-          answer_selected: temp
+        ...state,
+        queue: updateQueue(state.currTask, answer_selected),
+        curr_answer_id: action.answer_id,
+        answer_selected: answer_selected,
+        answer_colors: answer_colors
       }
     case 'ANSWER_REMOVED':
       var ans_array = state.answer_selected[action.question_id];
@@ -181,21 +200,6 @@ export function quiz(state = initialState, action) {
       return {
         ...state,
         review: action.review
-      }
-    case 'COLOR_SELECTED':
-      return {
-        ...state,
-        highlighter_color: {
-          question_id: action.question_id,
-          answer_id: action.answer_id,
-          color: action.color,
-          color_id: action.color_id
-        }
-      }
-    case 'RESET_QUEUE':
-      return {
-        ...state,
-        queue: [-1]
       }
     case 'TASK_DONE':
       return {

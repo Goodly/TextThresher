@@ -37,6 +37,8 @@ export const kelly_colors = [
   'rgb(128, 62, 117)',
   'rgb(129, 112, 102)',
   'rgb(0, 125, 52)',
+  'rgb(255, 179, 0)',
+  'rgb(70,194,64)',
   'rgb(102,000,153)', // following too dark for black text
   'rgb(127, 24, 13)',
   'rgb(000,051,153)',
@@ -45,8 +47,6 @@ export const kelly_colors = [
   'rgb(35, 44, 22)',
   'rgb(89, 51, 21)',
   'rgb(153,000,204)', // end of too dark
-  'rgb(255, 179, 0)', // date highlights - uses 2nd to last
-  'rgb(70,194,64)', // text highlights - uses last
 ];
 
 const kelly_color_hex = [

@@ -9,34 +9,27 @@ import { styles } from './styles.scss';
 const style = require('intro.js/introjs.css');
 import { introJs } from 'intro.js/intro.js';
 
-import { kelly_colors } from 'utils/colors';
-const COLOR_OPTIONS = kelly_colors;
-
-import { contextWords, getQuestionHints } from 'components/Quiz/contextWords';
-import { EXTRA_WORDS, SPECIAL_DISP_ID } from 'components/Quiz/contextWords';
+import { getAnnotatedText, getAnswerAnnotations } from 'components/Quiz/contextWords';
 
 export class Quiz extends Component {
   constructor(props) {
     super(props);
-    // These are used to build a map of answer_ids to the progressively built color table.
-    // First two are for original highlights and NLP hints display.
-    this.answer_colors = ['rgb(200,200,200)', 'rgb(225,225,225)'];
-    this.answer_ids = [{id: SPECIAL_DISP_ID}, {id: SPECIAL_DISP_ID + 1 }];
     
     this.handleScroll = this.handleScroll.bind(this);
     this.state = {
       highlightsStyle: 'highlights-fixed',
     };
-
   }
 
   static propTypes = {
     currTask: React.PropTypes.object,
-    onSaveAndNext: React.PropTypes.func,
-    answer_selected: React.PropTypes.object,
     queue: React.PropTypes.array,
+    question_id: React.PropTypes.number,
+    answer_id: React.PropTypes.number,
+    answer_selected: React.PropTypes.object,
+    answer_colors: React.PropTypes.instanceOf(Map).isRequired,
+    saveAndNext: React.PropTypes.func,
     review: React.PropTypes.bool,
-    color_id: React.PropTypes.object,
     done: React.PropTypes.bool,
   }
 
@@ -79,12 +72,8 @@ export class Quiz extends Component {
   onSaveAndNext = () => {
     window.scrollTo(0, 0) 
     var saveAnswer = Object.assign({}, this.props.answer_selected);
-    this.props.setReview(false);
     this.props.clearAnswers();
-    this.props.colorSelected();
     this.props.clearHighlights();
-    this.props.resetQueue();
-    // This loads gray highlights so must go after clearHighlights
     this.props.saveAndNext(saveAnswer);
   }
 
@@ -103,10 +92,10 @@ export class Quiz extends Component {
       }
     }
     var next_button = next_id == question.id ? <div></div> :
-        <button type="button" onClick={() => { this.props.activeQuestion(next_id); this.props.colorSelected({}); }}>{ "Next" }</button>;
+        <button type="button" onClick={() => { this.props.activeQuestion(next_id); }}>{ "Next" }</button>;
     var button = showButton ?  
       <div>
-        <button type="button" onClick={() => { this.props.activeQuestion(prev_id); this.props.colorSelected({}); }}> { "Prev" }</button>
+        <button type="button" onClick={() => { this.props.activeQuestion(prev_id); }}> { "Prev" }</button>
         { next_button }
       </div>
       : <div></div>;
@@ -122,7 +111,7 @@ export class Quiz extends Component {
     var topic = this.props.currTask ? this.props.currTask.topictree : [];
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
     var last_button = last_question ? 
-      <button type="button" className="review-button" onClick={() => { this.props.setReview(true); this.props.colorSelected({}); }}> { "Review" } </button> 
+      <button type="button" className="review-button" onClick={() => { this.props.setReview(true); }}> { "Review" } </button> 
       : <div></div>;
 
     for(var i = 0; i < topic.length; i++) {
@@ -169,34 +158,25 @@ export class Quiz extends Component {
     });
   }
 
-  mapHighlights(highlights) {
-    var text = '';
-    var article = this.props.currTask != undefined ? this.props.currTask.article.text : '';
-    for(var i = 0; i < highlights.length; i++) {
-      var triplet = contextWords(article, highlights[i], EXTRA_WORDS);
-      text += '...' + triplet.join(' ') + '...';
-    }
-    var c_id = this.props.color_id.color_id != undefined ? this.props.color_id.color_id : -1;
-    var ans_id = this.props.color_id.answer_id != undefined ? this.props.color_id.answer_id : -1;
-    // We have to tag the highlights with the answer_id.
-    // So each time we add an answer, we have to add its color and the
-    // id for that color to these two arrays.
-    if (ans_id >= 0 && c_id >= 0) {
-      // Parallel array map.
-      this.answer_colors.push(COLOR_OPTIONS[c_id]);
-      this.answer_ids.push({id: ans_id});
-    };
+  displayHighlighter(topic_highlights) {
+    let article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
+    let hint_sets_for_article = this.props.currTask != undefined ? this.props.currTask.hints : [];
+    // TODO: retrieve hint_type from the question record.
+    let hint_type = 'WHERE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
+    let { abridged, hints_offsets } = getAnnotatedText(article_text,
+                                                   topic_highlights,
+                                                   hint_type,
+                                                   hint_sets_for_article);
 
-    var hints_for_allQs = this.props.currTask != undefined ? this.props.currTask.hints : [];
-    var hints_offsets = getQuestionHints(this.props.question_id, hints_for_allQs).offsets;
+    let { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
 
-    // HighlightTool could be modified to take hints_for_question
     return (
-      <HighlightTool text={text}
-                     colors={this.answer_colors}
-                     topics={this.answer_ids}
-                     currentTopicId={ans_id}
-                     hints_offsets={hints_offsets} />
+      <HighlightTool text={abridged}
+                     colors={color_array}
+                     topics={answer_ids}
+                     currentTopicId={this.props.answer_id}
+                     hints_offsets={hints_offsets}
+      />
     );
   }
 
@@ -226,7 +206,7 @@ export class Quiz extends Component {
       return <div>Thank you for contributing to the project!</div>
     }
 
-    var highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
+    var topic_highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 
     var saveAndNextButton = this.props.review ? <button onClick={ this.onSaveAndNext }>Save and Next</button> : <div></div>;
@@ -244,7 +224,7 @@ export class Quiz extends Component {
       <div className="quiz clearfix" >
         <div className={`highlights ${this.state.highlightsStyle}`}>
           <div className="quizHighlighter">
-            { this.mapHighlights(highlights) }
+            { this.displayHighlighter(topic_highlights) }
           </div>
         </div> 
 

@@ -4,28 +4,51 @@ import mergeHighlights from './mergeHighlights';
 import HandleEnd from './Handles/HandleEnd';
 import HandleStart from './Handles/HandleStart';
 
-// Hint offsets are based on full article. We have to
-// generate offsets for our summarized version.
+// This routine gets alternating runs of unhighlighted
+// and highlighted text. We have to take a set of annotations and
+// insert them into the stream we are getting.
+// In both cases, we are given the offsets into the text passed
+// to the highlighter. For the case of Quiz abridged texts,
+// the passed in offsets must already match the abridged article.
 function getHintedText(text, start, end, hints_offsets) {
   var subtext = text.substring(start, end);
   if ( ! Array.isArray(hints_offsets)) {
     return subtext;
   };
-  var fromIndex = 0;
   var output = [];
   hints_offsets = hints_offsets.slice(); // Make a copy
-  hints_offsets = hints_offsets.sort( (a,b) => (a[0] - b[0]) );
-  hints_offsets.forEach( (offset) => {
-    var hintText = offset[2];
-    var hintStart=subtext.indexOf(hintText, fromIndex);
-    // Only look for hints that are supposed to be in this subtext
-    if ((hintStart >= 0) && (offset[1] > start) && (offset[0] < end)) {
-      output.push(subtext.substring(fromIndex, hintStart));
-      output.push(<i key={hintStart}>{hintText}</i>);
-      fromIndex = hintStart + hintText.length;
+  hints_offsets = hints_offsets.sort( (a,b) => (a[0] - b[0]) )
+  // We are not supposed to get overlapping hints, so proceed
+  // with that simplifying assumption.
+  hints_offsets.forEach(function (offset) {
+    var hintStart = offset[0];
+    var hintEnd = offset[1];
+    var mark = start;
+    if (hintStart <= start && hintEnd > start) {
+      mark = Math.min(hintEnd, end);
+      output.push(
+        <b key={String(start)+'.'+String(mark)}>
+          {text.substring(start, mark)}
+        </b>
+      );
+      start = mark;
+    };
+    if (hintStart >= start && hintStart <= end) {
+      mark = hintStart;
+      output.push(text.substring(start, mark));
+      start = mark;
+      mark = Math.min(hintEnd, end);
+      output.push(
+        <b key={String(start)+'.'+String(mark)}>
+          {text.substring(start, mark)}
+        </b>
+      );
+      start = mark;
     };
   });
-  output.push(subtext.substring(fromIndex));
+  if (start < end) {
+    output.push(text.substring(start, end));
+  };
   return output;
 }
 
@@ -332,12 +355,13 @@ const HighlightTool = React.createClass({
       var anchor = selectionObj.anchorNode;
       var extent = selectionObj.extentNode;
 
-      if (this.articleRef.childNodes.length > 1) {
-        var anchorResult = getOffset(this.articleRef, anchor);
-        start += anchorResult.offset;
-        var extentResult = getOffset(this.articleRef, extent);
-        end += extentResult.offset;
-      }
+      // Determine the actual start and end from the beginning
+      // of the displayed text.
+      var anchorResult = getOffset(this.articleRef, anchor);
+      start += anchorResult.offset;
+      var extentResult = getOffset(this.articleRef, extent);
+      end += extentResult.offset;
+
       var editStart = 0;
       var editEnd = 0;
       for (var i = 0; i < this.props.highlights.length; i++) {
@@ -375,13 +399,13 @@ const HighlightTool = React.createClass({
         this.props.deselectHighlight();
         // Reducer does a merge...does not factor in caseNum
         this.props.addHighlight(start, end, new_text, currentTopicId, this.props.text);
-        var newHighlight = (
-          { start: start,
-            end: end,
+        var newHighlight = {
+            start,
+            end,
             text: new_text,
             topic: currentTopicId,
             caseNum: 1
-          });
+        };
         // Now another merge pass?
         var j = 0;
         while (j < this.props.highlights.length) {
@@ -390,11 +414,12 @@ const HighlightTool = React.createClass({
             start = new_highlight[0].start;
             end = new_highlight[0].end;
             new_text = new_highlight[0].text
-            newHighlight = new_highlight[0];          }
+            newHighlight = new_highlight[0];
+          }
           j+=1;
         }
 
-        var select_highlight = {'start':start, 'end':end, 'text':new_text, 'topic':currentTopicId};
+        var select_highlight = {start, end, text:new_text, topic:currentTopicId};
         this.props.selectHighlight([select_highlight]);
       }
     }
@@ -538,7 +563,7 @@ const HighlightTool = React.createClass({
         })}
 
         <span key={String(text.length - tail.length) + '.' +String(text.length)} className="articleText">
-          {getHintedText(tail, 0, tail.length, this.props.hints_offsets)}
+          {getHintedText(text, text.length - tail.length, text.length, this.props.hints_offsets)}
         </span>
       </div>
     );
