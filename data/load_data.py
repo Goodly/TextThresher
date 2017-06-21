@@ -178,7 +178,7 @@ def load_schema(schema):
         name=schema_name,
         instructions=schema['instructions'],
         glossary=schema['glossary'],
-        order=0   # Give root topics order of 0 so it sorts ahead of its subtopics
+        order=0   # Give root topics order of 0 so they sort ahead of their subtopics
     )
     try:
         schema_obj.save()
