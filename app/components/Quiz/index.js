@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import { Map as ImmutableMap } from 'immutable';
+
 import Question from 'components/Question';
 import HighlightTool from 'components/HighlightTool';
 
@@ -26,8 +28,8 @@ export class Quiz extends Component {
     queue: React.PropTypes.array,
     question_id: React.PropTypes.number,
     answer_id: React.PropTypes.number,
-    answer_selected: React.PropTypes.object,
-    answer_colors: React.PropTypes.instanceOf(Map).isRequired,
+    answer_selected: React.PropTypes.instanceOf(ImmutableMap).isRequired,
+    answer_colors: React.PropTypes.instanceOf(ImmutableMap).isRequired,
     saveAndNext: React.PropTypes.func,
     review: React.PropTypes.bool,
     done: React.PropTypes.bool,
@@ -114,11 +116,24 @@ export class Quiz extends Component {
       <button type="button" className="review-button" onClick={() => { this.props.setReview(true); }}> { "Review" } </button> 
       : <div></div>;
 
+    var rootTopicName = '';
     for(var i = 0; i < topic.length; i++) {
+      // Topics are sorted by their "order" field in ascending order.
+      // The root topic is imported as order 0. So we're going to find
+      // it first before any subtopic.
+      if (this.props.currTask.topTopicId === topic[i].id) {
+        rootTopicName = topic[i].name + ':';
+      };
       for(var k = 0; k < topic[i].questions.length; k++) {
         if(this.props.question_id == topic[i].questions[k].id) {
+          if (this.props.currTask.topTopicId === topic[i].id) {
+            rootTopicName = ''; // Don't show root topic and topic when the same
+          };
           return (
             <div key={topic[i].id}>
+              <div style={{fontSize: '80%', color:'rgb(64,64,64)', marginBottom:'10px'}}>
+                {rootTopicName} {topic[i].name}
+              </div>
               { this.dispQuestion(topic[i].questions[k], true) }
               { last_button }
             </div>
@@ -126,7 +141,7 @@ export class Quiz extends Component {
         }
       }
     }
-    console.log("there was some error with the question queue processing");
+    console.log("Did not find the question with id:"+String(this.props.question_id));
     return <div></div>;
   }
 

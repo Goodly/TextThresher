@@ -3,14 +3,14 @@
 
 const { fetch, Request, Response, Headers } = require('fetch-ponyfill')();
 
-import { normalize, Schema, arrayOf } from 'normalizr';
+import { normalize, schema } from 'normalizr';
 
-let taskSchema = new Schema('tasks');
-let taskList = arrayOf(taskSchema);
+let taskSchema = new schema.Entity('tasks');
+let taskList = [taskSchema];
 
 function storeTasks(container, pagedTasks) {
   // Actually, the paged quiz endpoint isn't ready yet, this is already a task list
-  // Django backend doesn't provide task ids, so copy article id as the task id
+  // Django backend doesn't provide task ids, so generate ids
   pagedTasks = pagedTasks.map(
     (task, index) => ({...task, id: index*10+5})
   );

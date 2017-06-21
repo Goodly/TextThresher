@@ -1,3 +1,18 @@
+import { Map as ImmutableMap } from 'immutable';
+import { normalize, schema } from 'normalizr';
+
+// Schema for normalizing the task data structure into table like entities using
+// the database id as key, e.g.,
+// db.entities.topic[id], db.entities.question[id], db.entities.answer[id]
+let answerSchema = new schema.Entity('answer');
+let questionSchema = new schema.Entity('question', {answers: [answerSchema]});
+let topicSchema = new schema.Entity('topic', {questions: [questionSchema]});
+let hintSchema = new schema.Entity('hint', {}, {idAttribute: 'hint_type'});
+let quizTaskSchema = {
+  topictree: [topicSchema],
+  hints: [hintSchema],
+};
+
 import { kelly_colors } from 'utils/colors';
 const COLOR_OPTIONS = kelly_colors;
 
@@ -6,11 +21,12 @@ var next_color_index = 0;
 
 const initialState = {
   currTask: null,
+  db: { entities: {}, result: {} },
   curr_question_id: -1,
   queue: [-1],
   curr_answer_id: -100,
-  answer_selected: {},
-  answer_colors: new Map(),
+  answer_selected: ImmutableMap(),
+  answer_colors: ImmutableMap(),
   saveAndNext: null,
   review: false,
   done: false,
@@ -105,14 +121,14 @@ function updateQueue(currTask, answer_selected) {
   const { noncontingent, lookupQuestionNext, lookupAnswerNext } =
     questionSets(currTask.topictree);
   let activeQuestions = new Set(noncontingent);
-  // Iterate over object to add questions activated by current answers
+  // Iterate over ImmutableMaps to add questions activated by current answers
   // based on current set of answers
-  for (let question_id in answer_selected) {
+  for (let question_id of answer_selected.keys()) {
     let next_questions = lookupQuestionNext[question_id];
-    let answerList = answer_selected[question_id];
-    answerList.forEach( (answer) => {
-      next_questions = next_questions.concat(lookupAnswerNext[answer.answer_id]);
-    });
+    let answerMap = answer_selected.get(question_id);
+    for (let answer_id of answerMap.keys()) {
+      next_questions = next_questions.concat(lookupAnswerNext[answer_id]);
+    };
     next_questions.forEach( (question_id) => activeQuestions.add(question_id) );
   };
   let queue = Array.from(activeQuestions);
@@ -129,73 +145,79 @@ function sortQuestionsByNumber(topictree) {
 
 export function quiz(state = initialState, action) {
   switch(action.type) {
-    case 'CLEAR_ANSWERS':
+    case 'CLEAR_ANSWERS': { // use block scope for all cases declaring variables
+      const answer_selected = ImmutableMap();
       return {
         ...state,
         curr_question_id: -1,
         queue: updateQueue(state.currTask, answer_selected),
         curr_answer_id: -100,
-        answer_selected: {},
-        answer_colors: new Map(),
+        answer_selected,
+        answer_colors: ImmutableMap(),
         review: false
       }
+    }
     case 'FETCH_QUESTION':
       return Object.assign({}, initialState, { isFetching: true });
-    case 'FETCH_TASK_SUCCESS':
+    case 'FETCH_TASK_SUCCESS': {
       addSubtopicQuestion(action.task);
       sortQuestionsByNumber(action.task.topictree)
+      const taskDB = normalize(action.task, quizTaskSchema);
+      const answer_selected = ImmutableMap();
       return {
         ...state,
         currTask: action.task,
-        queue: updateQueue(action.task, state.answer_selected),
+        db: taskDB,
+        curr_question_id: -1,
+        queue: updateQueue(action.task, answer_selected),
+        answer_selected,
+        answer_colors: ImmutableMap(),
         review: false,
         done: false
       }
-    case 'ANSWER_SELECTED':
-      var answer_selected = Object.assign({}, state.answer_selected);
-      var answer_colors = new Map(state.answer_colors);
-      var new_ans = {
+    }
+    case 'ANSWER_SELECTED': {
+      let answer_selected = state.answer_selected;
+      let answer_colors = state.answer_colors;
+      const new_ans = {
         answer_id: action.answer_id,
         question_id: action.question_id,
         question_type: action.question_type,
         text: action.text
       };
-      if (answer_selected[action.question_id] && action.question_type == 'CHECKBOX') {
-        // TODO: If checkbox answer already saved, replace it.
-        answer_selected[action.question_id].push(new_ans);
+      if (answer_selected.has(action.question_id) && action.question_type == 'CHECKBOX') {
+        const answerMap = answer_selected.get(action.question_id);
+        answer_selected = answer_selected.set(action.question_id, answerMap.set(action.answer_id, new_ans));
       } else {
-        answer_selected[action.question_id] = [new_ans];
+        answer_selected = answer_selected.set(action.question_id, ImmutableMap([[action.answer_id, new_ans]]));
       }
       if (!answer_colors.has(action.answer_id)) {
-        var color = COLOR_OPTIONS[next_color_index++ % COLOR_OPTIONS.length];
-        answer_colors.set(action.answer_id, color);
+        const color = COLOR_OPTIONS[next_color_index++ % COLOR_OPTIONS.length];
+        answer_colors = answer_colors.set(action.answer_id, color);
       };
       return {
         ...state,
         queue: updateQueue(state.currTask, answer_selected),
         curr_answer_id: action.answer_id,
-        answer_selected: answer_selected,
-        answer_colors: answer_colors
+        answer_selected,
+        answer_colors
       }
-    case 'ANSWER_REMOVED':
-      var ans_array = state.answer_selected[action.question_id];
-      var ind = -1;
-      for(var i = 0; i < ans_array.length; i++) {
-        if(ans_array[i].answer_id == action.answer_id) {
-          ind = i;
-          break;
-        }
-      }
-      if(i > -1) {
-        var temp = Object.assign({}, state.answer_selected);
-        temp[action.question_id].splice(ind, 1);
+    }
+    case 'ANSWER_REMOVED': {
+      let answer_selected = state.answer_selected;
+      let answer_colors = state.answer_colors;
+      if (answer_selected.has(action.question_id)) {
+        const answerMap = answer_selected.get(action.question_id);
+        answer_selected = answer_selected.set(action.question_id, answerMap.delete(action.answer_id));
         return {
           ...state,
-          queue: updateQueue(state.currTask, temp),
-          answer_selected: temp
+          queue: updateQueue(state.currTask, answer_selected),
+          answer_selected,
+          answer_colors
         };
-      }
+      };
       return state;
+    }
     case 'UPDATE_REVIEW':
       return {
         ...state,

@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { Map as ImmutableMap } from 'immutable';
+
 import { SingleDatePicker } from 'react-dates';
 import moment from 'moment';
 import { selectAnswer, removeAnswer } from 'actions/quiz';
@@ -66,19 +68,16 @@ const Question = React.createClass({
   propTypes: {
     question: React.PropTypes.object.isRequired,
     answer_id: React.PropTypes.number,
-    answers: React.PropTypes.object,
-    answer_colors: React.PropTypes.instanceOf(Map).isRequired,
+    answers: React.PropTypes.instanceOf(ImmutableMap).isRequired,
+    answer_colors: React.PropTypes.instanceOf(ImmutableMap).isRequired,
     currTask: React.PropTypes.object
   },
 
-  checkInArray: function(answer_id) {
-    var answer_list = this.props.answers[this.props.question.id];
-    answer_list = answer_list ? answer_list: [];
-    for(var i = 0; i < answer_list.length; i++) {
-      if(answer_list[i].answer_id == answer_id) {
-        return true;
-      }
-    }
+  activeAnswer: function(answer_id) {
+    if (this.props.answers.has(this.props.question.id)) {
+      const answerMap = this.props.answers.get(this.props.question.id);
+      return answerMap.has(answer_id);
+    };
     return false;
   },
 
@@ -109,7 +108,7 @@ const Question = React.createClass({
                 style={{ "color": answerColor }}>
                 { renderInkWell(answerColor, selected, clickHandler) }
                 <span style={{ "verticalAlign": "middle" }}>
-                  <input type="radio" name={controlname} checked={ this.checkInArray(answer.id) }
+                  <input type="radio" name={controlname} checked={ this.activeAnswer(answer.id) }
                     onChange={clickHandler} />
                   { " " + answer.answer_content }
                 </span>
@@ -127,7 +126,7 @@ const Question = React.createClass({
         { answer_list.map((answer, i) => {
           // Don't show color well if question is SELECT_SUBTOPIC or answer is not selected
           let { answerColor, selected } = this.getAnswerColorState(answer.id);
-          if (type === TYPES.SELECT_SUBTOPIC || !this.checkInArray(answer.id)) {
+          if (type === TYPES.SELECT_SUBTOPIC || !this.activeAnswer(answer.id)) {
             answerColor = '';
             selected = false;
           };
@@ -135,7 +134,7 @@ const Question = React.createClass({
             this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id, answer.answer_content);
           };
           const checkboxHandler = () => {
-            if (this.checkInArray(answer.id)) {
+            if (this.activeAnswer(answer.id)) {
               this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id);
             } else {
               this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id, answer.answer_content);
@@ -148,7 +147,7 @@ const Question = React.createClass({
               <span style={{ "verticalAlign": "middle" }}>
                 <input type="checkbox"
                     name={controlname}
-                    checked={this.checkInArray(answer.id)}
+                    checked={this.activeAnswer(answer.id)}
                     onChange={checkboxHandler} />
                 { " " + answer.answer_content }
               </span>
@@ -164,8 +163,7 @@ const Question = React.createClass({
     let { answerColor, selected } = this.getAnswerColorState(answer.id);
     // TODO: Finish getting rid of local state for date, only use answer store.
     // Add string<->date round-trip conversions.
-    var answer_date = (this.props.answers[this.props.question.id] ?
-                       this.props.answers[this.props.question.id][0].text : moment());
+    var answer_date = moment();
     const clickHandler = () => {
       this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, answer.id, answer_date);
     };

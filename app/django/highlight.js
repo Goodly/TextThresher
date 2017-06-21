@@ -3,15 +3,15 @@
 
 const { fetch, Request, Response, Headers } = require('fetch-ponyfill')();
 
-import { normalize, Schema, arrayOf } from 'normalizr';
+import { normalize, schema } from 'normalizr';
 
-let taskSchema = new Schema('tasks');
-let taskList = { results: arrayOf(taskSchema) };
+let taskSchema = new schema.Entity('tasks');
+let taskList = { results: [taskSchema] };
 
 function storeTasks(container, pagedTasks) {
-  // Django backend doesn't provide task ids, so copy article id as the task id
+  // Django backend doesn't provide task ids, so generate ids
   pagedTasks.results = pagedTasks.results.map(
-    (task) => ({...task, id: task.article.id})
+    (task, index) => ({...task, id: index*10+5})
   );
   // Normalize data structure
   const taskDatabase = normalize(pagedTasks, taskList);
