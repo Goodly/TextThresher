@@ -1,14 +1,15 @@
-import { normalize, Schema, arrayOf } from 'normalizr';
+import { normalize, schema } from 'normalizr';
 
-let answerSchema = new Schema('answers');
-let questionSchema = new Schema('questions');
-questionSchema.define({answers: arrayOf(answerSchema)});
-let topicSchema = new Schema('topics');
-topicSchema.define({questions: arrayOf(questionSchema)});
-let hintSchema = new Schema('hints', {idAttribute: 'hint_type'});
+// Schema for normalizing the task data structure into table like entities using
+// the database id as key, e.g.,
+// db.entity.topic[id], db.entity.question[id], db.entity.answer[id]
+let answerSchema = new schema.Entity('answer');
+let questionSchema = new schema.Entity('question', {answers: [answerSchema]});
+let topicSchema = new schema.Entity('topic', {questions: [questionSchema]});
+let hintSchema = new schema.Entity('hint', {}, {idAttribute: 'hint_type'});
 let quizTaskSchema = {
-  topictree: arrayOf(topicSchema),
-  hints: arrayOf(hintSchema),
+  topictree: [topicSchema],
+  hints: [hintSchema],
 };
 
 import { kelly_colors } from 'utils/colors';
