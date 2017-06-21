@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import { Map as ImmutableMap } from 'immutable';
+
 import Question from 'components/Question';
 import HighlightTool from 'components/HighlightTool';
 
@@ -26,8 +28,8 @@ export class Quiz extends Component {
     queue: React.PropTypes.array,
     question_id: React.PropTypes.number,
     answer_id: React.PropTypes.number,
-    answer_selected: React.PropTypes.object,
-    answer_colors: React.PropTypes.instanceOf(Map).isRequired,
+    answer_selected: React.PropTypes.instanceOf(ImmutableMap).isRequired,
+    answer_colors: React.PropTypes.instanceOf(ImmutableMap).isRequired,
     saveAndNext: React.PropTypes.func,
     review: React.PropTypes.bool,
     done: React.PropTypes.bool,
