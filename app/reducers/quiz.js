@@ -1,3 +1,16 @@
+import { normalize, Schema, arrayOf } from 'normalizr';
+
+let answerSchema = new Schema('answers');
+let questionSchema = new Schema('questions');
+questionSchema.define({answers: arrayOf(answerSchema)});
+let topicSchema = new Schema('topics');
+topicSchema.define({questions: arrayOf(questionSchema)});
+let hintSchema = new Schema('hints', {idAttribute: 'hint_type'});
+let quizTaskSchema = {
+  topictree: arrayOf(topicSchema),
+  hints: arrayOf(hintSchema),
+};
+
 import { kelly_colors } from 'utils/colors';
 const COLOR_OPTIONS = kelly_colors;
 
@@ -6,6 +19,7 @@ var next_color_index = 0;
 
 const initialState = {
   currTask: null,
+  db: { entities: {}, result: {} },
   curr_question_id: -1,
   queue: [-1],
   curr_answer_id: -100,
@@ -144,9 +158,11 @@ export function quiz(state = initialState, action) {
     case 'FETCH_TASK_SUCCESS':
       addSubtopicQuestion(action.task);
       sortQuestionsByNumber(action.task.topictree)
+      const taskDB = normalize(action.task, quizTaskSchema);
       return {
         ...state,
         currTask: action.task,
+        db: taskDB,
         queue: updateQueue(action.task, state.answer_selected),
         review: false,
         done: false
