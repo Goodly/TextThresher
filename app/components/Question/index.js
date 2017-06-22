@@ -213,8 +213,9 @@ const Question = React.createClass({
         { renderInkWell(answerColor, selected, clickHandler) }
         <SingleDatePicker
           id={ this.props.question.id.toString() }
-          isOutsideRange={ () => {} }
+          isOutsideRange={ (day) => false }
           date={moment(answer_text)}
+          initialVisibleMonth={() => moment(answer_text)}
           focused={this.state.focused}
           onDateChange={dateChangeHandler}
           onFocusChange={({ focused }) => { this.setState({ focused }); }}
