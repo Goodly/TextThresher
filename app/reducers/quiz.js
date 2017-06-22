@@ -15,8 +15,7 @@ let quizTaskSchema = {
 
 import { kelly_colors } from 'utils/colors';
 const COLOR_OPTIONS = kelly_colors;
-
-// module level variable index over COLOR_OPTIONS
+// module level variable used as an index over COLOR_OPTIONS
 var next_color_index = 0;
 
 const initialState = {
@@ -143,6 +142,33 @@ function sortQuestionsByNumber(topictree) {
   }
 }
 
+function updateAnswerColors(state, submittedAnswer, remove=false) {
+  let answer_colors = state.answer_colors;
+  const question_id = submittedAnswer.question_id;
+  const answer_id = submittedAnswer.answer_id;
+  // If a color was assigned to a previously selected button in this
+  // radio group, then retrieve the color and re-use it. Remove
+  // the prior radio answer from the color map, so the highlighter
+  // can detect that we want to discard the prior highlight.
+  if (state.answer_selected.has(question_id) &&
+      submittedAnswer.question_type === "RADIO") {
+    const lastAnswerMap = state.answer_selected.get(question_id);
+    const lastRadioId = lastAnswerMap.entries().next().value[0];
+    const lastRadioColor = answer_colors.get(lastRadioId);
+    answer_colors = answer_colors.delete(lastRadioId);
+    return answer_colors.set(answer_id, lastRadioColor);
+  };
+  if ( ! answer_colors.has(answer_id) && remove === false) {
+    // If this answer has no color yet and we are not removing, assign a color
+    const color = COLOR_OPTIONS[next_color_index++ % COLOR_OPTIONS.length];
+    answer_colors = answer_colors.set(answer_id, color);
+  } else if (remove === true) {
+    // answer is in set and we are being asked to remove color
+    answer_colors = answer_colors.delete(answer_id);
+  };
+  return answer_colors;
+}
+
 export function quiz(state = initialState, action) {
   switch(action.type) {
     case 'CLEAR_ANSWERS': { // use block scope for all cases declaring variables
@@ -164,6 +190,7 @@ export function quiz(state = initialState, action) {
       sortQuestionsByNumber(action.task.topictree)
       const taskDB = normalize(action.task, quizTaskSchema);
       const answer_selected = ImmutableMap();
+      next_color_index = 0; // Reset color pool
       return {
         ...state,
         currTask: action.task,
@@ -178,29 +205,28 @@ export function quiz(state = initialState, action) {
     }
     case 'ANSWER_SELECTED': {
       let answer_selected = state.answer_selected;
-      let answer_colors = state.answer_colors;
-      const new_ans = {
-        answer_id: action.answer_id,
-        question_id: action.question_id,
+      const question_id = action.question_id;
+      const answer_id = action.answer_id;
+      const submittedAnswer = {
+        answer_id,
+        question_id,
         question_type: action.question_type,
         text: action.text
       };
-      if (answer_selected.has(action.question_id) && action.question_type == 'CHECKBOX') {
-        const answerMap = answer_selected.get(action.question_id);
-        answer_selected = answer_selected.set(action.question_id, answerMap.set(action.answer_id, new_ans));
+      if (answer_selected.has(question_id) && action.question_type == 'CHECKBOX') {
+        // Only checkboxes can have more than one answer to a question.
+        const answerMap = answer_selected.get(question_id);
+        answer_selected = answer_selected.set(question_id, answerMap.set(answer_id, submittedAnswer));
       } else {
-        answer_selected = answer_selected.set(action.question_id, ImmutableMap([[action.answer_id, new_ans]]));
+        // Otherwise new answer replaces any prior answer for the same question.
+        answer_selected = answer_selected.set(question_id, ImmutableMap([[answer_id, submittedAnswer]]));
       }
-      if (!answer_colors.has(action.answer_id)) {
-        const color = COLOR_OPTIONS[next_color_index++ % COLOR_OPTIONS.length];
-        answer_colors = answer_colors.set(action.answer_id, color);
-      };
       return {
         ...state,
         queue: updateQueue(state.currTask, answer_selected),
-        curr_answer_id: action.answer_id,
+        curr_answer_id: answer_id,
         answer_selected,
-        answer_colors
+        answer_colors: updateAnswerColors(state, submittedAnswer)
       }
     }
     case 'ANSWER_REMOVED': {
@@ -208,12 +234,15 @@ export function quiz(state = initialState, action) {
       let answer_colors = state.answer_colors;
       if (answer_selected.has(action.question_id)) {
         const answerMap = answer_selected.get(action.question_id);
-        answer_selected = answer_selected.set(action.question_id, answerMap.delete(action.answer_id));
-        return {
-          ...state,
-          queue: updateQueue(state.currTask, answer_selected),
-          answer_selected,
-          answer_colors
+        if (answerMap.has(action.answer_id)) {
+          const submittedAnswer = answerMap.get(action.answer_id);
+          answer_selected = answer_selected.set(action.question_id, answerMap.delete(action.answer_id));
+          return {
+            ...state,
+            queue: updateQueue(state.currTask, answer_selected),
+            answer_selected,
+            answer_colors: updateAnswerColors(state, submittedAnswer, true)
+          };
         };
       };
       return state;
