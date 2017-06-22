@@ -60,7 +60,6 @@ const Question = React.createClass({
 
   getInitialState () {
     return {
-      date: moment(),
       focused: false
     };
   },
@@ -74,14 +73,24 @@ const Question = React.createClass({
   },
 
   activeAnswer: function(answer_id) {
-    if (this.props.answers.has(this.props.question.id)) {
-      const answerMap = this.props.answers.get(this.props.question.id);
-      return answerMap.has(answer_id);
+    for (const answered_qs of this.props.answers.values()) {
+      if (answered_qs.has(answer_id)) {
+        return true;
+      };
     };
     return false;
   },
 
-  getAnswerColorState: function getAnswerColorState(answer_id) {
+  getAnswerValue: function(answer_id, default_value) {
+    for (const answered_qs of this.props.answers.values()) {
+      if (answered_qs.has(answer_id)) {
+        return answered_qs.get(answer_id);
+      };
+    };
+    return default_value;
+  },
+
+  getAnswerColorState: function(answer_id) {
     let answerColor = '';
     let selected = false;
     // answer_colors is a Map
@@ -160,16 +169,14 @@ const Question = React.createClass({
 
   dateTimeInput: function(answer_list) {
     const answer = answer_list[0];
+    const answer_text = this.getAnswerValue(answer.id, moment().toISOString());
     let { answerColor, selected } = this.getAnswerColorState(answer.id);
-    // TODO: Finish getting rid of local state for date, only use answer store.
-    // Add string<->date round-trip conversions.
-    var answer_date = moment();
     const clickHandler = () => {
-      this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, answer.id, answer_date);
+      this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, answer.id, answer_text);
     };
     const dateChangeHandler = (date) => {
-      this.setState({ date });
-      this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, answer.id, date);
+      const answer_text = date.toISOString();
+      this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, answer.id, answer_text);
     };
     return (
       <form>
@@ -177,7 +184,7 @@ const Question = React.createClass({
         <SingleDatePicker
           id={ this.props.question.id.toString() }
           isOutsideRange={ () => {} }
-          date={this.state.date}
+          date={moment(answer_text)}
           focused={this.state.focused}
           onDateChange={dateChangeHandler}
           onFocusChange={({ focused }) => { this.setState({ focused }); }} />
@@ -187,8 +194,8 @@ const Question = React.createClass({
 
   textInput: function(answer_list, type, controlname="textinput") {
     const answer = answer_list[0];
+    const answer_text = this.getAnswerValue(answer.id, '');
     let { answerColor, selected } = this.getAnswerColorState(answer.id);
-    const answer_text = this.props.answers[this.props.question.id] ? this.props.answers[this.props.question.id][0].text : '';
     const clickHandler = () => {
       this.props.selectAnswer(type, this.props.question.id, answer.id, answer_text);
     };
