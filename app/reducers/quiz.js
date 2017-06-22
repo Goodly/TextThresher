@@ -284,7 +284,10 @@ export function quiz(state = initialState, action) {
       // then set the placeholder answer immediately to select a color.
       // This is a good place to set the default date to the article
       // metadata 'date_published'
-      state = Object.assign({}, state, {curr_question_id: action.q_id});
+      state = Object.assign({}, state, {
+        curr_question_id: action.q_id,
+        curr_answer_id: -100,
+      });
       const question = state.db.entities.question[action.q_id];
       const type = question.question_type;
       if (type === "TEXT" || type === "DATE" || type === "TIME") {
