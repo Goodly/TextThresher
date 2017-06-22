@@ -8,13 +8,12 @@ DEPENDENCY_ID = 'if'
 DEPENDENCY_TARGET = 'then'
 
 QUESTION_TYPES = {'mc' : 'RADIO',
+                  'dd' : 'RADIO', # old label
                   'cl' : 'CHECKBOX',
-                  'dttm' : 'DATETIME',
+                  'tx' : 'TEXT',
+                  'tb' : 'TEXT', # old label
                   'dt' : 'DATE',
-                  'tb' : 'TEXT',
-                  'tm' : 'TIME',
-                  'dd' : 'RADIO',
-                  'tx' : 'TEXT'}   # The last three are legacy formats
+                  'tm' : 'TIME'}
 
 Dependency = namedtuple('Dependency', 
     ['topic', 'question', 'answer', 'next_question'])

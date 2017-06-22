@@ -14,8 +14,8 @@ export const colors = [
 ];
 
 // This started out as Kelly categorical colors, but has
-// been revised to a set of distinguishable colors when
-// used to highlight reversed (white) text.
+// been revised to a set of lighter colors that
+// can be used to highlight black text legibly.
 export const kelly_colors = [
   'rgb(241,96,97)',
   'rgb(253,212,132)',
@@ -39,14 +39,6 @@ export const kelly_colors = [
   'rgb(0, 125, 52)',
   'rgb(255, 179, 0)',
   'rgb(70,194,64)',
-  'rgb(102,000,153)', // following too dark for black text
-  'rgb(127, 24, 13)',
-  'rgb(000,051,153)',
-  'rgb(0, 83, 138)',
-  'rgb(83, 55, 122)',
-  'rgb(35, 44, 22)',
-  'rgb(89, 51, 21)',
-  'rgb(153,000,204)', // end of too dark
 ];
 
 const kelly_color_hex = [

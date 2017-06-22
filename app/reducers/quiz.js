@@ -1,5 +1,6 @@
 import { Map as ImmutableMap } from 'immutable';
 import { normalize, schema } from 'normalizr';
+import moment from 'moment';
 
 // Schema for normalizing the task data structure into table like entities using
 // the database id as key, e.g.,
@@ -15,9 +16,10 @@ let quizTaskSchema = {
 
 import { kelly_colors } from 'utils/colors';
 const COLOR_OPTIONS = kelly_colors;
-
-// module level variable index over COLOR_OPTIONS
+// module level variable used as an index over COLOR_OPTIONS
 var next_color_index = 0;
+
+import { selectAnswer } from 'actions/quiz';
 
 const initialState = {
   currTask: null,
@@ -143,6 +145,52 @@ function sortQuestionsByNumber(topictree) {
   }
 }
 
+function updateAnswerColors(state, submittedAnswer, remove=false) {
+  let answer_colors = state.answer_colors;
+  const question_id = submittedAnswer.question_id;
+  const answer_id = submittedAnswer.answer_id;
+  // If a color was assigned to a previously selected button in this
+  // radio group, then retrieve the color and re-use it. Remove
+  // the prior radio answer from the color map, so the highlighter
+  // can detect that we want to discard the prior highlight.
+  if (state.answer_selected.has(question_id) &&
+      submittedAnswer.question_type === "RADIO") {
+    const lastAnswerMap = state.answer_selected.get(question_id);
+    const lastRadioId = lastAnswerMap.entries().next().value[0];
+    const lastRadioColor = answer_colors.get(lastRadioId);
+    answer_colors = answer_colors.delete(lastRadioId);
+    return answer_colors.set(answer_id, lastRadioColor);
+  };
+  if ( ! answer_colors.has(answer_id) && remove === false) {
+    // If this answer has no color yet and we are not removing, assign a color
+    const color = COLOR_OPTIONS[next_color_index++ % COLOR_OPTIONS.length];
+    answer_colors = answer_colors.set(answer_id, color);
+  } else if (remove === true) {
+    // answer is in set and we are being asked to remove color
+    answer_colors = answer_colors.delete(answer_id);
+  };
+  return answer_colors;
+}
+
+function getAnswerValue(answer_selected, answer_id, default_value) {
+  for (const answered_qs of answer_selected.values()) {
+    if (answered_qs.has(answer_id)) {
+      return answered_qs.get(answer_id).text;
+    };
+  };
+  return default_value;
+}
+
+function getDefaultDate(state) {
+  if (state.currTask.article &&
+      state.currTask.article.metadata &&
+      state.currTask.article.metadata['date_published']) {
+    return moment(state.currTask.article.metadata['date_published']);
+  } else {
+    return moment().startOf('date').toISOString();
+  };
+};
+
 export function quiz(state = initialState, action) {
   switch(action.type) {
     case 'CLEAR_ANSWERS': { // use block scope for all cases declaring variables
@@ -164,6 +212,7 @@ export function quiz(state = initialState, action) {
       sortQuestionsByNumber(action.task.topictree)
       const taskDB = normalize(action.task, quizTaskSchema);
       const answer_selected = ImmutableMap();
+      next_color_index = 0; // Reset color pool
       return {
         ...state,
         currTask: action.task,
@@ -178,29 +227,28 @@ export function quiz(state = initialState, action) {
     }
     case 'ANSWER_SELECTED': {
       let answer_selected = state.answer_selected;
-      let answer_colors = state.answer_colors;
-      const new_ans = {
-        answer_id: action.answer_id,
-        question_id: action.question_id,
+      const question_id = action.question_id;
+      const answer_id = action.answer_id;
+      const submittedAnswer = {
+        answer_id,
+        question_id,
         question_type: action.question_type,
         text: action.text
       };
-      if (answer_selected.has(action.question_id) && action.question_type == 'CHECKBOX') {
-        const answerMap = answer_selected.get(action.question_id);
-        answer_selected = answer_selected.set(action.question_id, answerMap.set(action.answer_id, new_ans));
+      if (answer_selected.has(question_id) && action.question_type == 'CHECKBOX') {
+        // Only checkboxes can have more than one answer to a question.
+        const answerMap = answer_selected.get(question_id);
+        answer_selected = answer_selected.set(question_id, answerMap.set(answer_id, submittedAnswer));
       } else {
-        answer_selected = answer_selected.set(action.question_id, ImmutableMap([[action.answer_id, new_ans]]));
+        // Otherwise new answer replaces any prior answer for the same question.
+        answer_selected = answer_selected.set(question_id, ImmutableMap([[answer_id, submittedAnswer]]));
       }
-      if (!answer_colors.has(action.answer_id)) {
-        const color = COLOR_OPTIONS[next_color_index++ % COLOR_OPTIONS.length];
-        answer_colors = answer_colors.set(action.answer_id, color);
-      };
       return {
         ...state,
         queue: updateQueue(state.currTask, answer_selected),
-        curr_answer_id: action.answer_id,
+        curr_answer_id: answer_id,
         answer_selected,
-        answer_colors
+        answer_colors: updateAnswerColors(state, submittedAnswer)
       }
     }
     case 'ANSWER_REMOVED': {
@@ -208,12 +256,15 @@ export function quiz(state = initialState, action) {
       let answer_colors = state.answer_colors;
       if (answer_selected.has(action.question_id)) {
         const answerMap = answer_selected.get(action.question_id);
-        answer_selected = answer_selected.set(action.question_id, answerMap.delete(action.answer_id));
-        return {
-          ...state,
-          queue: updateQueue(state.currTask, answer_selected),
-          answer_selected,
-          answer_colors
+        if (answerMap.has(action.answer_id)) {
+          const submittedAnswer = answerMap.get(action.answer_id);
+          answer_selected = answer_selected.set(action.question_id, answerMap.delete(action.answer_id));
+          return {
+            ...state,
+            queue: updateQueue(state.currTask, answer_selected),
+            answer_selected,
+            answer_colors: updateAnswerColors(state, submittedAnswer, true)
+          };
         };
       };
       return state;
@@ -229,10 +280,27 @@ export function quiz(state = initialState, action) {
         done: true
       }
     case 'UPDATE_ACTIVE_QUESTION':
-      return {
-        ...state,
-        curr_question_id: action.q_id
-      }
+      // If the question is a single answer question like text or date,
+      // then set the placeholder answer immediately to select a color.
+      // This is a good place to set the default date to the article
+      // metadata 'date_published'
+      state = Object.assign({}, state, {
+        curr_question_id: action.q_id,
+        curr_answer_id: -100,
+      });
+      const question = state.db.entities.question[action.q_id];
+      const type = question.question_type;
+      if (type === "TEXT" || type === "DATE" || type === "TIME") {
+        const answer_id = question.answers[0];
+        let answer_text = getAnswerValue(state.answer_selected, answer_id, '');
+        if (type === "DATE") {
+          const defaultDate = getDefaultDate(state);
+          answer_text = getAnswerValue(state.answer_selected, answer_id, defaultDate);
+        };
+        const selectAnswerAction = selectAnswer(type, action.q_id, answer_id, answer_text);
+        state = quiz(state, selectAnswerAction);
+      };
+      return state;
     case 'POST_QUIZ_CALLBACK':
       return {
         ...state,

@@ -73,7 +73,7 @@ c Information not given
 if 01 == a, then 02
 if 01 == b, then 03
 
-* 02 tb Exactly where did the event take place?
+* 02 tx Exactly where did the event take place?
 
 * 03 mc Approximately where did the event take place?
 a Local bank 

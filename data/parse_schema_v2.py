@@ -13,9 +13,10 @@ Dependency = namedtuple('Dependency', ['topic', 'question', 'answer', 'next_ques
 
 QUESTION_TYPES = {
     'mc': 'RADIO',
-    'dt': 'DATETIME',
-    'tb': 'TEXT',
-    'cl': 'CHECKBOX'
+    'cl': 'CHECKBOX',
+    'tx': 'TEXT',
+    'dt': 'DATE',
+    'tm': 'TIME',
 }
 
 def is_answer(type_id):

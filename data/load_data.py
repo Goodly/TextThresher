@@ -60,9 +60,8 @@ class TopicsSchemaParser(object):
         """
         # In the Quiz front-end, tracking colors assigned to answers
         # is vastly simplified if every question can be counted on to have
-        # at least one answer with a unique ID. So for
-        # question_type == 'TEXT' and 'DATETIME', create a dummy
-        # answer that will have a unique Answer id for color tracking.
+        # at least one answer with a unique ID, including
+        # question_type == 'TEXT', 'DATE', or 'TIME'.
         if len(answers) == 0:
             answers.append({
                 'answer_number': 1,
