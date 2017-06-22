@@ -13,8 +13,8 @@ import 'react-dates/lib/css/_datepicker.css';
 const TYPES = {
   RADIO: 'RADIO',
   CHECKBOX: 'CHECKBOX',
-  DATETIME: 'DATETIME',
   TEXT: 'TEXT',
+  DATE: 'DATE',
   TIME: 'TIME',
   SELECT_SUBTOPIC: 'SELECT_SUBTOPIC'
 };
@@ -84,7 +84,7 @@ const Question = React.createClass({
   getAnswerValue: function(answer_id, default_value) {
     for (const answered_qs of this.props.answers.values()) {
       if (answered_qs.has(answer_id)) {
-        return answered_qs.get(answer_id);
+        return answered_qs.get(answer_id).text;
       };
     };
     return default_value;
@@ -110,7 +110,8 @@ const Question = React.createClass({
           {
             let { answerColor, selected } = this.getAnswerColorState(answer.id);
             var clickHandler = () => {
-              this.props.selectAnswer(TYPES.RADIO, this.props.question.id, answer.id, answer.text);
+              this.props.selectAnswer(TYPES.RADIO, this.props.question.id,
+                                      answer.id, answer.answer_content);
             };
             return (
               <div key={answer.id}
@@ -118,7 +119,8 @@ const Question = React.createClass({
                 { renderInkWell(answerColor, selected, clickHandler) }
                 <span style={{ "verticalAlign": "middle" }}>
                   <input type="radio" name={controlname} checked={ this.activeAnswer(answer.id) }
-                    onChange={clickHandler} />
+                    onChange={clickHandler}
+                  />
                   { " " + answer.answer_content }
                 </span>
               </div>
@@ -140,13 +142,16 @@ const Question = React.createClass({
             selected = false;
           };
           const clickHandler = () => {
-            this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id, answer.answer_content);
+            this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id,
+                                    answer.id, answer.answer_content);
           };
           const checkboxHandler = () => {
             if (this.activeAnswer(answer.id)) {
-              this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id);
+              this.props.removeAnswer(TYPES.CHECKBOX, this.props.question.id,
+                                      answer.id);
             } else {
-              this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id, answer.id, answer.answer_content);
+              this.props.selectAnswer(TYPES.CHECKBOX, this.props.question.id,
+                                      answer.id, answer.answer_content);
             }
           };
           return (
@@ -155,39 +160,15 @@ const Question = React.createClass({
               { renderInkWell(answerColor, selected, clickHandler) }
               <span style={{ "verticalAlign": "middle" }}>
                 <input type="checkbox"
-                    name={controlname}
-                    checked={this.activeAnswer(answer.id)}
-                    onChange={checkboxHandler} />
+                  name={controlname}
+                  checked={this.activeAnswer(answer.id)}
+                  onChange={checkboxHandler}
+                />
                 { " " + answer.answer_content }
               </span>
             </div>
           );
         })}
-      </form>
-    );
-  },
-
-  dateTimeInput: function(answer_list) {
-    const answer = answer_list[0];
-    const answer_text = this.getAnswerValue(answer.id, moment().toISOString());
-    let { answerColor, selected } = this.getAnswerColorState(answer.id);
-    const clickHandler = () => {
-      this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, answer.id, answer_text);
-    };
-    const dateChangeHandler = (date) => {
-      const answer_text = date.toISOString();
-      this.props.selectAnswer(TYPES.DATETIME, this.props.question.id, answer.id, answer_text);
-    };
-    return (
-      <form>
-        { renderInkWell(answerColor, selected, clickHandler) }
-        <SingleDatePicker
-          id={ this.props.question.id.toString() }
-          isOutsideRange={ () => {} }
-          date={moment(answer_text)}
-          focused={this.state.focused}
-          onDateChange={dateChangeHandler}
-          onFocusChange={({ focused }) => { this.setState({ focused }); }} />
       </form>
     );
   },
@@ -205,9 +186,39 @@ const Question = React.createClass({
     return (
       <form>
         { renderInkWell(answerColor, selected, clickHandler) }
-        <input type="text" name={controlname} style={{ color: answerColor }}
-            value={answer_text}
-            onChange={changeHandler} />
+        <input type="text" name={controlname}
+          value={answer_text}
+          onChange={changeHandler}
+        />
+      </form>
+    );
+  },
+
+  dateInput: function(answer_list) {
+    const answer = answer_list[0];
+    // reducer/quiz.js activeQuestion sets the default in Question at a time
+    // mode. If the user skips straight to Review, this default will be used.
+    const defaultDate = moment().startOf('date').toISOString();
+    const answer_text = this.getAnswerValue(answer.id, defaultDate);
+    let { answerColor, selected } = this.getAnswerColorState(answer.id);
+    const clickHandler = () => {
+      this.props.selectAnswer(TYPES.DATE, this.props.question.id, answer.id, answer_text);
+    };
+    const dateChangeHandler = (date) => {
+      const answer_text = date.toISOString();
+      this.props.selectAnswer(TYPES.DATE, this.props.question.id, answer.id, answer_text);
+    };
+    return (
+      <form>
+        { renderInkWell(answerColor, selected, clickHandler) }
+        <SingleDatePicker
+          id={ this.props.question.id.toString() }
+          isOutsideRange={ () => {} }
+          date={moment(answer_text)}
+          focused={this.state.focused}
+          onDateChange={dateChangeHandler}
+          onFocusChange={({ focused }) => { this.setState({ focused }); }}
+        />
       </form>
     );
   },
@@ -221,16 +232,17 @@ const Question = React.createClass({
         return this.mapToRadio(answer_list)
       case TYPES.CHECKBOX:
         return this.mapToCheckbox(answer_list, TYPES.CHECKBOX)
-      case TYPES.SELECT_SUBTOPIC:
-        return this.mapToCheckbox(answer_list, TYPES.SELECT_SUBTOPIC)
-      case TYPES.DATETIME:
-        return this.dateTimeInput(answer_list);
       case TYPES.TEXT:
         return this.textInput(answer_list, TYPES.TEXT);
+      case TYPES.DATE:
+        return this.dateInput(answer_list);
       case TYPES.TIME:
         return this.textInput(answer_list, TYPES.TIME);
+      case TYPES.SELECT_SUBTOPIC:
+        return this.mapToCheckbox(answer_list, TYPES.SELECT_SUBTOPIC)
       default:
-        console.log('unsupported answer type: ' + this.props.question.question_type + ', should be: RADIO, CHECKBOX, DATETIME or TEXT');
+        console.log('Unsupported answer type: ' + this.props.question.question_type +
+                    ', should be: RADIO, CHECKBOX, TEXT, DATE, TIME, or SELECT_SUBTOPIC.');
         return <div></div>
     }
   },

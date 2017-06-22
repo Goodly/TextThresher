@@ -1,5 +1,6 @@
 import { Map as ImmutableMap } from 'immutable';
 import { normalize, schema } from 'normalizr';
+import moment from 'moment';
 
 // Schema for normalizing the task data structure into table like entities using
 // the database id as key, e.g.,
@@ -17,6 +18,8 @@ import { kelly_colors } from 'utils/colors';
 const COLOR_OPTIONS = kelly_colors;
 // module level variable used as an index over COLOR_OPTIONS
 var next_color_index = 0;
+
+import { selectAnswer } from 'actions/quiz';
 
 const initialState = {
   currTask: null,
@@ -169,6 +172,25 @@ function updateAnswerColors(state, submittedAnswer, remove=false) {
   return answer_colors;
 }
 
+function getAnswerValue(answer_selected, answer_id, default_value) {
+  for (const answered_qs of answer_selected.values()) {
+    if (answered_qs.has(answer_id)) {
+      return answered_qs.get(answer_id).text;
+    };
+  };
+  return default_value;
+}
+
+function getDefaultDate(state) {
+  if (state.currTask.article &&
+      state.currTask.article.metadata &&
+      state.currTask.article.metadata['date_published']) {
+    return moment(state.currTask.article.metadata['date_published']);
+  } else {
+    return moment().startOf('date').toISOString();
+  };
+};
+
 export function quiz(state = initialState, action) {
   switch(action.type) {
     case 'CLEAR_ANSWERS': { // use block scope for all cases declaring variables
@@ -258,10 +280,24 @@ export function quiz(state = initialState, action) {
         done: true
       }
     case 'UPDATE_ACTIVE_QUESTION':
-      return {
-        ...state,
-        curr_question_id: action.q_id
-      }
+      // If the question is a single answer question like text or date,
+      // then set the placeholder answer immediately to select a color.
+      // This is a good place to set the default date to the article
+      // metadata 'date_published'
+      state = Object.assign({}, state, {curr_question_id: action.q_id});
+      const question = state.db.entities.question[action.q_id];
+      const type = question.question_type;
+      if (type === "TEXT" || type === "DATE" || type === "TIME") {
+        const answer_id = question.answers[0];
+        let answer_text = getAnswerValue(state.answer_selected, answer_id, '');
+        if (type === "DATE") {
+          const defaultDate = getDefaultDate(state);
+          answer_text = getAnswerValue(state.answer_selected, answer_id, defaultDate);
+        };
+        const selectAnswerAction = selectAnswer(type, action.q_id, answer_id, answer_text);
+        state = quiz(state, selectAnswerAction);
+      };
+      return state;
     case 'POST_QUIZ_CALLBACK':
       return {
         ...state,

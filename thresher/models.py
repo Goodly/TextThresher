@@ -211,10 +211,9 @@ class Question(models.Model):
     QUESTION_TYPE_CHOICES = (
             ('RADIO', 'Single answer - radio buttons'),
             ('CHECKBOX', 'Multiple answer - checkboxes'),
-            ('DATETIME', 'Date and Time'),
-            ('DATE', 'Date only'),
-            ('TIME', 'Time only'),
             ('TEXT', 'Text'),
+            ('DATE', 'Date'),
+            ('TIME', 'Time'),
     )
     question_type = models.CharField(max_length=10,
                                      choices=QUESTION_TYPE_CHOICES)
