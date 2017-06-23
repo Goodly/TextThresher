@@ -234,6 +234,7 @@ export function quiz(state = initialState, action) {
         hints_offsets,
         curr_question_id: -1,
         queue: updateQueue(action.task, answer_selected),
+        curr_answer_id: -100,
         answer_selected,
         answer_colors: ImmutableMap(),
         review: false,
