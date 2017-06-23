@@ -38,7 +38,7 @@ export function getAnnotatedText(article, topic_highlights, hint_type, hint_sets
   // Adjust offsets to match abridged version of article.
   // For now, use the hint feature to show the topic_highlights
   var hints_offsets = abridgeHintOffsets(article, topic_highlights);
-  return { abridged: abridged, hints_offsets: hints_offsets };
+  return { abridged, hints_offsets };
 };
 
 // This hacky hack can certainly be replaced with a much more elegant
