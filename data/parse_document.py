@@ -59,14 +59,14 @@ class ArticleParseError(Exception):
         self.error_type = error_type
 
 
-def parse_document(path):
-    with open(path, 'r') as f:
+def parse_document(fullpath, filename):
+    with open(fullpath, 'r') as f:
         raw_text = f.read()
-    return parse_article(raw_text, path)
+    return parse_article(raw_text, filename)
 
-def parse_article(raw_text, path):
+def parse_article(raw_text, filename):
     # extract info from the file name
-    article_number, city, state, periodical, periodical_code = parse_filename(path)
+    article_number, city, state, periodical, periodical_code = parse_filename(filename)
 
     # extract info from the header and remove it from the text
     (clean_text, date_published, annotators, version) = parse_header(raw_text)
@@ -114,6 +114,7 @@ def parse_article(raw_text, path):
         'state': state,
         'periodical': periodical,
         'periodical_code': periodical_code,
+        'filename': filename,
     }
     return {
         'metadata': metadata,

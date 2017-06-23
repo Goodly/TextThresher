@@ -18,6 +18,7 @@ from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
 
 from django.db.models import Max
+from django.db import transaction
 
 from data import init_defaults
 from data.parse_document import parse_document
@@ -196,7 +197,6 @@ def load_schema(schema):
         Topic.objects.filter(parent=schema_obj).delete()
 
     ANALYSIS_TYPES[schema_name] = schema_obj
-    print "loading schema:", schema_name
 
     # Load the topics, questions and answers of the schema
     schema_parser = TopicsSchemaParser(topic_obj=schema_obj,
@@ -277,21 +277,26 @@ def load_annotations(article, article_obj):
 def load_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
     for schema_file in schema_files:
-        load_schema(parse_schema(os.path.join(dirpath, schema_file)))
+        print "loading schema:", schema_file
+        with transaction.atomic():
+            load_schema(parse_schema(os.path.join(dirpath, schema_file)))
 
 def load_schema_v2_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
     for schema_file in schema_files:
-        load_schema(parse_schema_v2(os.path.join(dirpath, schema_file)))
+        with transaction.atomic():
+            load_schema(parse_schema_v2(os.path.join(dirpath, schema_file)))
 
 def load_article_dir(dirpath, with_annotations=False):
     for article_filename in os.listdir(dirpath):
         if os.path.splitext(article_filename)[1] != '.txt':
             continue
-        annotated_article = parse_document(os.path.join(dirpath, article_filename))
-        article_obj = load_article(annotated_article)
-        if with_annotations:
-            load_annotations(annotated_article, article_obj)
+        fullpath = os.path.join(dirpath, article_filename)
+        with transaction.atomic():
+            annotated_article = parse_document(fullpath, article_filename)
+            article_obj = load_article(annotated_article)
+            if with_annotations:
+                load_annotations(annotated_article, article_obj)
 
 def load_args():
     parser = argparse.ArgumentParser()
