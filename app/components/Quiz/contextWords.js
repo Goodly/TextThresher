@@ -22,28 +22,24 @@ export function contextWords(article, offset, extraWords) {
   return [before.join(' '), highlighted, after.join(' ')];
 }
 
-// Abridge the article based on the topic highlights, and recalc the
-// offsets needed to annotate the original highlights and hints.
-// Since we are abridging the text, we have to adjust the offsets
-// for the annotations (highlights and hints) to match the
-// abridged text.
+// Abridge the article based on the topic highlights.
 // TODO: The highlighter should be refactored to take care of abridging.
-export function getAnnotatedText(article, topic_highlights, hint_type, hint_sets_for_article) {
+export function abridgeText(article, topic_highlights) {
   var abridged = '';
   for (let i = 0; i < topic_highlights.length; i++) {
     var triplet = contextWords(article, topic_highlights[i], EXTRA_WORDS);
     abridged += '...' + triplet.join(' ') + '...';
   };
-  // TODO: Select the hint set indicated by hint_type.
-  // Adjust offsets to match abridged version of article.
-  // For now, use the hint feature to show the topic_highlights
-  var hints_offsets = abridgeHintOffsets(article, topic_highlights);
-  return { abridged, hints_offsets };
+  return abridged;
 };
 
-// This hacky hack can certainly be replaced with a much more elegant
-// computation by merging it into getAnnotatedText() above
-export function abridgeHintOffsets(article, offsets) {
+// Recalc the offsets needed to annotate the original highlights and hints.
+// Since we are abridging the text, we have to adjust the offsets for
+// the annotations (highlights and hints) to match the abridged text.
+// This hacky hack could be replaced with a more elegant
+// computation by merging it into abridgeText() above.
+// On the plus side, this algorithm fixes bad offsets.
+export function abridgeOffsets(article, offsets) {
   var hints_offsets = [];
   var text = '';
   offsets.forEach(function (offset) {

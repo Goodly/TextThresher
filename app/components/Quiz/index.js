@@ -11,7 +11,9 @@ import { styles } from './styles.scss';
 const style = require('intro.js/introjs.css');
 import { introJs } from 'intro.js/intro.js';
 
-import { getAnnotatedText, getAnswerAnnotations } from 'components/Quiz/contextWords';
+import { abridgeText,
+         abridgeOffsets,
+         getAnswerAnnotations } from 'components/Quiz/contextWords';
 
 function makeHighlightDB(highlights) {
   let highlightDB = new Map();
@@ -237,13 +239,23 @@ export class Quiz extends Component {
 
   displayHighlighter(topic_highlights) {
     const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
-    const hint_sets_for_article = this.props.currTask != undefined ? this.props.currTask.hints : [];
     // TODO: retrieve hint_type from the question record.
-    const hint_type = 'WHERE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
-    const { abridged, hints_offsets } = getAnnotatedText(article_text,
-                                                   topic_highlights,
-                                                   hint_type,
-                                                   hint_sets_for_article);
+    const questionDB = this.props.db.entities.question;
+    const question_id = this.props.question_id;
+    let hint_type = 'WHERE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
+    if (questionDB && questionDB[question_id]) {
+      hint_type = questionDB[question_id].hint_type;
+      hint_type = 'WHERE'; // DB not yet populated with this field
+    };
+    const hint_sets_for_article = this.props.db.entities.hint;
+    let hint_offsets = [];
+    if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
+      hint_offsets = hint_sets_for_article[hint_type].offsets;
+    };
+    const abridged = abridgeText(article_text, topic_highlights);
+    // Adjust offsets to match abridged version of article.
+    const abridged_topics = abridgeOffsets(article_text, topic_highlights);
+    const abridged_hints = abridgeOffsets(article_text, hint_offsets);
     const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
 
     return (
@@ -251,7 +263,7 @@ export class Quiz extends Component {
                      colors={color_array}
                      topics={answer_ids}
                      currentTopicId={this.props.answer_id}
-                     hints_offsets={hints_offsets}
+                     hints_offsets={abridged_topics}
       />
     );
   }

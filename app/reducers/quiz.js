@@ -2,7 +2,7 @@ import { Map as ImmutableMap } from 'immutable';
 import { normalize, schema } from 'normalizr';
 import moment from 'moment';
 
-import { getAnnotatedText } from 'components/Quiz/contextWords';
+import { abridgeText } from 'components/Quiz/contextWords';
 
 // Schema for normalizing the task data structure into table like entities using
 // the database id as key, e.g.,
@@ -222,7 +222,7 @@ export function quiz(state = initialState, action) {
       const article_text = currTask.article.text;
       const hint_sets_for_article = currTask.hints;
       const hint_type = 'WHERE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
-      const { abridged, hints_offsets } = getAnnotatedText(article_text,
+      const { abridged, hints_offsets } = abridgeText(article_text,
                                                    topic_highlights,
                                                    hint_type,
                                                    hint_sets_for_article);
