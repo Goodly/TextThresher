@@ -13,6 +13,41 @@ import { introJs } from 'intro.js/intro.js';
 
 import { getAnnotatedText, getAnswerAnnotations } from 'components/Quiz/contextWords';
 
+function makeHighlightDB(highlights) {
+  let highlightDB = new Map();
+  for (const entry of highlights) {
+    const answer_id = entry.topic;
+    if (highlightDB.has(answer_id)) {
+      highlightDB.get(answer_id).push(entry);
+    } else {
+      highlightDB.set(answer_id, [entry]);
+    };
+  };
+  return highlightDB;
+};
+
+function saveQuizAnswers(queue, answer_selected, highlights) {
+  const highlightDB = makeHighlightDB(highlights);
+  let savedQuiz = [];
+  queue.forEach( (question_id) => {
+    if (answer_selected.has(question_id)) {
+      let answerMap = answer_selected.get(question_id);
+      let answersWithHighlights = [];
+      for (let answer of answerMap.values()) {
+        if (highlightDB.has(answer.answer_id)) {
+          answer['highlights'] = highlightDB.get(answer.answer_id);
+        } else {
+          answer['highlights'] = [];
+        };
+        savedQuiz.push(answer);
+      }
+    } else {
+      throw new Error("You must answer all the questions before saving.");
+    };
+  });
+  return savedQuiz;
+};
+
 export class Quiz extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +60,9 @@ export class Quiz extends Component {
 
   static propTypes = {
     currTask: React.PropTypes.object,
+    db: React.PropTypes.object,
+    abridged: React.PropTypes.string,
+    hints_offsets: React.PropTypes.array,
     queue: React.PropTypes.array,
     question_id: React.PropTypes.number,
     answer_id: React.PropTypes.number,
@@ -33,6 +71,7 @@ export class Quiz extends Component {
     saveAndNext: React.PropTypes.func,
     review: React.PropTypes.bool,
     done: React.PropTypes.bool,
+    highlights: React.PropTypes.array.isRequired,
   }
 
   componentDidMount() {
@@ -68,15 +107,35 @@ export class Quiz extends Component {
     intro.start();
   }
 
+  allQuestionsAnswered = () => {
+    const queue = this.props.queue;
+    const answer_selected = this.props.answer_selected;
+    const questionDB = this.props.db.entities.question;
+    // Every question must have an answer, except checkboxes
+    return queue.every( (question_id) =>
+      answer_selected.has(question_id) ||
+      questionDB[question_id].question_type === "CHECKBOX");
+  };
+
   // Babel plugin transform-class-properties allows us to use
   // ES2016 property initializer syntax. So the arrow function
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
     window.scrollTo(0, 0) 
-    var saveAnswer = Object.assign({}, this.props.answer_selected);
+    const queue = this.props.queue;
+    const answer_selected = this.props.answer_selected;
+    const highlights = this.props.highlights;
+    const savedAnswers = saveQuizAnswers(queue, answer_selected, highlights);
+    const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
+    const savedQuiz = {
+      article_text,
+      abridged_text: this.props.abridged,
+      abridged_highlights: this.props.hints_offsets,
+      savedAnswers,
+    };
     this.props.clearAnswers();
     this.props.clearHighlights();
-    this.props.saveAndNext(saveAnswer);
+    this.props.saveAndNext(savedQuiz);
   }
 
   dispQuestion(question, showButton) { 
@@ -174,16 +233,15 @@ export class Quiz extends Component {
   }
 
   displayHighlighter(topic_highlights) {
-    let article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
-    let hint_sets_for_article = this.props.currTask != undefined ? this.props.currTask.hints : [];
+    const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
+    const hint_sets_for_article = this.props.currTask != undefined ? this.props.currTask.hints : [];
     // TODO: retrieve hint_type from the question record.
-    let hint_type = 'WHERE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
-    let { abridged, hints_offsets } = getAnnotatedText(article_text,
+    const hint_type = 'WHERE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
+    const { abridged, hints_offsets } = getAnnotatedText(article_text,
                                                    topic_highlights,
                                                    hint_type,
                                                    hint_sets_for_article);
-
-    let { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
+    const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
 
     return (
       <HighlightTool text={abridged}
@@ -224,7 +282,12 @@ export class Quiz extends Component {
     var topic_highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 
-    var saveAndNextButton = this.props.review ? <button onClick={ this.onSaveAndNext }>Save and Next</button> : <div></div>;
+    let saveAndNextButton =  <div/>;
+    if (this.props.review && this.allQuestionsAnswered()) {
+      saveAndNextButton =  <button onClick={ this.onSaveAndNext }>
+                             Save and Next
+                           </button>;
+    };
     // var highlighter_container = {
     //   "position": "fixed",
     //   "left": "15px",

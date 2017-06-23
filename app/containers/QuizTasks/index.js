@@ -26,6 +26,9 @@ const assembledActionCreators = Object.assign(
 const mapStateToProps = state => {
   return {
     currTask: state.quiz.currTask,
+    db: state.quiz.db,
+    abridged: state.quiz.abridged,
+    hints_offsets: state.quiz.hints_offsets,
     queue: state.quiz.queue,
     question_id: state.quiz.curr_question_id,
     answer_id: state.quiz.curr_answer_id,
@@ -35,6 +38,7 @@ const mapStateToProps = state => {
     review: state.quiz.review,
     djangoQuizTasks: state.djangoQuizTasks,
     done: state.quiz.done,
+    highlights: state.highlight.highlights,
   }
 };
 

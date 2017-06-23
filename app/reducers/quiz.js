@@ -2,6 +2,8 @@ import { Map as ImmutableMap } from 'immutable';
 import { normalize, schema } from 'normalizr';
 import moment from 'moment';
 
+import { getAnnotatedText } from 'components/Quiz/contextWords';
+
 // Schema for normalizing the task data structure into table like entities using
 // the database id as key, e.g.,
 // db.entities.topic[id], db.entities.question[id], db.entities.answer[id]
@@ -24,6 +26,8 @@ import { selectAnswer } from 'actions/quiz';
 const initialState = {
   currTask: null,
   db: { entities: {}, result: {} },
+  abridged: '',
+  hints_offsets: [],
   curr_question_id: -1,
   queue: [-1],
   curr_answer_id: -100,
@@ -213,10 +217,21 @@ export function quiz(state = initialState, action) {
       const taskDB = normalize(action.task, quizTaskSchema);
       const answer_selected = ImmutableMap();
       next_color_index = 0; // Reset color pool
+      const currTask = action.task;
+      const topic_highlights = currTask.highlights[0].offsets;
+      const article_text = currTask.article.text;
+      const hint_sets_for_article = currTask.hints;
+      const hint_type = 'WHERE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
+      const { abridged, hints_offsets } = getAnnotatedText(article_text,
+                                                   topic_highlights,
+                                                   hint_type,
+                                                   hint_sets_for_article);
       return {
         ...state,
         currTask: action.task,
         db: taskDB,
+        abridged,
+        hints_offsets,
         curr_question_id: -1,
         queue: updateQueue(action.task, answer_selected),
         answer_selected,
@@ -279,28 +294,43 @@ export function quiz(state = initialState, action) {
         ...state,
         done: true
       }
-    case 'UPDATE_ACTIVE_QUESTION':
+    case 'UPDATE_ACTIVE_QUESTION': {
       // If the question is a single answer question like text or date,
       // then set the placeholder answer immediately to select a color.
       // This is a good place to set the default date to the article
       // metadata 'date_published'
+      // This also reselects an available answer for checkbox and radio types.
+      let curr_answer_id = -100;
       state = Object.assign({}, state, {
         curr_question_id: action.q_id,
-        curr_answer_id: -100,
+        curr_answer_id
       });
       const question = state.db.entities.question[action.q_id];
       const type = question.question_type;
       if (type === "TEXT" || type === "DATE" || type === "TIME") {
         const answer_id = question.answers[0];
+        curr_answer_id = answer_id;
         let answer_text = getAnswerValue(state.answer_selected, answer_id, '');
         if (type === "DATE") {
           const defaultDate = getDefaultDate(state);
           answer_text = getAnswerValue(state.answer_selected, answer_id, defaultDate);
         };
         const selectAnswerAction = selectAnswer(type, action.q_id, answer_id, answer_text);
+        // Note sneaky call to this reducer to update state
         state = quiz(state, selectAnswerAction);
+      } else if (type === "RADIO" || type === "CHECKBOX") {
+        // For radio and checkbox, set curr_answer_id to last selected answer (if any)
+        if (state.answer_selected.has(action.q_id)) {
+          const answer = state.answer_selected.get(action.q_id);
+          if (answer.size > 0) {
+            curr_answer_id = answer.last().answer_id;
+          };
+        };
       };
-      return state;
+      return { ...state,
+        curr_answer_id
+      };
+    }
     case 'POST_QUIZ_CALLBACK':
       return {
         ...state,
