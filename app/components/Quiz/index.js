@@ -26,7 +26,7 @@ function makeHighlightDB(highlights) {
   return highlightDB;
 };
 
-function saveQuizAnswers(queue, answer_selected, highlights) {
+function saveQuizAnswers(queue, answer_selected, highlights, questionDB) {
   const highlightDB = makeHighlightDB(highlights);
   let savedQuiz = [];
   queue.forEach( (question_id) => {
@@ -41,7 +41,8 @@ function saveQuizAnswers(queue, answer_selected, highlights) {
         };
         savedQuiz.push(answer);
       }
-    } else {
+    } else if (questionDB[question_id].question_type !== "CHECKBOX" &&
+               questionDB[question_id].question_type !== "SELECT_SUBTOPIC") {
       throw new Error("You must answer all the questions before saving.");
     };
   });
@@ -114,7 +115,8 @@ export class Quiz extends Component {
     // Every question must have an answer, except checkboxes
     return queue.every( (question_id) =>
       answer_selected.has(question_id) ||
-      questionDB[question_id].question_type === "CHECKBOX");
+      questionDB[question_id].question_type === "CHECKBOX" ||
+      questionDB[question_id].question_type === "SELECT_SUBTOPIC");
   };
 
   // Babel plugin transform-class-properties allows us to use
@@ -125,7 +127,8 @@ export class Quiz extends Component {
     const queue = this.props.queue;
     const answer_selected = this.props.answer_selected;
     const highlights = this.props.highlights;
-    const savedAnswers = saveQuizAnswers(queue, answer_selected, highlights);
+    const questionDB = this.props.db.entities.question;
+    const savedAnswers = saveQuizAnswers(queue, answer_selected, highlights, questionDB);
     const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
     const savedQuiz = {
       article_text,
