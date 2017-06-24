@@ -53,7 +53,7 @@ function saveQuizAnswers(queue, answer_selected, highlights, questionDB) {
 export class Quiz extends Component {
   constructor(props) {
     super(props);
-    
+
     this.handleScroll = this.handleScroll.bind(this);
     this.state = {
       highlightsStyle: 'highlights-fixed',
@@ -123,7 +123,7 @@ export class Quiz extends Component {
   // ES2016 property initializer syntax. So the arrow function
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
-    window.scrollTo(0, 0) 
+    window.scrollTo(0, 0);
     const queue = this.props.queue;
     const answer_selected = this.props.answer_selected;
     const highlights = this.props.highlights;
@@ -141,7 +141,7 @@ export class Quiz extends Component {
     this.props.saveAndNext(savedQuiz);
   }
 
-  dispQuestion(question, showButton) { 
+  dispQuestion(question, showButton) {
     var next_id = question.id;
     var prev_id = -1;
     for(var k = 0; k < this.props.queue.length; k++) {
@@ -157,16 +157,18 @@ export class Quiz extends Component {
     }
     var next_button = next_id == question.id ? <div></div> :
         <button type="button" onClick={() => { this.props.activeQuestion(next_id); }}>{ "Next" }</button>;
-    var button = showButton ?  
+    var prev_button = prev_id == question.id ? <div></div> :
+        <button type="button" onClick={() => { this.props.activeQuestion(prev_id); }}> { "Prev" }</button>;
+    var buttons = showButton ?
       <div>
-        <button type="button" onClick={() => { this.props.activeQuestion(prev_id); }}> { "Prev" }</button>
+        { prev_button }
         { next_button }
       </div>
       : <div></div>;
     return (
       <div key={question.id}>
         <Question question={question} /> 
-        { button }
+        { buttons }
       </div>
     );
   }
