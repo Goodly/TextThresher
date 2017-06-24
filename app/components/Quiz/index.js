@@ -12,7 +12,6 @@ const style = require('intro.js/introjs.css');
 import { introJs } from 'intro.js/intro.js';
 
 import { abridgeText,
-         abridgeOffsets,
          getAnswerAnnotations } from 'components/Quiz/contextWords';
 
 function makeHighlightDB(highlights) {
@@ -65,7 +64,6 @@ export class Quiz extends Component {
     currTask: React.PropTypes.object,
     db: React.PropTypes.object,
     abridged: React.PropTypes.string,
-    hints_offsets: React.PropTypes.array,
     queue: React.PropTypes.array,
     question_id: React.PropTypes.number,
     answer_id: React.PropTypes.number,
@@ -251,11 +249,15 @@ export class Quiz extends Component {
     let hint_offsets = [];
     if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
       hint_offsets = hint_sets_for_article[hint_type].offsets;
+      console.log('Found '+hint_offsets.length+' '+hint_type+' hints');
     };
-    const abridged = abridgeText(article_text, topic_highlights);
-    // Adjust offsets to match abridged version of article.
-    const abridged_topics = abridgeOffsets(article_text, topic_highlights);
-    const abridged_hints = abridgeOffsets(article_text, hint_offsets);
+
+    const { abridged, abridged_highlights, abridged_hints } = abridgeText(
+      article_text,
+      topic_highlights,
+      hint_offsets
+    );
+
     const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
 
     return (
@@ -263,7 +265,7 @@ export class Quiz extends Component {
                      colors={color_array}
                      topics={answer_ids}
                      currentTopicId={this.props.answer_id}
-                     hints_offsets={abridged_topics}
+                     hints_offsets={abridged_highlights}
       />
     );
   }

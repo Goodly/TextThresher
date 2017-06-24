@@ -27,7 +27,6 @@ const initialState = {
   currTask: null,
   db: { entities: {}, result: {} },
   abridged: '',
-  hints_offsets: [],
   curr_question_id: -1,
   queue: [-1],
   curr_answer_id: -100,
@@ -220,18 +219,16 @@ export function quiz(state = initialState, action) {
       const currTask = action.task;
       const topic_highlights = currTask.highlights[0].offsets;
       const article_text = currTask.article.text;
-      const hint_sets_for_article = currTask.hints;
-      const hint_type = 'WHERE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
-      const { abridged, hints_offsets } = abridgeText(article_text,
-                                                   topic_highlights,
-                                                   hint_type,
-                                                   hint_sets_for_article);
+      const { abridged, abridged_highlights, abridged_hints } = abridgeText(
+        article_text,
+        topic_highlights,
+        []
+      );
       return {
         ...state,
         currTask: action.task,
         db: taskDB,
         abridged,
-        hints_offsets,
         curr_question_id: -1,
         queue: updateQueue(action.task, answer_selected),
         curr_answer_id: -100,

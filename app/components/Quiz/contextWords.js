@@ -24,35 +24,36 @@ export function contextWords(article, offset, extraWords) {
 
 // Abridge the article based on the topic highlights.
 // TODO: The highlighter should be refactored to take care of abridging.
-export function abridgeText(article, topic_highlights) {
-  var abridged = '';
-  for (let i = 0; i < topic_highlights.length; i++) {
-    var triplet = contextWords(article, topic_highlights[i], EXTRA_WORDS);
-    abridged += '...' + triplet.join(' ') + '...';
-  };
-  return abridged;
-};
-
 // Recalc the offsets needed to annotate the original highlights and hints.
 // Since we are abridging the text, we have to adjust the offsets for
 // the annotations (highlights and hints) to match the abridged text.
-// This hacky hack could be replaced with a more elegant
-// computation by merging it into abridgeText() above.
 // On the plus side, this algorithm fixes bad offsets.
-export function abridgeOffsets(article, offsets) {
-  var hints_offsets = [];
-  var text = '';
-  offsets.forEach(function (offset) {
-    var triplet = contextWords(article, offset, EXTRA_WORDS);
-    var fromIndex = text.length;
-    text += '...' + triplet.join(' ') + '...';
-    var start = text.indexOf(offset[2], fromIndex);
-    if (start != -1) {
-      var end = start + offset[2].length;
-      hints_offsets.push([start, end, offset[2]]);
+export function abridgeText(article, highlights, hints) {
+  let abridged = '';
+  let abridged_highlights = [];
+  let abridged_hints = [];
+  highlights.forEach(function (offset) {
+    const triplet = contextWords(article, offset, EXTRA_WORDS);
+    const fromIndex = abridged.length;
+    const tripletText = triplet.join(' ');
+    abridged += '...' + tripletText + '...';
+    const start = abridged.indexOf(offset[2], fromIndex);
+    if (start !== -1) {
+      const end = start + offset[2].length;
+      abridged_highlights.push([start, end, offset[2]]);
+      const charsBeforeHighlight = triplet[0].length + 1;
+      const charsAfterHighlight = triplet[2].length + 1;
+      const srcTripletStart = offset[0] - charsBeforeHighlight;
+      const destTripletStart = start - charsBeforeHighlight;
+      hints.forEach( (offset) => {
+        const hintStart = abridged.indexOf(offset[2], 0);
+        if (hintStart !== -1) {
+          abridged_hints.push([hintStart, hintStart + offset[2].length, offset[2]]);
+        };
+      });
     };
   });
-  return hints_offsets;
+  return { abridged, abridged_highlights, abridged_hints };
 };
 
 export function getAnswerAnnotations(answer_colors) {

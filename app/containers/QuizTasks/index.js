@@ -28,7 +28,6 @@ const mapStateToProps = state => {
     currTask: state.quiz.currTask,
     db: state.quiz.db,
     abridged: state.quiz.abridged,
-    hints_offsets: state.quiz.hints_offsets,
     queue: state.quiz.queue,
     question_id: state.quiz.curr_question_id,
     answer_id: state.quiz.curr_answer_id,
