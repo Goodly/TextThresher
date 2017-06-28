@@ -22,6 +22,21 @@ export function contextWords(article, offset, extraWords) {
   return [before.join(' '), highlighted, after.join(' ')];
 }
 
+// There may be duplicate hints, e.g., the name "Bob Smith" could
+// appear multiple times. For now we just need the unique hints.
+function dedupeHints(hints) {
+  let startLen = hints.length;
+  let hintMap = new Map();
+  hints.forEach( (offset) => {
+    hintMap.set(offset[2], offset);
+  });
+  hints = [];
+  for (let offset of hintMap) {
+    hints.push(offset);
+  };
+  return hints;
+};
+
 // Abridge the article based on the topic highlights.
 // TODO: The highlighter should be refactored to take care of abridging.
 // Recalc the offsets needed to annotate the original highlights and hints.
@@ -32,6 +47,7 @@ export function abridgeText(article, highlights, hints) {
   let abridged = '';
   let abridged_highlights = [];
   let abridged_hints = [];
+  hints = dedupeHints(hints);
   highlights.forEach(function (offset) {
     const triplet = contextWords(article, offset, EXTRA_WORDS);
     const fromIndex = abridged.length;
@@ -41,14 +57,16 @@ export function abridgeText(article, highlights, hints) {
     if (start !== -1) {
       const end = start + offset[2].length;
       abridged_highlights.push([start, end, offset[2]]);
-      const charsBeforeHighlight = triplet[0].length + 1;
-      const charsAfterHighlight = triplet[2].length + 1;
-      const srcTripletStart = offset[0] - charsBeforeHighlight;
-      const destTripletStart = start - charsBeforeHighlight;
       hints.forEach( (offset) => {
-        const hintStart = abridged.indexOf(offset[2], 0);
-        if (hintStart !== -1) {
-          abridged_hints.push([hintStart, hintStart + offset[2].length, offset[2]]);
+        let hintStart = abridged.indexOf(offset[2], 0);
+        // If "Bob Smith" is hinted twice, there will be two entries
+        // for that string with correct full text offsets,
+        // but for finding abridged offsets it's easiest to just
+        // check for possible multiples on each hint.
+        while (hintStart !== -1) {
+          let hintEnd = hintStart + offset[2].length;
+          abridged_hints.push([hintStart, hintEnd, offset[2]]);
+          hintStart = abridged.indexOf(offset[2], hintEnd);
         };
       });
     };
