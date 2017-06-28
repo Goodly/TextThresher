@@ -22,41 +22,56 @@ export function contextWords(article, offset, extraWords) {
   return [before.join(' '), highlighted, after.join(' ')];
 }
 
-// Abridge the article based on the topic highlights, and recalc the
-// offsets needed to annotate the original highlights and hints.
-// Since we are abridging the text, we have to adjust the offsets
-// for the annotations (highlights and hints) to match the
-// abridged text.
-// TODO: The highlighter should be refactored to take care of abridging.
-export function getAnnotatedText(article, topic_highlights, hint_type, hint_sets_for_article) {
-  var abridged = '';
-  for (let i = 0; i < topic_highlights.length; i++) {
-    var triplet = contextWords(article, topic_highlights[i], EXTRA_WORDS);
-    abridged += '...' + triplet.join(' ') + '...';
+// There may be duplicate hints, e.g., the name "Bob Smith" could
+// appear multiple times. For now we just need the unique hints.
+function dedupeHints(hints) {
+  let startLen = hints.length;
+  let hintMap = new Map();
+  hints.forEach( (offset) => {
+    hintMap.set(offset[2], offset);
+  });
+  hints = [];
+  for (let offset of hintMap.values()) {
+    hints.push(offset);
   };
-  // TODO: Select the hint set indicated by hint_type.
-  // Adjust offsets to match abridged version of article.
-  // For now, use the hint feature to show the topic_highlights
-  var hints_offsets = abridgeHintOffsets(article, topic_highlights);
-  return { abridged, hints_offsets };
+  return hints;
 };
 
-// This hacky hack can certainly be replaced with a much more elegant
-// computation by merging it into getAnnotatedText() above
-export function abridgeHintOffsets(article, offsets) {
-  var hints_offsets = [];
-  var text = '';
-  offsets.forEach(function (offset) {
-    var triplet = contextWords(article, offset, EXTRA_WORDS);
-    var fromIndex = text.length;
-    text += '...' + triplet.join(' ') + '...';
-    var start = text.indexOf(offset[2], fromIndex);
-    if (start != -1) {
-      var end = start + offset[2].length;
-      hints_offsets.push([start, end, offset[2]]);
+// Abridge the article based on the topic highlights.
+// TODO: The highlighter should be refactored to take care of abridging.
+// Recalc the offsets needed to annotate the original highlights and hints.
+// Since we are abridging the text, we have to adjust the offsets for
+// the annotations (highlights and hints) to match the abridged text.
+// On the plus side, this algorithm fixes bad offsets.
+export function abridgeText(article, highlights, hints) {
+  let abridged = '';
+  let abridged_highlights = [];
+  let abridged_hints = [];
+  hints = dedupeHints(hints);
+  highlights.forEach(function (offset) {
+    const triplet = contextWords(article, offset, EXTRA_WORDS);
+    const fromIndex = abridged.length;
+    const tripletText = triplet.join(' ');
+    abridged += '...' + tripletText + '...';
+    const start = abridged.indexOf(offset[2], fromIndex);
+    if (start !== -1) {
+      const end = start + offset[2].length;
+      abridged_highlights.push([start, end, offset[2]]);
+      hints.forEach( (offset) => {
+        let hintStart = abridged.indexOf(offset[2], 0);
+        // If "Bob Smith" is hinted twice, there will be two entries
+        // for that string with correct full text offsets,
+        // but for finding abridged offsets it's easiest to just
+        // check for possible multiples on each hint.
+        while (hintStart !== -1) {
+          let hintEnd = hintStart + offset[2].length;
+          abridged_hints.push([hintStart, hintEnd, offset[2]]);
+          hintStart = abridged.indexOf(offset[2], hintEnd);
+        };
+      });
     };
   });
-  return hints_offsets;
+  return { abridged, abridged_highlights, abridged_hints };
 };
 
 export function getAnswerAnnotations(answer_colors) {

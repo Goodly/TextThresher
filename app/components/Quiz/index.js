@@ -11,7 +11,73 @@ import { styles } from './styles.scss';
 const style = require('intro.js/introjs.css');
 import { introJs } from 'intro.js/intro.js';
 
-import { getAnnotatedText, getAnswerAnnotations } from 'components/Quiz/contextWords';
+import { abridgeText,
+         getAnswerAnnotations } from 'components/Quiz/contextWords';
+
+// note, will also capture 'whom' and 'whose'
+const re_hinttype = /^(WHERE|WHO|HOW MANY|WHEN)/i;
+
+function inferHintType(question_text) {
+  // data.nlp_hint_types.py: 'WHERE', 'WHO', 'HOW MANY', 'WHEN', 'NONE'
+  let match = question_text.match(re_hinttype);
+  if (match) {
+    return match[1].toUpperCase();
+  };
+  return 'NONE';
+};
+
+function eqSet(as, bs) {
+  if (as.size !== bs.size) return false;
+  for (var a of as) if (!bs.has(a)) return false;
+  return true;
+};
+
+function combineAnnotations(abridged, abridged_highlights, abridged_hints) {
+  let annotations = [];
+  if (abridged.length == 0) {
+    return annotations;
+  };
+  abridged_highlights.forEach( (offset) => {
+    let offset_style = offset.concat(['b']);
+    annotations.push(offset_style);
+  });
+  abridged_hints.forEach( (offset) => {
+    let offset_style = offset.concat(['i']);
+    annotations.push(offset_style);
+  });
+  // Now need to eliminate overlaps.
+  // For each character in text, create a Set. Add each style for that char
+  // to the set.
+  let textFormat = Array.from(new Array(abridged.length), (_, index) => new Set() );
+  for (let offset of annotations) {
+    for (let k=offset[0]; k < offset[1]; k++) {
+      textFormat[k].add(offset[3]);
+    };
+  };
+  // Now convert back to offset tuples [start, end, substring, style]
+  annotations = [];
+  let styleStart = 0;
+  let style=textFormat[styleStart];
+  for (let k=1; k < textFormat.length; k++) {
+    if ( ! eqSet(style, textFormat[k])) {
+      if (style.size > 0) {
+        //Convert set {'i','b'} to 'ib'
+        let textStyle = Array.from(style.values()).join('');
+        let textspan = abridged.substring(styleStart, k);
+        annotations.push([styleStart, k, textspan, textStyle]);
+      };
+      styleStart = k;
+      style=textFormat[styleStart];
+    };
+  };
+  // n.b. slight cheat - we know abridged ends in ... and that ... is never
+  // annotated, so we can ignore the last k.
+  if (abridged_hints.length > 0) {
+    console.log('annotations');
+    console.log(annotations);
+  };
+  return annotations;
+};
 
 function makeHighlightDB(highlights) {
   let highlightDB = new Map();
@@ -26,6 +92,10 @@ function makeHighlightDB(highlights) {
   return highlightDB;
 };
 
+// Note: There may be saved answers for questions no longer
+// in the queue because the contingency rule for the question is no
+// longer active. We don't want to save those answers.
+// Use the queue to save identify which questions to save.
 function saveQuizAnswers(queue, answer_selected, highlights, questionDB) {
   const highlightDB = makeHighlightDB(highlights);
   let savedQuiz = [];
@@ -52,7 +122,7 @@ function saveQuizAnswers(queue, answer_selected, highlights, questionDB) {
 export class Quiz extends Component {
   constructor(props) {
     super(props);
-    
+
     this.handleScroll = this.handleScroll.bind(this);
     this.state = {
       highlightsStyle: 'highlights-fixed',
@@ -63,7 +133,6 @@ export class Quiz extends Component {
     currTask: React.PropTypes.object,
     db: React.PropTypes.object,
     abridged: React.PropTypes.string,
-    hints_offsets: React.PropTypes.array,
     queue: React.PropTypes.array,
     question_id: React.PropTypes.number,
     answer_id: React.PropTypes.number,
@@ -123,7 +192,7 @@ export class Quiz extends Component {
   // ES2016 property initializer syntax. So the arrow function
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
-    window.scrollTo(0, 0) 
+    window.scrollTo(0, 0);
     const queue = this.props.queue;
     const answer_selected = this.props.answer_selected;
     const highlights = this.props.highlights;
@@ -141,7 +210,7 @@ export class Quiz extends Component {
     this.props.saveAndNext(savedQuiz);
   }
 
-  dispQuestion(question, showButton) { 
+  dispQuestion(question, showButton) {
     var next_id = question.id;
     var prev_id = -1;
     for(var k = 0; k < this.props.queue.length; k++) {
@@ -157,16 +226,18 @@ export class Quiz extends Component {
     }
     var next_button = next_id == question.id ? <div></div> :
         <button type="button" onClick={() => { this.props.activeQuestion(next_id); }}>{ "Next" }</button>;
-    var button = showButton ?  
+    var prev_button = prev_id == question.id ? <div></div> :
+        <button type="button" onClick={() => { this.props.activeQuestion(prev_id); }}> { "Prev" }</button>;
+    var buttons = showButton ?
       <div>
-        <button type="button" onClick={() => { this.props.activeQuestion(prev_id); }}> { "Prev" }</button>
+        { prev_button }
         { next_button }
       </div>
       : <div></div>;
     return (
       <div key={question.id}>
         <Question question={question} /> 
-        { button }
+        { buttons }
       </div>
     );
   }
@@ -237,13 +308,31 @@ export class Quiz extends Component {
 
   displayHighlighter(topic_highlights) {
     const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
-    const hint_sets_for_article = this.props.currTask != undefined ? this.props.currTask.hints : [];
-    // TODO: retrieve hint_type from the question record.
-    const hint_type = 'WHERE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
-    const { abridged, hints_offsets } = getAnnotatedText(article_text,
-                                                   topic_highlights,
-                                                   hint_type,
-                                                   hint_sets_for_article);
+    const questionDB = this.props.db.entities.question;
+    const question_id = this.props.question_id;
+    let hint_type = 'NONE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
+    if (questionDB && questionDB[question_id]) {
+      // DB not yet populated with this field
+      // hint_type = questionDB[question_id].hint_type;
+      // Use the prior technique of using the first word to set the hint type.
+      hint_type = inferHintType(questionDB[question_id].question_text);
+    };
+    const hint_sets_for_article = this.props.db.entities.hint;
+    let hint_offsets = [];
+    if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
+      hint_offsets = hint_sets_for_article[hint_type].offsets;
+      console.log('Found '+hint_offsets.length+' '+hint_type+' hints');
+      console.log(hint_offsets);
+    };
+
+    const { abridged, abridged_highlights, abridged_hints } = abridgeText(
+      article_text,
+      topic_highlights,
+      hint_offsets
+    );
+
+    let annotations = combineAnnotations(abridged, abridged_highlights, abridged_hints);
+
     const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
 
     return (
@@ -251,7 +340,7 @@ export class Quiz extends Component {
                      colors={color_array}
                      topics={answer_ids}
                      currentTopicId={this.props.answer_id}
-                     hints_offsets={hints_offsets}
+                     hints_offsets={annotations}
       />
     );
   }
