@@ -4,6 +4,32 @@ import mergeHighlights from './mergeHighlights';
 import HandleEnd from './Handles/HandleEnd';
 import HandleStart from './Handles/HandleStart';
 
+function getStyledText(key, subtext, styles) {
+  switch (styles) {
+    case 'ib':
+    case 'bi':
+      return (
+        <b key={key}>
+          <i>
+            {subtext}
+          </i>
+        </b>
+      );
+    case 'b':
+      return (
+        <b key={key}>
+          {subtext}
+        </b>
+      );
+    case 'i':
+      return (
+        <i key={key}>
+          {subtext}
+        </i>
+      );
+  };
+};
+
 // This routine gets alternating runs of unhighlighted
 // and highlighted text. We have to take a set of annotations and
 // insert them into the stream we are getting.
@@ -26,11 +52,10 @@ function getHintedText(text, start, end, hints_offsets) {
     var mark = start;
     if (hintStart <= start && hintEnd > start) {
       mark = Math.min(hintEnd, end);
-      output.push(
-        <b key={String(start)+'.'+String(mark)}>
-          {text.substring(start, mark)}
-        </b>
-      );
+      output.push(getStyledText(String(start) + '.' + String(mark),
+                                text.substring(start, mark),
+                                offset[3]
+      ));
       start = mark;
     };
     if (hintStart >= start && hintStart <= end) {
@@ -38,11 +63,10 @@ function getHintedText(text, start, end, hints_offsets) {
       output.push(text.substring(start, mark));
       start = mark;
       mark = Math.min(hintEnd, end);
-      output.push(
-        <b key={String(start)+'.'+String(mark)}>
-          {text.substring(start, mark)}
-        </b>
-      );
+      output.push(getStyledText(String(start) + '.' + String(mark),
+                                text.substring(start, mark),
+                                offset[3]
+      ));
       start = mark;
     };
   });

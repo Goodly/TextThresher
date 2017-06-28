@@ -31,7 +31,7 @@ function dedupeHints(hints) {
     hintMap.set(offset[2], offset);
   });
   hints = [];
-  for (let offset of hintMap) {
+  for (let offset of hintMap.values()) {
     hints.push(offset);
   };
   return hints;
