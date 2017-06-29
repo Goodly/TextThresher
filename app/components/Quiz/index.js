@@ -95,7 +95,7 @@ function makeHighlightDB(highlights) {
 // Note: There may be saved answers for questions no longer
 // in the queue because the contingency rule for the question is no
 // longer active. We don't want to save those answers.
-// Use the queue to save identify which questions to save.
+// Use the queue to identify which questions' answers to save.
 function saveQuizAnswers(queue, answer_selected, highlights, questionDB) {
   const highlightDB = makeHighlightDB(highlights);
   let savedQuiz = [];
@@ -124,6 +124,9 @@ export class Quiz extends Component {
     super(props);
 
     this.handleScroll = this.handleScroll.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    this.intro = introJs();
     this.state = {
       highlightsStyle: 'highlights-fixed',
     };
@@ -150,7 +153,7 @@ export class Quiz extends Component {
       {
         'element': '.highlights',
         'intro': 'Thank you for joining the project! Before you begin, read through the text provided. Focus in particular on the bold text -- you’ll be answering questions about it later.',
-        'position': 'bottom',
+        'position': 'auto',
       },
       {
         'element': '.quiz-questions',
@@ -160,21 +163,30 @@ export class Quiz extends Component {
       {
         'element': '.highlights',
         'intro': 'Please highlight all relevant words and phrases of the text that justify your answer -- make sure to include every piece of the text which support the answer you chose. When you’ve finished highlighting all relevant text to justify your answer, please check your work, then press "Next" to move onto the next question.',
-        'position': 'bottom',
+        'position': 'right',
       },
       {
-        'element': '.quiz',
+        'element': '.quiz-questions',
         'intro': 'Repeat this process for all of the remaining questions.',
+        'position': 'left',
       },
       {
         'element': '.review-button',
         'intro': 'Look over all your answers and move onto the next set of questions by clicking "Review" and "Save and Next". Thank you for contributing to this project!',
+        'position': 'auto',
       }
     ];
 
-    var intro = introJs();
-    intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5 });
-    intro.start();
+    this.intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5, 'scrollToElement': true });
+    this.intro.start();
+  }
+
+  componentDidUpdate() {
+    this.intro.refresh();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 
   allQuestionsAnswered = () => {
@@ -225,9 +237,15 @@ export class Quiz extends Component {
       }
     }
     var next_button = next_id == question.id ? <div></div> :
-        <button type="button" onClick={() => { this.props.activeQuestion(next_id); }}>{ "Next" }</button>;
+        <button type="button" className="next-button"
+          onClick={() => { this.props.activeQuestion(next_id); }}>
+          { "Next" }
+        </button>;
     var prev_button = prev_id == question.id ? <div></div> :
-        <button type="button" onClick={() => { this.props.activeQuestion(prev_id); }}> { "Prev" }</button>;
+        <button type="button" className="previous-button"
+          onClick={() => { this.props.activeQuestion(prev_id); }}>
+          { "Prev" }
+        </button>;
     var buttons = showButton ?
       <div>
         { prev_button }
@@ -245,8 +263,11 @@ export class Quiz extends Component {
   selectQuestion() {
     var topic = this.props.currTask ? this.props.currTask.topictree : [];
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
-    var last_button = last_question ? 
-      <button type="button" className="review-button" onClick={() => { this.props.setReview(true); }}> { "Review" } </button> 
+    var review_button = last_question ?
+      <button type="button" className="review-button"
+        onClick={() => { this.props.setReview(true); }}>
+        { "Review" }
+      </button>
       : <div></div>;
 
     var rootTopicName = '';
@@ -268,7 +289,7 @@ export class Quiz extends Component {
                 {rootTopicName} {topic[i].name}
               </div>
               { this.dispQuestion(topic[i].questions[k], true) }
-              { last_button }
+              { review_button }
             </div>
           );
         }
@@ -343,10 +364,6 @@ export class Quiz extends Component {
                      hints_offsets={annotations}
       />
     );
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
   }
 
   handleScroll() {
