@@ -71,6 +71,7 @@ export class RealQuiz extends Quiz {
   }
 
   componentDidMount() {
+    super.componentDidMount();
     fetchPybossaQuiz(this);
   }
 };
