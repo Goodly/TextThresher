@@ -37,23 +37,33 @@ services:
   django_rq:
     image: redis:3.2.9
 
-  pybossa:
-    # ubuntu:14.04 installs postgres 9.4 client
-    image: goodly/pybossa:latest
-    depends_on:
-      - db
-    ports:
-      - "3002:80"
-
   db:
-    # postgres:9.4
-    build:
-      context: ./docker
-      dockerfile: ./db/Dockerfile
-#   volumes:
-#    - ./_postgres_data:/var/lib/postgresql/data/
+    image: postgres:9.6
     environment:
+      - TERM=xterm
       - POSTGRES_USER=zz
       - POSTGRES_PASSWORD=testonly3UkM429Yp
       - POSTGRES_DB=thresher
-#    - PGDATA=/var/lib/postgresql/data/pgdata
+
+  pybossa:
+    image: goodly/pybossa:latest
+    environment:
+      - PYBOSSA_SECRET=test-only-y8y2i4ISpfwEMhLjUfXH9e5qA8qJkKA31tuLakvy
+      - PYBOSSA_SESSION_SECRET=test-only-y8y2i4ISpfwEMhLjUfXH9e5qA8qJkKA31tuLakvy
+      - PYBOSSA_DATABASE_URL=postgresql://dfuser:test-only-RDkWWAG9jXMAFO8pXu6K@pybossa-db/dforce
+      - PYBOSSA_ITSDANGEROUS_SECRET=test-only-2R1ucOk8KxEeh5SCaXcWPt4oDf2sHQvpiyHAPoyX
+      - PYBOSSA_BRAND=Deciding Force
+      - PYBOSSA_TITLE=Deciding Force
+      - PYBOSSA_LOGO=default_logo.svg
+    depends_on:
+      - pybossa-db
+    ports:
+      - "3002:80"
+
+  pybossa-db:
+    image: postgres:9.6
+    environment:
+      - TERM=xterm
+      - POSTGRES_USER=dfuser
+      - POSTGRES_PASSWORD=test-only-RDkWWAG9jXMAFO8pXu6K
+      - POSTGRES_DB=dforce
