@@ -52,38 +52,23 @@
             Articles:
           </div>
           <div class="form-selector">
-            Starting article id: 
+            Starting article id:
             <span class="article-id-selector" id="starting-article-id">
               {{ form.starting_article_id }}
             </span>
           </div>
           <div class="form-selector">
-            Ending article id: 
+            Ending article id:
             <span class="article-id-selector" id="ending-article-id">
               {{ form.ending_article_id }}
             </span>
           </div>
         </div>
 
-        <div class="form-container">
-          <div class="form-label">
-            NLP Hints
-          </div>
-          <div class="form-selector">
-            {{ form.add_nlp_hints }}
-            <span class="nlp-hints-label">
-              {{ form.add_nlp_hints.label }}
-            </span>
-          </div>
-          <div class="form-hint">
-            {{ form.add_nlp_hints.help_text }}
-          </div>
-        </div>
-
         {% if form.debug_presenter.value %}
           <div class="form-container">
             <div class="form-label">
-              Debug flag active
+              {{ form.debug_server.label }}
             </div>
             <div class="form-selector">
               {{ form.debug_server }}

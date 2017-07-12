@@ -21,9 +21,13 @@ class SelectTopicsField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, t):
         return t.name
 
+class NLPArticlesForm(forms.Form):
+    starting_article_id = forms.IntegerField(min_value=0)
+    ending_article_id = forms.IntegerField(min_value=0)
+
+
 help_select_project = "Select the Project for which you would like to generate tasks."
 help_select_topics = "The selected topics will be used for task generation."
-help_with_nlp = "Checking this box will generate NLP hints instead of generating tasks. Potentially time consuming."
 help_with_debug_server = "The task presenter for this project will be retrieved from this server on each page load."
 class SendTasksForm(forms.Form):
     project = SelectProjectField(Project.objects.all().order_by("name"),
@@ -34,9 +38,6 @@ class SendTasksForm(forms.Form):
                                widget=SelectMultiple(attrs={"size":11}))
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
-    add_nlp_hints = forms.BooleanField(required=False,
-                                       label="Begin NLP processing",
-                                       help_text=help_with_nlp)
     debug_presenter = forms.BooleanField(required=False, initial=False, widget=HiddenInput)
     debug_server = forms.CharField(required=False,
                                    label="Debug presenter flag active",

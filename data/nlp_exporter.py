@@ -18,13 +18,10 @@ from thresher.views import collectNLPTasks
 @django_rq.job('nlp_generator', timeout=1800, result_ttl=24*3600)
 def generate_nlp_tasks_worker(profile_id=None,
                               article_ids=None,
-                              topic_ids=None,
-                              project_id=None,
                               depends_on=None):
     startCount = len(connection.queries)
     articles = Article.objects.filter(id__in=article_ids)
-    topics = Topic.objects.filter(id__in=topic_ids)
-    tasks = collectNLPTasks(articles, topics)
+    tasks = collectNLPTasks(articles)
     for task in tasks:
         # annotator expects an array of tasks
         hint_source = json.dumps( [task] )

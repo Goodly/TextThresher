@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.db.models import Min, Max
 
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
-from researcher.forms import SendTasksForm
+from researcher.forms import NLPArticlesForm, SendTasksForm
 
 from data.document_importer import import_archive
 from data.schema_importer import import_schema
@@ -108,6 +108,61 @@ class UploadSchemaView(PermissionRequiredMixin, View):
                 {'form': bound_form}
             )
 
+
+class NLPArticlesView(PermissionRequiredMixin, View):
+    form_class = NLPArticlesForm
+    template_name = 'researcher/nlp_articles.html'
+    login_url = reverse_lazy('admin:login')
+    redirect_field_name = 'next'
+    # Put some requirements on form access.
+    permission_required = (
+        u'thresher.add_nlphints',
+        u'thresher.change_nlphints',
+        u'thresher.delete_nlphints',
+    )
+
+    def get(self, request):
+        agg = Article.objects.aggregate(Min('id'), Max('id'))
+        initial = { 'starting_article_id': agg['id__min'],
+                    'ending_article_id': agg['id__max'],
+        }
+        return render(
+            request,
+            self.template_name,
+            {'form': self.form_class(initial=initial),
+             'user': request.user,
+            }
+        )
+
+    def post(self, request):
+        bound_form = self.form_class(request.POST)
+        if request.user.is_authenticated and bound_form.is_valid():
+            profile_id = request.user.userprofile.id
+
+            starting_article_id = bound_form.cleaned_data['starting_article_id']
+            ending_article_id = bound_form.cleaned_data['ending_article_id']
+            articles = Article.objects.filter(
+                id__gte=starting_article_id,
+                id__lte=ending_article_id
+            ).order_by("id")
+            article_ids = list(articles.values_list('id', flat=True))
+            logger.info("%d articles in selected range" % len(article_ids))
+
+            generate_nlp_tasks_worker.delay(
+                profile_id=profile_id,
+                article_ids=article_ids,
+            )
+
+            return redirect(reverse('rq_home'))
+        else:
+            return render(
+                request,
+                self.template_name,
+                {'form': self.form_class(),
+                 'user': request.user
+                }
+            )
+
 class SendTasksView(PermissionRequiredMixin, View):
     form_class = SendTasksForm
     template_name = 'researcher/send_tasks.html'
@@ -165,17 +220,13 @@ class SendTasksView(PermissionRequiredMixin, View):
             project = bound_form.cleaned_data['project']
             project_id = project.id
             job = None
-            if bound_form.cleaned_data['add_nlp_hints']:
-                generator = generate_nlp_tasks_worker.delay
-            else:
-                debug_presenter = bound_form.cleaned_data['debug_presenter']
-                debug_server = bound_form.cleaned_data['debug_server']
-                job = create_or_update_remote_project(request.user.userprofile,
-                                                      project,
-                                                      debug_presenter=debug_presenter,
-                                                      debug_server=debug_server)
-                generator = self.get_task_generator(project)
-
+            debug_presenter = bound_form.cleaned_data['debug_presenter']
+            debug_server = bound_form.cleaned_data['debug_server']
+            job = create_or_update_remote_project(request.user.userprofile,
+                                                  project,
+                                                  debug_presenter=debug_presenter,
+                                                  debug_server=debug_server)
+            generator = self.get_task_generator(project)
             generator(profile_id=profile_id,
                       article_ids=article_ids,
                       topic_ids=topic_ids,
@@ -191,6 +242,7 @@ class SendTasksView(PermissionRequiredMixin, View):
                  'user': request.user
                 }
             )
+
 
 class RetrieveTaskrunsView(PermissionRequiredMixin, View):
     form_class = SendTasksForm

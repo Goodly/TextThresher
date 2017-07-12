@@ -25,7 +25,7 @@ from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 from data.parse_schema_v2 import parse_schema as parse_schema_v2
 
-from thresher.models import (Project, Article, Topic, HighlightGroup,
+from thresher.models import (Article, Topic, HighlightGroup,
                              ArticleHighlight, Question, Answer)
 
 ANALYSIS_TYPES = {}

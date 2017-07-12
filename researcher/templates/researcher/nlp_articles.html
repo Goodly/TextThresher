@@ -1,0 +1,45 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} Send articles for NLP processing {% endblock %}
+{% block content %}
+  <div class="content-container">
+    <h1 class="main-label">
+      NLP processing and status
+    </h1>
+
+    <div class="main-container">
+      <form
+        action="{% url 'researcher:nlp_articles' %}"
+        method="post">
+        <div class="page-description">
+          <div class="description-text">
+            Send articles for NLP hinting
+          </div>
+        </div>
+
+        <div class="form-container">
+          <div class="form-label">
+            Articles:
+          </div>
+          <div class="form-selector">
+            Starting article id:
+            <span class="article-id-selector" id="starting-article-id">
+              {{ form.starting_article_id }}
+            </span>
+          </div>
+          <div class="form-selector">
+            Ending article id:
+            <span class="article-id-selector" id="ending-article-id">
+              {{ form.ending_article_id }}
+            </span>
+          </div>
+        </div>
+
+        {% csrf_token %}
+        <button type="submit" class="submit">
+          Send articles for NLP hinting
+        </button>
+      </form>
+    </div>
+
+  </div>
+{% endblock %}
