@@ -67,7 +67,7 @@ def create_or_update_remote_project_worker(profile_id=None,
     payload = {
         "name": project.name,
         "short_name": project.short_name,
-        "description": project.instructions,
+        "description": project.description,
         "info": {
           "task_presenter": getPresenter(project.task_type,
                                          debug_presenter,

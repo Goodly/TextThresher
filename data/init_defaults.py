@@ -100,8 +100,7 @@ def createHighlighterProject(owner_profile):
         defaults = {
             "name": "Highlighter",
             "task_type": "HLTR",
-            "instructions": "Highlight passages in articles that discuss " +
-                          "the topics shown."
+            "description": "Highlight passages"
         }
     )
     if created:
@@ -115,7 +114,7 @@ def createQuizProject(owner_profile):
         defaults = {
             "name": "Quiz",
             "task_type": "QUIZ",
-            "instructions": "Answer questions about short text passages."
+            "description": "Answer questions"
         }
     )
     if created:
