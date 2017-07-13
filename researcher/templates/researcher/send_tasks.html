@@ -3,7 +3,7 @@
 {% block content %}
   <div class="content-container">
     <h1 class="main-label">
-      Generate and Send Tasks for a Project
+      Create a Pybossa Project
     </h1>
 
     <div class="main-container">
@@ -12,9 +12,11 @@
         method="post">
         <div class="page-description">
           <div class="description-text">
-            Send Tasks to a Pybossa Server
+            Configure tasks for this project
           </div>
         </div>
+
+            {{ form.as_p }}
 
 <!--         <p>You are logged in as: {{ user.username }}</p>
         <p>Your remote Pybossa server is set to: {{ user.userprofile.pybossa_url }}</p>
@@ -22,13 +24,13 @@
  -->
         <div class="form-container">
           <div class="form-label">
-            Project:
+            Task Type:
           </div>
           <div class="form-selector">
-            {{ form.project }}
+            {{ form.task_type }}
           </div>
           <div class="form-hint">
-            {{ form.project.help_text }}
+            {{ form.task_type.help_text }}
           </div>
         </div>
 
@@ -86,7 +88,7 @@
         {% endcomment %}
         {% csrf_token %}
         <button type="submit" class="submit">
-          Send Tasks
+          Create Pybossa Project
         </button>
       </form>
     </div>

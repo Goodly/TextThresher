@@ -16,7 +16,7 @@ urlpatterns = [
         views.NLPArticlesView.as_view(),
         name='nlp_articles'),
     url(r'^send_tasks/$',
-        views.SendTasksView.as_view(),
+        views.CreateProjectView.as_view(),
         name='send_tasks'),
     url(r'^project/(?P<pk>[0-9]+)/taskruns/$',
         views.RetrieveTaskrunsView.as_view(),

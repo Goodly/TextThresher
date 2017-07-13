@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.db.models import Min, Max
 
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
-from researcher.forms import NLPArticlesForm, SendTasksForm
+from researcher.forms import NLPArticlesForm, CreateProjectForm
 
 from data.document_importer import import_archive
 from data.schema_importer import import_schema
@@ -163,8 +163,8 @@ class NLPArticlesView(PermissionRequiredMixin, View):
                 }
             )
 
-class SendTasksView(PermissionRequiredMixin, View):
-    form_class = SendTasksForm
+class CreateProjectView(PermissionRequiredMixin, View):
+    form_class = CreateProjectForm
     template_name = 'researcher/send_tasks.html'
     login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
@@ -187,8 +187,11 @@ class SendTasksView(PermissionRequiredMixin, View):
 
     def get(self, request):
         agg = Article.objects.aggregate(Min('id'), Max('id'))
+        profile = request.user.userprofile
         initial = { 'starting_article_id': agg['id__min'],
                     'ending_article_id': agg['id__max'],
+                    'pybossa_url': profile.pybossa_url,
+                    'pybossa_api_key': profile.pybossa_api_key,
                     'debug_presenter': request.GET.get("debugPresenter", False)
         }
         return render(
@@ -245,7 +248,6 @@ class SendTasksView(PermissionRequiredMixin, View):
 
 
 class RetrieveTaskrunsView(PermissionRequiredMixin, View):
-    form_class = SendTasksForm
     template_name = 'researcher/retrieve_taskruns.html'
     login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
@@ -270,7 +272,6 @@ class RetrieveTaskrunsView(PermissionRequiredMixin, View):
 
 
 class RemoteProjectDeleteView(PermissionRequiredMixin, View):
-    form_class = SendTasksForm
     template_name = 'researcher/confirm_remote_project_delete.html'
     login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
@@ -286,4 +287,4 @@ class RemoteProjectDeleteView(PermissionRequiredMixin, View):
     def post(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
         job = delete_remote_project(request.user.userprofile, project)
-        return redirect('researcher:index')
+        return redirect(reverse('researcher:index'))

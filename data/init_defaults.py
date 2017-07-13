@@ -125,5 +125,3 @@ if __name__ == '__main__':
     createSuperUser()
     researchers = createThresherGroup()
     owner_profile = createNick(groups=[researchers])
-    createHighlighterProject(owner_profile)
-    createQuizProject(owner_profile)
