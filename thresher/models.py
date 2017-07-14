@@ -73,6 +73,12 @@ class Project(models.Model):
     pybossa_secret_key = models.CharField(blank=True, max_length=36, default="")
     pybossa_created = models.DateTimeField(null=True)
 
+    class Meta:
+        unique_together = (
+            ("name", "pybossa_url"),
+            ("short_name", "pybossa_url"),
+        )
+
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
 

@@ -15,12 +15,11 @@ from researcher.forms import NLPArticlesForm, CreateProjectForm
 from data.document_importer import import_archive
 from data.schema_importer import import_schema
 
-from data.pybossa_api import create_or_update_remote_project, delete_remote_project
-from data.pybossa_api import generate_highlight_tasks_worker
-from data.pybossa_api import generate_quiz_tasks_worker
+from data.pybossa_api import create_or_update_remote_project_worker
+from data.pybossa_api import delete_remote_project
+from data.pybossa_api import generate_tasks_worker
 from data.pybossa_api import generate_get_taskruns_worker
 from data.nlp_exporter import generate_nlp_tasks_worker
-from data.pybossa_api import InvalidTaskType
 from thresher.models import Article, Topic, UserProfile, Project
 
 class IndexView(TemplateView):
@@ -158,32 +157,26 @@ class NLPArticlesView(PermissionRequiredMixin, View):
             return render(
                 request,
                 self.template_name,
-                {'form': self.form_class(),
+                {'form': bound_form,
                  'user': request.user
                 }
             )
 
 class CreateProjectView(PermissionRequiredMixin, View):
     form_class = CreateProjectForm
-    template_name = 'researcher/send_tasks.html'
+    template_name = 'researcher/create_project.html'
     login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
-    # We are creating remotely, so real permission is via Pybossa API key.
-    # Put some requirements on form access.
+    # Create a local Project record to with the desired config for the remote.
+    # If remote creation fails, the Pybossa id and related fields will not
+    # be filled in. The Project record won't be deleted, as the update screen
+    # can be used to attempt to create the remote project again.
     permission_required = (
         u'thresher.add_project',
         u'thresher.change_project',
         u'thresher.add_task',
         u'thresher.change_task',
     )
-
-    def get_task_generator(self, project):
-        if project.task_type == 'HLTR':
-            return generate_highlight_tasks_worker.delay
-        elif project.task_type == 'QUIZ':
-            return generate_quiz_tasks_worker.delay
-        else:
-            raise InvalidTaskType("Project task type must be 'HLTR' or 'QUIZ'")
 
     def get(self, request):
         agg = Article.objects.aggregate(Min('id'), Max('id'))
@@ -205,10 +198,9 @@ class CreateProjectView(PermissionRequiredMixin, View):
     def post(self, request):
         bound_form = self.form_class(request.POST)
         if request.user.is_authenticated and bound_form.is_valid():
-            profile_id = request.user.userprofile.id
-
-            starting_article_id = bound_form.cleaned_data['starting_article_id']
-            ending_article_id = bound_form.cleaned_data['ending_article_id']
+            cleaned_data = bound_form.cleaned_data
+            starting_article_id = cleaned_data['starting_article_id']
+            ending_article_id = cleaned_data['ending_article_id']
             articles = Article.objects.filter(
                 id__gte=starting_article_id,
                 id__lte=ending_article_id
@@ -216,32 +208,45 @@ class CreateProjectView(PermissionRequiredMixin, View):
             article_ids = list(articles.values_list('id', flat=True))
             logger.info("%d articles in selected range" % len(article_ids))
 
-            topic_ids = list(bound_form.cleaned_data['topics']
+            topic_ids = list(cleaned_data['topics']
                              .values_list('id', flat=True))
             logger.info("%d topics selected" % len(topic_ids))
+            task_config = { 'topic_ids': topic_ids }
 
-            project = bound_form.cleaned_data['project']
+            # Need to catch failure if attempting to create a duplicate name
+            # or short_name on remote. Project model sets unique_together.
+            project = Project.objects.create(
+                owner_profile = request.user.userprofile,
+                name = cleaned_data['name'],
+                short_name = cleaned_data['short_name'],
+                description = cleaned_data['description'],
+                task_type = cleaned_data['task_type'],
+                task_config = task_config,
+                pybossa_url = cleaned_data['pybossa_url'],
+                pybossa_api_key = cleaned_data['pybossa_api_key']
+            )
             project_id = project.id
             job = None
-            debug_presenter = bound_form.cleaned_data['debug_presenter']
-            debug_server = bound_form.cleaned_data['debug_server']
-            job = create_or_update_remote_project(request.user.userprofile,
-                                                  project,
-                                                  debug_presenter=debug_presenter,
-                                                  debug_server=debug_server)
-            generator = self.get_task_generator(project)
-            generator(profile_id=profile_id,
-                      article_ids=article_ids,
-                      topic_ids=topic_ids,
-                      project_id=project_id,
-                      depends_on = job)
+            debug_presenter = cleaned_data['debug_presenter']
+            debug_server = cleaned_data['debug_server']
+            job = create_or_update_remote_project_worker.delay(
+                project_id=project_id,
+                debug_presenter=debug_presenter,
+                debug_server=debug_server
+            )
+            generate_tasks_worker.delay(
+                project_id=project_id,
+                article_ids=article_ids,
+                topic_ids=topic_ids,
+                depends_on=job
+            )
 
             return redirect(reverse('rq_home'))
         else:
             return render(
                 request,
                 self.template_name,
-                {'form': self.form_class(),
+                {'form': bound_form,
                  'user': request.user
                 }
             )
@@ -286,5 +291,5 @@ class RemoteProjectDeleteView(PermissionRequiredMixin, View):
 
     def post(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
-        job = delete_remote_project(request.user.userprofile, project)
+        job = delete_remote_project(project)
         return redirect(reverse('researcher:index'))

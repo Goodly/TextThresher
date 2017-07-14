@@ -320,8 +320,6 @@ if __name__ == '__main__':
     init_defaults.createSuperUser()
     researchers = init_defaults.createThresherGroup()
     created_by = init_defaults.createNick(groups=[researchers])
-    init_defaults.createHighlighterProject(created_by)
-    init_defaults.createQuizProject(created_by)
     args = load_args()
     if args.schema_dir:
         print "Loading schemas in version 1 format"

@@ -8,7 +8,7 @@
 
     <div class="main-container">
       <form
-        action="{% url 'researcher:send_tasks' %}"
+        action="{% url 'researcher:create_project' %}"
         method="post">
         <div class="page-description">
           <div class="description-text">
@@ -16,12 +16,16 @@
           </div>
         </div>
 
-            {{ form.as_p }}
+        {{ form.as_p }}
 
-<!--         <p>You are logged in as: {{ user.username }}</p>
-        <p>Your remote Pybossa server is set to: {{ user.userprofile.pybossa_url }}</p>
-        <p>Your Pybossa API key is set to: {{ user.userprofile.pybossa_api_key }}</p>
- -->
+        {% csrf_token %}
+        <button type="submit" class="submit">
+          Create Pybossa Project
+        </button>
+      </form>
+      <form
+        action="{% url 'researcher:create_project' %}"
+        method="post">
         <div class="form-container">
           <div class="form-label">
             Task Type:
@@ -83,9 +87,6 @@
 
         {{ form.debug_presenter }}
 
-        {% comment %}
-          <!-- {{ form.as_p }} -->
-        {% endcomment %}
         {% csrf_token %}
         <button type="submit" class="submit">
           Create Pybossa Project
