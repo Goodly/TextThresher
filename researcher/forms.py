@@ -27,16 +27,20 @@ class NLPArticlesForm(forms.Form):
 
 
 help_for_name = "The name of the project"
-help_for_short_name = "Short name for project"
+help_for_short_name = "Short name for project used in URLs"
 help_for_desc = "What are these tasks for and how do they work?"
 help_for_pybossa_url = "The URL of the Pybossa server to create the project on"
 help_for_api_key = "API key for your account on this Pybossa server"
 help_select_task_type = "Select the type of tasks you would like to generate."
-help_select_topics = "The selected topics will be used for task generation."
+help_select_topics = ("The selected topics will be used for task generation. <br>"
+                      'Hold down "Control", or "Command" on a Mac, to select more than one.')
 help_with_debug_server = "The task presenter for this project will be retrieved from this server on each page load."
 class CreateProjectForm(forms.Form):
     error_css_class = 'error'
     required_css_class = 'required'
+
+    task_type = SelectProjectType(TASK_TYPE,
+                                  help_text=help_select_task_type)
 
     name = forms.CharField(required=True,
                            label="Project name",
@@ -54,10 +58,10 @@ class CreateProjectForm(forms.Form):
                                   label="Long description",
                                   max_length=8000,
                                   help_text=help_for_desc,
-                                  widget=forms.Textarea(attrs={"size":500}))
+                                  widget=forms.Textarea(
+                                      attrs={"rows":3, "cols":60})
+                                  )
 
-    task_type = SelectProjectType(TASK_TYPE,
-                                  help_text=help_select_task_type)
     topics = SelectTopicsField(Topic.objects.filter(parent=None).order_by("name"),
                                help_text=help_select_topics,
                                widget=SelectMultiple(attrs={"size":11}))
@@ -70,7 +74,7 @@ class CreateProjectForm(forms.Form):
                                   initial="http://pybossa",
                                   max_length=1000,
                                   help_text=help_for_pybossa_url,
-                                  widget=TextInput(attrs={"size":80}))
+                                  widget=TextInput(attrs={"size":60}))
 
     pybossa_api_key = forms.CharField(required=True,
                                   label="Pybossa API key",
@@ -80,9 +84,16 @@ class CreateProjectForm(forms.Form):
 
     debug_presenter = forms.BooleanField(required=False, initial=False,
                                          widget=HiddenInput)
+
+    debug_server = forms.CharField(required=False,
+                                   max_length=200,
+                                   initial="http://localhost:3001",
+                                   widget=HiddenInput)
+
+class CreateProjectDebugForm(CreateProjectForm):
     debug_server = forms.CharField(required=False,
                                    label="Debug presenter flag active",
                                    max_length=200,
                                    initial="http://localhost:3001",
                                    help_text=help_with_debug_server,
-                                   widget=TextInput(attrs={"size":40}))
+                                   widget=TextInput(attrs={"size":36}))

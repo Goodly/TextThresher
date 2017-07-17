@@ -1,9 +1,9 @@
 {% extends parent_template|default:"researcher/base.html" %}
-{% block title %} Generate and Send Tasks for a Project {% endblock %}
+{% block title %} Create a TextThresher Project {% endblock %}
 {% block content %}
   <div class="content-container">
     <h1 class="main-label">
-      Create a Pybossa Project
+      Create a TextThresher Project
     </h1>
 
     <div class="main-container">
@@ -16,97 +16,15 @@
           </div>
         </div>
 
-        {{ form.as_p }}
+        <div class="form-container">
+          {{ form.as_p }}
+        </div>
 
         {% csrf_token %}
         <button type="submit" class="submit">
-          Create Pybossa Project
+          Create TextThresher Project
         </button>
       </form>
-      <form
-        action="{% url 'researcher:create_project' %}"
-        method="post">
-        <div class="form-container">
-          <div class="form-label">
-            Task Type:
-          </div>
-          <div class="form-selector">
-            {{ form.task_type }}
-          </div>
-          <div class="form-hint">
-            {{ form.task_type.help_text }}
-          </div>
-        </div>
-
-        <div class="form-container">
-          <div class="form-label">
-            Topics:
-          </div>
-          <div class="form-selector">
-            {{ form.topics }}
-          </div>
-          <div class="form-hint">
-            {{ form.topics.help_text }}
-          </div>
-          <div class="form-hint">
-            Hold down "Control", or "Command" on a Mac, to select more than one.
-          </div>
-        </div>
-
-        <div class="form-container">
-          <div class="form-label">
-            Articles:
-          </div>
-          <div class="form-selector">
-            Starting article id:
-            <span class="article-id-selector" id="starting-article-id">
-              {{ form.starting_article_id }}
-            </span>
-          </div>
-          <div class="form-selector">
-            Ending article id:
-            <span class="article-id-selector" id="ending-article-id">
-              {{ form.ending_article_id }}
-            </span>
-          </div>
-        </div>
-
-        {% if form.debug_presenter.value %}
-          <div class="form-container">
-            <div class="form-label">
-              {{ form.debug_server.label }}
-            </div>
-            <div class="form-selector">
-              {{ form.debug_server }}
-            </div>
-            <div class="form-hint">
-              {{ form.debug_server.help_text }}
-            </div>
-          </div>
-        {% endif %}
-
-        {{ form.debug_presenter }}
-
-        {% csrf_token %}
-        <button type="submit" class="submit">
-          Create Pybossa Project
-        </button>
-      </form>
-    </div>
-
-    <div class="right-section-container">
-      <div class="right-section-label">
-        RELATED INFO
-      </div>
-      <div class="right-section-item">
-        <strong>User: </strong> {{ user.username }}
-      </div>
-      <div class="right-section-item">
-        <strong>Server: </strong> {{ user.userprofile.pybossa_url }}
-      </div>
-      <div class="right-section-item">
-        <strong>API Key: </strong> {{ user.userprofile.pybossa_api_key }}
-      </div>
     </div>
   </div>
 {% endblock %}

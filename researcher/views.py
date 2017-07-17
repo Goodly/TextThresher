@@ -10,7 +10,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.db.models import Min, Max
 
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
-from researcher.forms import NLPArticlesForm, CreateProjectForm
+from researcher.forms import NLPArticlesForm
+from researcher.forms import CreateProjectForm, CreateProjectDebugForm
 
 from data.document_importer import import_archive
 from data.schema_importer import import_schema
@@ -163,7 +164,6 @@ class NLPArticlesView(PermissionRequiredMixin, View):
             )
 
 class CreateProjectView(PermissionRequiredMixin, View):
-    form_class = CreateProjectForm
     template_name = 'researcher/create_project.html'
     login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
@@ -178,15 +178,29 @@ class CreateProjectView(PermissionRequiredMixin, View):
         u'thresher.change_task',
     )
 
+    def __init__(self, **kwargs):
+        super(CreateProjectView, self)
+        self.form_class = CreateProjectForm
+
     def get(self, request):
         agg = Article.objects.aggregate(Min('id'), Max('id'))
         profile = request.user.userprofile
+        # Developers can add "?debugPresenter=true" to the URL to
+        # have the task presenter set to a script tag pointed at
+        # the developer's localhost running 'npm run dev' for
+        # easy debugging in the Pybossa page context.
+        debug_presenter = request.GET.get("debugPresenter", False)
         initial = { 'starting_article_id': agg['id__min'],
                     'ending_article_id': agg['id__max'],
                     'pybossa_url': profile.pybossa_url,
                     'pybossa_api_key': profile.pybossa_api_key,
-                    'debug_presenter': request.GET.get("debugPresenter", False)
+                    'debug_presenter': debug_presenter
         }
+        if debug_presenter:
+            # Show the field that allows editing the debug server
+            self.form_class = CreateProjectDebugForm
+        else:
+            self.form_class = CreateProjectForm
         return render(
             request,
             self.template_name,
