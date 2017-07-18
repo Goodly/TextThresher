@@ -191,6 +191,15 @@ h1.main-label {
     margin-bottom: 10px;
 }
 
+.form-container label[for="id_starting_article_id"]::before {
+  content: "Articles:";
+  display: block;
+  font-size: 18px;
+  font-weight: normal;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
 .form-container label[for="id_starting_article_id"],
 .form-container label[for="id_ending_article_id"] {
     display: inline-block;

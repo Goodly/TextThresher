@@ -179,7 +179,7 @@ class CreateProjectView(PermissionRequiredMixin, View):
     )
 
     def __init__(self, **kwargs):
-        super(CreateProjectView, self)
+        super(CreateProjectView, self).__init__(**kwargs)
         self.form_class = CreateProjectForm
 
     def get(self, request):
