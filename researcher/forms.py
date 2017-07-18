@@ -34,7 +34,8 @@ help_for_api_key = "API key for your account on this Pybossa server"
 help_select_task_type = "Select the type of tasks you would like to generate."
 help_select_topics = ("The selected topics will be used for task generation. <br>"
                       'Hold down "Control", or "Command" on a Mac, to select more than one.')
-help_with_debug_server = "The task presenter for this project will be retrieved from this server on each page load."
+help_with_debug_server = ("The task presenter for this project will be retrieved from this server.<br>"
+                          "Use 'npm run dev' server to debug task presenters.")
 class CreateProjectForm(forms.Form):
     error_css_class = 'error'
     required_css_class = 'required'
@@ -92,7 +93,7 @@ class CreateProjectForm(forms.Form):
 
 class CreateProjectDebugForm(CreateProjectForm):
     debug_server = forms.CharField(required=False,
-                                   label="Debug presenter flag active",
+                                   label="URL serving task presenters",
                                    max_length=200,
                                    initial="http://localhost:3001",
                                    help_text=help_with_debug_server,
