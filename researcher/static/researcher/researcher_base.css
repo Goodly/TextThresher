@@ -192,26 +192,32 @@ h1.main-label {
 }
 
 .form-container label[for="id_starting_article_id"]::before {
-  content: "Articles:";
-  display: block;
-  font-size: 18px;
-  font-weight: normal;
-  margin-top: 10px;
-  margin-bottom: 20px;
+    content: "Articles:";
+    display: block;
+    font-size: 18px;
+    font-weight: normal;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    margin-left: -10px;
 }
 
 .form-container label[for="id_starting_article_id"],
 .form-container label[for="id_ending_article_id"] {
     display: inline-block;
     margin-top: 3px;
+    margin-bottom: 0px;
     margin-left: 5px;
     font-size: 14px;
     line-height: 4px;
 }
 
+.form-container #id_starting_article_id {
+    margin-bottom: 0px;
+}
+
 .form-container #id_starting_article_id,
 .form-container #id_ending_article_id {
-    margin-left: 5px;
+    margin-left: 10px;
     font-size: 11px;
     line-height: 4px;
 }
