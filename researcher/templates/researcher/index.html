@@ -52,8 +52,13 @@
                 {{ project.name }}
               <ul class="item-container">
                 <li class="item">
-                  <a href="{{ project.get_local_edit_URL }}" target="_blank">
+                  <a href="{{ project.get_local_edit_URL }}">
                     Update Project
+                  </a>
+                </li>
+                <li class="item">
+                  <a href="{{ project.get_add_tasks_URL }}">
+                    Add Tasks to Project
                   </a>
                 </li>
                 <li class="item">

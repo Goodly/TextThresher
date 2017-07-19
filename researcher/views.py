@@ -13,6 +13,7 @@ from researcher.forms import UploadArticlesForm, UploadSchemaForm
 from researcher.forms import NLPArticlesForm
 from researcher.forms import CreateProjectForm, CreateProjectDebugForm
 from researcher.forms import EditProjectForm, EditProjectDebugForm
+from researcher.forms import AddTasksForm
 
 from data.document_importer import import_archive
 from data.schema_importer import import_schema
@@ -321,6 +322,65 @@ class EditProjectView(PermissionRequiredMixin, UpdateView):
         return response
 
 
+class AddTasksView(PermissionRequiredMixin, FormView):
+    template_name = 'researcher/add_project_tasks.html'
+    form_class = AddTasksForm
+    login_url = reverse_lazy('admin:login')
+    redirect_field_name = 'next'
+    permission_required = (
+        u'thresher.add_project',
+        u'thresher.change_project',
+        u'thresher.add_task',
+        u'thresher.change_task',
+    )
+    success_url = reverse_lazy('rq_home')
+
+    def get_initial(self):
+        project_id = self.kwargs['pk']
+        agg = Article.objects.aggregate(Min('id'), Max('id'))
+        initial = {
+            'project_id': project_id,
+            'starting_article_id': agg['id__min'],
+            'ending_article_id': agg['id__max'],
+        }
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super(AddTasksView, self).get_context_data(**kwargs)
+        project_id = self.kwargs['pk']
+        project = Project.objects.get(pk=project_id)
+        context.update({
+            'project': project,
+        })
+        return context
+
+    def form_valid(self, form):
+        cleaned_data = form.cleaned_data
+        starting_article_id = cleaned_data['starting_article_id']
+        ending_article_id = cleaned_data['ending_article_id']
+        articles = Article.objects.filter(
+            id__gte=starting_article_id,
+            id__lte=ending_article_id
+        ).order_by("id")
+        article_ids = list(articles.values_list('id', flat=True))
+        logger.info("%d articles in selected range" % len(article_ids))
+
+        project_id = cleaned_data['project_id']
+        project = Project.objects.get(pk=project_id)
+        topic_ids = project.task_config['topic_ids']
+        logger.info("%d topics selected" % len(topic_ids))
+
+        job = None
+        generate_tasks_worker.delay(
+            project_id=project_id,
+            article_ids=article_ids,
+            topic_ids=topic_ids,
+            depends_on=job
+        )
+
+        return super(AddTasksView, self).form_valid(form)
+
+
 class RetrieveTaskrunsView(PermissionRequiredMixin, View):
     template_name = 'researcher/retrieve_taskruns.html'
     login_url = reverse_lazy('admin:login')
@@ -334,7 +394,7 @@ class RetrieveTaskrunsView(PermissionRequiredMixin, View):
         u'thresher.change_highlightgroup',
         u'thresher.delete_highlightgroup',
      )
-    
+
     def get(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
         return render(request, self.template_name, {'project': project})

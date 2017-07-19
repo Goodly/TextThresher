@@ -86,6 +86,10 @@ class Project(models.Model):
         """ Return a link to the local page to edit the project."""
         return reverse('researcher:edit_project', kwargs={"pk": self.id})
 
+    def get_add_tasks_URL(self):
+        """ Return a link to the local page to edit the project."""
+        return reverse('researcher:add_project_tasks', kwargs={"pk": self.id})
+
     def join_remote_base_URL(self, urlpath):
         if self.pybossa_url is None:
             return ""

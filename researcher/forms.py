@@ -144,3 +144,4 @@ class EditProjectDebugForm(EditProjectForm):
 class AddTasksForm(forms.Form):
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
+    project_id = forms.IntegerField(required=True, widget=HiddenInput)
