@@ -1,7 +1,9 @@
 from django import forms
-from django.forms.widgets import SelectMultiple, HiddenInput, TextInput
+from django.forms.widgets import SelectMultiple, HiddenInput, TextInput, Textarea
+from django.forms.widgets import SelectMultiple, HiddenInput
+from django.forms.widgets import TextInput, Textarea
 
-from thresher.models import TASK_TYPE, Topic
+from thresher.models import TASK_TYPE, Topic, Project
 
 help_with_annotations = "Check this box to import any existing annotations and topics embedded in the articles."
 class UploadArticlesForm(forms.Form):
@@ -59,7 +61,7 @@ class CreateProjectForm(forms.Form):
                                   label="Long description",
                                   max_length=8000,
                                   help_text=help_for_desc,
-                                  widget=forms.Textarea(
+                                  widget=Textarea(
                                       attrs={"rows":3, "cols":60})
                                   )
 
@@ -91,6 +93,7 @@ class CreateProjectForm(forms.Form):
                                    initial="http://localhost:3001",
                                    widget=HiddenInput)
 
+
 class CreateProjectDebugForm(CreateProjectForm):
     debug_server = forms.CharField(required=False,
                                    label="URL serving task presenters",
@@ -98,3 +101,46 @@ class CreateProjectDebugForm(CreateProjectForm):
                                    initial="http://localhost:3001",
                                    help_text=help_with_debug_server,
                                    widget=TextInput(attrs={"size":36}))
+
+
+class EditProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'short_name', 'description']
+        label = {
+            'name': "Project name",
+            'short_name': "Short project name",
+            'description': "Long description"
+        }
+        widgets = {
+            'name': TextInput(attrs={"size":60}),
+            'short_name': TextInput(attrs={"size":30}),
+            'description': Textarea(attrs={"rows":3, "cols":60})
+        }
+        help_text = {
+            'name': help_for_name,
+            'short_name': help_for_short_name,
+            'description': help_for_desc
+        }
+
+    debug_presenter = forms.BooleanField(required=False, initial=False,
+                                         widget=HiddenInput)
+
+    debug_server = forms.CharField(required=False,
+                                   max_length=200,
+                                   initial="http://localhost:3001",
+                                   widget=HiddenInput)
+
+
+class EditProjectDebugForm(EditProjectForm):
+    debug_server = forms.CharField(required=False,
+                                   label="URL serving task presenters",
+                                   max_length=200,
+                                   initial="http://localhost:3001",
+                                   help_text=help_with_debug_server,
+                                   widget=TextInput(attrs={"size":36}))
+
+
+class AddTasksForm(forms.Form):
+    starting_article_id = forms.IntegerField(min_value=0)
+    ending_article_id = forms.IntegerField(min_value=0)

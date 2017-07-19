@@ -82,6 +82,10 @@ class Project(models.Model):
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
 
+    def get_local_edit_URL(self):
+        """ Return a link to the local page to edit the project."""
+        return reverse('researcher:edit_project', kwargs={"pk": self.id})
+
     def join_remote_base_URL(self, urlpath):
         if self.pybossa_url is None:
             return ""

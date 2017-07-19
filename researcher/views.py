@@ -5,13 +5,14 @@ import tarfile, tempfile
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import FormView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Min, Max
 
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
 from researcher.forms import NLPArticlesForm
 from researcher.forms import CreateProjectForm, CreateProjectDebugForm
+from researcher.forms import EditProjectForm, EditProjectDebugForm
 
 from data.document_importer import import_archive
 from data.schema_importer import import_schema
@@ -23,14 +24,14 @@ from data.pybossa_api import generate_get_taskruns_worker
 from data.nlp_exporter import generate_nlp_tasks_worker
 from thresher.models import Article, Topic, UserProfile, Project
 
-class IndexView(TemplateView):
+class IndexView(View):
     template_name = 'researcher/index.html'
 
     def get(self, request):
         # We need 'request' in the context so use render
         return render(request,
                       self.template_name,
-                      {'projects': Project.objects.filter(pybossa_id__isnull=False).order_by('name')}
+                      {'projects': Project.objects.all().order_by('name')}
         )
 
 class UploadArticlesView(PermissionRequiredMixin, View):
@@ -264,6 +265,60 @@ class CreateProjectView(PermissionRequiredMixin, View):
                  'user': request.user
                 }
             )
+
+
+class EditProjectView(PermissionRequiredMixin, UpdateView):
+    template_name = 'researcher/edit_project.html'
+    queryset = Project.objects.all()
+    login_url = reverse_lazy('admin:login')
+    redirect_field_name = 'next'
+    permission_required = (
+        u'thresher.add_project',
+        u'thresher.change_project',
+        u'thresher.add_task',
+        u'thresher.change_task',
+    )
+    success_url = reverse_lazy('rq_home')
+
+    def get_form_class(self):
+        debug_presenter = self.request.GET.get("debugPresenter", False)
+        if debug_presenter:
+            # Show the field that allows editing the debug server
+            return EditProjectDebugForm
+        else:
+            return EditProjectForm
+
+    def get_context_data(self, **kwargs):
+        context = super(EditProjectView, self).get_context_data(**kwargs)
+        context.update({
+            'user': self.request.user,
+        })
+        return context
+
+    def get_initial(self):
+        # Developers can add "?debugPresenter=true" to the URL to
+        # have the task presenter set to a script tag pointed at
+        # the developer's localhost running 'npm run dev' for
+        # easy debugging in the Pybossa page context.
+        debug_presenter = self.request.GET.get('debugPresenter', False)
+        initial = { 'debug_presenter': debug_presenter }
+        return initial
+
+    def form_valid(self, form):
+        # need to save Project updates promptly as the new data
+        # will be needed in the worker process that updates the
+        # remote project.
+        response = super(EditProjectView, self).form_valid(form)
+
+        project = self.get_object()
+        debug_presenter = form.cleaned_data['debug_presenter']
+        debug_server = form.cleaned_data['debug_server']
+        job = create_or_update_remote_project_worker.delay(
+            project_id=project.id,
+            debug_presenter=debug_presenter,
+            debug_server=debug_server
+        )
+        return response
 
 
 class RetrieveTaskrunsView(PermissionRequiredMixin, View):
