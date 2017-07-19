@@ -25,9 +25,15 @@
             </a>
           </li>
           <li class="item">
-            <a href="{% url 'researcher:send_tasks' %}">
-              Send Tasks to Pybossa Server
+            <a href="{% url 'researcher:nlp_articles' %}">
+              Add NLP hints to articles
             </a>
+          </li>
+          <li class="item">
+            <a href="{% url 'researcher:create_project' %}">
+              Create Project
+            </a>
+          </li>
         </ul>
         
         <!-- <p></p>
@@ -38,13 +44,23 @@
       <!-- Second section -->
       <div class="projects-container">
         <div class="section-label-container">
-          <p class="section-label">REMOTE PROJECTS</p>
+          <p class="section-label">PROJECTS</p>
         </div>
           {% for project in projects %}
             <div class="project">
               <p>
                 {{ project.name }}
               <ul class="item-container">
+                <li class="item">
+                  <a href="{{ project.get_local_edit_URL }}">
+                    Update Project
+                  </a>
+                </li>
+                <li class="item">
+                  <a href="{{ project.get_add_tasks_URL }}">
+                    Add Tasks to Project
+                  </a>
+                </li>
                 <li class="item">
                   <a href="{{ project.get_remote_URL }}" target="_blank">
                     View Remote

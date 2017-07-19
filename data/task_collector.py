@@ -17,7 +17,7 @@ from thresher.serializers import (ProjectSerializer,
                                   NLPQuestionSerializer,
                                   NLPHintSerializer)
 
-def collectNLPTasks(articles=None, topics=None):
+def collectNLPTasks(articles=None):
     taskList = [{
                   "article_id": article.id,
                   "Topic Text": article.text,

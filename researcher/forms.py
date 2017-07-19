@@ -1,7 +1,9 @@
 from django import forms
-from django.forms.widgets import SelectMultiple, HiddenInput, TextInput
+from django.forms.widgets import SelectMultiple, HiddenInput, TextInput, Textarea
+from django.forms.widgets import SelectMultiple, HiddenInput
+from django.forms.widgets import TextInput, Textarea
 
-from thresher.models import Project, Topic
+from thresher.models import TASK_TYPE, Topic, Project
 
 help_with_annotations = "Check this box to import any existing annotations and topics embedded in the articles."
 class UploadArticlesForm(forms.Form):
@@ -13,7 +15,7 @@ class UploadArticlesForm(forms.Form):
 class UploadSchemaForm(forms.Form):
     schema_file = forms.FileField(allow_empty_file=False)
 
-class SelectProjectField(forms.ModelChoiceField):
+class SelectProjectType(forms.ChoiceField):
     def label_from_instance(self, p):
         return p.name
 
@@ -21,26 +23,125 @@ class SelectTopicsField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, t):
         return t.name
 
-help_select_project = "Select the Project for which you would like to generate tasks."
-help_select_topics = "The selected topics will be used for task generation."
-help_with_nlp = "Checking this box will generate NLP hints instead of generating tasks. Potentially time consuming."
-help_with_debug_server = "The task presenter for this project will be retrieved from this server on each page load."
-class SendTasksForm(forms.Form):
-    project = SelectProjectField(Project.objects.all().order_by("name"),
-                                 empty_label=None,
-                                 help_text=help_select_project)
+class NLPArticlesForm(forms.Form):
+    starting_article_id = forms.IntegerField(min_value=0)
+    ending_article_id = forms.IntegerField(min_value=0)
+
+
+help_for_name = "The name of the project"
+help_for_short_name = "Short name for project used in URLs"
+help_for_desc = "What are these tasks for and how do they work?"
+help_for_pybossa_url = "The URL of the Pybossa server to create the project on"
+help_for_api_key = "API key for your account on this Pybossa server"
+help_select_task_type = "Select the type of tasks you would like to generate."
+help_select_topics = ("The selected topics will be used for task generation. <br>"
+                      'Hold down "Control", or "Command" on a Mac, to select more than one.')
+help_with_debug_server = ("The task presenter for this project will be retrieved from this server.<br>"
+                          "Use 'npm run dev' server to debug task presenters.")
+class CreateProjectForm(forms.Form):
+    error_css_class = 'error'
+    required_css_class = 'required'
+
+    task_type = SelectProjectType(TASK_TYPE,
+                                  help_text=help_select_task_type)
+
+    name = forms.CharField(required=True,
+                           label="Project name",
+                           max_length=200,
+                           help_text=help_for_name,
+                           widget=TextInput(attrs={"size":60}))
+
+    short_name = forms.CharField(required=True,
+                                 label="Short project name",
+                                 max_length=100,
+                                 help_text=help_for_short_name,
+                                 widget=TextInput(attrs={"size":30}))
+
+    description = forms.CharField(required=True,
+                                  label="Long description",
+                                  max_length=8000,
+                                  help_text=help_for_desc,
+                                  widget=Textarea(
+                                      attrs={"rows":3, "cols":60})
+                                  )
+
     topics = SelectTopicsField(Topic.objects.filter(parent=None).order_by("name"),
                                help_text=help_select_topics,
                                widget=SelectMultiple(attrs={"size":11}))
+
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
-    add_nlp_hints = forms.BooleanField(required=False,
-                                       label="Begin NLP processing",
-                                       help_text=help_with_nlp)
-    debug_presenter = forms.BooleanField(required=False, initial=False, widget=HiddenInput)
+
+    pybossa_url = forms.CharField(required=True,
+                                  label="Pybossa server URL",
+                                  initial="http://pybossa",
+                                  max_length=1000,
+                                  help_text=help_for_pybossa_url,
+                                  widget=TextInput(attrs={"size":60}))
+
+    pybossa_api_key = forms.CharField(required=True,
+                                  label="Pybossa API key",
+                                  max_length=36,
+                                  help_text=help_for_api_key,
+                                  widget=TextInput(attrs={"size":36}))
+
+    debug_presenter = forms.BooleanField(required=False, initial=False,
+                                         widget=HiddenInput)
+
     debug_server = forms.CharField(required=False,
-                                   label="Debug presenter flag active",
+                                   max_length=200,
+                                   initial="http://localhost:3001",
+                                   widget=HiddenInput)
+
+
+class CreateProjectDebugForm(CreateProjectForm):
+    debug_server = forms.CharField(required=False,
+                                   label="URL serving task presenters",
                                    max_length=200,
                                    initial="http://localhost:3001",
                                    help_text=help_with_debug_server,
-                                   widget=TextInput(attrs={"size":40}))
+                                   widget=TextInput(attrs={"size":36}))
+
+
+class EditProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'short_name', 'description']
+        label = {
+            'name': "Project name",
+            'short_name': "Short project name",
+            'description': "Long description"
+        }
+        widgets = {
+            'name': TextInput(attrs={"size":60}),
+            'short_name': TextInput(attrs={"size":30}),
+            'description': Textarea(attrs={"rows":3, "cols":60})
+        }
+        help_text = {
+            'name': help_for_name,
+            'short_name': help_for_short_name,
+            'description': help_for_desc
+        }
+
+    debug_presenter = forms.BooleanField(required=False, initial=False,
+                                         widget=HiddenInput)
+
+    debug_server = forms.CharField(required=False,
+                                   max_length=200,
+                                   initial="http://localhost:3001",
+                                   widget=HiddenInput)
+
+
+class EditProjectDebugForm(EditProjectForm):
+    debug_server = forms.CharField(required=False,
+                                   label="URL serving task presenters",
+                                   max_length=200,
+                                   initial="http://localhost:3001",
+                                   help_text=help_with_debug_server,
+                                   widget=TextInput(attrs={"size":36}))
+
+
+class AddTasksForm(forms.Form):
+    starting_article_id = forms.IntegerField(min_value=0)
+    ending_article_id = forms.IntegerField(min_value=0)
+    project_id = forms.IntegerField(required=True, widget=HiddenInput)

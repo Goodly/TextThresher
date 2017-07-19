@@ -1,0 +1,31 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} Send articles for NLP hinting {% endblock %}
+{% block content %}
+  <div class="content-container">
+    <h1 class="main-label">
+      NLP processing and status
+    </h1>
+
+    <div class="main-container">
+      <form
+        action="{% url 'researcher:nlp_articles' %}"
+        method="post">
+        <div class="page-description">
+          <div class="description-text">
+            Send articles for NLP hinting
+          </div>
+        </div>
+
+        <div class="form-container">
+          {{ form.as_p }}
+        </div>
+
+        {% csrf_token %}
+        <button type="submit" class="submit">
+          Send articles for NLP hinting
+        </button>
+      </form>
+    </div>
+
+  </div>
+{% endblock %}

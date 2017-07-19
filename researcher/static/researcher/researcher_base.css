@@ -174,11 +174,6 @@ h1.main-label {
     float: left;
 }
 
-.form-label {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
 .form-container {
     float: left;
     margin-left: 10px;
@@ -188,12 +183,56 @@ h1.main-label {
     width: 96%;
 }
 
-.form-selector {
+.form-label,
+.form-container label {
+    display: block;
+    font-size: 18px;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+.form-container label[for="id_starting_article_id"]::before {
+    content: "Articles:";
+    display: block;
+    font-size: 18px;
+    font-weight: normal;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    margin-left: -10px;
+}
+
+.form-container label[for="id_starting_article_id"],
+.form-container label[for="id_ending_article_id"] {
+    display: inline-block;
+    margin-top: 3px;
+    margin-bottom: 0px;
+    margin-left: 5px;
+    font-size: 14px;
+    line-height: 4px;
+}
+
+.form-container #id_starting_article_id {
+    margin-bottom: 0px;
+}
+
+.form-container #id_starting_article_id,
+.form-container #id_ending_article_id {
+    margin-left: 10px;
+    font-size: 11px;
+    line-height: 4px;
+}
+
+.form-selector,
+.form-container input,
+.form-container textarea,
+.form-container select {
     margin-left: 10px;
     margin-bottom: 10px;
 }
 
-.form-hint {
+.form-hint,
+.form-container .helptext {
+    display: block;
     margin-left: 10px;
     margin-bottom: 5px;
     font-size: 12px;
@@ -208,16 +247,6 @@ select#id_topics {
 
 option {
     margin: 2px 0px;
-}
-
-.article-id-selector {
-    margin-left: 5px;
-    font-size: 11px;
-    line-height: 4px;
-}
-
-span.nlp-hints-label {
-    margin-left: 5px;
 }
 
 button.submit {

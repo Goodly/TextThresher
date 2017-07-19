@@ -1,0 +1,30 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} Create a TextThresher Project {% endblock %}
+{% block content %}
+  <div class="content-container">
+    <h1 class="main-label">
+      Create a TextThresher Project
+    </h1>
+
+    <div class="main-container">
+      <form
+        action="{% url 'researcher:create_project' %}"
+        method="post">
+        <div class="page-description">
+          <div class="description-text">
+            Configure tasks for this project
+          </div>
+        </div>
+
+        <div class="form-container">
+          {{ form.as_p }}
+        </div>
+
+        {% csrf_token %}
+        <button type="submit" class="submit">
+          Create TextThresher Project
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

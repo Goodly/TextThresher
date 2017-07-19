@@ -49,25 +49,46 @@ TASK_TYPE = (
 )
 
 class Project(models.Model):
-    # max_length matches Pybossa db
+    # currently owner_profile used to obtain default remote url and api key
     owner_profile = models.ForeignKey(UserProfile, related_name="projects",
                                       on_delete=models.PROTECT)
+    pybossa_url = models.CharField(blank=True, max_length=200, default="")
+    # UUID format is 36 chars including hyphens
+    pybossa_api_key = models.CharField(blank=True, max_length=36, default="")
+
+    # following fields used to configure remote project
+    # max_length matches Pybossa db
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
-    instructions = models.TextField()
+    description = models.TextField()
     task_type = models.CharField(max_length=4,
                                  choices=TASK_TYPE, default="HLTR")
-    # following fields are empty/null unless remote Pybossa project has been created
-    pybossa_url = models.CharField(blank=True, max_length=200, default="")
+    task_config = JSONField(default={})
+    pybossa_project_password = models.CharField(blank=True, max_length=36, default="")
+
+    # following fields are obtained from Pybossa after project created on Pybossa
     pybossa_id = models.IntegerField(null=True)
     pybossa_owner_id = models.IntegerField(null=True)
     # UUID format is 36 chars including hyphens
     pybossa_secret_key = models.CharField(blank=True, max_length=36, default="")
     pybossa_created = models.DateTimeField(null=True)
-    pybossa_project_password = models.CharField(blank=True, max_length=36, default="")
+
+    class Meta:
+        unique_together = (
+            ("name", "pybossa_url"),
+            ("short_name", "pybossa_url"),
+        )
 
     def __unicode__(self):
         return "id %d: %s" % (self.id, self.name)
+
+    def get_local_edit_URL(self):
+        """ Return a link to the local page to edit the project."""
+        return reverse('researcher:edit_project', kwargs={"pk": self.id})
+
+    def get_add_tasks_URL(self):
+        """ Return a link to the local page to edit the project."""
+        return reverse('researcher:add_project_tasks', kwargs={"pk": self.id})
 
     def join_remote_base_URL(self, urlpath):
         if self.pybossa_url is None:

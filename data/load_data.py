@@ -25,7 +25,7 @@ from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 from data.parse_schema_v2 import parse_schema as parse_schema_v2
 
-from thresher.models import (Project, Article, Topic, HighlightGroup,
+from thresher.models import (Article, Topic, HighlightGroup,
                              ArticleHighlight, Question, Answer)
 
 ANALYSIS_TYPES = {}
@@ -320,8 +320,6 @@ if __name__ == '__main__':
     init_defaults.createSuperUser()
     researchers = init_defaults.createThresherGroup()
     created_by = init_defaults.createNick(groups=[researchers])
-    init_defaults.createHighlighterProject(created_by)
-    init_defaults.createQuizProject(created_by)
     args = load_args()
     if args.schema_dir:
         print "Loading schemas in version 1 format"

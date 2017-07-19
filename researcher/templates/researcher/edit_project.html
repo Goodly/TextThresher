@@ -1,0 +1,30 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} Update a TextThresher Project {% endblock %}
+{% block content %}
+  <div class="content-container">
+    <h1 class="main-label">
+      Update a TextThresher Project
+    </h1>
+
+    <div class="main-container">
+      <form
+        action="{% url 'researcher:edit_project' project.id %}"
+        method="post">
+        <div class="page-description">
+          <div class="description-text">
+            Edit the task name and description, and configuration
+          </div>
+        </div>
+
+        <div class="form-container">
+          {{ form.as_p }}
+        </div>
+
+        {% csrf_token %}
+        <button type="submit" class="submit">
+          Update TextThresher Project
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
