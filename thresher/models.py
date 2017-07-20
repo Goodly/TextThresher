@@ -99,9 +99,9 @@ class Project(models.Model):
         else:
             return urljoin(self.pybossa_url, urlpath)
 
-    def get_remote_URL(self):
+    def get_remote_project_settings_URL(self):
         """ Return a link to the remote Pybossa project if it has been created."""
-        return self.join_remote_base_URL("project/%s/" % (self.short_name))
+        return self.join_remote_base_URL("project/%s/settings" % (self.short_name))
 
     def get_local_task_retrieval_URL(self):
         """ Return a link to the local page to start retrieval of task runs."""
