@@ -1,9 +1,9 @@
 {% extends parent_template|default:"researcher/base.html" %}
-{% block title %} Add tasks to a TextThresher Project {% endblock %}
+{% block title %} {{ page_title }} {% endblock %}
 {% block content %}
   <div class="content-container">
     <h1 class="main-label">
-      Add tasks to a TextThresher Project
+      {{ page_title }}
     </h1>
 
     <div class="main-container">
@@ -12,11 +12,26 @@
         method="post">
         <div class="page-description">
           <div class="description-text">
-            Add tasks to: {{ project.name }}
+            {{ action_desc }} {{ project.name }}
             <br>
             Task type: {{ project.task_type }}
             <br>
             On server: {{ project.pybossa_url }}
+            <br>
+            Topics selected:
+            <ul>
+            {% for topic in topics %}
+              <li class="topic-name">
+                {{ topic.name }}
+              </li>
+            {% empty %}
+              <div class="nothing-label">
+                Did not find the topics for this project.
+                <br>
+                That's not right.
+              </div>
+            {% endfor %}
+            </ul>
           </div>
         </div>
 
@@ -26,7 +41,7 @@
 
         {% csrf_token %}
         <button type="submit" class="submit">
-          Add Tasks
+          {{ submit_button }}
         </button>
       </form>
     </div>
