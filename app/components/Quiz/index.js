@@ -151,7 +151,7 @@ export class Quiz extends Component {
     window.addEventListener('scroll', this.handleScroll);
     var steps = [
       {
-        'element': '.highlights',
+        'element': '.quiz-introjs',
         'intro': 'Thank you for joining the project! Before you begin, read through the text provided. Focus in particular on the bold text -- you’ll be answering questions about it later.',
         'position': 'auto',
       },
@@ -161,7 +161,7 @@ export class Quiz extends Component {
         'position': 'left',
       },
       {
-        'element': '.highlights',
+        'element': '.quiz-introjs',
         'intro': 'Please highlight all relevant words and phrases of the text that justify your answer -- make sure to include every piece of the text which support the answer you chose. When you’ve finished highlighting all relevant text to justify your answer, please check your work, then press "Next" to move onto the next question.',
         'position': 'right',
       },
@@ -181,7 +181,7 @@ export class Quiz extends Component {
     this.intro.start();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     this.intro.refresh();
   }
 
@@ -369,16 +369,17 @@ export class Quiz extends Component {
   handleScroll() {
     let navbar = document.querySelector('.navbar');
     let footer = document.querySelector('footer');
-    let highlights = document.querySelector('.highlights');
+    let highlights = document.querySelector('.quiz-highlighter');
     let getRect = (el) => el.getBoundingClientRect();
+    let navbarBottom = getRect(navbar).bottom;
     let footerTop = getRect(footer).top;
 
-    // Check if topic picker should start scrolling
-    if (footerTop - 1 < getRect(highlights).bottom) {
+    // Check if article should start scrolling up to make room
+    if (getRect(highlights).bottom > footerTop) {
       this.setState({ highlightsStyle: 'highlights-absolute'});
     };
-    // Check if topic picker should stop scrolling
-    if (getRect(highlights).top > getRect(navbar).height) {
+    // Check if article is done scrolling back down
+    if (getRect(highlights).top > navbarBottom) {
       this.setState({ highlightsStyle: 'highlights-fixed'});
     };
   }
@@ -397,25 +398,16 @@ export class Quiz extends Component {
                              Save and Next
                            </button>;
     };
-    // var highlighter_container = {
-    //   "position": "fixed",
-    //   "left": "15px",
-    //   "width": "450px",
-    // };
-    var answer_container = {
-      "marginLeft": "450px",
-      "paddingLeft": "15px"
-    }
 
     return (
       <div className="quiz clearfix" >
-        <div className={`highlights ${this.state.highlightsStyle}`}>
-          <div className="quizHighlighter">
+        <div className="quiz-introjs">
+          <div className={`quiz-highlighter ${this.state.highlightsStyle}`}>
             { this.displayHighlighter(topic_highlights) }
           </div>
         </div> 
 
-        <div className="quiz-questions" style={answer_container}>
+        <div className="quiz-questions">
           { question_list }
           { saveAndNextButton }
         </div>

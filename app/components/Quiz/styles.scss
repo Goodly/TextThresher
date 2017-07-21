@@ -9,7 +9,7 @@
   margin-right: auto;
   padding-top: 15px;
   padding-bottom: 15px;
-  min-height: 700px;
+  min-height: 450px;
 
   &__next {
     margin-top: 20px;
@@ -39,30 +39,36 @@
   }
 }
 
-
-.highlights {
-  left: 15px;
+// Need this wrapper for introJS to annotate. Things blow up if
+// introJS tries to annotate the position: fixed class below.
+.quiz-introjs {
+  float: left;
   width: 450px;
+  height: 450px;
 }
 
+.quiz-highlighter {
+  line-height: 2.2;
+  width: 450px;
+  height: 450px;
+  overflow: auto;
+}
 
-// change to 'static' until bug in event listener found
-// position: 'fixed' when scroll testing for footer bump
+// onScroll starting style for highlighter is fixed to viewport
 .highlights-fixed {
-  position: static;
-  float: left;
+  position: fixed;
   bottom: auto;
 }
 
+// onScroll style for when footer needs to push article up
 .highlights-absolute {
-  left: -30px;
   position: absolute;
-  top: auto;
   bottom: 0px;
 }
 
-.quizHighlighter {
-  line-height: 2.2
+.quiz-questions {
+  margin-left: 450px;
+  padding-left: 15px;
 }
 
 .prompt {
