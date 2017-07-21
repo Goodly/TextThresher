@@ -84,6 +84,9 @@ def create_or_update_remote_project_worker(project_id,
         result['info']['task_presenter'] = ""
         return result
     else:
+        # if there is an error on initial creation, don't keep local record
+        if not project.pybossa_id:
+            project.delete()
         # our large task_presenter is embedded in the exception_msg,
         # so truncate the message
         result['exception_msg'] = result['exception_msg'][:256]

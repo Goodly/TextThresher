@@ -1,0 +1,49 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} {{ page_title }} {% endblock %}
+{% block content %}
+  <div class="content-container">
+    <h1 class="main-label">
+      {{ page_title }}
+    </h1>
+
+    <div class="main-container">
+      <form
+        action="{{ form_action }}"
+        method="post">
+        <div class="page-description">
+          <div class="description-text">
+            {{ action_desc }} {{ project.name }}
+            <br>
+            Task type: {{ project.task_type }}
+            <br>
+            On server: {{ project.pybossa_url }}
+            <br>
+            Topics selected:
+            <ul>
+            {% for topic in topics %}
+              <li class="topic-name">
+                {{ topic.name }}
+              </li>
+            {% empty %}
+              <div class="nothing-label">
+                Did not find the topics for this project.
+                <br>
+                That's not right.
+              </div>
+            {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <div class="form-container">
+          {{ form.as_p }}
+        </div>
+
+        {% csrf_token %}
+        <button type="submit" class="submit">
+          {{ submit_button }}
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

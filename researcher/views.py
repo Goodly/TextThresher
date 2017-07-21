@@ -269,7 +269,7 @@ class CreateProjectView(PermissionRequiredMixin, View):
 
 
 class EditProjectView(PermissionRequiredMixin, UpdateView):
-    template_name = 'researcher/edit_project.html'
+    template_name = 'researcher/generic_project_update.html'
     queryset = Project.objects.all()
     login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
@@ -291,8 +291,23 @@ class EditProjectView(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditProjectView, self).get_context_data(**kwargs)
+        project = self.get_object()
+        topic_ids = project.task_config['topic_ids']
+        topics = Topic.objects.filter(id__in=topic_ids)
+        if len(topics) != len(topic_ids):
+            found_topic_ids = topics.values_list('id', flat=True)
+            errMsg = "Only found topics {}, looking for {}.".format(found_topic_ids, topic_ids)
+            logger.error(errMsg)
+        # The Django UpdateView GCBV automatically adds the 'project' to the context
+        # by inferring it from the queryset and kwargs['pk']
         context.update({
             'user': self.request.user,
+            'topics': topics,
+            'page_title': "Update TextThresher Project",
+            'action_desc': "Update project:",
+            'form_action': reverse('researcher:edit_project',
+                                   kwargs={'pk': project.id}),
+            'submit_button': "Update Project",
         })
         return context
 
@@ -323,7 +338,7 @@ class EditProjectView(PermissionRequiredMixin, UpdateView):
 
 
 class AddTasksView(PermissionRequiredMixin, FormView):
-    template_name = 'researcher/add_project_tasks.html'
+    template_name = 'researcher/generic_project_update.html'
     form_class = AddTasksForm
     login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
@@ -349,8 +364,20 @@ class AddTasksView(PermissionRequiredMixin, FormView):
         context = super(AddTasksView, self).get_context_data(**kwargs)
         project_id = self.kwargs['pk']
         project = Project.objects.get(pk=project_id)
+        topic_ids = project.task_config['topic_ids']
+        topics = Topic.objects.filter(id__in=topic_ids)
+        if len(topics) != len(topic_ids):
+            found_topic_ids = topics.values_list('id', flat=True)
+            errMsg = "Only found topics {}, looking for {}.".format(found_topic_ids, topic_ids)
+            logger.error(errMsg)
         context.update({
             'project': project,
+            'topics': topics,
+            'page_title': "Add tasks to a TextThresher Project",
+            'action_desc': "Add tasks to:",
+            'form_action': reverse('researcher:add_project_tasks',
+                                   kwargs={'pk': project.id}),
+            'submit_button': "Add Tasks",
         })
         return context
 
@@ -401,7 +428,7 @@ class RetrieveTaskrunsView(PermissionRequiredMixin, View):
 
     def post(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
-        job = generate_get_taskruns_worker.delay(request.user.userprofile.id, project.id)
+        job = generate_get_taskruns_worker.delay(project.id)
         return redirect(reverse('rq_home'))
 
 
