@@ -428,7 +428,7 @@ class RetrieveTaskrunsView(PermissionRequiredMixin, View):
 
     def post(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
-        job = generate_get_taskruns_worker.delay(request.user.userprofile.id, project.id)
+        job = generate_get_taskruns_worker.delay(project.id)
         return redirect(reverse('rq_home'))
 
 
