@@ -305,6 +305,8 @@ class EditProjectView(PermissionRequiredMixin, UpdateView):
             'topics': topics,
             'page_title': "Update TextThresher Project",
             'action_desc': "Update project:",
+            'form_action': reverse('researcher:edit_project',
+                                   kwargs={'pk': project.id}),
             'submit_button': "Update Project",
         })
         return context
@@ -373,6 +375,8 @@ class AddTasksView(PermissionRequiredMixin, FormView):
             'topics': topics,
             'page_title': "Add tasks to a TextThresher Project",
             'action_desc': "Add tasks to:",
+            'form_action': reverse('researcher:add_project_tasks',
+                                   kwargs={'pk': project.id}),
             'submit_button': "Add Tasks",
         })
         return context
