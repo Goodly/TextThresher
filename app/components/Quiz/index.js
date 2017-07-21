@@ -151,7 +151,7 @@ export class Quiz extends Component {
     window.addEventListener('scroll', this.handleScroll);
     var steps = [
       {
-        'element': '.quiz-highlighter',
+        'element': '.quiz-introjs',
         'intro': 'Thank you for joining the project! Before you begin, read through the text provided. Focus in particular on the bold text -- you’ll be answering questions about it later.',
         'position': 'auto',
       },
@@ -161,7 +161,7 @@ export class Quiz extends Component {
         'position': 'left',
       },
       {
-        'element': '.quiz-highlighter',
+        'element': '.quiz-introjs',
         'intro': 'Please highlight all relevant words and phrases of the text that justify your answer -- make sure to include every piece of the text which support the answer you chose. When you’ve finished highlighting all relevant text to justify your answer, please check your work, then press "Next" to move onto the next question.',
         'position': 'right',
       },
@@ -401,8 +401,10 @@ export class Quiz extends Component {
 
     return (
       <div className="quiz clearfix" >
-        <div className={`quiz-highlighter ${this.state.highlightsStyle}`}>
-          { this.displayHighlighter(topic_highlights) }
+        <div className="quiz-introjs">
+          <div className={`quiz-highlighter ${this.state.highlightsStyle}`}>
+            { this.displayHighlighter(topic_highlights) }
+          </div>
         </div> 
 
         <div className="quiz-questions">

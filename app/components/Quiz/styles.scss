@@ -39,6 +39,13 @@
   }
 }
 
+// Need this wrapper for introJS to annotate. Things blow up if
+// introJS tries to annotate the position: fixed class below.
+.quiz-introjs {
+  float: left;
+  width: 450px;
+  height: 450px;
+}
 
 .quiz-highlighter {
   line-height: 2.2;
