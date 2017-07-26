@@ -54,7 +54,7 @@ export default function runPybossaTasks(container) {
       container.storeTask(task, onSaveAndNext);
     } else {
       // No more tasks
-      container.storeTask(task, ()=>{} );
+      container.storeTask(null, ()=>{} );
     }
   });
 

@@ -75,10 +75,14 @@ export class RealHighlighter extends TopicHighlighter {
 
   storeTask(task, onSaveAndNext) {
     super.storeTask(task, onSaveAndNext);
-    this.props.storeProject(task.info.project);
-    this.props.storeTopics(task.info.topics);
-    this.props.storeArticle(task.info.article);
-    this.props.storeSaveAndNext(onSaveAndNext);
+    if (task !== null) {
+      this.props.storeProject(task.info.project);
+      this.props.storeTopics(task.info.topics);
+      this.props.storeArticle(task.info.article);
+      this.props.storeSaveAndNext(onSaveAndNext);
+    } else {
+        // Set redux to DONE mode or navigate to a DONE url
+    };
   }
 
   storeProgress(data) {

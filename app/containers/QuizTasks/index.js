@@ -13,7 +13,7 @@ import * as quizTaskActions from 'actions/djangoQuiz';
 
 // Function to start MockQuiz data loading cycle
 import fetchDjangoQuiz from 'django/quiz';
-// Function to start RealQuiz data loading cycle
+// Function to start loading tasks from Pybossa server
 import runPybossaTasks from 'pybossa/pybossa';
 
 const assembledActionCreators = Object.assign(
@@ -79,9 +79,13 @@ export class RealQuiz extends Quiz {
 
   storeTask(task, onSaveAndNext) {
     super.storeTask(task, onSaveAndNext);
-    this.props.storeProject(task.info.project);
-    this.props.storeQuizTask(task.info);
-    this.props.storeSaveAndNext(onSaveAndNext);
+    if (task !== null) {
+      this.props.storeProject(task.info.project);
+      this.props.storeQuizTask(task.info);
+      this.props.storeSaveAndNext(onSaveAndNext);
+    } else {
+      // Set redux to DONE mode or navigate to a DONE url
+    };
   }
 
   storeProgress(data) {
