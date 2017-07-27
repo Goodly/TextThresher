@@ -81,7 +81,7 @@ export class RealQuiz extends Quiz {
   }
 
   storeTask(task, onSaveAndNext) {
-    super.storeTask(task, onSaveAndNext);
+//    super.storeTask(task, onSaveAndNext);
     if (task !== null) {
       this.props.storeTask(task);
       this.props.storeSaveAndNext(onSaveAndNext);
@@ -94,7 +94,7 @@ export class RealQuiz extends Quiz {
   }
 
   storeProgress(data) {
-    super.storeProgress(data);
+//    super.storeProgress(data);
     this.props.storeProgress(data);
   }
 };

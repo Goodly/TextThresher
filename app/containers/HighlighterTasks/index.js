@@ -78,7 +78,7 @@ export class RealHighlighter extends TopicHighlighter {
   }
 
   storeTask(task, onSaveAndNext) {
-    super.storeTask(task, onSaveAndNext);
+//    super.storeTask(task, onSaveAndNext);
     if (task !== null) {
       this.props.storeTask(task);
       this.props.storeSaveAndNext(onSaveAndNext);
@@ -92,7 +92,7 @@ export class RealHighlighter extends TopicHighlighter {
   }
 
   storeProgress(data) {
-    super.storeProgress(data);
+//    super.storeProgress(data);
     this.props.storeProgress(data);
   }
 };
