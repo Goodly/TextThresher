@@ -206,8 +206,6 @@ export function quiz(state = initialState, action) {
         review: false
       }
     }
-    case 'FETCH_QUESTION':
-      return Object.assign({}, initialState, { isFetching: true });
     case 'FETCH_TASK_SUCCESS': {
       addSubtopicQuestion(action.task);
       sortQuestionsByNumber(action.task.topictree)

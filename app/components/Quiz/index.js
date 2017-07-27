@@ -385,7 +385,7 @@ export class Quiz extends Component {
   }
 
   render() {
-    if(this.props.done) {
+    if (this.props.done) {
       return <div>Thank you for contributing to the project!</div>
     }
 
