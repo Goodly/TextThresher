@@ -1,6 +1,6 @@
 const initialState = {
   name : "",
-  instructions : ""
+  description : ""
 };
 
 
@@ -10,7 +10,7 @@ export function project(state = initialState, action) {
     return {
       ...state,
       name: action.response.results[0].name,
-      instructions: action.response.results[0].instructions 
+      description: action.response.results[0].description
     }
     
     default:

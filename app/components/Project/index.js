@@ -8,7 +8,7 @@ import * as projectActionCreators from 'actions/project';
 const mapStateToProps = state => {
   return {
     name: state.project.name,
-    instructions: state.project.instructions
+    description: state.project.description
   };
 }
 
@@ -16,15 +16,15 @@ const Project = React.createClass({
     displayName: 'Project',
     render() {
         var name = this.props.name;
-        var instructions = this.props.instructions;
+        var description = this.props.description;
 
         return (
             <div>
                 <h1 className="project_title">
                     {name}
                 </h1>
-                <h4 className="project_instruction">
-                    {instructions}
+                <h4 className="project_description">
+                    {description}
                 </h4>
             </div>
         );
