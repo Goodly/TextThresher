@@ -33,6 +33,7 @@ const mapStateToProps = state => {
     currentTopicId: state.topicPicker.currentTopicId,
     topics: state.topicPicker.topics,
     highlights: state.highlight.highlights,
+    task: state.task,
     saveAndNext: state.task.saveAndNext,
     done: state.task.done,
     djangoHighlightTasks: state.djangoHighlightTasks
@@ -79,10 +80,11 @@ export class RealHighlighter extends TopicHighlighter {
   storeTask(task, onSaveAndNext) {
     super.storeTask(task, onSaveAndNext);
     if (task !== null) {
+      this.props.storeTask(task);
+      this.props.storeSaveAndNext(onSaveAndNext);
       this.props.storeProject(task.info.project);
       this.props.storeTopics(task.info.topics);
       this.props.storeArticle(task.info.article);
-      this.props.storeSaveAndNext(onSaveAndNext);
     } else {
       // Set redux to DONE mode or navigate to a DONE url
       this.props.storeTasksDone();

@@ -38,6 +38,7 @@ const mapStateToProps = state => {
     review: state.quiz.review,
     djangoQuizTasks: state.djangoQuizTasks,
     highlights: state.highlight.highlights,
+    task: state.task,
     saveAndNext: state.task.saveAndNext,
     done: state.task.done,
   }
@@ -82,9 +83,10 @@ export class RealQuiz extends Quiz {
   storeTask(task, onSaveAndNext) {
     super.storeTask(task, onSaveAndNext);
     if (task !== null) {
+      this.props.storeTask(task);
+      this.props.storeSaveAndNext(onSaveAndNext);
       this.props.storeProject(task.info.project);
       this.props.storeQuizTask(task.info);
-      this.props.storeSaveAndNext(onSaveAndNext);
     } else {
       // Set redux to DONE mode or navigate to a DONE url
       this.props.storeTasksDone();
