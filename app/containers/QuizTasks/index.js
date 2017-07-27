@@ -7,6 +7,7 @@ import { Quiz } from 'components/Quiz';
 import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
 import * as highlightActions from 'actions/highlight';
+import * as taskActions from 'actions/task';
 
 // These actions are only used on MockHighlighter, to store tasks from Django
 import * as quizTaskActions from 'actions/djangoQuiz';
@@ -19,7 +20,8 @@ import runPybossaTasks from 'pybossa/pybossa';
 const assembledActionCreators = Object.assign(
   { storeProject },
   quizActions,
-  highlightActions
+  highlightActions,
+  taskActions
 );
 
 // djangoQuizTasks only used by MockHighlighter
@@ -33,11 +35,11 @@ const mapStateToProps = state => {
     answer_id: state.quiz.curr_answer_id,
     answer_selected: state.quiz.answer_selected,
     answer_colors: state.quiz.answer_colors,
-    saveAndNext: state.quiz.saveAndNext,
     review: state.quiz.review,
     djangoQuizTasks: state.djangoQuizTasks,
-    done: state.quiz.done,
     highlights: state.highlight.highlights,
+    saveAndNext: state.task.saveAndNext,
+    done: state.task.done,
   }
 };
 
@@ -85,6 +87,7 @@ export class RealQuiz extends Quiz {
       this.props.storeSaveAndNext(onSaveAndNext);
     } else {
       // Set redux to DONE mode or navigate to a DONE url
+      this.props.storeTasksDone();
     };
   }
 

@@ -8,6 +8,7 @@ import { storeProject } from 'actions/project';
 import * as articleActions from 'actions/article';
 import * as topicActions from 'actions/topicPicker';
 import * as highlightActions from 'actions/highlight';
+import * as taskActions from 'actions/task';
 
 // These actions are only used on MockHighlighter, to store tasks from Django
 import * as highlightTaskActions from 'actions/djangoHighlights';
@@ -21,17 +22,19 @@ const assembledActionCreators = Object.assign(
     { storeProject },
     articleActions,
     topicActions,
-    highlightActions
+    highlightActions,
+    taskActions
 );
 
 // djangoHighlightTasks only used by MockHighlighter
 const mapStateToProps = state => {
   return {
     article: state.article.article,
-    saveAndNext: state.article.saveAndNext,
     currentTopicId: state.topicPicker.currentTopicId,
     topics: state.topicPicker.topics,
     highlights: state.highlight.highlights,
+    saveAndNext: state.task.saveAndNext,
+    done: state.task.done,
     djangoHighlightTasks: state.djangoHighlightTasks
   };
 }
@@ -81,7 +84,8 @@ export class RealHighlighter extends TopicHighlighter {
       this.props.storeArticle(task.info.article);
       this.props.storeSaveAndNext(onSaveAndNext);
     } else {
-        // Set redux to DONE mode or navigate to a DONE url
+      // Set redux to DONE mode or navigate to a DONE url
+      this.props.storeTasksDone();
     };
   }
 
