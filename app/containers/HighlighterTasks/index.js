@@ -93,5 +93,6 @@ export class RealHighlighter extends TopicHighlighter {
 
   storeProgress(data) {
     super.storeProgress(data);
+    this.props.storeProgress(data);
   }
 };

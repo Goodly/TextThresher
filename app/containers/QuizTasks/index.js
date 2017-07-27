@@ -95,6 +95,6 @@ export class RealQuiz extends Quiz {
 
   storeProgress(data) {
     super.storeProgress(data);
+    this.props.storeProgress(data);
   }
-
 };
