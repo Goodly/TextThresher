@@ -384,8 +384,11 @@ export class Quiz extends Component {
     if (getRect(highlighter).bottom >= footerTop) {
       this.setState({ highlightsStyle: 'highlights-absolute'});
     };
+    let quizBounds = document.querySelector('.quiz');
+    let computedStyle = window.getComputedStyle(quizBounds, null);
+    let spaceUnderHeader = parseInt(computedStyle.getPropertyValue("padding-top"), 10);
     // Check if article should stop scrolling back down
-    if (getRect(highlighter).top > getRect(navbar).bottom) {
+    if (getRect(highlighter).top > getRect(navbar).bottom + spaceUnderHeader) {
       this.setState({ highlightsStyle: 'highlights-fixed'});
     };
   }
