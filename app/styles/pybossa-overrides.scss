@@ -1,0 +1,12 @@
+// Override Pybossa theme - only load this on Pybossa pages
+
+// Hide Pybossa provided link to project and word "Contribute"
+// Be careful not to affect footer which also uses 'container' class.
+.container h1 {
+  display: none
+}
+
+// Get rid of footer margin for our footer scroll bump to work smoothly.
+footer {
+  margin-top: 0px !important;
+}
