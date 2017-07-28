@@ -4,10 +4,3 @@ export function storeArticle(article) {
     response: article
   };
 }
-
-export function storeSaveAndNext(saveAndNext) {
-  return {
-    type: 'POST_HIGHLIGHTS_CALLBACK',
-    saveAndNext: saveAndNext
-  };
-}

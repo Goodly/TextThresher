@@ -32,9 +32,7 @@ const initialState = {
   curr_answer_id: -100,
   answer_selected: ImmutableMap(),
   answer_colors: ImmutableMap(),
-  saveAndNext: null,
   review: false,
-  done: false,
 };
 
 // Currently there is always a root topic with one or more sub-topics.
@@ -208,8 +206,6 @@ export function quiz(state = initialState, action) {
         review: false
       }
     }
-    case 'FETCH_QUESTION':
-      return Object.assign({}, initialState, { isFetching: true });
     case 'FETCH_TASK_SUCCESS': {
       addSubtopicQuestion(action.task);
       sortQuestionsByNumber(action.task.topictree)
@@ -235,7 +231,6 @@ export function quiz(state = initialState, action) {
         answer_selected,
         answer_colors: ImmutableMap(),
         review: false,
-        done: false
       }
     }
     case 'ANSWER_SELECTED': {
@@ -287,11 +282,6 @@ export function quiz(state = initialState, action) {
         ...state,
         review: action.review
       }
-    case 'TASK_DONE':
-      return {
-        ...state,
-        done: true
-      }
     case 'UPDATE_ACTIVE_QUESTION': {
       // If the question is a single answer question like text or date,
       // then set the placeholder answer immediately to select a color.
@@ -329,11 +319,6 @@ export function quiz(state = initialState, action) {
         curr_answer_id
       };
     }
-    case 'POST_QUIZ_CALLBACK':
-      return {
-        ...state,
-        saveAndNext: action.saveAndNext
-      }
     default:
       return state;
   }

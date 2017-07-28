@@ -5,6 +5,7 @@ import { Map as ImmutableMap } from 'immutable';
 
 import Question from 'components/Question';
 import HighlightTool from 'components/HighlightTool';
+import Project from 'components/Project';
 
 import { styles } from './styles.scss';
 
@@ -385,7 +386,7 @@ export class Quiz extends Component {
   }
 
   render() {
-    if(this.props.done) {
+    if (this.props.done) {
       return <div>Thank you for contributing to the project!</div>
     }
 
@@ -400,16 +401,19 @@ export class Quiz extends Component {
     };
 
     return (
-      <div className="quiz clearfix" >
-        <div className="quiz-introjs">
-          <div className={`quiz-highlighter ${this.state.highlightsStyle}`}>
-            { this.displayHighlighter(topic_highlights) }
+      <div>
+        <Project />
+        <div className="quiz clearfix" >
+          <div className="quiz-introjs">
+            <div className={`quiz-highlighter ${this.state.highlightsStyle}`}>
+              { this.displayHighlighter(topic_highlights) }
+            </div>
           </div>
-        </div> 
 
-        <div className="quiz-questions">
-          { question_list }
-          { saveAndNextButton }
+          <div className="quiz-questions">
+            { question_list }
+            { saveAndNextButton }
+          </div>
         </div>
       </div>
     )

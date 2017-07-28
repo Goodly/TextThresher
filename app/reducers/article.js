@@ -2,7 +2,6 @@ const initialState = {
     article: {
       text: ""
     },
-    saveAndNext: null
 };
 
 export function article(state = initialState, action) {
@@ -11,11 +10,6 @@ export function article(state = initialState, action) {
       return {
         ...state,
         article: action.response
-      }
-    case 'POST_HIGHLIGHTS_CALLBACK':
-      return {
-        ...state,
-        saveAndNext: action.saveAndNext
       }
     default:
       return state;

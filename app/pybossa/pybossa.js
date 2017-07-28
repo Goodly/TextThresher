@@ -1,7 +1,7 @@
 // PybossaJS docs at http://pybossajs.readthedocs.io/en/latest/library.html
 
 // Key thing to understand is that runPybossaTasks is only run once
-// per task queue, NOT once per task.
+// on initial page load, NOT once per task.
 // However, runPybossaTask configures callback functions that run once
 // per task.
 // So functions provided to loadUserProgress, taskLoaded and presentTask
@@ -16,15 +16,14 @@ function getProjectName() {
   if (elements.length >= 3 && elements[1] === 'project') {
     return elements[2];
   } else {
-    return 'TextThresherQuiz';
+    return 'CantFindProjectInURL';
   }
 }
 
-export default function fetchPybossaQuiz(container) {
+export default function runPybossaTasks(container) {
   function loadUserProgress() {
     pybossa.userProgress(getProjectName()).done(function(data){
-      // Dispatch this info to the redux store for display
-      // storePercentComplete(data); #TODO
+      container.storeProgress(data);
     });
   }
 
@@ -40,26 +39,22 @@ export default function fetchPybossaQuiz(container) {
   });
 
   pybossa.presentTask(function(task, deferred) {
+    loadUserProgress();
     if ( !$.isEmptyObject(task) ) {
-      loadUserProgress();
-      // Update redux store with info
-      container.props.storeProject(task.info.project);
-      container.props.storeQuizTask(task.info);
-
       function onSaveAndNext(answers) {
         pybossa.saveTask(task.id, answers).done(function() {
           deferred.resolve(task);
         });
       };
-      // This is the tricky part. Each time we load a new task into
+      // Give task to container so it can update redux store
+      // onSaveAndNext is the tricky part. Each time we load a new task into
       // the store, we also provide this callback that the UI button
-      // can use to call the function above to save the data and trigger
+      // can use to call the function above to save the taskrun and trigger
       // loading the next task with the deferred.resolve(task) call.
-      container.props.storeSaveAndNext(onSaveAndNext);
+      container.storeTask(task, onSaveAndNext);
     } else {
-      // Displatch to store saying we are done with tasks
-      storeTasksDone(); 
-      container.props.storeSaveAndNext( ()=>{} );
+      // No more tasks
+      container.storeTask(null, ()=>{} );
     }
   });
 

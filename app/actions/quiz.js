@@ -27,12 +27,6 @@ export function storeQuizTask(task) {
   };
 }
 
-export function storeTasksDone() {
-  return {
-    type: 'TASK_DONE',
-  }
-}
-
 export function selectAnswer(question_type, question_id, answer_id, text) {
   return {
     type: 'ANSWER_SELECTED',
@@ -50,11 +44,4 @@ export function removeAnswer(question_type, question_id, answer_id) {
     question_id,
     answer_id
   }
-}
-
-export function storeSaveAndNext(saveAndNext) {
-  return {
-    type: 'POST_QUIZ_CALLBACK',
-    saveAndNext
-  };
 }

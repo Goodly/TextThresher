@@ -7,19 +7,21 @@ import { Quiz } from 'components/Quiz';
 import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
 import * as highlightActions from 'actions/highlight';
+import * as taskActions from 'actions/task';
 
 // These actions are only used on MockHighlighter, to store tasks from Django
 import * as quizTaskActions from 'actions/djangoQuiz';
 
 // Function to start MockQuiz data loading cycle
 import fetchDjangoQuiz from 'django/quiz';
-// Function to start RealQuiz data loading cycle
-import fetchPybossaQuiz from 'pybossa/quiz';
+// Function to start loading tasks from Pybossa server
+import runPybossaTasks from 'pybossa/pybossa';
 
 const assembledActionCreators = Object.assign(
   { storeProject },
   quizActions,
-  highlightActions
+  highlightActions,
+  taskActions
 );
 
 // djangoQuizTasks only used by MockHighlighter
@@ -33,11 +35,12 @@ const mapStateToProps = state => {
     answer_id: state.quiz.curr_answer_id,
     answer_selected: state.quiz.answer_selected,
     answer_colors: state.quiz.answer_colors,
-    saveAndNext: state.quiz.saveAndNext,
     review: state.quiz.review,
     djangoQuizTasks: state.djangoQuizTasks,
-    done: state.quiz.done,
     highlights: state.highlight.highlights,
+    task: state.task,
+    saveAndNext: state.task.saveAndNext,
+    done: state.task.done,
   }
 };
 
@@ -68,10 +71,30 @@ export class MockQuiz extends Quiz {
 export class RealQuiz extends Quiz {
   constructor(props) {
     super(props);
+    this.storeTask = this.storeTask.bind(this);
+    this.storeProgress = this.storeProgress.bind(this);
   }
 
   componentDidMount() {
     super.componentDidMount();
-    fetchPybossaQuiz(this);
+    runPybossaTasks(this);
+  }
+
+  storeTask(task, onSaveAndNext) {
+//    super.storeTask(task, onSaveAndNext);
+    if (task !== null) {
+      this.props.storeTask(task);
+      this.props.storeSaveAndNext(onSaveAndNext);
+      this.props.storeProject(task.info.project);
+      this.props.storeQuizTask(task.info);
+    } else {
+      // Set redux to DONE mode or navigate to a DONE url
+      this.props.storeTasksDone();
+    };
+  }
+
+  storeProgress(data) {
+//    super.storeProgress(data);
+    this.props.storeProgress(data);
   }
 };

@@ -121,10 +121,11 @@ export class TopicHighlighter extends Component {
   }
 
   render() {
-    // TODO: Detect if done
-    // return (<div>DONE</div>)
+    if (this.props.done) {
+      return <div>Thank you for contributing to the project!</div>
+    }
 
-    let loadingClass = this.props.article.isFetching ? 'loading' : '';
+    let loadingClass = this.props.djangoHighlightTasks.isFetching ? 'loading' : '';
 
     return (
       <ReactCSSTransitionsGroup transitionName='fadein'
