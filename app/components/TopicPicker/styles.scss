@@ -1,14 +1,11 @@
 @import 'app/styles/_mixins.scss';
 @import 'app/styles/_variables.scss';
 
-$topic-picker-nav-width: 25%;
-
 .topic-picker {
   width: 250px;
   background-color: $offblack;
   overflow: hidden;
   transition: background $transition-fast;
-  z-index: 10000000000;
 
   .topic-picker__header {
     background-color: $offwhite;

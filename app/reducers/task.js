@@ -1,7 +1,10 @@
 const initialState = {
   task: {},
   saveAndNext: () => {},
-  progress: {},
+  progress: {
+    done: 0,
+    total: 0
+  },
   done: false,
 };
 

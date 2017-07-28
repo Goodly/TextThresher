@@ -10,10 +10,9 @@
   margin-bottom: initial;
 }
 
+// This mixin is used by both Highlighter and Quiz tools for font consistency.
 @mixin newspaper {
-  // text-indent: 20px;
-  // Think about em-dashes and more spaces / automatic <p> creation
   white-space: pre-wrap;
-  line-height: 1.5;
+  line-height: 2.2;
   font-family: $font-newspaper;
 }

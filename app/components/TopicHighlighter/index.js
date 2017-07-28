@@ -16,8 +16,6 @@ import { introJs } from 'intro.js/intro.js';
 // so that we can apply the sass variable $pybossa-header-height
 // The second one gets a dynamic style since just need to change 'position'
 var scrollStyles = {
-  'topicFixed': 'topic-picker-fixed',
-  'topicAbsolute': 'topic-picker-absolute',
   'instrFixed': {
     position: 'fixed'
   },
@@ -30,9 +28,12 @@ export class TopicHighlighter extends Component {
   constructor(props) {
     super(props);
     this.handleScroll = this.handleScroll.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    this.intro = introJs();
     this.state = {
       instrStyle: scrollStyles.instrFixed,
-      topicStyle: scrollStyles.topicFixed
+      topicStyle: 'topic-picker-fixed'
     };
   }
 
@@ -40,7 +41,7 @@ export class TopicHighlighter extends Component {
     window.addEventListener('scroll', this.handleScroll);
     var steps = [
       {
-        'element': '#article-container',
+        'element': '#article-introjs',
         'intro': 'Thank you for joining the project! Before you start, skim through the text provided -- you\'ll sort it into different topics later.',
       },
       {
@@ -54,7 +55,7 @@ export class TopicHighlighter extends Component {
         'position': 'top',
       },
       {
-        'element': '#article-container',
+        'element': '#article-introjs',
         'intro': 'Then, we return to the article! Highlight the places in the article that fall into the first topic.',
         'position': 'left',
       },
@@ -64,7 +65,7 @@ export class TopicHighlighter extends Component {
         'position': 'right',
       },
       {
-        'element': '#article-container',
+        'element': '#article-introjs',
         'intro': 'Repeat this process for every remaining topic.',
         'position': 'left',
       },
@@ -75,9 +76,17 @@ export class TopicHighlighter extends Component {
       },
     ];
 
-    var intro = introJs();
-    intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5 });
-    intro.start();
+    this.intro.setOptions({
+      'steps': steps,
+      'overlayOpacity': 0.5,
+      'exitOnOverlayClick': false,
+      'disableInteraction': true,
+    });
+    this.intro.start();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    this.intro.refresh();
   }
 
   componentWillUnmount() {
@@ -94,13 +103,13 @@ export class TopicHighlighter extends Component {
     let getRect = (el) => el.getBoundingClientRect();
     let footerTop = getRect(footer).top;
 
-    // Check if topic picker should start scrolling
-    if (footerTop - 1 < getRect(topicPicker).bottom) {
-      this.setState({ topicStyle: scrollStyles.topicAbsolute});
+    // Check if topic picker should start scrolling up
+    if (getRect(topicPicker).bottom >= footerTop) {
+      this.setState({ topicStyle: 'topic-picker-absolute'});
     };
-    // Check if topic picker should stop scrolling
-    if (getRect(topicPicker).top > getRect(navbar).height) {
-      this.setState({ topicStyle: scrollStyles.topicFixed});
+    // Check if topic picker should stop scrolling back down
+    if (getRect(topicPicker).top > getRect(navbar).bottom) {
+      this.setState({ topicStyle: 'topic-picker-fixed' });
     };
 
     // Check if instructions block should start scrolling up
@@ -145,17 +154,15 @@ export class TopicHighlighter extends Component {
                                       transitionAppearTimeout={500}
                                       transitionEnterTimeout={500}
                                       transitionLeaveTimeout={500}>
-              <div className="article" key={this.props.article.articleId}>
+              <div className="highlighter-tool" key={this.props.article.articleId}>
                 <Project />
-                <div id='article-container'>
-
+                <div id='article-introjs'>
                   <HighlightTool
                     text={this.props.article.text}
                     topics={this.props.topics.results}
                     colors={colors}
                     currentTopicId={this.props.currentTopicId}
                   />
-                  
                 </div>
                 <button onClick={this.onSaveAndNext} className='save-and-next'>Save and Next</button>
               </div>

@@ -28,9 +28,7 @@ class TopicInstructionComponent extends Component {
   render() {
     var topicLookup = this.props.lookupTopicById[this.props.currentTopicId];
     var index = topicLookup[0];
-    var full_inst = topicLookup[1].instructions;
-    var instructions = full_inst.length > 500 ? full_inst.substring(0,500) + "..." : full_inst;
-
+    var instructions = topicLookup[1].instructions;
 
     var styles = {
         borderTop: 'solid',

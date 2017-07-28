@@ -1,15 +1,27 @@
 @import 'app/styles/_variables.scss';
+@import 'app/styles/_mixins.scss';
+
+$space-under-header: 20px;
+$space-above-footer: 20px;
+$article-min-height: 350px;
+$article-max-height: 550px;
+$left-col-width: 500px;
+$highlighter-help-text-height: 30px;
+
+.project-title {
+  margin-top: 0px;
+}
 
 .quiz {
-  // In case we need to position child highlighter_container 'absolute' on scroll
+  // Create stacking context for setting child quiz-highlighter to fixed
   position: relative;
   width: 90%;
   margin-bottom: 0px;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  min-height: 450px;
+  padding-top: $space-under-header;
+  padding-bottom: $space-above-footer;
+  min-height: $article-min-height;
 
   &__next {
     margin-top: 20px;
@@ -35,52 +47,56 @@
         font-style: italic;
       }
     }
-
   }
 }
 
-// Need this wrapper for introJS to annotate. Things blow up if
-// introJS tries to annotate the position: fixed class below.
+// Need this wrapper for introJS to annotate. Layout breaks if
+// introJS tries to annotate an element with position: fixed
 .quiz-introjs {
   float: left;
-  width: 450px;
-  height: 450px;
+  width: $left-col-width;
+  height: $article-max-height - $space-above-footer;
 }
 
 .quiz-highlighter {
-  line-height: 2.2;
-  width: 450px;
-  height: 450px;
-  overflow: auto;
+  width: $left-col-width;
+  min-height: $article-min-height;
+  max-height: $article-max-height;
+  padding-bottom: $space-above-footer;
+  height: 100%;
+
+  .highlighter-help-text {
+    height: $highlighter-help-text-height;
+  }
+
+  .article-click-box {
+    @include newspaper;
+    min-height: $article-min-height;
+    max-height: $article-max-height -
+                $highlighter-help-text-height -
+                $space-above-footer;
+    height: 100%;
+    overflow: auto;
+    border: 1px solid black;
+    padding: 1em;
+  }
 }
 
 // onScroll starting style for highlighter is fixed to viewport
 .highlights-fixed {
   position: fixed;
+  top: $pybossa-header-height + $space-under-header;
   bottom: auto;
 }
 
 // onScroll style for when footer needs to push article up
 .highlights-absolute {
   position: absolute;
+  top: auto;
   bottom: 0px;
 }
 
 .quiz-questions {
-  margin-left: 450px;
-  padding-left: 15px;
-}
-
-.prompt {
-  position: relative;
-  opacity: 0;
-  //top: 50px;
-  left: 30%;
-  margin-top: 25px;
-  text-align: center;
-  transition: opacity 1s ease;
-  &.active {
-    opacity: 1;
-  }
-
+  margin-left: $left-col-width;
+  padding-left: 30px;
 }

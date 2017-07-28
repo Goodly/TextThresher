@@ -178,7 +178,13 @@ export class Quiz extends Component {
       }
     ];
 
-    this.intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5, 'scrollToElement': true });
+    this.intro.setOptions({
+      'steps': steps,
+      'overlayOpacity': 0.5,
+      'scrollToElement': true,
+      'exitOnOverlayClick': false,
+      'disableInteraction': true,
+    });
     this.intro.start();
   }
 
@@ -370,17 +376,16 @@ export class Quiz extends Component {
   handleScroll() {
     let navbar = document.querySelector('.navbar');
     let footer = document.querySelector('footer');
-    let highlights = document.querySelector('.quiz-highlighter');
+    let highlighter = document.querySelector('.quiz-highlighter');
     let getRect = (el) => el.getBoundingClientRect();
-    let navbarBottom = getRect(navbar).bottom;
     let footerTop = getRect(footer).top;
 
-    // Check if article should start scrolling up to make room
-    if (getRect(highlights).bottom > footerTop) {
+    // Check if article should start scrolling up when footer collides
+    if (getRect(highlighter).bottom >= footerTop) {
       this.setState({ highlightsStyle: 'highlights-absolute'});
     };
-    // Check if article is done scrolling back down
-    if (getRect(highlights).top > navbarBottom) {
+    // Check if article should stop scrolling back down
+    if (getRect(highlighter).top > getRect(navbar).bottom) {
       this.setState({ highlightsStyle: 'highlights-fixed'});
     };
   }
@@ -401,21 +406,22 @@ export class Quiz extends Component {
     };
 
     return (
-      <div>
-        <Project />
         <div className="quiz clearfix" >
           <div className="quiz-introjs">
             <div className={`quiz-highlighter ${this.state.highlightsStyle}`}>
+              <div className="highlighter-help-text">
+                Look for answers in the bolded text.
+              </div>
               { this.displayHighlighter(topic_highlights) }
             </div>
           </div>
 
           <div className="quiz-questions">
+            <Project />
             { question_list }
             { saveAndNextButton }
           </div>
         </div>
-      </div>
     )
   }
 }

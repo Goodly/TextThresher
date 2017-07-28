@@ -5,6 +5,7 @@ import { render } from 'react-dom';
 
 import App from 'containers/App';
 import { RealHighlighter } from 'containers/HighlighterTasks';
+import { style } from 'styles/pybossa-overrides.scss';
 
 let elem = document.createElement('div');
 elem.id = ('react-root');
