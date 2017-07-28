@@ -28,6 +28,9 @@ export class TopicHighlighter extends Component {
   constructor(props) {
     super(props);
     this.handleScroll = this.handleScroll.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    this.intro = introJs();
     this.state = {
       instrStyle: scrollStyles.instrFixed,
       topicStyle: 'topic-picker-fixed'
@@ -73,9 +76,17 @@ export class TopicHighlighter extends Component {
       },
     ];
 
-    var intro = introJs();
-    intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5 });
-    intro.start();
+    this.intro.setOptions({
+      'steps': steps,
+      'overlayOpacity': 0.5,
+      'exitOnOverlayClick': false,
+      'disableInteraction': true,
+    });
+    this.intro.start();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    this.intro.refresh();
   }
 
   componentWillUnmount() {

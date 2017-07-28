@@ -178,7 +178,13 @@ export class Quiz extends Component {
       }
     ];
 
-    this.intro.setOptions({ 'steps': steps, 'overlayOpacity': 0.5, 'scrollToElement': true });
+    this.intro.setOptions({
+      'steps': steps,
+      'overlayOpacity': 0.5,
+      'scrollToElement': true,
+      'exitOnOverlayClick': false,
+      'disableInteraction': true,
+    });
     this.intro.start();
   }
 
