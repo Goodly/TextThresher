@@ -19,13 +19,11 @@ export function getUpdatedProject(storeProject) {
     (projectList) => {
       let project = projectList[0];
       if (project.info && project.info.task_presenter) {
-        // Remove multi-megabyte task presenter cause wasteful.
-        // Wish there was a way to retrieve the project info
-        // without the task_presenter field because this
-        // is a redundant network load of 3 to 5 MB.
+        // Remove possibly multi-megabyte task presenter cause don't
+        // need or want to see in debugger or Redux tools.
         project.info.task_presenter = '';
       };
-      storeProject(projectList[0]);
+      storeProject(project);
     }
   );
 }
