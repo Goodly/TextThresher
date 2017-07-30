@@ -6,6 +6,7 @@ import { colors } from 'utils/colors';
 import HighlightTool from 'components/HighlightTool';
 import { TopicPicker, TopicInstruction }  from 'components/TopicPicker';
 import Project from 'components/Project';
+import ThankYou from 'components/ThankYou';
 
 import { styles } from './styles.scss';
 
@@ -131,7 +132,7 @@ export class TopicHighlighter extends Component {
 
   render() {
     if (this.props.done) {
-      return <div>Thank you for contributing to the project!</div>
+      return <ThankYou />
     }
 
     let loadingClass = this.props.djangoHighlightTasks.isFetching ? 'loading' : '';

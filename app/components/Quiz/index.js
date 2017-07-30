@@ -6,6 +6,7 @@ import { Map as ImmutableMap } from 'immutable';
 import Question from 'components/Question';
 import HighlightTool from 'components/HighlightTool';
 import Project from 'components/Project';
+import ThankYou from 'components/ThankYou';
 
 import { styles } from './styles.scss';
 
@@ -395,7 +396,7 @@ export class Quiz extends Component {
 
   render() {
     if (this.props.done) {
-      return <div>Thank you for contributing to the project!</div>
+      return <ThankYou />
     }
 
     var topic_highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
