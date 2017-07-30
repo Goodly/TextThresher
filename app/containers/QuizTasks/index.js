@@ -16,6 +16,8 @@ import * as quizTaskActions from 'actions/djangoQuiz';
 import fetchDjangoQuiz from 'django/quiz';
 // Function to start loading tasks from Pybossa server
 import runPybossaTasks from 'pybossa/pybossa';
+// Function to fetch latest project fields instead of original task config
+import { getUpdatedProject } from 'pybossa/fetchproject';
 
 const assembledActionCreators = Object.assign(
   { storeProject },
@@ -78,14 +80,15 @@ export class RealQuiz extends Quiz {
   componentDidMount() {
     super.componentDidMount();
     runPybossaTasks(this);
+    getUpdatedProject(this.props.storeProject);
   }
 
   storeTask(task, onSaveAndNext) {
-//    super.storeTask(task, onSaveAndNext);
+    // super.storeTask(task, onSaveAndNext);
     if (task !== null) {
       this.props.storeTask(task);
       this.props.storeSaveAndNext(onSaveAndNext);
-      this.props.storeProject(task.info.project);
+      // this.props.storeProject(task.info.project);
       this.props.storeQuizTask(task.info);
     } else {
       // Set redux to DONE mode or navigate to a DONE url
@@ -94,7 +97,7 @@ export class RealQuiz extends Quiz {
   }
 
   storeProgress(data) {
-//    super.storeProgress(data);
+    // super.storeProgress(data);
     this.props.storeProgress(data);
   }
 };

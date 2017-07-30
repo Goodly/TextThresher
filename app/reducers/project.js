@@ -10,7 +10,8 @@ export function project(state = initialState, action) {
     return {
       ...state,
       name: action.response.results[0].name,
-      description: action.response.results[0].description
+      description: action.response.results[0].description,
+      long_description: action.response.results[0].long_description
     }
     
     default:
