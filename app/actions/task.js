@@ -1,14 +1,8 @@
-export function storeTask(task) {
+export function storeTask(task, saveAndNext) {
   return {
     type: 'SAVE_TASK',
-    task
-  };
-}
-
-export function storeSaveAndNext(saveAndNext) {
-  return {
-    type: 'SAVE_TASK_CALLBACK',
-    saveAndNext: saveAndNext
+    task,
+    saveAndNext,
   };
 }
 
@@ -21,6 +15,6 @@ export function storeProgress(progress) {
 
 export function storeTasksDone() {
   return {
-    type: 'TASK_DONE',
+    type: 'TASKS_DONE',
   }
 }

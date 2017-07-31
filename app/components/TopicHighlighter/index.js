@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 
 import { colors } from 'utils/colors';
 import HighlightTool from 'components/HighlightTool';
 import { TopicPicker, TopicInstruction }  from 'components/TopicPicker';
 import Project from 'components/Project';
+import ThankYou from 'components/ThankYou';
+import { displayStates } from 'components/displaystates';
 
 import { styles } from './styles.scss';
 
@@ -30,10 +31,13 @@ export class TopicHighlighter extends Component {
     this.handleScroll = this.handleScroll.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
+    this.restartTutorial = this.restartTutorial.bind(this);
     this.intro = introJs();
+    this.introStarted = false;
     this.state = {
       instrStyle: scrollStyles.instrFixed,
-      topicStyle: 'topic-picker-fixed'
+      topicStyle: 'topic-picker-fixed',
     };
   }
 
@@ -43,6 +47,7 @@ export class TopicHighlighter extends Component {
       {
         'element': '#article-introjs',
         'intro': 'Thank you for joining the project! Before you start, skim through the text provided -- you\'ll sort it into different topics later.',
+        'position': 'left',
       },
       {
         'element': '.topic-picker-wrapper',
@@ -82,15 +87,32 @@ export class TopicHighlighter extends Component {
       'exitOnOverlayClick': false,
       'disableInteraction': true,
     });
-    this.intro.start();
+    this.startTutorialOnTaskLoad();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.intro.refresh();
+    this.startTutorialOnTaskLoad();
+  }
+
+  startTutorialOnTaskLoad() {
+    if (this.props.displayState === displayStates.TASK_LOADED) {
+      if ( ! this.introStarted) {
+        this.intro.start();
+        this.introStarted = true;
+      } else {
+        this.intro.refresh();
+      };
+    }
+  }
+
+  restartTutorial() {
+    this.intro.start();
+    this.introStarted = true;
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    this.intro.exit();
   }
 
   // The idea here is to handle all the dynamic layout in this
@@ -130,46 +152,37 @@ export class TopicHighlighter extends Component {
   }
 
   render() {
-    if (this.props.done) {
-      return <div>Thank you for contributing to the project!</div>
+    if (this.props.displayState === displayStates.TASKS_DONE) {
+      return <ThankYou />
     }
 
-    let loadingClass = this.props.djangoHighlightTasks.isFetching ? 'loading' : '';
+    let loadingClass = this.props.displayState === displayStates.BEFORE_LOAD ? 'loading' : '';
 
     return (
-      <ReactCSSTransitionsGroup transitionName='fadein'
-                                transitionAppear
-                                transitionAppearTimeout={500}
-                                transitionEnterTimeout={500}
-                                transitionLeaveTimeout={500}>
-        <div className={loadingClass}></div>
-
+      <div className={loadingClass}>
         <div className='topic-highlighter-wrapper'>
-            <TopicPicker
-              topics={this.props.topics}
-              topicStyle={this.state.topicStyle}
-            />
-            <ReactCSSTransitionsGroup transitionName='fade-between'
-                                      transitionAppear
-                                      transitionAppearTimeout={500}
-                                      transitionEnterTimeout={500}
-                                      transitionLeaveTimeout={500}>
-              <div className="highlighter-tool" key={this.props.article.articleId}>
-                <Project />
-                <div id='article-introjs'>
-                  <HighlightTool
-                    text={this.props.article.text}
-                    topics={this.props.topics.results}
-                    colors={colors}
-                    currentTopicId={this.props.currentTopicId}
-                  />
-                </div>
-                <button onClick={this.onSaveAndNext} className='save-and-next'>Save and Next</button>
-              </div>
-            </ReactCSSTransitionsGroup>
-            <TopicInstruction instrStyle={this.state.instrStyle} />
+          <TopicPicker
+            topics={this.props.topics}
+            topicStyle={this.state.topicStyle}
+          />
+          <div className="highlighter-tool" key={this.props.article.articleId}>
+            <button onClick={this.restartTutorial} className='restart-introjs'>
+              Restart Tutorial
+            </button>
+            <Project />
+            <div id='article-introjs'>
+              <HighlightTool
+                text={this.props.article.text}
+                topics={this.props.topics.results}
+                colors={colors}
+                currentTopicId={this.props.currentTopicId}
+              />
+            </div>
+            <button onClick={this.onSaveAndNext} className='save-and-next'>Save and Next</button>
+          </div>
+          <TopicInstruction instrStyle={this.state.instrStyle} />
         </div>
-      </ReactCSSTransitionsGroup>
+      </div>
     );
   }
 };

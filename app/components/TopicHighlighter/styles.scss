@@ -24,17 +24,21 @@
 }
 
 .highlighter-tool {
-  @include newspaper;
   transition: opacity $transition-slow;
   margin-left: 275px;
   margin-right: 1em;
 
   .article-click-box {
+    @include newspaper;
     padding: 1em;
     border: 1px solid silver;
   }
 
-  button {
+  button.restart-introjs {
+    float: right;
+  }
+
+  button.save-and-next {
     margin: 2em;
   }
 }

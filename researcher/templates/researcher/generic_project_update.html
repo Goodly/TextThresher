@@ -38,7 +38,12 @@
         <div class="form-container">
           {{ form.as_p }}
         </div>
-
+        {% if presenter_will_be_updated %}
+          <div class="description-text">
+            Note: In addition to changes above (if any), the task presenter will
+            be updated to the version provided with this copy of TextThresher.
+          </div>
+        {% endif %}
         {% csrf_token %}
         <button type="submit" class="submit">
           {{ submit_button }}

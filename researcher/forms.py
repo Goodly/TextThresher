@@ -58,7 +58,7 @@ class CreateProjectForm(forms.Form):
                                  widget=TextInput(attrs={"size":30}))
 
     description = forms.CharField(required=True,
-                                  label="Long description",
+                                  label="Description",
                                   max_length=8000,
                                   help_text=help_for_desc,
                                   widget=Textarea(
@@ -110,7 +110,7 @@ class EditProjectForm(forms.ModelForm):
         label = {
             'name': "Project name",
             'short_name': "Short project name",
-            'description': "Long description"
+            'description': "Description"
         }
         widgets = {
             'name': TextInput(attrs={"size":60}),
