@@ -308,6 +308,7 @@ class EditProjectView(PermissionRequiredMixin, UpdateView):
             'form_action': reverse('researcher:edit_project',
                                    kwargs={'pk': project.id}),
             'submit_button': "Update Project",
+            'presenter_will_be_updated': True,
         })
         return context
 
@@ -378,6 +379,7 @@ class AddTasksView(PermissionRequiredMixin, FormView):
             'form_action': reverse('researcher:add_project_tasks',
                                    kwargs={'pk': project.id}),
             'submit_button': "Add Tasks",
+            'presenter_will_be_updated': False,
         })
         return context
 
