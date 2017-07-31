@@ -1,3 +1,5 @@
+import { displayStates } from 'components/displaystates';
+
 const initialState = {
   task: {},
   saveAndNext: () => {},
@@ -5,7 +7,7 @@ const initialState = {
     done: 0,
     total: 0
   },
-  done: false,
+  displayState: displayStates.BEFORE_LOAD,
 };
 
 export function task(state = initialState, action) {
@@ -13,25 +15,22 @@ export function task(state = initialState, action) {
     case 'SAVE_TASK':
       return {
         ...state,
-        info: action.info
-      }
-    case 'SAVE_TASK_CALLBACK':
-      return {
-        ...state,
-        saveAndNext: action.saveAndNext
+        info: action.info,
+        saveAndNext: action.saveAndNext,
+        displayState: displayStates.TASK_LOADED,
       }
     case 'TASK_PROGRESS':
       return {
         ...state,
         progress: action.progress
       }
-    case 'TASK_DONE':
-      // Don't reset progress stats!
+    case 'TASKS_DONE':
+      // Don't reset progress stats - displayed in ThankYou component.
       return {
         ...state,
         task: {},
         saveAndNext: () => {},
-        done: true
+        displayState: displayStates.TASKS_DONE,
       }
     default:
       return state;

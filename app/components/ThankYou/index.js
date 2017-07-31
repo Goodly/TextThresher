@@ -6,6 +6,7 @@ import { styles } from './styles.scss';
 const mapStateToProps = state => {
   return {
     name: state.project.name,
+    short_name: state.project.short_name,
     tasksCompleted: state.task.progress.done
   };
 }
@@ -13,17 +14,26 @@ const mapStateToProps = state => {
 const ThankYou = React.createClass({
   displayName: 'Project',
   render() {
-    let name = this.props.name;
-    let tasksCompleted = this.props.tasksCompleted;
+    const name = this.props.name;
+    const tasksCompleted = this.props.tasksCompleted;
+    const projectLink = "/project/" + this.props.short_name;
+    const blogLink = projectLink + "/blog";
+
+    let message = "You have completed the task for ";
+    if (tasksCompleted > 1) {
+      message = "You have completed all " + tasksCompleted + " tasks for ";
+    };
 
     return (
-      <div>
-        Thank you! You have completed all 
-        <span className="project-tasks-completed"> { tasksCompleted } </span>
-        tasks for
-        <span className="project-title"> {name} </span>!
+      <div className="thank-you">
+        { message }
+        <a href={ projectLink } className="project-title"> { name } </a>!
         <div>
-          We appreciate your assistance.
+         Thank you! We appreciate your assistance.
+        </div>
+        <div className="thank-you-suggestion">
+          You can check <a href={ blogLink }>{ name } blog</a> to find
+          updates and results for this project.
         </div>
       </div>
     );

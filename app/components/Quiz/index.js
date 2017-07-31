@@ -7,6 +7,7 @@ import Question from 'components/Question';
 import HighlightTool from 'components/HighlightTool';
 import Project from 'components/Project';
 import ThankYou from 'components/ThankYou';
+import { displayStates } from 'components/displaystates';
 
 import { styles } from './styles.scss';
 
@@ -128,7 +129,9 @@ export class Quiz extends Component {
     this.handleScroll = this.handleScroll.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
     this.intro = introJs();
+    this.introStarted = false;
     this.state = {
       highlightsStyle: 'highlights-fixed',
     };
@@ -186,15 +189,27 @@ export class Quiz extends Component {
       'exitOnOverlayClick': false,
       'disableInteraction': true,
     });
-    this.intro.start();
+    this.startTutorialOnTaskLoad();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.intro.refresh();
+    this.startTutorialOnTaskLoad();
+  }
+
+  startTutorialOnTaskLoad() {
+    if (this.props.displayState === displayStates.TASK_LOADED) {
+      if ( ! this.introStarted) {
+        this.intro.start();
+        this.introStarted = true;
+      } else {
+        this.intro.refresh();
+      };
+    }
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    this.intro.exit();
   }
 
   allQuestionsAnswered = () => {
@@ -395,7 +410,7 @@ export class Quiz extends Component {
   }
 
   render() {
-    if (this.props.done) {
+    if (this.props.displayState === displayStates.TASKS_DONE) {
       return <ThankYou />
     }
 

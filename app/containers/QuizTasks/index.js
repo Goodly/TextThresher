@@ -42,7 +42,7 @@ const mapStateToProps = state => {
     highlights: state.highlight.highlights,
     task: state.task,
     saveAndNext: state.task.saveAndNext,
-    done: state.task.done,
+    displayState: state.task.displayState,
   }
 };
 
@@ -86,9 +86,7 @@ export class RealQuiz extends Quiz {
   storeTask(task, onSaveAndNext) {
     // super.storeTask(task, onSaveAndNext);
     if (task !== null) {
-      this.props.storeTask(task);
-      this.props.storeSaveAndNext(onSaveAndNext);
-      // this.props.storeProject(task.info.project);
+      this.props.storeTask(task, onSaveAndNext);
       this.props.storeQuizTask(task.info);
     } else {
       // Set redux to DONE mode or navigate to a DONE url
