@@ -17,15 +17,20 @@ const Project = React.createClass({
     let name = this.props.name;
     let description = this.props.description;
     let tasksCompleted = this.props.tasksCompleted;
-    let progress = "You have not completed any tasks for this project yet.";
-    if ((tasksCompleted > 0) && (tasksCompleted < 4)) {
+    let progress = "Welcome!"
+    if (tasksCompleted === 0) {
+      progress = "Welcome! Click the tutorial button to the right " +
+                 "if you need to see the tuorial again.";
+    } else if (tasksCompleted === 1) {
+      progress = "You have completed your first task - nice!"
+    } else if ((tasksCompleted > 1) && (tasksCompleted < 4)) {
       progress = "You have completed " + tasksCompleted + " tasks."
     } else if (tasksCompleted < 10) {
-      progress = "You are getting the hang of this with " + tasksCompleted +
-      " tasks completed. Do you think you can do 10?";
+      progress = "You are doing well with " + tasksCompleted +
+      " tasks completed. Do you think you can complete 10?";
     } else if (tasksCompleted < 20) {
       progress = "You have completed " + tasksCompleted + " tasks. Thank you!"
-    } else {
+    } else if (tasksCompleted >= 20) {
       progress = "You are awesome! You have completed " + tasksCompleted +
       " tasks. Thank you very much for helping out so much!";
     }
