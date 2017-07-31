@@ -130,6 +130,7 @@ export class Quiz extends Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
+    this.restartTutorial = this.restartTutorial.bind(this);
     this.intro = introJs();
     this.introStarted = false;
     this.state = {
@@ -205,6 +206,11 @@ export class Quiz extends Component {
         this.intro.refresh();
       };
     }
+  }
+
+  restartTutorial() {
+    this.intro.start();
+    this.introStarted = true;
   }
 
   componentWillUnmount() {
@@ -419,7 +425,8 @@ export class Quiz extends Component {
 
     let saveAndNextButton =  <div/>;
     if (this.props.review && this.allQuestionsAnswered()) {
-      saveAndNextButton =  <button onClick={ this.onSaveAndNext }>
+      saveAndNextButton =  <button className="save-and-next"
+                                   onClick={ this.onSaveAndNext }>
                              Save and Next
                            </button>;
     };
@@ -436,6 +443,9 @@ export class Quiz extends Component {
           </div>
 
           <div className="quiz-questions">
+            <button onClick={this.restartTutorial} className='restart-introjs'>
+              Restart Tutorial
+            </button>
             <Project />
             { question_list }
             { saveAndNextButton }

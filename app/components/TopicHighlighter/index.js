@@ -32,6 +32,7 @@ export class TopicHighlighter extends Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
+    this.restartTutorial = this.restartTutorial.bind(this);
     this.intro = introJs();
     this.introStarted = false;
     this.state = {
@@ -46,6 +47,7 @@ export class TopicHighlighter extends Component {
       {
         'element': '#article-introjs',
         'intro': 'Thank you for joining the project! Before you start, skim through the text provided -- you\'ll sort it into different topics later.',
+        'position': 'left',
       },
       {
         'element': '.topic-picker-wrapper',
@@ -101,6 +103,11 @@ export class TopicHighlighter extends Component {
         this.intro.refresh();
       };
     }
+  }
+
+  restartTutorial() {
+    this.intro.start();
+    this.introStarted = true;
   }
 
   componentWillUnmount() {
@@ -159,6 +166,9 @@ export class TopicHighlighter extends Component {
             topicStyle={this.state.topicStyle}
           />
           <div className="highlighter-tool" key={this.props.article.articleId}>
+            <button onClick={this.restartTutorial} className='restart-introjs'>
+              Restart Tutorial
+            </button>
             <Project />
             <div id='article-introjs'>
               <HighlightTool

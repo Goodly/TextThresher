@@ -34,7 +34,11 @@
     border: 1px solid silver;
   }
 
-  button {
+  button.restart-introjs {
+    float: right;
+  }
+
+  button.save-and-next {
     margin: 2em;
   }
 }

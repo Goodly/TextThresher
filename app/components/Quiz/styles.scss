@@ -99,4 +99,12 @@ $highlighter-help-text-height: 30px;
 .quiz-questions {
   margin-left: $left-col-width;
   padding-left: 30px;
+
+  button.restart-introjs {
+    float: right;
+  }
+
+  button.save-and-next {
+    margin: 2em;
+  }
 }
