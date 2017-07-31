@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import ReactCSSTransitionsGroup from 'react-addons-css-transition-group';
 
 import { colors } from 'utils/colors';
 import HighlightTool from 'components/HighlightTool';
@@ -150,42 +149,30 @@ export class TopicHighlighter extends Component {
       return <ThankYou />
     }
 
-    let loadingClass = this.props.djangoHighlightTasks.isFetching ? 'loading' : '';
+    let loadingClass = this.props.displayState === displayStates.BEFORE_LOAD ? 'loading' : '';
 
     return (
-      <ReactCSSTransitionsGroup transitionName='fadein'
-                                transitionAppear
-                                transitionAppearTimeout={500}
-                                transitionEnterTimeout={500}
-                                transitionLeaveTimeout={500}>
-        <div className={loadingClass}></div>
-
+      <div className={loadingClass}>
         <div className='topic-highlighter-wrapper'>
-            <TopicPicker
-              topics={this.props.topics}
-              topicStyle={this.state.topicStyle}
-            />
-            <ReactCSSTransitionsGroup transitionName='fade-between'
-                                      transitionAppear
-                                      transitionAppearTimeout={500}
-                                      transitionEnterTimeout={500}
-                                      transitionLeaveTimeout={500}>
-              <div className="highlighter-tool" key={this.props.article.articleId}>
-                <Project />
-                <div id='article-introjs'>
-                  <HighlightTool
-                    text={this.props.article.text}
-                    topics={this.props.topics.results}
-                    colors={colors}
-                    currentTopicId={this.props.currentTopicId}
-                  />
-                </div>
-                <button onClick={this.onSaveAndNext} className='save-and-next'>Save and Next</button>
-              </div>
-            </ReactCSSTransitionsGroup>
-            <TopicInstruction instrStyle={this.state.instrStyle} />
+          <TopicPicker
+            topics={this.props.topics}
+            topicStyle={this.state.topicStyle}
+          />
+          <div className="highlighter-tool" key={this.props.article.articleId}>
+            <Project />
+            <div id='article-introjs'>
+              <HighlightTool
+                text={this.props.article.text}
+                topics={this.props.topics.results}
+                colors={colors}
+                currentTopicId={this.props.currentTopicId}
+              />
+            </div>
+            <button onClick={this.onSaveAndNext} className='save-and-next'>Save and Next</button>
+          </div>
+          <TopicInstruction instrStyle={this.state.instrStyle} />
         </div>
-      </ReactCSSTransitionsGroup>
+      </div>
     );
   }
 };
