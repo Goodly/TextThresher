@@ -67,7 +67,7 @@ function addSubtopicQuestion(task) {
     id: -1,
     question_number: 0,
     question_type: 'SELECT_SUBTOPIC',
-    question_text: 'Which of these subtopics are in the highlighted text?',
+    question_text: 'Which of these subtopics are in the bold-faced text?',
     answers: answer_list,
     next_questions: []
   };
