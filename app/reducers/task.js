@@ -8,6 +8,7 @@ const initialState = {
     total: 0
   },
   displayState: displayStates.BEFORE_LOAD,
+  lastDisplayState: displayStates.BEFORE_LOAD,
 };
 
 export function task(state = initialState, action) {
@@ -24,6 +25,19 @@ export function task(state = initialState, action) {
         ...state,
         progress: action.progress
       }
+    case 'SHOW_HELP':
+      if (action.showHelpFlag === true) {
+        return {
+          ...state,
+          displayState: displayStates.SHOW_HELP,
+          lastDisplayState: state.displayState
+        };
+      } else {
+        return {
+          ...state,
+          displayState: state.lastDisplayState
+        };
+      };
     case 'TASKS_DONE':
       // Don't reset progress stats - displayed in ThankYou component.
       return {

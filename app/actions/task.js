@@ -13,6 +13,13 @@ export function storeProgress(progress) {
   }
 }
 
+export function showHelp(showHelpFlag) {
+  return {
+    type: 'SHOW_HELP',
+    showHelpFlag
+  }
+}
+
 export function storeTasksDone() {
   return {
     type: 'TASKS_DONE',

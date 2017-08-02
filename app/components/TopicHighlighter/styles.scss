@@ -25,6 +25,7 @@
 
 .highlighter-tool {
   transition: opacity $transition-slow;
+  margin-top: 20px;
   margin-left: 275px;
   margin-right: 1em;
 
@@ -36,6 +37,12 @@
 
   button.restart-introjs {
     float: right;
+    margin-bottom: 6px;
+  }
+
+  button.show-help {
+    float: right;
+    clear: right;
   }
 
   button.save-and-next {
