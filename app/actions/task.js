@@ -13,6 +13,20 @@ export function storeProgress(progress) {
   }
 }
 
+export function displayHintSelector(displayFlag) {
+  return {
+    type: 'DISPLAY_HINT_SELECT',
+    displayFlag
+  }
+}
+
+export function setDisplayHintType(hintType) {
+  return {
+    type: 'SET_HINT_TYPE',
+    hintType
+  }
+}
+
 export function showHelp(showHelpFlag) {
   return {
     type: 'SHOW_HELP',

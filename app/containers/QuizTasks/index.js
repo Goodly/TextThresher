@@ -43,6 +43,8 @@ const mapStateToProps = state => {
     task: state.task,
     saveAndNext: state.task.saveAndNext,
     displayState: state.task.displayState,
+    displayHintSelectControl: state.task.displayHintSelectControl,
+    displayHintType: state.task.displayHintType,
   }
 };
 
