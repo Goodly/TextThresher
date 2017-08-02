@@ -9,6 +9,8 @@ const initialState = {
   },
   displayState: displayStates.BEFORE_LOAD,
   lastDisplayState: displayStates.BEFORE_LOAD,
+  displayHintSelectControl: false,
+  displayHintType: '',
 };
 
 export function task(state = initialState, action) {
@@ -25,6 +27,16 @@ export function task(state = initialState, action) {
         ...state,
         progress: action.progress
       }
+    case 'DISPLAY_HINT_SELECT':
+      return {
+        ...state,
+        displayHintSelectControl: action.displayFlag
+      }
+    case 'SET_HINT_TYPE':
+      return {
+        ...state,
+        displayHintType: action.hintType
+      }
     case 'SHOW_HELP':
       if (action.showHelpFlag === true) {
         return {
@@ -38,6 +50,11 @@ export function task(state = initialState, action) {
           displayState: state.lastDisplayState
         };
       };
+    case 'TASK_PROGRESS':
+      return {
+        ...state,
+        progress: action.progress
+      }
     case 'TASKS_DONE':
       // Don't reset progress stats - displayed in ThankYou component.
       return {

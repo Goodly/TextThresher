@@ -8,6 +8,7 @@ import HighlightTool from 'components/HighlightTool';
 import Project from 'components/Project';
 import ThankYou from 'components/ThankYou';
 import ShowHelp from 'components/ShowHelp';
+import SelectHint from 'components/SelectHint';
 import { displayStates } from 'components/displaystates';
 
 import { styles } from './styles.scss';
@@ -128,6 +129,7 @@ export class Quiz extends Component {
     super(props);
 
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
@@ -156,6 +158,7 @@ export class Quiz extends Component {
 
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener('keyup', this.handleKeyUp);
     var steps = [
       {
         'element': '.quiz-introjs',
@@ -216,6 +219,7 @@ export class Quiz extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('keyup', this.handleKeyUp);
     this.intro.exit();
   }
 
@@ -368,6 +372,9 @@ export class Quiz extends Component {
       // Use the prior technique of using the first word to set the hint type.
       hint_type = inferHintType(questionDB[question_id].question_text);
     };
+    if (this.props.displayHintSelectControl) {
+      hint_type = this.props.displayHintType;
+    };
     const hint_sets_for_article = this.props.db.entities.hint;
     let hint_offsets = [];
     if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
@@ -420,6 +427,17 @@ export class Quiz extends Component {
     };
   }
 
+  handleKeyUp(evt) {
+    // Don't steal keystrokes from input elements!
+    if (document.activeElement.nodeName === "INPUT") {
+      return;
+    };
+    // 72 is 'h' key
+    if (evt.keyCode === 72) {
+      this.props.displayHintSelector( ! this.props.displayHintSelectControl);
+    }
+  }
+
   render() {
     if (this.props.displayState === displayStates.TASKS_DONE) {
       return <ThankYou />
@@ -441,7 +459,7 @@ export class Quiz extends Component {
     };
 
     return (
-        <div className="quiz clearfix" >
+        <div className="quiz clearfix">
           <div className="quiz-introjs">
             <div className={`quiz-highlighter ${this.state.highlightsStyle}`}>
               <div className="highlighter-help-text">
@@ -461,6 +479,10 @@ export class Quiz extends Component {
             <Project />
             { question_list }
             { saveAndNextButton }
+            <SelectHint
+              currTask={this.props.currTask}
+              onChange={ (evt) => { this.props.setDisplayHintType(evt.target.value); }}
+            />
           </div>
         </div>
     )
