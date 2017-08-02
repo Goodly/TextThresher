@@ -6,6 +6,7 @@ import HighlightTool from 'components/HighlightTool';
 import { TopicPicker, TopicInstruction }  from 'components/TopicPicker';
 import Project from 'components/Project';
 import ThankYou from 'components/ThankYou';
+import ShowHelp from 'components/ShowHelp';
 import { displayStates } from 'components/displaystates';
 
 import { styles } from './styles.scss';
@@ -119,9 +120,13 @@ export class TopicHighlighter extends Component {
   // component, rather than jamming code specific to this layout
   // down into the called components.
   handleScroll() {
+    let topicPicker = document.querySelector('.topic-picker-wrapper');
+    // Element won't be present on help or done layouts.
+    if (! topicPicker) {
+      return;
+    };
     let navbar = document.querySelector('.navbar');
     let footer = document.querySelector('footer');
-    let topicPicker = document.querySelector('.topic-picker-wrapper');
     let getRect = (el) => el.getBoundingClientRect();
     let footerTop = getRect(footer).top;
 
@@ -156,6 +161,10 @@ export class TopicHighlighter extends Component {
       return <ThankYou />
     }
 
+    if (this.props.displayState === displayStates.SHOW_HELP) {
+      return <ShowHelp closeHelp={ () => { this.props.showHelp(false); } } />
+    }
+
     let loadingClass = this.props.displayState === displayStates.BEFORE_LOAD ? 'loading' : '';
 
     return (
@@ -168,6 +177,9 @@ export class TopicHighlighter extends Component {
           <div className="highlighter-tool" key={this.props.article.articleId}>
             <button onClick={this.restartTutorial} className='restart-introjs'>
               Restart Tutorial
+            </button>
+            <button onClick={ () => { this.props.showHelp(true); } } className='show-help'>
+              Help
             </button>
             <Project />
             <div id='article-introjs'>

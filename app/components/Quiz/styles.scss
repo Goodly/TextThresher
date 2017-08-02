@@ -102,6 +102,12 @@ $highlighter-help-text-height: 30px;
 
   button.restart-introjs {
     float: right;
+    margin-bottom: 6px;
+  }
+
+  button.show-help {
+    float: right;
+    clear: right;
   }
 
   button.save-and-next {

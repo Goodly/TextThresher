@@ -7,6 +7,7 @@ import Question from 'components/Question';
 import HighlightTool from 'components/HighlightTool';
 import Project from 'components/Project';
 import ThankYou from 'components/ThankYou';
+import ShowHelp from 'components/ShowHelp';
 import { displayStates } from 'components/displaystates';
 
 import { styles } from './styles.scss';
@@ -396,9 +397,13 @@ export class Quiz extends Component {
   }
 
   handleScroll() {
+    let highlighter = document.querySelector('.quiz-highlighter');
+    // Element won't be present on help or done layouts.
+    if ( ! highlighter) {
+      return;
+    };
     let navbar = document.querySelector('.navbar');
     let footer = document.querySelector('footer');
-    let highlighter = document.querySelector('.quiz-highlighter');
     let getRect = (el) => el.getBoundingClientRect();
     let footerTop = getRect(footer).top;
 
@@ -418,6 +423,10 @@ export class Quiz extends Component {
   render() {
     if (this.props.displayState === displayStates.TASKS_DONE) {
       return <ThankYou />
+    }
+
+    if (this.props.displayState === displayStates.SHOW_HELP) {
+      return <ShowHelp closeHelp={ () => { this.props.showHelp(false); } } />
     }
 
     var topic_highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
@@ -445,6 +454,9 @@ export class Quiz extends Component {
           <div className="quiz-questions">
             <button onClick={this.restartTutorial} className='restart-introjs'>
               Restart Tutorial
+            </button>
+            <button onClick={ () => { this.props.showHelp(true); } } className='show-help'>
+              Help
             </button>
             <Project />
             { question_list }
