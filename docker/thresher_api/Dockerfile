@@ -66,6 +66,5 @@ RUN npm run deploy:quiet
 COPY /docker/bashrc_to_docker ${HOME}/.bashrc
 EXPOSE 5000
 
-CMD ["gunicorn", "-b", ":5000", "-w", "10", "--error-logfile", "-", \
-     "--access-logfile", "-", "--reload", \
-     "thresher_backend.wsgi"]
+# Runs migrate, then replaces sh with 'exec gunicorn...'
+CMD ["bash", "docker/thresher_api/migrate_and_run.sh"]
