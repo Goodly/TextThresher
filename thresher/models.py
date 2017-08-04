@@ -31,8 +31,8 @@ class UserProfile(models.Model):
 
 class Contributor(models.Model):
     pybossa_user_id = models.IntegerField(null=True, db_index=True, unique=True)
-    experience_score = models.FloatField()
-    accuracy_score = models.FloatField()
+    experience_score = models.FloatField(default=0.0)
+    accuracy_score = models.FloatField(default=0.0)
 
     def __unicode__(self):
         return "id {} pybossa user id {} experience score {} accuracy score {}".format(
@@ -172,10 +172,6 @@ class Topic(models.Model):
     glossary = JSONField(default={}) # as a JSON map
 
     instructions = models.TextField()
-
-    hint_type = models.CharField(max_length=10,
-                                 choices=HINT_TYPE_CHOICES,
-                                 default='NONE')
 
     def validate_unique(self, exclude=None):
         qs = Topic.objects.filter(name=self.name)
@@ -351,6 +347,10 @@ class HighlightGroup(models.Model):
 
 
 class QuizTaskRun(models.Model):
+    article = models.ForeignKey(Article,
+                                related_name="quiz_taskruns",
+                                on_delete=models.CASCADE,
+                                null=True)   # nullable for makemigration
     # Pybossa id of taskrun contributor
     contributor = models.ForeignKey(Contributor,
                                     related_name="quiz_taskruns",
