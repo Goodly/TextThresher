@@ -351,6 +351,17 @@ class QuizTaskRun(models.Model):
                                 related_name="quiz_taskruns",
                                 on_delete=models.CASCADE,
                                 null=True)   # nullable for makemigration
+
+    # The highlight group this Quiz addressed
+    highlight_group = models.ForeignKey(HighlightGroup,
+                                        related_name="submitted_answers",
+                                        on_delete=models.CASCADE,
+                                        null=True)   # nullable for makemigration
+
+    task = models.ForeignKey(Task,
+                             related_name="quiz_taskruns",
+                             on_delete=models.CASCADE)
+
     # Pybossa id of taskrun contributor
     contributor = models.ForeignKey(Contributor,
                                     related_name="quiz_taskruns",
@@ -358,9 +369,6 @@ class QuizTaskRun(models.Model):
 
     # Taskrun id
     pybossa_id = models.IntegerField(null=True, db_index=True)
-    task = models.ForeignKey(Task,
-                             related_name="quiz_taskruns",
-                             on_delete=models.CASCADE)
 
     # Complete taskrun as returned by Pybossa
     info = JSONField()
@@ -380,16 +388,12 @@ class SubmittedAnswer(models.Model):
                              related_name="submitted_answers",
                              on_delete=models.CASCADE)
 
-    # The highlight group this answer is part of
-    highlight_group = models.ForeignKey(HighlightGroup,
-                                        related_name="submitted_answers",
-                                        on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer,
+                               related_name="submitted_answers",
+                               null=True,
+                               on_delete=models.CASCADE)
 
-    question = models.ForeignKey(Question,
-                                 related_name="submitted_answers",
-                                 on_delete=models.CASCADE)
-
-    answer = models.TextField()
+    answer_text = models.TextField(default="")
 
     # highlighted text (stored as JSON array of offset tuples)
     offsets = JSONField(default=[])
