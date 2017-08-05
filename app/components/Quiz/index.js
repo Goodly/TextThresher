@@ -244,11 +244,13 @@ export class Quiz extends Component {
     const highlights = this.props.highlights;
     const questionDB = this.props.db.entities.question;
     const savedAnswers = saveQuizAnswers(queue, answer_selected, highlights, questionDB);
-    const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
+    const article_id = this.props.currTask ? this.props.currTask.article.id : '';
+    const article_text = this.props.currTask ? this.props.currTask.article.text : '';
     const savedQuiz = {
+      article_id,
       article_text,
       abridged_text: this.props.abridged,
-      abridged_highlights: this.props.hints_offsets,
+      abridged_highlights: this.props.abridged_highlights,
       savedAnswers,
     };
     this.props.clearAnswers();
