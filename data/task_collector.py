@@ -105,6 +105,7 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
         # Although this code can send multiple HighlightGroups, the
         # Quiz task presenter will only use the first one.
         # So when there are multiple highlight taskruns in the database,
+        # (for a given article and topic),
         # the taskrun to be processed by a Quiz will essentially be selected
         # at random. There will need to be a way to flag the
         # official "Gold Standard" HighlightGroup that was distilled from
