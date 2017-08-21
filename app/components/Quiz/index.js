@@ -241,7 +241,7 @@ export class Quiz extends Component {
     const queue = this.props.queue;
     const answer_selected = this.props.answer_selected;
     const highlights = this.props.highlights;
-    const highlight_group_id = currTask.highlights[0].id;
+    const highlight_group_id = this.props.currTask.highlights[0].id;
     const questionDB = this.props.db.entities.question;
     const savedAnswers = saveQuizAnswers(queue, answer_selected, highlights, questionDB);
     const article_id = this.props.currTask ? this.props.currTask.article.id : '';

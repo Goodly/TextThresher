@@ -384,13 +384,19 @@ class QuizTaskRun(models.Model):
 
 # A submitted answer to a question
 class SubmittedAnswer(models.Model):
-    quiz = models.ForeignKey(QuizTaskRun,
+    quiz_task_run = models.ForeignKey(QuizTaskRun,
                              related_name="submitted_answers",
                              on_delete=models.CASCADE)
 
+    # db_constraint=False because currently the front end dynamically
+    # generates the subtopic question and answers, and has to use
+    # negative ids to avoid collision with database keys
+    # So currently expecting to load negative ids without
+    # related records for some submitted answers.
     answer = models.ForeignKey(Answer,
                                related_name="submitted_answers",
                                null=True,
+                               db_constraint=False,
                                on_delete=models.CASCADE)
 
     answer_text = models.TextField(default="")

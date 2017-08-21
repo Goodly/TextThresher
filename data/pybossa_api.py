@@ -323,14 +323,31 @@ def save_quiz_taskrun(task, taskrun):
             pybossa_user_id=taskrun['user_id'],
         )
 
-        qtr = QuizTaskRun.objects.create(
+        # Until gold standard flag decided, only using first highlight_group
+        # task is safe - from our database
+        expected_highlight_group_id = task.info['highlights'][0]['id']
+        # taskrun returned by Pybossa, treat cautiously
+        returned_highlight_group_id = taskrun['info'].get('highlight_group_id', None)
+        if returned_highlight_group_id:
+            # Make sure front-end used the highlight_group we expected
+            assert(expected_highlight_group_id==returned_highlight_group_id)
+
+        quiz_task_run = QuizTaskRun.objects.create(
             task=task, # safe - from our database, not Pybossa
             article_id=task.info['article']['id'], # safe - from our database
             contributor=contributor,
+            highlight_group_id=expected_highlight_group_id, # safe - from our database
             pybossa_id=taskrun_id,
             info=taskrun
         )
 
-        # TODO: Create SubmittedAnswers record
+        # Everything in savedAnswers is untrusted
+        for saved_answer in taskrun['info']['savedAnswers']:
+            submitted = SubmittedAnswer.objects.create(
+                quiz_task_run=quiz_task_run,
+                answer_id=saved_answer['answer_id'],
+                answer_text=saved_answer['text'],
+                offsets=saved_answer['highlights']
+            )
 
-        return qtr
+        return quiz_task_run
