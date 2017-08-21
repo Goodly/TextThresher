@@ -605,52 +605,52 @@
 </g>
 <!-- thresher_models_SubmittedAnswer -->
 <g id="node13" class="node"><title>thresher_models_SubmittedAnswer</title>
-<polygon fill="palegoldenrod" stroke="none" points="494,-1103 494,-1185 681,-1185 681,-1103 494,-1103"/>
-<polygon fill="#698b22" stroke="none" points="494.5,-1168 494.5,-1185 681.5,-1185 681.5,-1168 494.5,-1168"/>
-<text text-anchor="start" x="527" y="-1175.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="540" y="-1175.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;SubmittedAnswer &#160;&#160;&#160;</text>
-<text text-anchor="start" x="496.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="509.5" y="-1160.6" font-family="Helvetica Bold" font-size="8.00">id</text>
-<text text-anchor="start" x="519.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="578.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="591.5" y="-1160.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
-<text text-anchor="start" x="637.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="496.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="509.5" y="-1147.6" font-family="Helvetica Bold" font-size="8.00">answer</text>
-<text text-anchor="start" x="545.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="578.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="591.5" y="-1147.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="666.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="496.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="509.5" y="-1134.6" font-family="Helvetica Bold" font-size="8.00">quiz</text>
-<text text-anchor="start" x="530.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="578.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="591.5" y="-1134.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="666.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="496.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="509.5" y="-1121.6" font-family="Helvetica " font-size="8.00">answer_text</text>
-<text text-anchor="start" x="561.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="578.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="591.5" y="-1121.6" font-family="Helvetica " font-size="8.00">TextField</text>
-<text text-anchor="start" x="627.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="496.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="509.5" y="-1108.6" font-family="Helvetica " font-size="8.00">offsets</text>
-<text text-anchor="start" x="540.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="578.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="591.5" y="-1108.6" font-family="Helvetica " font-size="8.00">JSONField</text>
-<text text-anchor="start" x="631.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<polygon fill="palegoldenrod" stroke="none" points="482,-1103 482,-1185 683,-1185 683,-1103 482,-1103"/>
+<polygon fill="#698b22" stroke="none" points="482.5,-1168 482.5,-1185 683.5,-1185 683.5,-1168 482.5,-1168"/>
+<text text-anchor="start" x="522" y="-1175.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="535" y="-1175.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;SubmittedAnswer &#160;&#160;&#160;</text>
+<text text-anchor="start" x="484.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="497.5" y="-1160.6" font-family="Helvetica Bold" font-size="8.00">id</text>
+<text text-anchor="start" x="507.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="580.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="593.5" y="-1160.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
+<text text-anchor="start" x="639.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="484.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="497.5" y="-1147.6" font-family="Helvetica Bold" font-size="8.00">answer</text>
+<text text-anchor="start" x="533.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="580.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="593.5" y="-1147.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="668.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="484.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="497.5" y="-1134.6" font-family="Helvetica Bold" font-size="8.00">quiz_task_run</text>
+<text text-anchor="start" x="563.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="580.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="593.5" y="-1134.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="668.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="484.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="497.5" y="-1121.6" font-family="Helvetica " font-size="8.00">answer_text</text>
+<text text-anchor="start" x="549.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="580.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="593.5" y="-1121.6" font-family="Helvetica " font-size="8.00">TextField</text>
+<text text-anchor="start" x="629.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="484.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="497.5" y="-1108.6" font-family="Helvetica " font-size="8.00">offsets</text>
+<text text-anchor="start" x="528.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="580.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="593.5" y="-1108.6" font-family="Helvetica " font-size="8.00">JSONField</text>
+<text text-anchor="start" x="633.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
 </g>
 <!-- thresher_models_SubmittedAnswer&#45;&gt;thresher_models_Answer -->
 <g id="edge16" class="edge"><title>thresher_models_SubmittedAnswer&#45;&gt;thresher_models_Answer</title>
-<path fill="none" stroke="black" d="M629.9,-1092.3C643.84,-1075.6 659.2,-1057.2 672.69,-1041.1"/>
-<ellipse fill="black" stroke="black" cx="627.013" cy="-1095.74" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="708" y="-1074.6" font-family="Helvetica,sans-Serif" font-size="8.00">answer (submitted_answers)</text>
+<path fill="none" stroke="black" d="M627.36,-1092.6C630.8,-1088.7 634.21,-1084.8 637.5,-1081 648.74,-1068.1 660.86,-1054 671.9,-1041.2"/>
+<ellipse fill="black" stroke="black" cx="624.604" cy="-1095.71" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="706" y="-1074.6" font-family="Helvetica,sans-Serif" font-size="8.00">answer (submitted_answers)</text>
 </g>
 <!-- thresher_models_SubmittedAnswer&#45;&gt;thresher_models_QuizTaskRun -->
 <g id="edge17" class="edge"><title>thresher_models_SubmittedAnswer&#45;&gt;thresher_models_QuizTaskRun</title>
-<path fill="none" stroke="black" d="M533.5,-1093.1C519.88,-1080.5 505.16,-1066.9 491.2,-1054"/>
-<ellipse fill="black" stroke="black" cx="536.732" cy="-1096.09" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="573.5" y="-1074.6" font-family="Helvetica,sans-Serif" font-size="8.00">quiz (submitted_answers)</text>
+<path fill="none" stroke="black" d="M496.93,-1093.8C491.85,-1089.7 486.99,-1085.5 482.5,-1081 474.54,-1073.1 467.21,-1063.8 460.7,-1054.3"/>
+<ellipse fill="black" stroke="black" cx="500.316" cy="-1096.44" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="558" y="-1074.6" font-family="Helvetica,sans-Serif" font-size="8.00">quiz_task_run (submitted_answers)</text>
 </g>
 <!-- thresher_models_NLPHints -->
 <g id="node14" class="node"><title>thresher_models_NLPHints</title>
