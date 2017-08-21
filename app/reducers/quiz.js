@@ -27,6 +27,7 @@ const initialState = {
   currTask: null,
   db: { entities: {}, result: {} },
   abridged: '',
+  abridged_highlights: [],
   curr_question_id: -1,
   queue: [-1],
   curr_answer_id: -100,
@@ -215,7 +216,7 @@ export function quiz(state = initialState, action) {
       const currTask = action.task;
       const topic_highlights = currTask.highlights[0].offsets;
       const article_text = currTask.article.text;
-      const { abridged, abridged_highlights, abridged_hints } = abridgeText(
+      const { abridged, abridged_highlights } = abridgeText(
         article_text,
         topic_highlights,
         []
@@ -225,6 +226,7 @@ export function quiz(state = initialState, action) {
         currTask: action.task,
         db: taskDB,
         abridged,
+        abridged_highlights,
         curr_question_id: -1,
         queue: updateQueue(action.task, answer_selected),
         curr_answer_id: -100,
@@ -315,7 +317,8 @@ export function quiz(state = initialState, action) {
           };
         };
       };
-      return { ...state,
+      return {
+        ...state,
         curr_answer_id
       };
     }

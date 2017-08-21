@@ -107,7 +107,6 @@ function saveQuizAnswers(queue, answer_selected, highlights, questionDB) {
   queue.forEach( (question_id) => {
     if (answer_selected.has(question_id)) {
       let answerMap = answer_selected.get(question_id);
-      let answersWithHighlights = [];
       for (let answer of answerMap.values()) {
         if (highlightDB.has(answer.answer_id)) {
           answer['highlights'] = highlightDB.get(answer.answer_id);
@@ -242,13 +241,17 @@ export class Quiz extends Component {
     const queue = this.props.queue;
     const answer_selected = this.props.answer_selected;
     const highlights = this.props.highlights;
+    const highlight_group_id = this.props.currTask.highlights[0].id;
     const questionDB = this.props.db.entities.question;
     const savedAnswers = saveQuizAnswers(queue, answer_selected, highlights, questionDB);
-    const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
+    const article_id = this.props.currTask ? this.props.currTask.article.id : '';
+    const article_text = this.props.currTask ? this.props.currTask.article.text : '';
     const savedQuiz = {
+      article_id,
       article_text,
       abridged_text: this.props.abridged,
-      abridged_highlights: this.props.hints_offsets,
+      abridged_highlights: this.props.abridged_highlights,
+      highlight_group_id,
       savedAnswers,
     };
     this.props.clearAnswers();

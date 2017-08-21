@@ -64,8 +64,7 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
 
     # Set up Prefetch that will cache just the highlights matching
     # this topic to article.highlight_taskruns[n].highlightsForTopic
-    topicHighlights = (HighlightGroup.objects.filter(topic=topic)
-                       .prefetch_related("submitted_answers"))
+    topicHighlights = HighlightGroup.objects.filter(topic=topic)
     fetchHighlights = Prefetch("highlight_taskruns__highlights",
                                queryset=topicHighlights,
                                to_attr="highlightsForTopic")
@@ -99,10 +98,18 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
         # Need to sort here instead of the above prefetch because we want
         # to ignore the potential grouping effect if there was more than one
         # ArticleHighlight in above list comprehension
-        # See data.pybossa_api.save_highlight_taskrun for import code
+        # See data.pybossa_api.save_quiz_taskrun for import code
         sortkey = lambda x: x.case_number
         hg_by_case = sorted(highlights, key=sortkey)
 
+        # Although this code can send multiple HighlightGroups, the
+        # Quiz task presenter will only use the first one.
+        # So when there are multiple highlight taskruns in the database,
+        # (for a given article and topic),
+        # the taskrun to be processed by a Quiz will essentially be selected
+        # at random. There will need to be a way to flag the
+        # official "Gold Standard" HighlightGroup that was distilled from
+        # multiple Highlighter taskruns, that will be the one sent to the Quiz.
         for case_number, hg_case_group in groupby(hg_by_case, key=sortkey):
             taskList.append({
                "project": project_data,

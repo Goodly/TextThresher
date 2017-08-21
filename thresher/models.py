@@ -31,8 +31,8 @@ class UserProfile(models.Model):
 
 class Contributor(models.Model):
     pybossa_user_id = models.IntegerField(null=True, db_index=True, unique=True)
-    experience_score = models.FloatField()
-    accuracy_score = models.FloatField()
+    experience_score = models.FloatField(default=0.0)
+    accuracy_score = models.FloatField(default=0.0)
 
     def __unicode__(self):
         return "id {} pybossa user id {} experience score {} accuracy score {}".format(
@@ -172,10 +172,6 @@ class Topic(models.Model):
     glossary = JSONField(default={}) # as a JSON map
 
     instructions = models.TextField()
-
-    hint_type = models.CharField(max_length=10,
-                                 choices=HINT_TYPE_CHOICES,
-                                 default='NONE')
 
     def validate_unique(self, exclude=None):
         qs = Topic.objects.filter(name=self.name)
@@ -351,6 +347,21 @@ class HighlightGroup(models.Model):
 
 
 class QuizTaskRun(models.Model):
+    article = models.ForeignKey(Article,
+                                related_name="quiz_taskruns",
+                                on_delete=models.CASCADE,
+                                null=True)   # nullable for makemigration
+
+    # The highlight group this Quiz addressed
+    highlight_group = models.ForeignKey(HighlightGroup,
+                                        related_name="submitted_answers",
+                                        on_delete=models.CASCADE,
+                                        null=True)   # nullable for makemigration
+
+    task = models.ForeignKey(Task,
+                             related_name="quiz_taskruns",
+                             on_delete=models.CASCADE)
+
     # Pybossa id of taskrun contributor
     contributor = models.ForeignKey(Contributor,
                                     related_name="quiz_taskruns",
@@ -358,9 +369,6 @@ class QuizTaskRun(models.Model):
 
     # Taskrun id
     pybossa_id = models.IntegerField(null=True, db_index=True)
-    task = models.ForeignKey(Task,
-                             related_name="quiz_taskruns",
-                             on_delete=models.CASCADE)
 
     # Complete taskrun as returned by Pybossa
     info = JSONField()
@@ -376,20 +384,22 @@ class QuizTaskRun(models.Model):
 
 # A submitted answer to a question
 class SubmittedAnswer(models.Model):
-    quiz = models.ForeignKey(QuizTaskRun,
+    quiz_task_run = models.ForeignKey(QuizTaskRun,
                              related_name="submitted_answers",
                              on_delete=models.CASCADE)
 
-    # The highlight group this answer is part of
-    highlight_group = models.ForeignKey(HighlightGroup,
-                                        related_name="submitted_answers",
-                                        on_delete=models.CASCADE)
+    # db_constraint=False because currently the front end dynamically
+    # generates the subtopic question and answers, and has to use
+    # negative ids to avoid collision with database keys
+    # So currently expecting to load negative ids without
+    # related records for some submitted answers.
+    answer = models.ForeignKey(Answer,
+                               related_name="submitted_answers",
+                               null=True,
+                               db_constraint=False,
+                               on_delete=models.CASCADE)
 
-    question = models.ForeignKey(Question,
-                                 related_name="submitted_answers",
-                                 on_delete=models.CASCADE)
-
-    answer = models.TextField()
+    answer_text = models.TextField(default="")
 
     # highlighted text (stored as JSON array of offset tuples)
     offsets = JSONField(default=[])
