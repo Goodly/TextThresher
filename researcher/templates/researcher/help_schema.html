@@ -1,0 +1,472 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% block title %} Schema Format {% endblock %}
+{% block content %}
+  <div class="content-container">
+    <h1 class="main-label">
+      Schema Format
+    </h1>
+    <div class="main-container">
+<h3>Instructions for Creating TextThresher Schema </h3>
+
+<p>TextThresher is a general tool researchers can use to enlist crowds in the complex labeling of large text corpora. For a general introduction, watch this video.</p>
+
+<p>Creating a TextThresher project will usually proceed according to the following steps:</p>
+
+<ol>
+<li><p>Gather your documents (or at least a representative sample of them).</p></li>
+
+<li><p>Know your documents. What do you want/expect to find in the documents?
+a. What are the documents about that is so interesting?
+b. What are the fundamental units or objects you want to analyze? (e.g. individual people; events; encounters; deployments of some concept; legal opinions)
+    i. Write down all of these objects/units you are interested in learning more about.
+c. What are all the variables and attributes that describe these units or objects of analysis?
+    i. Write all of these down (hierarchically nested) under your list of objects/units of analysis.</p></li>
+
+<li><p>Try highlighting your documents according to just the objects/units of analysis.
+a. You can do this with physical copies, or in a WordProcessor, or in TextThresher
+b. Write down instructions for identifying/highlighting each object. Explain what people are looking for – what is in the category, and what is out.
+c. Try having a small group of  3-5 people do the highlighting of just the objects/units of analysis according to your instructions. <br />
+d. Revise your list of objects/units and/or your instructions if people are having too much trouble identifying those objects/units in your documents.</p></li>
+
+<li><p>From 2.c.i, convert all the variables/attributes for each object/unit into a question. (E.g. ‘hair color’ becomes: Does the text say what color hair the person had? with answer options, brown, black, red, blonde, dyed, other, no information given)
+a. Designate the question type for each question: mc – ’multiple choice/radio button’; cl – ’checklist’; tx – ‘text box’; dt – ‘date/time’; lf – ‘logic flow’ (logic flow questions are discussed below). </p></li>
+
+<li><p>Consider whether any of the questions group together semantically. Do the documents tend to discuss information relevant to one set of questions before discussing information relevant to others? Do people tend to think of the information elicited by these questions as ‘of a kind’? If such subtopics are apparent, they offer an opportunity to further simplify work for your crowd workers or citizen science volunteers.</p></li>
+
+<li><p>List all your questions first by the subtopics discovered in 5. Then list them in priority order under those subtopics.
+a. Clarify to yourself which questions are follow-up questions and the conditions under which you would want that follow up questions asked and answered. (E.g. what color was the dyed hair?: This is a question you only need ask if the answer to the question about hair color was ‘dyed.’) </p></li>
+
+<li><p>Start writing your lists of objects/units and all their variables/attributes as a TextThresher scheme. (See example below.)
+<ol>
+<li>Each object/unit will get its own .txt file.</li>
+<li>The “title:” field will be used in TextThresher’s highlighter interface. So choose titles that succinctly indicate the objects/units contributors will be searching for.</li>
+<li>At the bottom of the scheme, write instructions for contributors who are tasked with finding objects/units. This field must start with “Instructions: “</li>
+<li>It is usually best to start a scheme with an lf – logic flow question asking which subtopics are discussed in the displayed text. If a subtopic is not discussed, contributors will not check it off, and TextThresher will not ask questions about it, greatly reducing the number of empty questions/answers viewed by the contributor.</li>
+<li>Label questions of different subtopics with their unique subtopic number, then a unique question number. Their answers should get a unique number as well. (E.g.: answer 2.3.4 is the fourth answer choice of the third question listed under the second sub-topic).</li>
+<li>Follow up questions can be listed under the subtopic either immediately after the question it would follow or near the bottom.</li>
+<li>Specify which questions are follow up questions at the bottom of each sub-topic’s list of questions. E.g: If you only want to ask question 2.14 if the answer to question 2.13 was option 5, specify this by writing <pre>if 2.13.5, then 2.14</pre> If you want to ask question 2.15 as long as there was any answer to question 2.14, write <pre>if 2.14.any, then 2.15</pre> Using these logical statements, you can easily ensure that contributors are only answering follow-up questions when they are relevant.</li>
+</ol>
+</p></li>
+</ol>
+
+<h3>EXAMPLE Scheme from DecidingForce project</h3>
+<pre>
+title: Police
+
+1 Type of police-initiated event
+2 Event setting and composition (location, attendance and crowd composition/demographics, time/duration)
+3 Police Gear and Activities
+4 Arrests/injuries
+
+1.01 mc What type of event is described in the bolded text?
+1.01.01 Raid of camp or eviction of campers
+1.01.02 Showdown at the camp
+1.01.03 Warnings or threats at the camp or through the media
+1.01.04 Surveillance of camp
+1.01.05 Surveillance of individual protest organizers away from the camp
+1.01.06 Arrests of protest organizers away from any protest-initiated event or camp
+1.01.07 Undercover infiltration of a camp
+1.01.08 Undercover infiltration of other protester activities
+1.01.09 Propaganda campaign against Occupy
+1.01.10 “Snatch ‘n’ grab” arrests at camp – arrest of individual people (especially key organizers, at the camp, with or without a warrant)
+1.01.11 Space-taking (i.e. establishing of perimeter barricades or fences or lines of police for containment or strategic incapacitation purposes)
+1.01.12 Statement (to public and/or Occupy) of refusal to enforce an eviction order or permit expiration or some other law coming from city
+1.01.13 Notable non-event (e.g. intentional non-enforcement – everyone is expecting police to do one thing, then they don't do it)
+1.01.14 Official statement from police chief, or high-level officer or official spokesperson
+1.01.15 Other
+
+1.02 cl Which of the following occurred during the raid? Select all that apply:
+1.02.01 Some (but not all) tents/structures were dismantled
+1.02.02 All tents/structures were dismantled
+1.02.03 Some (but not all) protesters were evicted from the camp
+1.02.04 All were evicted from the camp
+1.02.05 City workers assisted in park cleanup
+1.02.06 Other
+
+1.03 mc What warning or threat was issued by police?
+1.03.01 Protesters must leave the camp by a certain date
+1.03.02 If protesters do not comply with police/city requests (ex. get a permit for the camp, repair health/safety concerns, etc.), they will be evicted
+1.03.03 Other
+
+1.04 mc Where did the police make warnings/threats?
+1.04.01 In person, at the camp
+1.04.02 Through a letter or email sent/delivered to the camp
+1.04.03 During a meeting with members of the camp
+1.04.04 Through social media (Facebook, Twitter, blog/website etc.)
+1.04.05 Through the media (through interviews, press conferences, official statements, etc)
+1.04.06 Other
+
+1.05 cl Which of the following surveillance tactics did police use at the camp? Select all that apply:
+1.05.01 Walking through the camp
+1.05.02 Watching camp activity (ex. general assembly meetings, voting, organizing)
+1.05.03 Videotaping or taking photos of protesters and/or camp
+1.05.04 Driving past the camp
+1.05.05 Watching the camp from a parked car
+
+1.06 mc Who did the police use surveillance against?
+1.06.01 Protester(s), who are not camp leaders or organizers
+1.06.02 Protest/camp leaders or organizers
+1.06.03 Other
+
+1.07 cl Where did the police's propaganda campaign take place? Select all that apply:
+1.07.01 Social media (Facebook, Twitter, blog/website, etc)
+1.07.02 Media (through interviews, press releases, press conferences, etc.)
+
+1.08 cl What kind of space-taking tactics did the police use?
+1.08.01 Fencing or barricading areas (ex. buildings, walkways, streets) to block access by protesters; and/or creating a designated protest zone where campers are allowed to protest
+1.08.02 Forming skirmish lines (lines of police often in riot gear, preventing protesters’ movement into or out of an area)
+1.08.03 Other
+
+1.09 cl What event was expected, but not carried out by the police? Select all that apply:
+1.09.01 Issuing an eviction order to protesters
+1.09.02 Performing arrests at the camp
+1.09.03 Raiding the camp and/or enforcing eviction deadlines made by the city or police
+1.09.04 Other
+
+1.10 mc What kind of official statement is this?
+1.10.01 Speaking at a press conference
+1.10.02 Informal interview with news media
+1.10.03 A press release, open letter, email, or op-ed to the media and/or public
+1.10.04 Social media and/or internet posting
+1.10.05 Other
+1.10.06 Information not given
+
+1.11 cl What is the title or role of the speaker? Select all that apply: (Please highlight both the title and the name of each actor selected.)
+1.11.01 Police Chief, Commissioner, Superintendent, or Sheriff
+1.11.02 Assistant Police Chief, Commissioner, Superintendent, or Sheriff
+1.11.03 Deputy Chief, Commissioner, or Superintendent
+1.11.04 Commander or Inspector
+1.11.05 Colonel
+1.11.06 Major
+1.11.07 Captain
+1.11.08 Lieutenant
+1.11.09 Sergeant
+1.11.10 Officer
+1.11.11 Official spokesperson, media correspondent
+
+1.12 mc Which of the following information does the text give about when the statement was made?
+1.12.01 The exact time
+1.12.02 An approximate time
+1.12.03 Information not given
+
+1.14 mc Approximately when was the statement made?
+1.14.01 Pre-dawn (12am-6am)
+1.14.02 Morning (6am-12pm)
+1.14.03 Mid-day (12pm-3pm)
+1.14.04 Afternoon (3pm-6pm)
+1.14.05 Evening (6pm-9pm)
+1.14.06 Night (9pm-12am)
+
+if 1.01.01, then 1.02
+if 1.01.03, then 1.03
+if 1.01.03, then 1.04
+if 1.01.04, then 1.05
+if 1.01.04, then 1.06
+if 1.01.05, then 1.06
+if 1.01.09, then 1.07
+if 1.01.11, then 1.08
+if 1.01.13, then 1.09
+if 1.01.14, then 1.10
+if 1.10.any, then 1.11
+if 1.10.any, then 1.12
+if 1.12.02, then 1.14
+
+
+2.01 mc Which of the following information does the text give about the event's location?
+2.01.01 The exact location or address
+2.01.02 An approximate location, or clues about where the event took place (e.g. "the small group of protesters marched down Market Street)
+2.01.03 Information not given
+
+2.04 mc Which of the following information does the text give about the number of police at the event?
+2.04.01 The exact number
+2.04.02 An estimate or approximate number
+2.04.03 Information not given
+
+2.05 mc Who estimated the number of police in attendance?
+2.05.01 Author, Journalist, Media
+2.05.02 Police
+2.05.03 City official
+2.05.04 Protester
+2.05.05 Independent
+2.05.06 Other
+2.05.07 Information not given
+
+2.06 mc Which of the following information does the text give about the number of protesters at the event?
+2.06.01 The exact number
+2.06.02 An estimate or approximate number
+2.06.03 Information not given
+
+2.07 mc Who estimated the number of protesters in attendance?
+2.07.01 Author, Journalist, Media
+2.07.02 Police
+2.07.03 City official
+2.07.04 Protester
+2.07.05 Independent
+2.07.06 Information not given
+2.07.07 Other
+
+2.08 cl Were any of the following groups at the event?
+2.08.01 Counter-protesters
+2.08.02 Anarchists or “Black Block”
+2.08.03 Celebrities
+2.08.04 Homeless
+2.08.05 Union members
+2.08.06 Occupiers from other cities
+2.08.08 “Occupy the Hood” protesters
+2.08.09 Other groups allied with Occupy
+2.08.10 Allied politicians
+
+2.09 cl Does the text provide any of the following information about who was in attendance?
+2.09.01 The ethnic/gender/religious/political identities of participants
+2.09.02 The economic class or circumstances of the participants
+2.09.03 The age ranges of the participants
+2.09.04 The education level of the participants
+2.09.05 The occupations or job status of participants
+
+2.12 cl Which of the following groups and identities were in attendance?
+2.12.01 A wide variety of groups and identities
+2.12.02 Women
+2.12.03 Anarchists
+2.12.04 Homeless
+2.12.05 Union members
+2.12.06 Reinforcement campers from other cities
+2.12.07 Religious leaders or communities
+2.12.08 Occupy the Hood protesters
+2.12.09 Other groups allied with Occupy
+2.12.10 Celebrities
+2.12.11 Black/African-American
+2.12.12 Hispanic/Latino/Chicano
+2.12.13 Asian-American/Pacific Islander
+2.12.14 Native American
+2.12.15 Information not given
+
+2.13 cl Which of the following economic class groups were in attendance?
+2.13.01 A wide variety of classes
+2.13.02 Working/Lower (less than $24,999)
+2.13.03 Lower-Middle ($25,000-$49,999)
+2.13.04 Middle ($50,000-$74,999)
+2.13.05 Upper-Middle ($75,000-$99,999)
+2.13.06 Upper ($100,000-$249,999)
+2.13.07 The 1% ($250,000+)
+2.13.08 Information not given
+
+2.14 cl Which of the following age groups were in attendance?
+2.14.01 A wide variety of ages
+2.14.02 Under 18
+2.14.03 18-25
+2.14.04 26-35
+2.14.05 36-45
+2.14.06 46-65
+2.14.07 66 or older
+2.14.08 Information not given
+
+2.15 cl Which of the following educational attainment groups were in attendance?
+2.15.01 A wide variety of educational attainment levels
+2.15.02 Less than high school diploma
+2.15.03 High school diploma/GED
+2.15.04 Some college (2 years or fewer)
+2.15.05 College degree (B.A., B.S., trade school, technical school)
+2.15.06 Master's degree
+2.15.07 PhD
+2.15.08 Information not given
+
+2.16 cl Which of the following career fields/occupations are held by people who attended the event?
+2.16.01 A wide variety of career fields/occupations
+2.16.02 Unemployed
+2.16.03 Architecture and Engineering
+2.16.04 Arts, Entertainment, and Media
+2.16.05 Cleaning and Janitorial
+2.16.06 Business and Finance
+2.16.07 Community and Social Services
+2.16.10 Computer and Mathematical
+2.16.11 Construction and Maintenance
+2.16.12 Education and Library
+2.16.13 Farming, Fishing, and Forestry
+2.16.14 Food Services
+2.16.15 Healthcare Practitioners, Technical, and Support
+2.16.16 Legal
+2.16.17 Life, Physical, and Social Science
+2.16.18 Office and Management
+2.16.19 Military
+2.16.20 Personal Care and Service
+2.16.21 Production
+2.16.22 Sales and Marketing
+2.16.23 Transportation
+2.16.24 Student
+2.16.25 Retired
+
+2.19 cl Which of the following information does the text give about when the event occurred?
+2.19.01 The exact start time
+2.19.02 An approximate start time
+2.19.03 The exact end time
+2.19.04 An approximate end time
+2.19.05 The duration (the length of time the event lasted after it began)
+2.19.06 Information not given
+
+2.20 mc Approximately when did the event begin?
+2.20.01 Pre-dawn (12am-6am)
+2.20.02 Morning (6am-12pm)
+2.20.03 Mid-day (12pm-3pm)
+2.20.04 Afternoon (3pm-6pm)
+2.20.05 Evening (6pm-9pm)
+2.20.06 Night (9pm-12am)
+
+2.21 mc Approximately when did the event end?
+2.21.01 Pre-dawn (12am-6am)
+2.21.02 Morning (6am-12pm)
+2.21.03 Mid-day (12pm-3pm)
+2.21.04 Afternoon (3pm-6pm)
+2.21.05 Evening (6pm-9pm)
+2.21.06 Night (9pm-12am)
+
+2.22 mc Approximately how long did the event last?
+2.22.01 Less than 15 minutes
+2.22.02 “Under half an hour”: 16-30 minutes
+2.22.03 “Over half an hour”: 31-60 minutes
+2.22.04 “A few hours”: 1-2 hours
+2.22.05 “More than a few hours”: 3-5 hours
+2.22.06 “Over 6 hours”: 6-11 hours
+2.22.07 “Half a day”: 12-15 hours
+2.22.08 “A full day”: 16-24 hours
+2.22.09 “Overnight” or “More than 1 day”
+
+if 2.04.01, then 2.05
+if 2.04.02, then 2.05
+if 2.06.01, then 2.07
+if 2.06.02, then 2.07
+if 2.09.01, then 2.12
+if 2.09.02, then 2.13
+if 2.09.03, then 2.14
+if 2.09.04, then 2.15
+if 2.09.05, then 2.16
+if 2.19.02, then 2.20
+if 2.19.04, then 2.21
+if 2.19.05, then 2.22
+
+
+3.04 cl Does the text discuss police activities or the equipment they used
+3.04.01 It discusses police activities
+3.04.02 It discusses police equipment (e.g. tear gas, horses, batons, etc.)
+3.04.03 Information not given
+
+3.05 cl What kinds of things did the police do?
+3.05.01 Ignore protesters minor violations (like jaywalking or blocking sidewalks)
+3.05.02 Talk to protesters in a calm and cooperative manner
+3.05.03 Monitor protesters from a distance
+3.05.04 Use videocameras, drone cameras, or other video-recording technology
+3.05.05 Warn protesters against breaking minor laws (like jaywalking or blocking sidewalks)
+3.05.06 Issue tickets or citations to protesters breaking minor laws (like jaywalking or blocking sidewalks)
+3.05.07 Issue tickets or citations to protesters for violating curfew laws
+3.05.08 Arrest the most disruptive protesters
+3.05.09 Arrest protest leaders or organizers
+3.05.10 Push or shove protesters (with or without using riot shields)
+3.05.11 Hit, punch, or kick protesters
+3.05.12 Strike protesters with batons
+3.05.13 Disperse protesters with water
+3.05.14 Disperse protesters with sound canons (that direct uncomfortably loud noise at protesters)
+3.05.15 Use pepper spray on protesters
+3.05.16 Use tear gas on protesters
+3.05.17 Fire rubber bullets at protesters
+3.05.18 Fire bean bag rounds at protesters
+3.05.19 Fire live ammunition (bullets) at protesters
+3.05.20 Corral, “kettle,” or otherwise force protesters into a confined space
+3.05.21 Arrest more than ten protesters protesters at a time
+
+
+3.06 cl Which of the following gear and/or tactics did the police use during this event? Select all that apply:
+3.06.01 Shields
+3.06.02 Batons
+3.06.03 Body Armor
+3.06.04 Riot Gear (including some combination of the above)
+3.06.05 Horses
+3.06.06 Urban Assault Vehicles
+3.06.07 Tear gas
+3.06.08 Rubber Bullets
+3.06.09 Beanbag Rounds
+3.06.10 Pepper Spray
+3.06.11 Skirmish lines
+3.06.12 Motorcycles
+3.06.13 Squad cars near or within protester crowds
+3.06.14 Other
+
+
+if 3.04.01, then 3.05
+if 3.04.02, then 3.06
+
+4.01 mc Which of the following information does the text give about arrests that occurred during the event?
+4.01.01 The exact number
+4.01.02 An approximate number
+4.01.03 Information not given
+
+4.04 cl Who was arrested?
+4.04.01 Protesters
+4.04.02 Counterprotesters
+4.04.03 Protesters from other cities
+4.04.04 Independents
+4.04.05 News reporters
+4.04.06 City officials
+4.04.07 Undercover police
+4.04.08 Other
+
+4.05 mc Which of the following information does the text give about when the arrests occurred?
+4.05.01 The exact time (highlight only the precise time information)
+4.05.02 An approximate time
+4.05.03 Information not given
+
+4.07 mc Approximately when did the arrests occur?
+4.07.01 Pre-dawn (12am-6am)
+4.07.02 Morning (6am-12pm)
+4.07.03 Midday (12pm-3pm)
+4.07.04 Afternoon (3pm-6pm)
+4.07.05 Evening (6pm-9pm)
+4.07.06 Night (9pm-12am)
+
+4.08 mc Which of the following information does the text give about the number of protesters injured during the event?
+4.08.01 The exact number
+4.08.02 An approximate number
+4.08.03 Information not given
+
+4.11 mc Which of the following information does the text give about when the protesters were injured?
+4.11.01 The exact time
+4.11.02 An approximate time
+4.11.03 Information not given
+
+4.13 mc Approximately when were the protesters injured?
+4.13.01 Pre-dawn (12am-6am)
+4.13.02 Morning (6am-12pm)
+4.13.03 Midday (12pm-3pm)
+4.13.04 Afternoon (3pm-6pm)
+4.13.05 Evening (6pm-9pm)
+4.13.06 Night (9pm-12am)
+
+4.14 mc Which of the following information does the text give about the number of police injured during the event?
+4.14.01 The exact number
+4.14.02 An approximate number
+4.14.03 Information not given
+
+
+4.17 mc Which of the following information does the text give about when the police were injured?
+4.17.01 The exact time
+4.17.02 An approximate time
+4.17.03 Information not given
+
+
+4.19 mc Approximately when were the police injured?
+4.19.01 Pre-dawn (12am-6am)
+4.19.02 Morning (6am-12pm)
+4.19.03 Midday (12pm-3pm)
+4.19.04 Afternoon (3pm-6pm)
+4.19.05 Evening (6pm-9pm)
+4.19.06 Night (9pm-12am)
+
+
+if 4.05.02, then 4.07
+if 4.11.02, then 4.13
+if 4.17.02, then 4.19
+
+
+Instructions: Highlight text describes the time, location, and all the actions of a police-initiated event occurring during the Occupy movement. Remember, a police-initiated event is one that the police plan or lead, AND that is not in direct immediate response to an event protesters have initiated. Many police activities occur during events that protesters initiate, and those police activities should be highlighted as a part of a PROTESTER-initiated event. If more than one event is described, be sure to adjust the highlight flag indicating which text corresponds with which event.
+</pre>
+    </div>
+  </div>
+{% endblock %}

@@ -354,7 +354,7 @@ class QuizTaskRun(models.Model):
 
     # The highlight group this Quiz addressed
     highlight_group = models.ForeignKey(HighlightGroup,
-                                        related_name="submitted_answers",
+                                        related_name="quiz_taskruns",
                                         on_delete=models.CASCADE,
                                         null=True)   # nullable for makemigration
 

@@ -1,4 +1,5 @@
 from django.conf.urls import include, url
+from django.views.generic import TemplateView
 from . import views
 
 app_name = 'researcher'
@@ -12,6 +13,9 @@ urlpatterns = [
     url(r'^upload_schema/$',
         views.UploadSchemaView.as_view(),
         name='upload_schema'),
+    url(r'^help/schema/$',
+        TemplateView.as_view(template_name="researcher/help_schema.html"),
+        name='help_schema'),
     url(r'^nlp_articles/$',
         views.NLPArticlesView.as_view(),
         name='nlp_articles'),

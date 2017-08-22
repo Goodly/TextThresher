@@ -379,46 +379,46 @@
 </g>
 <!-- thresher_models_Answer -->
 <g id="node9" class="node"><title>thresher_models_Answer</title>
-<polygon fill="palegoldenrod" stroke="none" points="607,-955 607,-1037 812,-1037 812,-955 607,-955"/>
-<polygon fill="#698b22" stroke="none" points="607.5,-1020 607.5,-1037 812.5,-1037 812.5,-1020 607.5,-1020"/>
-<text text-anchor="start" x="673.5" y="-1027.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="686.5" y="-1027.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;Answer &#160;&#160;&#160;</text>
-<text text-anchor="start" x="609.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="622.5" y="-1012.6" font-family="Helvetica Bold" font-size="8.00">id</text>
-<text text-anchor="start" x="632.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="709.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="722.5" y="-1012.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
-<text text-anchor="start" x="768.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="609.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="622.5" y="-999.6" font-family="Helvetica Bold" font-size="8.00">question</text>
-<text text-anchor="start" x="665.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="709.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="722.5" y="-999.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="797.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="609.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="622.5" y="-986.6" font-family="Helvetica " font-size="8.00">answer_content</text>
-<text text-anchor="start" x="690.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="709.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="722.5" y="-986.6" font-family="Helvetica " font-size="8.00">TextField</text>
-<text text-anchor="start" x="758.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="609.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="622.5" y="-973.6" font-family="Helvetica " font-size="8.00">answer_number</text>
-<text text-anchor="start" x="692.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="709.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="722.5" y="-973.6" font-family="Helvetica " font-size="8.00">IntegerField</text>
-<text text-anchor="start" x="771.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="609.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="622.5" y="-960.6" font-family="Helvetica " font-size="8.00">next_questions</text>
-<text text-anchor="start" x="687.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="709.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="722.5" y="-960.6" font-family="Helvetica " font-size="8.00">JSONField</text>
-<text text-anchor="start" x="762.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<polygon fill="palegoldenrod" stroke="none" points="589,-955 589,-1037 794,-1037 794,-955 589,-955"/>
+<polygon fill="#698b22" stroke="none" points="589.5,-1020 589.5,-1037 794.5,-1037 794.5,-1020 589.5,-1020"/>
+<text text-anchor="start" x="655.5" y="-1027.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="668.5" y="-1027.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;Answer &#160;&#160;&#160;</text>
+<text text-anchor="start" x="591.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="604.5" y="-1012.6" font-family="Helvetica Bold" font-size="8.00">id</text>
+<text text-anchor="start" x="614.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="691.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="704.5" y="-1012.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
+<text text-anchor="start" x="750.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="591.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="604.5" y="-999.6" font-family="Helvetica Bold" font-size="8.00">question</text>
+<text text-anchor="start" x="647.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="691.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="704.5" y="-999.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="779.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="591.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="604.5" y="-986.6" font-family="Helvetica " font-size="8.00">answer_content</text>
+<text text-anchor="start" x="672.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="691.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="704.5" y="-986.6" font-family="Helvetica " font-size="8.00">TextField</text>
+<text text-anchor="start" x="740.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="591.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="604.5" y="-973.6" font-family="Helvetica " font-size="8.00">answer_number</text>
+<text text-anchor="start" x="674.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="691.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="704.5" y="-973.6" font-family="Helvetica " font-size="8.00">IntegerField</text>
+<text text-anchor="start" x="753.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="591.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="604.5" y="-960.6" font-family="Helvetica " font-size="8.00">next_questions</text>
+<text text-anchor="start" x="669.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="691.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="704.5" y="-960.6" font-family="Helvetica " font-size="8.00">JSONField</text>
+<text text-anchor="start" x="744.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
 </g>
 <!-- thresher_models_Answer&#45;&gt;thresher_models_Question -->
 <g id="edge6" class="edge"><title>thresher_models_Answer&#45;&gt;thresher_models_Question</title>
-<path fill="none" stroke="black" d="M739.32,-943.46C748.62,-927.39 758.92,-909.58 768.43,-893.15"/>
-<ellipse fill="black" stroke="black" cx="737.132" cy="-947.247" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="797" y="-913.6" font-family="Helvetica,sans-Serif" font-size="8.00">question (answers)</text>
+<path fill="none" stroke="black" d="M726.86,-943.9C738.05,-927.72 750.49,-909.73 761.96,-893.15"/>
+<ellipse fill="black" stroke="black" cx="724.419" cy="-947.422" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="788" y="-913.6" font-family="Helvetica,sans-Serif" font-size="8.00">question (answers)</text>
 </g>
 <!-- thresher_models_ArticleHighlight -->
 <g id="node10" class="node"><title>thresher_models_ArticleHighlight</title>
@@ -483,174 +483,174 @@
 </g>
 <!-- thresher_models_HighlightGroup -->
 <g id="node11" class="node"><title>thresher_models_HighlightGroup</title>
-<polygon fill="palegoldenrod" stroke="none" points="322.5,-794 322.5,-876 536.5,-876 536.5,-794 322.5,-794"/>
-<polygon fill="#698b22" stroke="none" points="322.5,-859 322.5,-876 536.5,-876 536.5,-859 322.5,-859"/>
-<text text-anchor="start" x="374.5" y="-866.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="387.5" y="-866.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;HighlightGroup &#160;&#160;&#160;</text>
-<text text-anchor="start" x="324.5" y="-851.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="337.5" y="-851.6" font-family="Helvetica Bold" font-size="8.00">id</text>
-<text text-anchor="start" x="347.5" y="-851.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="433.5" y="-851.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="446.5" y="-851.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
-<text text-anchor="start" x="492.5" y="-851.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="324.5" y="-838.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="337.5" y="-838.6" font-family="Helvetica Bold" font-size="8.00">article_highlight</text>
-<text text-anchor="start" x="416.5" y="-838.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="433.5" y="-838.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="446.5" y="-838.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="521.5" y="-838.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="324.5" y="-825.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="337.5" y="-825.6" font-family="Helvetica Bold" font-size="8.00">topic</text>
-<text text-anchor="start" x="362.5" y="-825.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="433.5" y="-825.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="446.5" y="-825.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="521.5" y="-825.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="324.5" y="-812.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="337.5" y="-812.6" font-family="Helvetica " font-size="8.00">case_number</text>
-<text text-anchor="start" x="395.5" y="-812.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="433.5" y="-812.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="446.5" y="-812.6" font-family="Helvetica " font-size="8.00">IntegerField</text>
-<text text-anchor="start" x="495.5" y="-812.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="324.5" y="-799.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="337.5" y="-799.6" font-family="Helvetica " font-size="8.00">offsets</text>
-<text text-anchor="start" x="368.5" y="-799.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="433.5" y="-799.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="446.5" y="-799.6" font-family="Helvetica " font-size="8.00">JSONField</text>
-<text text-anchor="start" x="486.5" y="-799.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<polygon fill="palegoldenrod" stroke="none" points="326.5,-794 326.5,-876 540.5,-876 540.5,-794 326.5,-794"/>
+<polygon fill="#698b22" stroke="none" points="326.5,-859 326.5,-876 540.5,-876 540.5,-859 326.5,-859"/>
+<text text-anchor="start" x="378.5" y="-866.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="391.5" y="-866.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;HighlightGroup &#160;&#160;&#160;</text>
+<text text-anchor="start" x="328.5" y="-851.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="341.5" y="-851.6" font-family="Helvetica Bold" font-size="8.00">id</text>
+<text text-anchor="start" x="351.5" y="-851.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="437.5" y="-851.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="450.5" y="-851.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
+<text text-anchor="start" x="496.5" y="-851.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="328.5" y="-838.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="341.5" y="-838.6" font-family="Helvetica Bold" font-size="8.00">article_highlight</text>
+<text text-anchor="start" x="420.5" y="-838.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="437.5" y="-838.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="450.5" y="-838.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="525.5" y="-838.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="328.5" y="-825.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="341.5" y="-825.6" font-family="Helvetica Bold" font-size="8.00">topic</text>
+<text text-anchor="start" x="366.5" y="-825.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="437.5" y="-825.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="450.5" y="-825.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="525.5" y="-825.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="328.5" y="-812.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="341.5" y="-812.6" font-family="Helvetica " font-size="8.00">case_number</text>
+<text text-anchor="start" x="399.5" y="-812.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="437.5" y="-812.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="450.5" y="-812.6" font-family="Helvetica " font-size="8.00">IntegerField</text>
+<text text-anchor="start" x="499.5" y="-812.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="328.5" y="-799.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="341.5" y="-799.6" font-family="Helvetica " font-size="8.00">offsets</text>
+<text text-anchor="start" x="372.5" y="-799.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="437.5" y="-799.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="450.5" y="-799.6" font-family="Helvetica " font-size="8.00">JSONField</text>
+<text text-anchor="start" x="490.5" y="-799.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
 </g>
 <!-- thresher_models_HighlightGroup&#45;&gt;thresher_models_Topic -->
 <g id="edge10" class="edge"><title>thresher_models_HighlightGroup&#45;&gt;thresher_models_Topic</title>
-<path fill="none" stroke="black" d="M501.32,-785.67C522.11,-772.97 545.21,-760.03 567.5,-750 605.84,-732.74 649.77,-718.17 688.38,-706.98"/>
-<ellipse fill="black" stroke="black" cx="497.772" cy="-787.865" rx="4.00002" ry="4.00002"/>
+<path fill="none" stroke="black" d="M503.09,-785.58C523.27,-772.88 545.75,-759.97 567.5,-750 605.73,-732.49 649.64,-717.88 688.26,-706.71"/>
+<ellipse fill="black" stroke="black" cx="499.714" cy="-787.731" rx="4.00002" ry="4.00002"/>
 <text text-anchor="middle" x="603" y="-752.6" font-family="Helvetica,sans-Serif" font-size="8.00">topic (highlights)</text>
 </g>
 <!-- thresher_models_HighlightGroup&#45;&gt;thresher_models_ArticleHighlight -->
 <g id="edge11" class="edge"><title>thresher_models_HighlightGroup&#45;&gt;thresher_models_ArticleHighlight</title>
-<path fill="none" stroke="black" d="M421.27,-781.68C418.75,-765.68 415.98,-748.12 413.48,-732.23"/>
-<ellipse fill="black" stroke="black" cx="421.939" cy="-785.938" rx="4.00001" ry="4.00001"/>
-<text text-anchor="middle" x="476.5" y="-752.6" font-family="Helvetica,sans-Serif" font-size="8.00">article_highlight (highlights)</text>
+<path fill="none" stroke="black" d="M423.89,-781.68C420.96,-765.68 417.73,-748.12 414.81,-732.23"/>
+<ellipse fill="black" stroke="black" cx="424.676" cy="-785.956" rx="4.00001" ry="4.00001"/>
+<text text-anchor="middle" x="478.5" y="-752.6" font-family="Helvetica,sans-Serif" font-size="8.00">article_highlight (highlights)</text>
 </g>
 <!-- thresher_models_QuizTaskRun -->
 <g id="node12" class="node"><title>thresher_models_QuizTaskRun</title>
-<polygon fill="palegoldenrod" stroke="none" points="324,-942 324,-1050 535,-1050 535,-942 324,-942"/>
-<polygon fill="#698b22" stroke="none" points="324.5,-1033 324.5,-1050 535.5,-1050 535.5,-1033 324.5,-1033"/>
-<text text-anchor="start" x="380.5" y="-1040.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="393.5" y="-1040.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;QuizTaskRun &#160;&#160;&#160;</text>
-<text text-anchor="start" x="326.5" y="-1025.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="339.5" y="-1025.6" font-family="Helvetica Bold" font-size="8.00">id</text>
-<text text-anchor="start" x="349.5" y="-1025.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="432.5" y="-1025.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="445.5" y="-1025.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
-<text text-anchor="start" x="491.5" y="-1025.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="326.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="339.5" y="-1012.6" font-family="Helvetica Bold" font-size="8.00">article</text>
-<text text-anchor="start" x="370.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="432.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="445.5" y="-1012.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="520.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="326.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="339.5" y="-999.6" font-family="Helvetica Bold" font-size="8.00">contributor</text>
-<text text-anchor="start" x="393.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="432.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="445.5" y="-999.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="520.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="326.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="339.5" y="-986.6" font-family="Helvetica Bold" font-size="8.00">highlight_group</text>
-<text text-anchor="start" x="415.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="432.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="445.5" y="-986.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="520.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="326.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="339.5" y="-973.6" font-family="Helvetica Bold" font-size="8.00">task</text>
-<text text-anchor="start" x="360.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="432.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="445.5" y="-973.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="520.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="326.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="339.5" y="-960.6" font-family="Helvetica " font-size="8.00">info</text>
-<text text-anchor="start" x="355.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="432.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="445.5" y="-960.6" font-family="Helvetica " font-size="8.00">JSONField</text>
-<text text-anchor="start" x="485.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="326.5" y="-947.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="339.5" y="-947.6" font-family="Helvetica " font-size="8.00">pybossa_id</text>
-<text text-anchor="start" x="388.5" y="-947.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="432.5" y="-947.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="445.5" y="-947.6" font-family="Helvetica " font-size="8.00">IntegerField</text>
-<text text-anchor="start" x="494.5" y="-947.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<polygon fill="palegoldenrod" stroke="none" points="328,-942 328,-1050 539,-1050 539,-942 328,-942"/>
+<polygon fill="#698b22" stroke="none" points="328.5,-1033 328.5,-1050 539.5,-1050 539.5,-1033 328.5,-1033"/>
+<text text-anchor="start" x="384.5" y="-1040.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="397.5" y="-1040.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;QuizTaskRun &#160;&#160;&#160;</text>
+<text text-anchor="start" x="330.5" y="-1025.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="343.5" y="-1025.6" font-family="Helvetica Bold" font-size="8.00">id</text>
+<text text-anchor="start" x="353.5" y="-1025.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="436.5" y="-1025.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="449.5" y="-1025.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
+<text text-anchor="start" x="495.5" y="-1025.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="330.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="343.5" y="-1012.6" font-family="Helvetica Bold" font-size="8.00">article</text>
+<text text-anchor="start" x="374.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="436.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="449.5" y="-1012.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="524.5" y="-1012.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="330.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="343.5" y="-999.6" font-family="Helvetica Bold" font-size="8.00">contributor</text>
+<text text-anchor="start" x="397.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="436.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="449.5" y="-999.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="524.5" y="-999.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="330.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="343.5" y="-986.6" font-family="Helvetica Bold" font-size="8.00">highlight_group</text>
+<text text-anchor="start" x="419.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="436.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="449.5" y="-986.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="524.5" y="-986.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="330.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="343.5" y="-973.6" font-family="Helvetica Bold" font-size="8.00">task</text>
+<text text-anchor="start" x="364.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="436.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="449.5" y="-973.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="524.5" y="-973.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="330.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="343.5" y="-960.6" font-family="Helvetica " font-size="8.00">info</text>
+<text text-anchor="start" x="359.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="436.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="449.5" y="-960.6" font-family="Helvetica " font-size="8.00">JSONField</text>
+<text text-anchor="start" x="489.5" y="-960.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="330.5" y="-947.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="343.5" y="-947.6" font-family="Helvetica " font-size="8.00">pybossa_id</text>
+<text text-anchor="start" x="392.5" y="-947.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="436.5" y="-947.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="449.5" y="-947.6" font-family="Helvetica " font-size="8.00">IntegerField</text>
+<text text-anchor="start" x="498.5" y="-947.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
 </g>
 <!-- thresher_models_QuizTaskRun&#45;&gt;thresher_models_Contributor -->
 <g id="edge12" class="edge"><title>thresher_models_QuizTaskRun&#45;&gt;thresher_models_Contributor</title>
-<path fill="none" stroke="black" d="M308.94,-937.82C241.12,-898.25 163.1,-838.39 127.5,-759 97.918,-693.03 96.032,-606.93 97.888,-558.29"/>
-<ellipse fill="black" stroke="black" cx="312.423" cy="-939.825" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="185" y="-752.6" font-family="Helvetica,sans-Serif" font-size="8.00">contributor (quiz_taskruns)</text>
+<path fill="none" stroke="black" d="M312.76,-938.45C244.19,-898.96 164.95,-838.95 128.5,-759 98.497,-693.18 96.301,-607.03 98.002,-558.34"/>
+<ellipse fill="black" stroke="black" cx="316.313" cy="-940.472" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="186" y="-752.6" font-family="Helvetica,sans-Serif" font-size="8.00">contributor (quiz_taskruns)</text>
 </g>
 <!-- thresher_models_QuizTaskRun&#45;&gt;thresher_models_Task -->
 <g id="edge13" class="edge"><title>thresher_models_QuizTaskRun&#45;&gt;thresher_models_Task</title>
-<path fill="none" stroke="black" d="M339.44,-932.54C326.67,-920.6 314.76,-907.31 305.5,-893 234.9,-783.94 245.76,-739.77 228.5,-611 226.36,-595.06 231.99,-581.67 241.95,-570.51"/>
-<ellipse fill="black" stroke="black" cx="342.395" cy="-935.235" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="290.5" y="-752.6" font-family="Helvetica,sans-Serif" font-size="8.00">task (quiz_taskruns)</text>
+<path fill="none" stroke="black" d="M343.6,-932.43C330.81,-920.5 318.85,-907.25 309.5,-893 237.92,-784 246.68,-740.13 228.5,-611 226.26,-595.07 231.83,-581.69 241.76,-570.54"/>
+<ellipse fill="black" stroke="black" cx="346.562" cy="-935.127" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="292.5" y="-752.6" font-family="Helvetica,sans-Serif" font-size="8.00">task (quiz_taskruns)</text>
 </g>
 <!-- thresher_models_QuizTaskRun&#45;&gt;thresher_models_Article -->
 <g id="edge14" class="edge"><title>thresher_models_QuizTaskRun&#45;&gt;thresher_models_Article</title>
-<path fill="none" stroke="black" d="M550.35,-954.26C566.11,-944.93 580.81,-933.64 592.5,-920 682.58,-814.97 675.61,-635.8 667.51,-558.19"/>
-<ellipse fill="black" stroke="black" cx="546.529" cy="-956.427" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="710.5" y="-752.6" font-family="Helvetica,sans-Serif" font-size="8.00">article (quiz_taskruns)</text>
+<path fill="none" stroke="black" d="M553.89,-935.85C559.83,-930.9 565.43,-925.61 570.5,-920 664.38,-816.1 668.3,-635.93 665.08,-558.1"/>
+<ellipse fill="black" stroke="black" cx="550.437" cy="-938.605" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="696.5" y="-752.6" font-family="Helvetica,sans-Serif" font-size="8.00">article (quiz_taskruns)</text>
 </g>
 <!-- thresher_models_QuizTaskRun&#45;&gt;thresher_models_HighlightGroup -->
 <g id="edge15" class="edge"><title>thresher_models_QuizTaskRun&#45;&gt;thresher_models_HighlightGroup</title>
-<path fill="none" stroke="black" d="M429.5,-929.51C429.5,-912.87 429.5,-895.38 429.5,-880.09"/>
-<ellipse fill="black" stroke="black" cx="429.5" cy="-933.6" rx="4" ry="4"/>
-<text text-anchor="middle" x="509" y="-913.6" font-family="Helvetica,sans-Serif" font-size="8.00">highlight_group (submitted_answers)</text>
+<path fill="none" stroke="black" d="M433.5,-929.51C433.5,-912.87 433.5,-895.38 433.5,-880.09"/>
+<ellipse fill="black" stroke="black" cx="433.5" cy="-933.6" rx="4" ry="4"/>
+<text text-anchor="middle" x="500" y="-913.6" font-family="Helvetica,sans-Serif" font-size="8.00">highlight_group (quiz_taskruns)</text>
 </g>
 <!-- thresher_models_SubmittedAnswer -->
 <g id="node13" class="node"><title>thresher_models_SubmittedAnswer</title>
-<polygon fill="palegoldenrod" stroke="none" points="482,-1103 482,-1185 683,-1185 683,-1103 482,-1103"/>
-<polygon fill="#698b22" stroke="none" points="482.5,-1168 482.5,-1185 683.5,-1185 683.5,-1168 482.5,-1168"/>
-<text text-anchor="start" x="522" y="-1175.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="535" y="-1175.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;SubmittedAnswer &#160;&#160;&#160;</text>
-<text text-anchor="start" x="484.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="497.5" y="-1160.6" font-family="Helvetica Bold" font-size="8.00">id</text>
-<text text-anchor="start" x="507.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="580.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="593.5" y="-1160.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
-<text text-anchor="start" x="639.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="484.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="497.5" y="-1147.6" font-family="Helvetica Bold" font-size="8.00">answer</text>
-<text text-anchor="start" x="533.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="580.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="593.5" y="-1147.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="668.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="484.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="497.5" y="-1134.6" font-family="Helvetica Bold" font-size="8.00">quiz_task_run</text>
-<text text-anchor="start" x="563.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="580.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="593.5" y="-1134.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
-<text text-anchor="start" x="668.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="484.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="497.5" y="-1121.6" font-family="Helvetica " font-size="8.00">answer_text</text>
-<text text-anchor="start" x="549.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="580.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="593.5" y="-1121.6" font-family="Helvetica " font-size="8.00">TextField</text>
-<text text-anchor="start" x="629.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="484.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="497.5" y="-1108.6" font-family="Helvetica " font-size="8.00">offsets</text>
-<text text-anchor="start" x="528.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="580.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
-<text text-anchor="start" x="593.5" y="-1108.6" font-family="Helvetica " font-size="8.00">JSONField</text>
-<text text-anchor="start" x="633.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<polygon fill="palegoldenrod" stroke="none" points="472,-1103 472,-1185 673,-1185 673,-1103 472,-1103"/>
+<polygon fill="#698b22" stroke="none" points="472.5,-1168 472.5,-1185 673.5,-1185 673.5,-1168 472.5,-1168"/>
+<text text-anchor="start" x="512" y="-1175.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="525" y="-1175.6" font-family="Helvetica Bold" font-size="8.00" fill="white"> &#160;&#160;&#160;SubmittedAnswer &#160;&#160;&#160;</text>
+<text text-anchor="start" x="474.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="487.5" y="-1160.6" font-family="Helvetica Bold" font-size="8.00">id</text>
+<text text-anchor="start" x="497.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="570.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="583.5" y="-1160.6" font-family="Helvetica Bold" font-size="8.00">AutoField</text>
+<text text-anchor="start" x="629.5" y="-1160.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="474.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="487.5" y="-1147.6" font-family="Helvetica Bold" font-size="8.00">answer</text>
+<text text-anchor="start" x="523.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="570.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="583.5" y="-1147.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="658.5" y="-1147.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="474.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="487.5" y="-1134.6" font-family="Helvetica Bold" font-size="8.00">quiz_task_run</text>
+<text text-anchor="start" x="553.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="570.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="583.5" y="-1134.6" font-family="Helvetica Bold" font-size="8.00">ForeignKey (id)</text>
+<text text-anchor="start" x="658.5" y="-1134.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="474.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="487.5" y="-1121.6" font-family="Helvetica " font-size="8.00">answer_text</text>
+<text text-anchor="start" x="539.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="570.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="583.5" y="-1121.6" font-family="Helvetica " font-size="8.00">TextField</text>
+<text text-anchor="start" x="619.5" y="-1121.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="474.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="487.5" y="-1108.6" font-family="Helvetica " font-size="8.00">offsets</text>
+<text text-anchor="start" x="518.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="570.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="583.5" y="-1108.6" font-family="Helvetica " font-size="8.00">JSONField</text>
+<text text-anchor="start" x="623.5" y="-1108.6" font-family="Helvetica,sans-Serif" font-size="8.00"> &#160;&#160;&#160;</text>
 </g>
 <!-- thresher_models_SubmittedAnswer&#45;&gt;thresher_models_Answer -->
 <g id="edge16" class="edge"><title>thresher_models_SubmittedAnswer&#45;&gt;thresher_models_Answer</title>
-<path fill="none" stroke="black" d="M627.36,-1092.6C630.8,-1088.7 634.21,-1084.8 637.5,-1081 648.74,-1068.1 660.86,-1054 671.9,-1041.2"/>
-<ellipse fill="black" stroke="black" cx="624.604" cy="-1095.71" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="706" y="-1074.6" font-family="Helvetica,sans-Serif" font-size="8.00">answer (submitted_answers)</text>
+<path fill="none" stroke="black" d="M620.47,-1092.8C623.92,-1088.8 627.3,-1084.9 630.5,-1081 640.83,-1068.5 651.43,-1054.4 660.84,-1041.4"/>
+<ellipse fill="black" stroke="black" cx="617.67" cy="-1095.92" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="701" y="-1074.6" font-family="Helvetica,sans-Serif" font-size="8.00">answer (submitted_answers)</text>
 </g>
 <!-- thresher_models_SubmittedAnswer&#45;&gt;thresher_models_QuizTaskRun -->
 <g id="edge17" class="edge"><title>thresher_models_SubmittedAnswer&#45;&gt;thresher_models_QuizTaskRun</title>
-<path fill="none" stroke="black" d="M496.93,-1093.8C491.85,-1089.7 486.99,-1085.5 482.5,-1081 474.54,-1073.1 467.21,-1063.8 460.7,-1054.3"/>
-<ellipse fill="black" stroke="black" cx="500.316" cy="-1096.44" rx="4.00002" ry="4.00002"/>
-<text text-anchor="middle" x="558" y="-1074.6" font-family="Helvetica,sans-Serif" font-size="8.00">quiz_task_run (submitted_answers)</text>
+<path fill="none" stroke="black" d="M488.36,-1093.6C483.79,-1089.6 479.45,-1085.4 475.5,-1081 468.41,-1073.1 462.21,-1063.8 456.91,-1054.3"/>
+<ellipse fill="black" stroke="black" cx="491.655" cy="-1096.34" rx="4.00002" ry="4.00002"/>
+<text text-anchor="middle" x="551" y="-1074.6" font-family="Helvetica,sans-Serif" font-size="8.00">quiz_task_run (submitted_answers)</text>
 </g>
 <!-- thresher_models_NLPHints -->
 <g id="node14" class="node"><title>thresher_models_NLPHints</title>
