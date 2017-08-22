@@ -13,6 +13,11 @@
         <div class="page-description" id="page">
           <div class="description-text">
             Use this form to upload a schema file containing topics, with questions and answers for those topics.
+            <div class="schema-help">
+              <a href="{% url 'researcher:help_schema' %}" target="_blank">
+                Schema format instructions
+              </a>
+            </div>
           </div>
         </div>
         {% csrf_token %}
@@ -20,9 +25,6 @@
         <button type="submit">Upload file</button>
       </form>
     </div>
-    
+
   </div>
-
-  
 {% endblock %}
-
