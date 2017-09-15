@@ -1,5 +1,6 @@
 import argparse
 from collections import namedtuple
+import re
 
 TITLE_ID = 'title:'
 INSTRUCTIONS_ID = 'instructions:'
@@ -15,8 +16,10 @@ QUESTION_TYPES = {'mc' : 'RADIO',
                   'dt' : 'DATE',
                   'tm' : 'TIME'}
 
-Dependency = namedtuple('Dependency', 
+Dependency = namedtuple('Dependency',
     ['topic', 'question', 'answer', 'next_question'])
+
+#HINT_TYPES = r"/^(WHERE|WHO|HOW MANY|WHEN)/i"
 
 def load_defaults(output):
     output['parent'] = ''
@@ -63,7 +66,7 @@ def parse_glossary(glossary_entry, output):
     output['glossary'][term.strip()] = definition.strip()
 
 def parse_dependency(dependency, output):
-    
+
     splitted_dependency = dependency.split(', ')
     source_phrase = splitted_dependency[0]
     target_phrase = splitted_dependency[1].split(' ')[1]
@@ -83,14 +86,24 @@ def parse_dependency(dependency, output):
                                              target_question))
 
 
+def infer_hint_type(question):
+    #data.nlp_hint_types.py: 'WHERE', 'WHO', 'HOW MANY', 'WHEN', 'NONE'
+    match = re.search("WHERE|WHO|HOW MANY|WHEN", question, re.IGNORECASE)
+    if match:
+        return match.group(0).upper()
+    else:
+        return 'NONE';
+
+
 def parse_question_entry(entry_id, data, output):
+    # Infer hint type here and set
     type_bits = entry_id.split('.')
     num_bits = len(type_bits)
     if num_bits == 1:
         try:
             topics_id = int(type_bits[0])
         except ValueError:
-            return 
+            return
         topic_id = type_bits[0]
         if 'topics' not in output:
             output['topics'] = []
@@ -104,6 +117,7 @@ def parse_question_entry(entry_id, data, output):
         question_id = type_bits[1]
         topic = [t for t in output['topics'] if t['id'] == topic_id][0]
         question_type, question_text = data.split(None, 1)
+        hint_type = infer_hint_type(question_text)
         if question_type in QUESTION_TYPES:
             question_type = QUESTION_TYPES[question_type]
         topic['questions'].append({
@@ -111,6 +125,8 @@ def parse_question_entry(entry_id, data, output):
             'question_text': question_text,
             'question_type': question_type,
             'answers': [],
+            'hint_type': hint_type,
+
         })
     else:
         topic_id, question_id, answer_id = type_bits
@@ -122,11 +138,11 @@ def parse_question_entry(entry_id, data, output):
         })
 
 def print_data(output):
-    print "Here's the current parsed data:"
+    print ("Here's the current parsed data:")
     import pprint; pprint.pprint(output)
 
 def print_dependencies(output):
-    print "Print dependencies:"
+    print ("Print dependencies:")
     import pprint; pprint.pprint(output['dependencies'])
 
 
@@ -134,8 +150,8 @@ if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('filename', nargs=1)
     args = arg_parser.parse_args()
-    
+
     output = parse_schema(args.filename[0])
     print_data(output)
-    # print_dependencies(output)
 
+    # print_dependencies(output)
