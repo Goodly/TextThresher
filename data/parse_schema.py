@@ -19,8 +19,6 @@ QUESTION_TYPES = {'mc' : 'RADIO',
 Dependency = namedtuple('Dependency',
     ['topic', 'question', 'answer', 'next_question'])
 
-#HINT_TYPES = r"/^(WHERE|WHO|HOW MANY|WHEN)/i"
-
 def load_defaults(output):
     output['parent'] = ''
     output['topics'] = []
@@ -85,14 +83,12 @@ def parse_dependency(dependency, output):
                                              source_answer_id,
                                              target_question))
 
-
 def infer_hint_type(question):
     match = re.search("WHERE|WHO|HOW MANY|WHEN", question, re.IGNORECASE)
     if match:
         return match.group(0).upper()
     else:
         return 'NONE';
-
 
 def parse_question_entry(entry_id, data, output):
     type_bits = entry_id.split('.')
@@ -136,11 +132,11 @@ def parse_question_entry(entry_id, data, output):
         })
 
 def print_data(output):
-    print ("Here's the current parsed data:")
+    print "Here's the current parsed data:"
     import pprint; pprint.pprint(output)
 
 def print_dependencies(output):
-    print ("Print dependencies:")
+    print "Print dependencies:"
     import pprint; pprint.pprint(output['dependencies'])
 
 
