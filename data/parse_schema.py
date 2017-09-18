@@ -87,7 +87,6 @@ def parse_dependency(dependency, output):
 
 
 def infer_hint_type(question):
-    #data.nlp_hint_types.py: 'WHERE', 'WHO', 'HOW MANY', 'WHEN', 'NONE'
     match = re.search("WHERE|WHO|HOW MANY|WHEN", question, re.IGNORECASE)
     if match:
         return match.group(0).upper()
