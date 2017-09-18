@@ -358,9 +358,6 @@ export class Quiz extends Component {
     const question_id = this.props.question_id;
     let hint_type = 'NONE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
     if (questionDB && questionDB[question_id]) {
-      // DB not yet populated with this field
-      // hint_type = questionDB[question_id].hint_type;
-      // Use the prior technique of using the first word to set the hint type.
       hint_type = questionDB[question_id].hint_type;
     };
     if (this.props.displayHintSelectControl) {
