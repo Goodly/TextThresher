@@ -95,7 +95,6 @@ def infer_hint_type(question):
 
 
 def parse_question_entry(entry_id, data, output):
-    # Infer hint type here and set
     type_bits = entry_id.split('.')
     num_bits = len(type_bits)
     if num_bits == 1:
