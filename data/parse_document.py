@@ -412,13 +412,13 @@ if __name__ == '__main__':
     }
 
     outfile = os.path.join(OUTPUT_FOLDER, "articles.json")
+    data = []
     if len(sys.argv) > 1:
-        data = []
         file_path = sys.argv[1]
         file_name, ext = os.path.splitext(os.path.basename(file_path))
         outfile = os.path.join(OUTPUT_FOLDER, os.path.basename(file_name) + ".json")
         try:
-            data.append(parse_document(file_path))
+            data.append(parse_document(os.path.abspath(file_path), os.path.basename(file_path)))
         except ArticleParseError as e:
             print e
     else:
