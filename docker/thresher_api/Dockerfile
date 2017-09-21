@@ -47,20 +47,17 @@ ENV PYTHONPATH /home/thresher
 # note: Development config mounts the git repo root on this path.
 # Copy minimal files needed to npm install to try
 # and re-use cache
-WORKDIR /home/thresher
-COPY /package.json /home/thresher
-RUN chown -R ${USER}:${USER} /home/thresher
-
 ENV WEBPACK_BUILD_DIR /home/thresher
 WORKDIR /home/thresher
+RUN chown ${USER}:${USER} /home/thresher
+COPY /package.json /home/thresher
+
 USER ${USER}
 RUN npm install
 
 # Now copy the rest of the repo into the image - any file change breaks build cache
+# .dockerignore must exclude node_modules/ and dist/
 COPY / /home/thresher
-USER root
-RUN chown -R ${USER}:${USER} /home/thresher
-USER ${USER}
 RUN npm run deploy:quiet
 
 COPY /docker/bashrc_to_docker ${HOME}/.bashrc
