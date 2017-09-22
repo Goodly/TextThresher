@@ -3,6 +3,17 @@ import style from "./styles.scss";
 
 export default class HandleEnd extends Component {
 
+  constructor(props) {
+    super(props);
+  }
+
+  static propTypes = {
+    highlight: React.PropTypes.object,
+    color: React.PropTypes.string,
+    caseNum: React.PropTypes.number,
+    caseMax: React.PropTypes.number
+  }
+
   render() {
 
     var arrowup = {
@@ -33,12 +44,4 @@ export default class HandleEnd extends Component {
       </span>
     )
   }
-};
-
-HandleEnd.displayName = 'HandleEnd';
-HandleEnd.PropTypes = {
-  highlight: React.PropTypes.object,
-  color: React.PropTypes.string,
-  caseNum: React.PropTypes.number,
-  caseMax: React.PropTypes.number
-};
+}

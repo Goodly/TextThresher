@@ -3,6 +3,18 @@ import style from "./styles.scss";
 
 
 export default class HandleStart extends Component {
+
+  constructor(props) {
+    super(props);
+  }
+  
+  static propTypes = {
+    highlight: React.PropTypes.object,
+    color: React.PropTypes.string,
+    caseNum: React.PropTypes.number,
+    caseMax: React.PropTypes.number
+  }
+
   render() {
     var arrowup = {
       borderBottom: "15px solid " + this.props.color,
@@ -30,13 +42,4 @@ export default class HandleStart extends Component {
       </span>
     )
   }
-};
-
-HandleStart.displayName = 'HandleStart';
-
-HandleStart.PropTypes= {
-  highlight: React.PropTypes.object,
-  color: React.PropTypes.string,
-  caseNum: React.PropTypes.number,
-  caseMax: React.PropTypes.number
 }

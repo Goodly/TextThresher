@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-export default React.createClass({
-  displayName: 'NotFoundRoute',
+export default class NotFoundRoute extends Component {
+
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return (
@@ -14,4 +17,4 @@ export default React.createClass({
       </div>
     );
   }
-});
+}

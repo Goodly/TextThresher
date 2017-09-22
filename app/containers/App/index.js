@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'store/appStore.js';
 
@@ -7,12 +7,15 @@ const store = configureStore();
 /* global styles for app */
 import './styles.scss';
 
-export default React.createClass({
-  displayName: 'App',
+export default class App extends Component {
 
-  propTypes: {
+  constructor(props) {
+    super(props);
+  }
+
+  static propTypes = {
     children: React.PropTypes.object.isRequired
-  },
+  }
 
   render() {
     return (
@@ -23,4 +26,4 @@ export default React.createClass({
       </Provider>
     );
   }
-});
+}

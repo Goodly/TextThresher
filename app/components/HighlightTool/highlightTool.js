@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import overlap from './overlap';
 import mergeHighlights from './mergeHighlights';
 import HandleEnd from './Handles/HandleEnd';
@@ -105,10 +105,25 @@ function getOffset(node, targetNode, result={done: false,
   return result;
 };
 
-const HighlightTool = React.createClass({
-  displayName: 'HighlightTool',
+export default class HighlightTool extends Component {
 
-  propTypes: {
+  constructor(props) {
+    super(props);
+
+    this.breakHighlights = this.breakHighlights.bind(this);
+    this.processHighlights = this.processHighlights.bind(this);
+    this.mergeColors = this.mergeColors.bind(this);
+    this.wordCorrection = this.wordCorrection.bind(this);
+    this.clearHighlights = this.clearHighlights.bind(this);
+    this.returnHighlights = this.returnHighlights.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleCase = this.handleCase.bind(this);
+  }
+
+  static propTypes = {
     text: React.PropTypes.string.isRequired,
     topics: React.PropTypes.array.isRequired,
     highlights: React.PropTypes.array.isRequired,
@@ -116,7 +131,7 @@ const HighlightTool = React.createClass({
     selectedHighlight: React.PropTypes.array.isRequired,
     colors: React.PropTypes.array.isRequired,
     hints_offsets: React.PropTypes.array,
-  },
+  }
 
   /*
   Domain: current stored highlight objects
@@ -143,7 +158,7 @@ const HighlightTool = React.createClass({
   /*
   parseHighlights: Breaks highlights into start and end points, then sorts them
   */
-  breakHighlights: function(highlights) {
+  breakHighlights(highlights) {
     var parsedHighlights = [];
     var temp_index = 0;
     while (temp_index < highlights.length) {
@@ -158,9 +173,9 @@ const HighlightTool = React.createClass({
       return a.index - b.index;
     });
     return parsedHighlights;
-  },
+  }
 
-  processHighlights: function(highlights) {
+  processHighlights(highlights) {
     var parsedHighlights = this.breakHighlights(highlights);
 
     //Track which topics are active - activeTopic indices corresponds to this.props.topics indices
@@ -271,7 +286,7 @@ const HighlightTool = React.createClass({
       temp_index += 1;
     }
     return final;
-  },
+  }
   /*
   Domain: List of Topics
   Range: String RGB
@@ -279,7 +294,7 @@ const HighlightTool = React.createClass({
   From list of topics, merges colors to produce a "middle" value
   Take topics, find the number, generate that many colors
   */
-  mergeColors: function(topics, selected) {
+  mergeColors(topics, selected) {
     var list = [];
     var index = 0;
     var colors = this.props.colors;
@@ -311,9 +326,9 @@ const HighlightTool = React.createClass({
       return 'rgba(255, 255, 255, 0)';
     }
     return 'rgba(' + Math.round(red) + ', ' + Math.round(green) + ', ' + Math.round(blue) + ', ' + opacity +')';
-  },
+  }
 
-  wordCorrection: function(start, end) {
+  wordCorrection(start, end) {
     end -= 1;
     if (start > end) {
       var temp = start;
@@ -355,18 +370,18 @@ const HighlightTool = React.createClass({
       end_char = this.props.text[edit]
     }
     return [start_correction, end_correction+1];
-  },
+  }
 
-  clearHighlights: function() {
+  clearHighlights() {
     this.props.clearHighlights();
-  },
+  }
 
-  returnHighlights: function() {
+  returnHighlights() {
     return this.props.highlights;
-  },
+  }
 
 
-  handleClick: function() {
+  handleClick() {
     var currentTopicId = this.props.currentTopicId;
     var selectionObj = window.getSelection();
     if (selectionObj.anchorOffset == selectionObj.extentOffset) {
@@ -449,13 +464,13 @@ const HighlightTool = React.createClass({
     }
     //removes selection after creating highlight
     window.getSelection().removeAllRanges();
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     document.addEventListener('keydown',this.handleKeyDown);
-  },
+  }
 
-  handleKeyDown: function(e) {
+  handleKeyDown(e) {
     // Don't steal backspace and delete key from input elements!
     if (document.activeElement.nodeName === "INPUT") {
       return;
@@ -467,21 +482,21 @@ const HighlightTool = React.createClass({
         }
       }
     }
-  },
+  }
 
-  handleSelect: function(source, e) {
+  handleSelect(source, e) {
     if (source.length != 0) {
       this.props.selectHighlight(source);
     }
-  },
+  }
 
-  handleCase: function(source, e, i) {
+  handleCase(source, e, i) {
     var newCase = source.caseNum + i;
     if (newCase == 0) {
       newCase = 1;
     }
     this.props.changeCaseHighlight(source, newCase);
-  },
+  }
 
   render() {
     var text = this.props.text;
@@ -594,6 +609,4 @@ const HighlightTool = React.createClass({
     // Need to render tail using article relative start,end
     // in order to place hints correctly in tail.
   }
-});
-
-export default HighlightTool;
+}

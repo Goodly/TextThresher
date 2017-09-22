@@ -13,6 +13,14 @@ const mapStateToProps = state => {
 }
 
 class ShowHelp extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  static propTypes = { 
+    closeHelp: React.PropTypes.func.isRequired 
+  }
+
   render() {
     let name = this.props.name;
     let description = this.props.description;
@@ -41,7 +49,5 @@ class ShowHelp extends Component {
     );
   }
 }
-
-ShowHelp.propTypes = { closeHelp: React.PropTypes.func.isRequired };
 
 export default connect(mapStateToProps)(ShowHelp);
