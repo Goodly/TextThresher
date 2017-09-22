@@ -19,18 +19,6 @@ import { introJs } from 'intro.js/intro.js';
 import { abridgeText,
          getAnswerAnnotations } from 'components/Quiz/contextWords';
 
-// note, will also capture 'whom' and 'whose'
-const re_hinttype = /^(WHERE|WHO|HOW MANY|WHEN)/i;
-
-function inferHintType(question_text) {
-  // data.nlp_hint_types.py: 'WHERE', 'WHO', 'HOW MANY', 'WHEN', 'NONE'
-  let match = question_text.match(re_hinttype);
-  if (match) {
-    return match[1].toUpperCase();
-  };
-  return 'NONE';
-};
-
 function eqSet(as, bs) {
   if (as.size !== bs.size) return false;
   for (var a of as) if (!bs.has(a)) return false;
@@ -291,7 +279,7 @@ export class Quiz extends Component {
       : <div></div>;
     return (
       <div key={question.id}>
-        <Question question={question} /> 
+        <Question question={question} />
         { buttons }
       </div>
     );
@@ -370,10 +358,7 @@ export class Quiz extends Component {
     const question_id = this.props.question_id;
     let hint_type = 'NONE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
     if (questionDB && questionDB[question_id]) {
-      // DB not yet populated with this field
-      // hint_type = questionDB[question_id].hint_type;
-      // Use the prior technique of using the first word to set the hint type.
-      hint_type = inferHintType(questionDB[question_id].question_text);
+      hint_type = questionDB[question_id].hint_type;
     };
     if (this.props.displayHintSelectControl) {
       hint_type = this.props.displayHintType;
