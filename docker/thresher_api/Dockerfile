@@ -1,19 +1,12 @@
-FROM python:2.7-slim
-ENV PYTHONUNBUFFERED 1
+#-------BUILD javascript task presenter in dist/ -----------------
+FROM python:2.7-slim as builder
+
 ENV TERM xterm
-
-# helpful aliases
-COPY /docker/bashrc_to_docker /root/.bashrc
-
 # ARG vars exist only during build and can be overridden by --build-args
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -q && apt-get install -q -y \
         curl apt-transport-https apt-utils \
-        gcc \
-        gettext \
-        postgresql-client libpq-dev \
-        vim less psmisc \
         python
 
 WORKDIR /home/download
@@ -39,16 +32,50 @@ ARG NODE_PACKAGE=nodejs_6.11.3-1nodesource1_amd64.deb
 RUN curl -sSO "https://deb.nodesource.com/node_6.x/pool/main/n/nodejs/${NODE_PACKAGE}"
 RUN dpkg -i ${NODE_PACKAGE}
 
-# npm upgrade doesn't work due to bug in nodejs .deb package!
-# Must install nodejs at terminal for npm upgrade to work!
-#RUN npm install -g npm
-#RUN npm --version
-
 RUN curl -sSO https://dl.yarnpkg.com/debian/pubkey.gpg
 RUN apt-key add pubkey.gpg
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 RUN apt-get update -q && apt-get install -q -y 'yarn=1.0.2*'
+
+# note: Development config mounts the git repo root on this path.
+# Copy minimal files needed to npm install to try
+# and re-use cache
+ENV WEBPACK_BUILD_DIR /home/thresher
+WORKDIR /home/thresher
+RUN chown ${USER}:${USER} /home/thresher
+COPY /package.json /home/thresher
+COPY /yarn.lock /home/thresher
+
+USER ${USER}
+RUN yarn install
+
+# Now copy the rest of the repo into the image - any file change breaks build cache
+# .dockerignore must exclude node_modules/ and dist/
+COPY /.babelrc .
+COPY /app ./app
+COPY /webpack ./webpack
+COPY /webpack.config.js .
+RUN npm run deploy:quiet
+
+# helpful aliases
+COPY /docker/bashrc_to_docker /root/.bashrc
+COPY /docker/bashrc_to_docker ${HOME}/.bashrc
+
+#-------------DJANGO SERVER----------------
+FROM python:2.7-slim as django
+USER root
+ENV PYTHONUNBUFFERED 1
+ENV TERM xterm
+# ARG vars exist only during build and can be overridden by --build-args
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -q && apt-get install -q -y \
+        curl apt-transport-https apt-utils \
+        gcc \
+        gettext \
+        postgresql-client libpq-dev \
+        vim less psmisc
 
 RUN rm -rf /var/lib/apt/lists/*
 
@@ -71,23 +98,17 @@ WORKDIR /var/www
 RUN chown ${USER}:${USER} /var/www
 
 ENV PYTHONPATH /home/thresher
-# note: Development config mounts the git repo root on this path.
-# Copy minimal files needed to npm install to try
-# and re-use cache
-ENV WEBPACK_BUILD_DIR /home/thresher
 WORKDIR /home/thresher
 RUN chown ${USER}:${USER} /home/thresher
-COPY /package.json /home/thresher
-COPY /yarn.lock /home/thresher
+COPY --from=builder /home/thresher/dist .
+COPY /data .
+COPY /docker .
+COPY /manage.py .
+COPY /researcher .
+COPY /thresher .
+COPY /thresher_backend .
 
-USER ${USER}
-RUN yarn install
-
-# Now copy the rest of the repo into the image - any file change breaks build cache
-# .dockerignore must exclude node_modules/ and dist/
-COPY / /home/thresher
-RUN npm run deploy:quiet
-
+COPY /docker/bashrc_to_docker /root/.bashrc
 COPY /docker/bashrc_to_docker ${HOME}/.bashrc
 EXPOSE 5000
 
