@@ -100,13 +100,13 @@ RUN chown ${USER}:${USER} /var/www
 ENV PYTHONPATH /home/thresher
 WORKDIR /home/thresher
 RUN chown ${USER}:${USER} /home/thresher
-COPY --from=builder /home/thresher/dist .
-COPY /data .
-COPY /docker .
+COPY --from=builder /home/thresher/dist ./dist
+COPY /data ./data
+COPY /docker ./docker
 COPY /manage.py .
-COPY /researcher .
-COPY /thresher .
-COPY /thresher_backend .
+COPY /researcher ./researcher
+COPY /thresher ./thresher
+COPY /thresher_backend ./thresher_backend
 
 COPY /docker/bashrc_to_docker /root/.bashrc
 COPY /docker/bashrc_to_docker ${HOME}/.bashrc
