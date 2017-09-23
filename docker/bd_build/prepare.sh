@@ -31,17 +31,17 @@ dpkg-divert --local --rename --add /usr/bin/ischroot
 ln -sf /bin/true /usr/bin/ischroot
 
 ## Install HTTPS support for APT.
-#$minimal_apt_get_install apt-transport-https ca-certificates
+$minimal_apt_get_install apt-transport-https ca-certificates
 
 ## Install add-apt-repository
-#$minimal_apt_get_install software-properties-common
+$minimal_apt_get_install software-properties-common
 
 ## Upgrade all packages.
 # apt-get dist-upgrade -y --no-install-recommends
 
-## Fix locale.
-$minimal_apt_get_install language-pack-en
-locale-gen en_US
-update-locale LANG=en_US.UTF-8 LC_CTYPE=en_US.UTF-8
-echo -n en_US.UTF-8 > /etc/container_environment/LANG
-echo -n en_US.UTF-8 > /etc/container_environment/LC_CTYPE
+## Fix locale on Ubuntu
+#$minimal_apt_get_install language-pack-en
+#locale-gen en_US
+#update-locale LANG=en_US.UTF-8 LC_CTYPE=en_US.UTF-8
+#echo -n en_US.UTF-8 > /etc/container_environment/LANG
+#echo -n en_US.UTF-8 > /etc/container_environment/LC_CTYPE

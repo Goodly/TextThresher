@@ -1,12 +1,19 @@
 #-------BUILD javascript task presenter in dist/ -----------------
 FROM python:2.7-slim as builder
 
+# Prep base
+RUN apt-get update -q
+WORKDIR /bd_build
+COPY /docker/bd_build /bd_build
+RUN ./prepare.sh
+
 ENV TERM xterm
 # ARG vars exist only during build and can be overridden by --build-args
 ARG DEBIAN_FRONTEND=noninteractive
+ARG MINIMAL_APT_INSTALL="apt-get install -q -y --no-install-recommends"
 
-RUN apt-get update -q && apt-get install -q -y \
-        curl apt-transport-https apt-utils \
+RUN $MINIMAL_APT_INSTALL \
+        curl \
         python
 
 WORKDIR /home/download
@@ -36,7 +43,7 @@ RUN curl -sSO https://dl.yarnpkg.com/debian/pubkey.gpg
 RUN apt-key add pubkey.gpg
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-RUN apt-get update -q && apt-get install -q -y 'yarn=1.0.2*'
+RUN apt-get update -q && $MINIMAL_APT_INSTALL 'yarn=1.0.2*'
 
 # note: Development config mounts the git repo root on this path.
 # Copy minimal files needed to npm install to try
@@ -58,20 +65,24 @@ COPY /webpack ./webpack
 COPY /webpack.config.js .
 RUN npm run deploy:quiet
 
-# helpful aliases
-COPY /docker/bashrc_to_docker /root/.bashrc
-COPY /docker/bashrc_to_docker ${HOME}/.bashrc
-
-#-------------DJANGO SERVER----------------
+#-------IMAGE FOR BOTH DJANGO SERVER & PYTHON RQ SERVICE----------------
 FROM python:2.7-slim as django
 USER root
+
+# Prep base
+RUN apt-get update -q
+WORKDIR /bd_build
+COPY /docker/bd_build /bd_build
+RUN ./prepare.sh
+
 ENV PYTHONUNBUFFERED 1
 ENV TERM xterm
 # ARG vars exist only during build and can be overridden by --build-args
 ARG DEBIAN_FRONTEND=noninteractive
+ARG MINIMAL_APT_INSTALL="apt-get install -q -y --no-install-recommends"
 
-RUN apt-get update -q && apt-get install -q -y \
-        curl apt-transport-https apt-utils \
+RUN $MINIMAL_APT_INSTALL \
+        curl \
         gcc \
         gettext \
         postgresql-client libpq-dev \
@@ -108,6 +119,7 @@ COPY /researcher ./researcher
 COPY /thresher ./thresher
 COPY /thresher_backend ./thresher_backend
 
+# helpful aliases
 COPY /docker/bashrc_to_docker /root/.bashrc
 COPY /docker/bashrc_to_docker ${HOME}/.bashrc
 EXPOSE 5000
