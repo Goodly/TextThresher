@@ -16,6 +16,16 @@ const mapStateToProps = state => {
 }
 
 class SelectHint extends Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  static propTypes = {
+    currTask: React.PropTypes.object,
+    onChange: React.PropTypes.func.isRequired,
+  }
+
   render() {
     if ( ! this.props.displayHintSelectControl) {
       return <div />;
@@ -43,10 +53,5 @@ class SelectHint extends Component {
     };
   }
 }
-
-SelectHint.propTypes = {
-  currTask: React.PropTypes.object,
-  onChange: React.PropTypes.func.isRequired,
-};
 
 export default connect(mapStateToProps)(SelectHint);

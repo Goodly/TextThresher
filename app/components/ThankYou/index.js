@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { styles } from './styles.scss';
@@ -11,8 +11,11 @@ const mapStateToProps = state => {
   };
 }
 
-const ThankYou = React.createClass({
-  displayName: 'Project',
+class ThankYou extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     const name = this.props.name;
     const tasksCompleted = this.props.tasksCompleted;
@@ -38,6 +41,6 @@ const ThankYou = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default connect(mapStateToProps)(ThankYou);

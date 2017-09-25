@@ -197,4 +197,4 @@ export class TopicHighlighter extends Component {
       </div>
     );
   }
-};
+}

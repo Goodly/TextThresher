@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Map as ImmutableMap } from 'immutable';
@@ -55,42 +55,51 @@ function renderInkWell(color, selected, clickHandler) {
   return <div style={ style } onClick={ clickHandler } />
 }
 
-const Question = React.createClass({
-  displayname: 'Question',
+class Question extends Component {
 
-  getInitialState () {
-    return {
-      focused: false
+  constructor(props) {
+    super(props);
+
+    this.activeAnswer = this.activeAnswer.bind(this);
+    this.getAnswerValue = this.getAnswerValue.bind(this);
+    this.getAnswerColorState = this.getAnswerColorState.bind(this);
+    this.mapToRadio = this.mapToRadio.bind(this);
+    this.mapToCheckbox = this.mapToCheckbox.bind(this);
+    this.textInput = this.textInput.bind(this);
+    this.dateInput = this.dateInput.bind(this);
+    this.mapQuestionAnswers = this.mapQuestionAnswers.bind(this);
+    this.state = {
+      focused: false,
     };
-  },
+  }
 
-  propTypes: {
+  static propTypes = {
     question: React.PropTypes.object.isRequired,
     answer_id: React.PropTypes.number,
     answers: React.PropTypes.instanceOf(ImmutableMap).isRequired,
     answer_colors: React.PropTypes.instanceOf(ImmutableMap).isRequired,
     currTask: React.PropTypes.object
-  },
+  }
 
-  activeAnswer: function(answer_id) {
+  activeAnswer(answer_id) {
     for (const answered_qs of this.props.answers.values()) {
       if (answered_qs.has(answer_id)) {
         return true;
       };
     };
     return false;
-  },
+  }
 
-  getAnswerValue: function(answer_id, default_value) {
+  getAnswerValue(answer_id, default_value) {
     for (const answered_qs of this.props.answers.values()) {
       if (answered_qs.has(answer_id)) {
         return answered_qs.get(answer_id).text;
       };
     };
     return default_value;
-  },
+  }
 
-  getAnswerColorState: function(answer_id) {
+  getAnswerColorState(answer_id) {
     let answerColor = '';
     let selected = false;
     // answer_colors is a Map
@@ -101,9 +110,9 @@ const Question = React.createClass({
       selected = true;
     };
     return { answerColor, selected };
-  },
+  }
 
-  mapToRadio: function(answer_list, controlname="controlgroup") {
+  mapToRadio(answer_list, controlname="controlgroup") {
     return (
       <form>
         { answer_list.map((answer, i) =>
@@ -129,9 +138,9 @@ const Question = React.createClass({
         )}
       </form>
     );
-  },
+  }
 
-  mapToCheckbox: function(answer_list, type, controlname="controlgroup") {
+  mapToCheckbox(answer_list, type, controlname="controlgroup") {
     return (
       <form>
         { answer_list.map((answer, i) => {
@@ -171,9 +180,9 @@ const Question = React.createClass({
         })}
       </form>
     );
-  },
+  }
 
-  textInput: function(answer_list, type, controlname="textinput") {
+  textInput(answer_list, type, controlname="textinput") {
     const answer = answer_list[0];
     const answer_text = this.getAnswerValue(answer.id, '');
     let { answerColor, selected } = this.getAnswerColorState(answer.id);
@@ -192,9 +201,9 @@ const Question = React.createClass({
         />
       </form>
     );
-  },
+  }
 
-  dateInput: function(answer_list) {
+  dateInput(answer_list) {
     const answer = answer_list[0];
     // reducer/quiz.js activeQuestion sets the default in Question at a time
     // mode. If the user skips straight to Review, this default will be used.
@@ -222,9 +231,9 @@ const Question = React.createClass({
         />
       </form>
     );
-  },
+  }
 
-  mapQuestionAnswers: function() {
+  mapQuestionAnswers() {
     var answer_list = this.props.question.answers.sort((a, b) => {
       return a.answer_number - b.answer_number;
     });
@@ -246,7 +255,7 @@ const Question = React.createClass({
                     ', should be: RADIO, CHECKBOX, TEXT, DATE, TIME, or SELECT_SUBTOPIC.');
         return <div></div>
     }
-  },
+  }
 
   render() {
     const mapped_answers = this.props.question ? this.mapQuestionAnswers() :  <div></div> ;
@@ -260,7 +269,7 @@ const Question = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default connect(
   mapStateToProps,

@@ -43,7 +43,7 @@ class TopicInstructionComponent extends Component {
       </div>
       );
   }
-};
+}
 
 TopicInstructionComponent.propTypes = {
   instrStyle: React.PropTypes.object.isRequired
@@ -54,16 +54,19 @@ export let TopicInstruction = connect(
   mapDispatchToProps
 )(Radium(TopicInstructionComponent));
 
-const TopicItem = React.createClass({
-  displayName: 'TopicItem',
+class TopicItem extends Component {
 
-  propTypes: {
+  constructor(props) {
+    super(props);
+  }
+
+  static propTypes = {
     topic: React.PropTypes.object.isRequired,
     currentTopicId: React.PropTypes.number.isRequired,
     color: React.PropTypes.string.isRequired,
     height: React.PropTypes.string.isRequired,
     clickFunc: React.PropTypes.func.isRequired,
-  },
+  }
 
   render() {
     var topic = this.props.topic;
@@ -103,21 +106,26 @@ const TopicItem = React.createClass({
       </li>
     );
   }
-});
+}
 
-const TopicPickerComponent = React.createClass({
-  displayName: 'TopicPicker',
+class TopicPickerComponent extends Component {
 
-  propTypes: {
+  constructor(props) {
+    super(props);
+
+    this.activateTopic = this.activateTopic.bind(this);
+  }
+
+  static propTypes = {
     topics: React.PropTypes.object.isRequired,
     topicStyle: React.PropTypes.string.isRequired,
     currentTopicId: React.PropTypes.number.isRequired,
     onActivateTopic: React.PropTypes.func.isRequired,
-  },
+  }
 
   activateTopic(topic) {
     this.props.onActivateTopic(topic);
-  },
+  }
 
   render() {
     var topic_array = this.props.topics.results;
@@ -144,7 +152,7 @@ const TopicPickerComponent = React.createClass({
       </div>
     );
   }
-});
+}
 
 export let TopicPicker = connect(
   mapStateToProps,
