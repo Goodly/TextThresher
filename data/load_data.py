@@ -24,6 +24,7 @@ from data import init_defaults
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema
 from data.parse_schema_v2 import parse_schema as parse_schema_v2
+from data.pybossa_api import ParseSchemaException
 
 from thresher.models import (Article, Topic, HighlightGroup,
                              ArticleHighlight, Question, Answer)
@@ -278,8 +279,11 @@ def load_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
     for schema_file in schema_files:
         print "loading schema:", schema_file
-        with transaction.atomic():
-            load_schema(parse_schema(os.path.join(dirpath, schema_file)))
+        try:
+            with transaction.atomic():
+                load_schema(parse_schema(os.path.join(dirpath, schema_file)))
+        except ParseSchemaException as e:
+            e.load_err_model()
 
 def load_schema_v2_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))

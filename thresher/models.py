@@ -426,3 +426,15 @@ class NLPHints(models.Model):
     def __unicode__(self):
         return ("id %d article id %d hint type %s") % (self.id,
                 self.article_id, self.hint_type)
+
+class ParserError(models.Model):
+    message = models.TextField()
+    errtype = models.TextField()
+    file_name = models.TextField()
+    linenum = models.IntegerField()
+
+    def __unicode__(self):
+        return "In file {} line {}, {} error: {}".format(self.file_name,
+                                                         self.linenum,
+                                                         self.errtype,
+                                                         self.message)
