@@ -13,7 +13,7 @@ import django_rq
 q = django_rq.get_queue('nlp_exporter')
 
 from thresher.models import Article, Topic
-from thresher.views import collectNLPTasks
+from data.task_collector import collectNLPTasks
 
 @django_rq.job('nlp_generator', timeout=1800, result_ttl=24*3600)
 def generate_nlp_tasks_worker(profile_id=None,
