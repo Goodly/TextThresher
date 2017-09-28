@@ -25,8 +25,9 @@ from data.parse_document import parse_document
 from data.parse_schema import parse_schema, ParseSchemaException
 from data.parse_schema_v2 import parse_schema as parse_schema_v2
 
-from thresher.models import (Article, Topic, HighlightGroup,
-                             ArticleHighlight, Question, Answer, ParserError)
+from thresher.models import (Article, Topic, Question, Answer,
+                             ArticleHighlight, HighlightGroup,
+                             Contributor, ParserError)
 
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
@@ -242,7 +243,16 @@ def load_article(article):
 def load_annotations(article, article_obj):
     # In future usage, the articles being imported will not be highlighted
     # already and thus won't have 'annotators'.
-    article_highlight = ArticleHighlight.objects.create(article=article_obj)
+    annotators = ','.join(article['metadata']['annotators'])
+    if annotators == "":
+        annotators = "Unknown annotator"
+
+    (contributor, created) = Contributor.objects.get_or_create(
+        username=annotators
+    )
+
+    article_highlight = ArticleHighlight.objects.create(article=article_obj,
+                                                        contributor=contributor)
 
     for tua_type, tuas in article['tuas'].iteritems():
         try:

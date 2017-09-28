@@ -30,16 +30,23 @@ class UserProfile(models.Model):
 
 
 class Contributor(models.Model):
+    username = models.CharField(blank=True, max_length=100, default="")
     pybossa_user_id = models.IntegerField(null=True, db_index=True, unique=True)
     experience_score = models.FloatField(default=0.0)
     accuracy_score = models.FloatField(default=0.0)
 
+    # username can be blank and pybossa_user_id can be null, but
+    # must use one or both.
+    class Meta:
+        unique_together = (
+            ("username", "pybossa_user_id"),
+        )
+
     def __unicode__(self):
-        return "id {} pybossa user id {} experience score {} accuracy score {}".format(
+        return "id {} username {} pybossa user id {}".format(
                 self.id,
-                self.pybossa_user_id,
-                self.experience_score,
-                self.accuracy_score
+                self.username,
+                self.pybossa_user_id
         )
 
 
@@ -310,7 +317,7 @@ class ArticleHighlight(models.Model):
         desc = ("id %d for article id %d" % (self.id, self.article.id))
         if self.pybossa_id:
             desc += " pybossa taskrun id %d" % self.pybossa_id
-        if self.contributor:
+        if self.contributor and self.contributor.pybossa_user_id:
             desc += " by Pybossa user %d" % self.contributor.pybossa_user_id
         return desc
 
