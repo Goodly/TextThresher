@@ -29,6 +29,14 @@ class NewUserAdmin(UserAdmin):
         UserProfileInLine,
     ]
 
+class ArticleHighlightAdmin(admin.ModelAdmin):
+    def filename(self, articleHighlight):
+        article = articleHighlight.article
+        return article.metadata.get('filename','-')
+    filename.short_description = 'Filename'
+
+    list_display = ('id', 'contributor', 'article', 'filename')
+
 # Re-register UserAdmin, including the additional attributes added
 admin.site.unregister(User)
 admin.site.register(User, NewUserAdmin)
@@ -41,7 +49,7 @@ admin.site.register(Question)
 admin.site.register(Answer)
 admin.site.register(Contributor)
 admin.site.register(Task)
-admin.site.register(ArticleHighlight)
+admin.site.register(ArticleHighlight, ArticleHighlightAdmin)
 admin.site.register(HighlightGroup)
 admin.site.register(QuizTaskRun)
 admin.site.register(SubmittedAnswer)
