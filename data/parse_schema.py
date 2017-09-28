@@ -38,6 +38,7 @@ def parse_schema(schema_file):
 
                 # Throw out blank lines
                 if not raw_line:
+                    linecount += 1
                     continue
 
                 try:
@@ -55,13 +56,13 @@ def parse_schema(schema_file):
                         parse_question_entry(type_id, data, parsed_schema)
                     else:
                         # type_id is wrong or split lines returned wrong stuffs
-                        raise Exception("type_id is invalid.")
+                        raise Exception("type_id {} is invalid.".format(type_id))
 
                 except Exception as e:
                     raise ParseSchemaException(e.message, type(e).__name__,
                                                schema_file, linecount)
 
-            linecount += 1
+                linecount += 1
     except IOError as ioerr:
         msg = "I/O error({0}): {1}".format(ioerr.errno, ioerr.strerror)
         raise ParseSchemaException(msg, type(ioerr).__name__, schema_file, -1)
@@ -69,11 +70,7 @@ def parse_schema(schema_file):
     return parsed_schema
 
 def parse_title(title, output):
-    if title:
-        output['title'] = title
-    else:
-        output['title'] = ''
-        raise Exception("Title is empty")
+    output['title'] = title
 
 def parse_instructions(instructions, output):
     output['instructions'] = instructions
