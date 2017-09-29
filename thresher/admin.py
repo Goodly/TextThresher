@@ -42,8 +42,29 @@ def getContributor(contributor):
         return "pybossa_user_id: {}".format(contributor.pybossa_user_id)
 
 
+def numberOfHighlights(obj):
+    return len(obj.offsets)
+numberOfHighlights.short_description = 'Number of Highlights'
+
+
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('id',  'task_type', 'name', 'short_name',
+                    'pybossa_url', 'pybossa_id', 'pybossa_created')
+
+
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('id', 'article_number', metadata_filename)
+
+
+class TopicAdmin(admin.ModelAdmin):
+    def getParent(self, obj):
+        if obj.parent:
+            return obj.parent.name
+        else:
+            return "-"
+    getParent.short_description = 'Parent'
+
+    list_display = ('id', 'getParent', 'order', 'name')
 
 
 class QuestionAdmin(admin.ModelAdmin):
@@ -68,6 +89,15 @@ class ContributorAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'pybossa_user_id')
 
 
+class TaskAdmin(admin.ModelAdmin):
+    def getProjectName(self, obj):
+        return obj.project.name
+    getProjectName.short_description = 'Project Name'
+
+    list_display = ('id', 'task_type', 'getProjectName', 'pybossa_created',
+                    'pybossa_id', 'pybossa_state')
+
+
 class ArticleHighlightAdmin(admin.ModelAdmin):
     def getContributor(self, obj):
         return getContributor(obj.contributor)
@@ -80,11 +110,6 @@ class ArticleHighlightAdmin(admin.ModelAdmin):
     list_display = ('id', 'getContributor', 'contributor',
                     'article', 'filename')
     list_select_related = True
-
-
-def numberOfHighlights(obj):
-    return len(obj.offsets)
-numberOfHighlights.short_description = 'Number of Highlights'
 
 
 class HighlightGroupAdmin(admin.ModelAdmin):
@@ -146,13 +171,13 @@ admin.site.unregister(User)
 admin.site.register(User, NewUserAdmin)
 
 admin.site.register(UserProfile)
-admin.site.register(Project)
+admin.site.register(Project, ProjectAdmin)
 admin.site.register(Article, ArticleAdmin)
-admin.site.register(Topic)
+admin.site.register(Topic, TopicAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Contributor, ContributorAdmin)
-admin.site.register(Task)
+admin.site.register(Task, TaskAdmin)
 admin.site.register(ArticleHighlight, ArticleHighlightAdmin)
 admin.site.register(HighlightGroup, HighlightGroupAdmin)
 admin.site.register(QuizTaskRun, QuizTaskRunAdmin)
