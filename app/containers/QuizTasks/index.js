@@ -9,11 +9,6 @@ import * as quizActions from 'actions/quiz';
 import * as highlightActions from 'actions/highlight';
 import * as taskActions from 'actions/task';
 
-// These actions are only used on MockHighlighter, to store tasks from Django
-import * as quizTaskActions from 'actions/djangoQuiz';
-
-// Function to start MockQuiz data loading cycle
-import fetchDjangoQuiz from 'django/quiz';
 // Function to start loading tasks from Pybossa server
 import runPybossaTasks from 'pybossa/pybossa';
 // Function to fetch latest project fields instead of original task config
@@ -26,7 +21,6 @@ const assembledActionCreators = Object.assign(
   taskActions
 );
 
-// djangoQuizTasks only used by MockHighlighter
 const mapStateToProps = state => {
   return {
     currTask: state.quiz.currTask,
@@ -39,33 +33,12 @@ const mapStateToProps = state => {
     answer_selected: state.quiz.answer_selected,
     answer_colors: state.quiz.answer_colors,
     review: state.quiz.review,
-    djangoQuizTasks: state.djangoQuizTasks,
     highlights: state.highlight.highlights,
     task: state.task,
     saveAndNext: state.task.saveAndNext,
     displayState: state.task.displayState,
     displayHintSelectControl: state.task.displayHintSelectControl,
     displayHintType: state.task.displayHintType,
-  }
-};
-
-@connect (
-  mapStateToProps,
-  dispatch => bindActionCreators(
-    Object.assign({},
-                  assembledActionCreators,
-                  quizTaskActions
-                 ),
-    dispatch)
-)
-export class MockQuiz extends Quiz {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    super.componentDidMount();
-    fetchDjangoQuiz(this);
   }
 };
 

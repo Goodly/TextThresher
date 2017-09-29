@@ -1,11 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, hashHistory } from 'react-router';
-import Routes from 'routes';
+import App from 'containers/App';
 
 render(
-  <Router
-    history={ hashHistory }
-    routes={ Routes } />,
+  <App>
+    Still working on this.
+  </App>,
   document.getElementById('react-root')
 );

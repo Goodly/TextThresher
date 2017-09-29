@@ -10,11 +10,6 @@ import * as topicActions from 'actions/topicPicker';
 import * as highlightActions from 'actions/highlight';
 import * as taskActions from 'actions/task';
 
-// These actions are only used on MockHighlighter, to store tasks from Django
-import * as highlightTaskActions from 'actions/djangoHighlights';
-
-// Function to start MockTopicHighlighter data loading cycle
-import fetchDjangoHighlights from 'django/highlight';
 // Function to start loading tasks from Pybossa server
 import runPybossaTasks from 'pybossa/pybossa';
 // Function to fetch latest project fields instead of original task config
@@ -28,7 +23,6 @@ const assembledActionCreators = Object.assign(
     taskActions
 );
 
-// djangoHighlightTasks only used by MockHighlighter
 const mapStateToProps = state => {
   return {
     article: state.article.article,
@@ -38,30 +32,8 @@ const mapStateToProps = state => {
     task: state.task,
     saveAndNext: state.task.saveAndNext,
     displayState: state.task.displayState,
-    djangoHighlightTasks: state.djangoHighlightTasks
   };
 }
-
-@connect (
-  mapStateToProps,
-  dispatch => bindActionCreators(
-    Object.assign({},
-                  assembledActionCreators,
-                  highlightTaskActions
-                 ),
-    dispatch
-  )
-)
-export class MockHighlighter extends TopicHighlighter {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    super.componentDidMount();
-    fetchDjangoHighlights(this);
-  }
-};
 
 @connect (
   mapStateToProps,
