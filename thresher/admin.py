@@ -130,11 +130,15 @@ class SubmittedAnswerAdmin(admin.ModelAdmin):
 
 
 class NLPHintsAdmin(admin.ModelAdmin):
+    def numberOfHints(obj):
+        return len(obj.offsets)
+    numberOfHints.short_description = 'Number of hints'
+
     def filename(self, obj):
         return metadata_filename(obj.article)
     filename.short_description = 'Filename'
 
-    list_display = ('id', 'hint_type', numberOfHighlights, 'filename')
+    list_display = ('id', 'hint_type', numberOfHints, 'filename')
 
 
 # Re-register UserAdmin, including the additional attributes added
