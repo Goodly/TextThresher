@@ -348,7 +348,8 @@ class HighlightGroup(models.Model):
         desc = (("id %d article id %d Topic %s and Case %d ") %
                 (self.id, self.article_highlight.article.id,
                 topic_name, self.case_number))
-        if self.article_highlight.contributor:
+        if (self.article_highlight.contributor and
+           self.article_highlight.contributor.pybossa_user_id):
             desc += " by Pybossa user %d" % self.article_highlight.contributor.pybossa_user_id
         return desc
 
@@ -384,7 +385,7 @@ class QuizTaskRun(models.Model):
         desc = ("id %d" % (self.id,))
         if self.pybossa_id:
             desc += " pybossa taskrun id %d" % self.pybossa_id
-        if self.contributor:
+        if self.contributor and self.contributor.pybossa_user_id:
             desc += " by Pybossa user %d" % self.contributor.pybossa_user_id
         return desc
 
@@ -412,8 +413,9 @@ class SubmittedAnswer(models.Model):
     offsets = JSONField(default=[])
 
     def __unicode__(self):
-        return ("id %d question id %d pybossa user id %d") % (self.id,
-                self.question.id, self.quiz.pybossa_user_id)
+        desc = ("id %d quiz task run id %d answer id %d") % (self.id,
+                self.quiz_task_run_id, self.answer_id)
+        return desc
 
 
 class NLPHints(models.Model):

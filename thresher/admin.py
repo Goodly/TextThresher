@@ -29,13 +29,113 @@ class NewUserAdmin(UserAdmin):
         UserProfileInLine,
     ]
 
+
+def metadata_filename(obj):
+    return obj.metadata.get('filename','-')
+metadata_filename.short_description = 'Filename'
+
+
+def getContributor(contributor):
+    if contributor.username != "":
+        return contributor.username
+    else:
+        return "pybossa_user_id: {}".format(contributor.pybossa_user_id)
+
+
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'article_number', metadata_filename)
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    def topicName(self, obj):
+        return obj.topic.name
+    topicName.short_description = 'Topic'
+
+    list_display = ('id', 'topic_id', 'topicName', 'question_type',
+                    'hint_type', 'question_number', 'question_text')
+
+
+class AnswerAdmin(admin.ModelAdmin):
+    def getQuestionText(self, obj):
+        return obj.question.question_text;
+    getQuestionText.short_description = 'Question'
+
+    list_display = ('id', 'question_id', 'getQuestionText',
+                    'answer_number', 'answer_content')
+
+
+class ContributorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'pybossa_user_id')
+
+
 class ArticleHighlightAdmin(admin.ModelAdmin):
-    def filename(self, articleHighlight):
-        article = articleHighlight.article
-        return article.metadata.get('filename','-')
+    def getContributor(self, obj):
+        return getContributor(obj.contributor)
+    getContributor.short_description = 'Contributor'
+
+    def filename(self, obj):
+        return metadata_filename(obj.article)
     filename.short_description = 'Filename'
 
-    list_display = ('id', 'contributor', 'article', 'filename')
+    list_display = ('id', 'getContributor', 'contributor',
+                    'article', 'filename')
+    list_select_related = True
+
+
+def numberOfHighlights(obj):
+    return len(obj.offsets)
+numberOfHighlights.short_description = 'Number of Highlights'
+
+
+class HighlightGroupAdmin(admin.ModelAdmin):
+    def topicName(self, obj):
+        return obj.topic.name
+    topicName.short_description = 'Topic'
+
+    def getContributor(self, obj):
+        return getContributor(obj.article_highlight.contributor)
+    getContributor.short_description = 'Contributor'
+
+    def filename(self, obj):
+        return metadata_filename(obj.article_highlight.article)
+    filename.short_description = 'Filename'
+
+    list_display = ('id', 'article_highlight_id', 'getContributor',
+                    'topic_id', 'topicName', 'case_number',
+                    numberOfHighlights, 'filename')
+    list_select_related = True
+
+
+class QuizTaskRunAdmin(admin.ModelAdmin):
+    def topicName(self, obj):
+        return obj.highlight_group.topic.name
+    topicName.short_description = 'Topic'
+
+    def getContributor(self, obj):
+        return getContributor(obj.contributor)
+    getContributor.short_description = 'Contributor'
+
+    def filename(self, obj):
+        return metadata_filename(obj.highlight_group.article_highlight.article)
+    filename.short_description = 'Filename'
+
+    list_display = ('id', 'getContributor', 'highlight_group',
+                    'topicName', 'article', 'filename')
+    list_select_related = True
+
+
+class SubmittedAnswerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'quiz_task_run', 'answer_id', 'answer_text',
+                    numberOfHighlights)
+
+
+class NLPHintsAdmin(admin.ModelAdmin):
+    def filename(self, obj):
+        return metadata_filename(obj.article)
+    filename.short_description = 'Filename'
+
+    list_display = ('id', 'hint_type', numberOfHighlights, 'filename')
+
 
 # Re-register UserAdmin, including the additional attributes added
 admin.site.unregister(User)
@@ -43,15 +143,15 @@ admin.site.register(User, NewUserAdmin)
 
 admin.site.register(UserProfile)
 admin.site.register(Project)
-admin.site.register(Article)
+admin.site.register(Article, ArticleAdmin)
 admin.site.register(Topic)
-admin.site.register(Question)
-admin.site.register(Answer)
-admin.site.register(Contributor)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Answer, AnswerAdmin)
+admin.site.register(Contributor, ContributorAdmin)
 admin.site.register(Task)
 admin.site.register(ArticleHighlight, ArticleHighlightAdmin)
-admin.site.register(HighlightGroup)
-admin.site.register(QuizTaskRun)
-admin.site.register(SubmittedAnswer)
-admin.site.register(NLPHints)
+admin.site.register(HighlightGroup, HighlightGroupAdmin)
+admin.site.register(QuizTaskRun, QuizTaskRunAdmin)
+admin.site.register(SubmittedAnswer, SubmittedAnswerAdmin)
+admin.site.register(NLPHints, NLPHintsAdmin)
 admin.site.register(ParserError)
