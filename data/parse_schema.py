@@ -188,6 +188,6 @@ if __name__ == '__main__':
         import logging
         logging.basicConfig()
         logger = logging.getLogger(__name__)
-        logger.error("In file {} line {}, {} error: {}, at time {}"
+        logger.error("In file {} line {}, {} error: {}, at UTC time {:%Y-%m-%d %H:%M:%S}"
                      .format(e.file_name, e.linenum, e.errtype, e.message,
                              e.timestamp))
