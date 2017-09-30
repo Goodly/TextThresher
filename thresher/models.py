@@ -432,9 +432,9 @@ class ParserError(models.Model):
     errtype = models.TextField()
     file_name = models.TextField()
     linenum = models.IntegerField()
+    timestamp = models.DateTimeField()
 
     def __unicode__(self):
-        return "In file {} line {}, {} error: {}".format(self.file_name,
-                                                         self.linenum,
-                                                         self.errtype,
-                                                         self.message)
+        return ("In file {} line {}, {} error: {}, at time {}"
+                .format(self.file_name, self.linenum, self.errtype,
+                        self.message, self.timestamp))

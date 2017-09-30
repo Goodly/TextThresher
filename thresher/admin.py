@@ -10,12 +10,12 @@ from thresher.models import (UserProfile, Project, Article,
                              Contributor, Task,
                              ArticleHighlight, HighlightGroup,
                              QuizTaskRun, SubmittedAnswer,
-                             NLPHints)
+                             NLPHints, ParserError)
 
 class UserProfileInLine(admin.StackedInline):
-    """ Class meant to serve as an inline in the 
-    newly defined user. An inline allows the 
-    UserProfile class to be modified directly 
+    """ Class meant to serve as an inline in the
+    newly defined user. An inline allows the
+    UserProfile class to be modified directly
     through the User class, since an inline gets
     modified on the same page as its parent on the
     admin page. """
@@ -26,7 +26,7 @@ class UserProfileInLine(admin.StackedInline):
 # Create a new User admin, adding the appropriate inline
 class NewUserAdmin(UserAdmin):
     inlines = [
-        UserProfileInLine,  
+        UserProfileInLine,
     ]
 
 # Re-register UserAdmin, including the additional attributes added
@@ -46,3 +46,4 @@ admin.site.register(HighlightGroup)
 admin.site.register(QuizTaskRun)
 admin.site.register(SubmittedAnswer)
 admin.site.register(NLPHints)
+admin.site.register(ParserError)

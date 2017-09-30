@@ -1,8 +1,8 @@
 import argparse
 from collections import namedtuple
 import re
+import pytz, datetime
 
-from data.pybossa_api import ParseSchemaException
 
 TITLE_ID = 'title:'
 INSTRUCTIONS_ID = 'instructions:'
@@ -20,6 +20,17 @@ QUESTION_TYPES = {'mc' : 'RADIO',
 
 Dependency = namedtuple('Dependency',
     ['topic', 'question', 'answer', 'next_question'])
+
+class ParseSchemaException(Exception):
+
+    def __init__(self, message, errtype, file_name, linenum, timestamp, *args):
+        self.message = message
+        self.errtype = errtype
+        self.file_name = file_name
+        self.linenum = linenum
+        self.timestamp = timestamp
+        super(ParseSchemaException, self).__init__(message, errtype, file_name,
+                                                   linenum, timestamp, *args)
 
 def load_defaults(output):
     output['parent'] = ''
@@ -56,16 +67,22 @@ def parse_schema(schema_file):
                         parse_question_entry(type_id, data, parsed_schema)
                     else:
                         # type_id is wrong or split lines returned wrong stuffs
-                        raise Exception("type_id {} is invalid.".format(type_id))
+                        msg = "type_id {} is invalid.".format(type_id)
+                        timestamp = datetime.datetime.now(pytz.utc)
+                        raise ParseSchemaException(msg, "", "", 0, timestamp)
 
                 except Exception as e:
+                    timestamp = datetime.datetime.now(pytz.utc)
                     raise ParseSchemaException(e.message, type(e).__name__,
-                                               schema_file, linecount)
+                                               schema_file, linecount,
+                                               timestamp)
 
                 linecount += 1
     except IOError as ioerr:
         msg = "I/O error({0}): {1}".format(ioerr.errno, ioerr.strerror)
-        raise ParseSchemaException(msg, type(ioerr).__name__, schema_file, -1)
+        timestamp = datetime.datetime.now(pytz.utc)
+        raise ParseSchemaException(msg, type(ioerr).__name__, schema_file, -1,
+                                   timestamp)
 
     return parsed_schema
 
@@ -163,6 +180,14 @@ if __name__ == '__main__':
     arg_parser.add_argument('filename', nargs=1)
     args = arg_parser.parse_args()
 
-    output = parse_schema(args.filename[0])
-    print_data(output)
-    # print_dependencies(output)
+    try:
+        output = parse_schema(args.filename[0])
+        print_data(output)
+        # print_dependencies(output)
+    except ParseSchemaException as e:
+        import logging
+        logging.basicConfig()
+        logger = logging.getLogger(__name__)
+        logger.error("In file {} line {}, {} error: {}, at time {}"
+                     .format(e.file_name, e.linenum, e.errtype, e.message,
+                             e.timestamp))

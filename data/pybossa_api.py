@@ -19,28 +19,11 @@ import django_rq
 from thresher.models import (Article, Topic, Project,
                              Task, Contributor,
                              ArticleHighlight, HighlightGroup,
-                             QuizTaskRun, SubmittedAnswer,
-                             ParserError)
+                             QuizTaskRun, SubmittedAnswer)
 
 from data.task_collector import collectHighlightTasks, collectQuizTasks
 from data import init_defaults
 
-
-class ParseSchemaException(Exception):
-
-    def __init__(self, message, errtype, file_name, linenum, *args):
-        self.message = message
-        self.errtype = errtype
-        self.file_name = file_name
-        self.linenum = linenum
-        super(ParseSchemaException, self).__init__(message, errtype, file_name,
-                                                   linenum, *args)
-
-    def load_err_model(self):
-        err = ParserError.objects.create(message=self.message,
-                                         errtype=self.errtype,
-                                         file_name=self.file_name,
-                                         linenum=self.linenum)
 
 class InvalidTaskType(Exception):
     pass
