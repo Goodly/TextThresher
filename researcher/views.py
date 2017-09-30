@@ -100,7 +100,7 @@ class UploadSchemaView(PermissionRequiredMixin, View):
                 logger.info("Schema copied to temp file %s" % schema_file.name)
                 schema_file.seek(0)
                 schema_contents = schema_file.read()
-                import_schema.delay(schema_contents, request.user.userprofile.id)
+                import_schema.delay(f.name, schema_contents, request.user.userprofile.id)
 
             return redirect('/admin/thresher/topic/')
         else:

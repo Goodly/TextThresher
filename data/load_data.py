@@ -272,7 +272,10 @@ def load_annotations(article, article_obj):
                 print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
                 print e
 
-def log_parse_exception(e):
+def save_parse_exception_message(e):
+    # This cannot be a method of parse_schema.ParseSchemaException because
+    # parse_schema.py must be able to run at the command line without
+    # Django dependencies.
     ParserError.objects.create(message=e.message, errtype=e.errtype,
                                file_name=e.file_name, linenum=e.linenum,
                                timestamp=e.timestamp)
@@ -280,12 +283,13 @@ def log_parse_exception(e):
 def load_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
     for schema_file in schema_files:
-        print "loading schema:", schema_file
+        print "Loading schema:", schema_file
         try:
             with transaction.atomic():
                 load_schema(parse_schema(os.path.join(dirpath, schema_file)))
         except ParseSchemaException as e:
-            log_parse_exception(e)
+            e.log()
+            save_parse_exception_message(e)
 
 def load_schema_v2_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
