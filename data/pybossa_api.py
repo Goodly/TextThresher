@@ -24,6 +24,7 @@ from thresher.models import (Article, Topic, Project,
 from data.task_collector import collectHighlightTasks, collectQuizTasks
 from data import init_defaults
 
+
 class InvalidTaskType(Exception):
     pass
 

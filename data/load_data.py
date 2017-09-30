@@ -22,11 +22,11 @@ from django.db import transaction
 
 from data import init_defaults
 from data.parse_document import parse_document
-from data.parse_schema import parse_schema
+from data.parse_schema import parse_schema, ParseSchemaException
 from data.parse_schema_v2 import parse_schema as parse_schema_v2
 
 from thresher.models import (Article, Topic, HighlightGroup,
-                             ArticleHighlight, Question, Answer)
+                             ArticleHighlight, Question, Answer, ParserError)
 
 ANALYSIS_TYPES = {}
 HIGH_ID = 20000
@@ -272,14 +272,20 @@ def load_annotations(article, article_obj):
                 print 'error on article #', new_id, 'tua #', tua_id, 'of', tua_type
                 print e
 
-
+def log_parse_exception(e):
+    ParserError.objects.create(message=e.message, errtype=e.errtype,
+                               file_name=e.file_name, linenum=e.linenum,
+                               timestamp=e.timestamp)
 
 def load_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
     for schema_file in schema_files:
         print "loading schema:", schema_file
-        with transaction.atomic():
-            load_schema(parse_schema(os.path.join(dirpath, schema_file)))
+        try:
+            with transaction.atomic():
+                load_schema(parse_schema(os.path.join(dirpath, schema_file)))
+        except ParseSchemaException as e:
+            log_parse_exception(e)
 
 def load_schema_v2_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
