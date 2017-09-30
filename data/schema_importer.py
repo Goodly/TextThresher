@@ -2,6 +2,7 @@ import logging
 logger = logging.getLogger(__name__)
 import tarfile, tempfile
 import django_rq
+from django.db import transaction
 from data.load_data import load_schema, save_parse_exception_message
 from data.parse_schema import parse_schema, ParseSchemaException
 
@@ -13,7 +14,8 @@ def import_schema(uploaded_filename, schema_contents, owner_profile_id):
         schema_file.flush()
         schema_id = None
         try:
-            schema_id = load_schema(parse_schema(schema_file.name))
+            with transaction.atomic():
+                schema_id = load_schema(parse_schema(schema_file.name))
         except ParseSchemaException as e:
             # Restore original uploaded filename, don't log temp filename.
             e.file_name = uploaded_filename
