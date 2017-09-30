@@ -280,16 +280,21 @@ def save_parse_exception_message(e):
                                file_name=e.file_name, linenum=e.linenum,
                                timestamp=e.timestamp)
 
+def load_schema_atomic(orig_filename, actual_filepath):
+    try:
+        with transaction.atomic():
+            load_schema(parse_schema(actual_filepath))
+    except ParseSchemaException as e:
+        # Log original filename, not path or secure /tmp file used by RQ worker.
+        e.file_name = orig_filename
+        e.log()
+        save_parse_exception_message(e)
+
 def load_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
     for schema_file in schema_files:
         print "Loading schema:", schema_file
-        try:
-            with transaction.atomic():
-                load_schema(parse_schema(os.path.join(dirpath, schema_file)))
-        except ParseSchemaException as e:
-            e.log()
-            save_parse_exception_message(e)
+        load_schema_atomic(schema_file, os.path.join(dirpath, schema_file))
 
 def load_schema_v2_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
