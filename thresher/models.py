@@ -435,6 +435,6 @@ class ParserError(models.Model):
     timestamp = models.DateTimeField()
 
     def __unicode__(self):
-        return ("Line {} of file {}, {} error: {}, at {}"
+        return ("Line {} of file {}, {} error: {}, at {:%Y-%m-%d %H:%M:%S %Z}"
                 .format(self.linenum, self.file_name, self.errtype,
                         self.message, self.timestamp))

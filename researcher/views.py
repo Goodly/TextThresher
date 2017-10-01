@@ -8,6 +8,7 @@ from django.views import View
 from django.views.generic import FormView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Min, Max
+from django.contrib import messages
 
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
 from researcher.forms import NLPArticlesForm
@@ -24,6 +25,14 @@ from data.pybossa_api import generate_tasks_worker
 from data.pybossa_api import generate_get_taskruns_worker
 from data.nlp_exporter import generate_nlp_tasks_worker
 from thresher.models import Article, Topic, UserProfile, Project
+from thresher.models import ParserError
+
+def showParserErrorMessages(request):
+    errors = ParserError.objects.order_by("timestamp").all()
+    for err in errors:
+        messages.error(request, err)
+    errors.delete()
+
 
 class IndexView(View):
     template_name = 'researcher/index.html'
@@ -83,6 +92,7 @@ class UploadSchemaView(PermissionRequiredMixin, View):
     )
 
     def get(self, request):
+        showParserErrorMessages(request)
         return render(
             request,
             self.template_name,
@@ -102,7 +112,7 @@ class UploadSchemaView(PermissionRequiredMixin, View):
                 schema_contents = schema_file.read()
                 import_schema.delay(f.name, schema_contents, request.user.userprofile.id)
 
-            return redirect('/admin/thresher/topic/')
+            return redirect('researcher:upload_schema')
         else:
             return render(
                 request,

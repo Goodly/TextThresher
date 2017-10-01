@@ -56,6 +56,9 @@ permissions = [
     u'add_quiztaskrun',
     u'change_quiztaskrun',
     u'delete_quiztaskrun',
+    u'add_parsererror',
+    u'change_parsererror',
+    u'delete_parsererror',
     u'change_userprofile',
 ]
 
