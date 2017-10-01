@@ -6,6 +6,9 @@
       Upload Schema File
     </h1>
 
+    <a href="{% url 'admin:thresher_topic_changelist' %}">
+      View Topics
+    </a>
     <div class="main-container">
       <form enctype="multipart/form-data"
         action="{% url 'researcher:upload_schema' %}"
