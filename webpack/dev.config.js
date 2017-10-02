@@ -7,7 +7,7 @@ const config = require('../webpack.config.js');
 
 const PUBLIC_PATH = config.output.publicPath;
 
-config.entry.app.unshift(
+config.entry.highlightViewer.unshift(
   `webpack-dev-server/client?${PUBLIC_PATH}`,
   'webpack/hot/only-dev-server'
 );

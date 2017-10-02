@@ -24,7 +24,6 @@ const PATHS = {
   app: path.resolve(buildPath, './app'),
   dist: path.resolve(buildPath, './dist'),
   staticRoot: path.resolve(buildPath, './app/staticroot'),
-  vendorPath: path.resolve(buildPath, './vendor'),
 };
 
 function execCmd(command) {
@@ -36,7 +35,7 @@ function execCmd(command) {
 
 const config = {
   devServer: {
-    contentBase: [PATHS.staticRoot, PATHS.vendorPath],
+    contentBase: [PATHS.staticRoot],
     public: PUBLIC_HOST,
     publicPath: PUBLIC_PATH,
     host: WEBPACK_LISTEN_IP,
@@ -55,9 +54,9 @@ const config = {
   context: PATHS.buildPath,
   devtool: '#source-map',
   entry: {
-    app: [
+    highlightViewer: [
       'babel-polyfill',
-      './app/index'
+      './app/highlightViewer'
     ],
     highlight: [
       'babel-polyfill',
@@ -173,9 +172,9 @@ const config = {
     new HtmlWebpackPlugin({
       title: 'TextThresher',
       template: './app/templates/index_template.html',
-      chunks: ['app'],
+      chunks: ['highlightViewer'],
+      filename: 'highlightViewer.html',
       chunksSortMode: 'dependency',
-      filename: 'index.html',
     }),
     new webpack.NoEmitOnErrorsPlugin(),
   ],
