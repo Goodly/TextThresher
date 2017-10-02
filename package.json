@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "eslint",
-    "dev": "node --harmony ./webpack/dev-server.js",
+    "dev": "webpack-dev-server --config webpack/dev.config.js",
     "serve": "webpack-dev-server --config webpack/dev.config.js",
     "build": "NODE_ENV=development CLEANDIST=true webpack --config webpack.config.js --progress",
     "build:quiet": "NODE_ENV=development CLEANDIST=true webpack --config webpack.config.js --bail",
