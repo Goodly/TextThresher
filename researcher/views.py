@@ -481,7 +481,10 @@ class ArticleView(PermissionRequiredMixin, View):
 
     def get(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
-        context = {'article': article}
+        context = {
+            'article': article,
+            'page_title': "Article Highlight Viewer",
+        }
         # The default page load the articleView react app from Django static
         # files. Updating that requires 'npm run build' followed by
         # './manage.py collectstatic' in the thresher_api container.
@@ -489,7 +492,7 @@ class ArticleView(PermissionRequiredMixin, View):
         # script tag pointed at localhost:3001/dist/articleReview.bundle.js
         # and run 'npm run dev' for easy debugging.
         debug_presenter = request.GET.get("debugPresenter", False)
-        debug_server = request.GET.get("debugHost", "http://localhost:3001")
+        debug_server = request.GET.get("debugHost", settings.WEBPACK_DEV_SERVER)
         context['debug_presenter'] = debug_presenter
         context['debug_server'] = debug_server
         if debug_presenter:

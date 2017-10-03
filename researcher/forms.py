@@ -1,3 +1,4 @@
+from django.conf import settings
 from django import forms
 from django.forms.widgets import SelectMultiple, HiddenInput, TextInput, Textarea
 from django.forms.widgets import SelectMultiple, HiddenInput
@@ -90,7 +91,7 @@ class CreateProjectForm(forms.Form):
 
     debug_server = forms.CharField(required=False,
                                    max_length=200,
-                                   initial="http://localhost:3001",
+                                   initial=settings.WEBPACK_DEV_SERVER,
                                    widget=HiddenInput)
 
 
@@ -98,7 +99,7 @@ class CreateProjectDebugForm(CreateProjectForm):
     debug_server = forms.CharField(required=False,
                                    label="URL serving task presenters",
                                    max_length=200,
-                                   initial="http://localhost:3001",
+                                   initial=settings.WEBPACK_DEV_SERVER,
                                    help_text=help_with_debug_server,
                                    widget=TextInput(attrs={"size":36}))
 
@@ -128,7 +129,7 @@ class EditProjectForm(forms.ModelForm):
 
     debug_server = forms.CharField(required=False,
                                    max_length=200,
-                                   initial="http://localhost:3001",
+                                   initial=settings.WEBPACK_DEV_SERVER,
                                    widget=HiddenInput)
 
 
@@ -136,7 +137,7 @@ class EditProjectDebugForm(EditProjectForm):
     debug_server = forms.CharField(required=False,
                                    label="URL serving task presenters",
                                    max_length=200,
-                                   initial="http://localhost:3001",
+                                   initial=settings.WEBPACK_DEV_SERVER,
                                    help_text=help_with_debug_server,
                                    widget=TextInput(attrs={"size":36}))
 

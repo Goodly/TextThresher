@@ -18,6 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # host mounted volume. Devs should 'npm run build' inside the container only.
 if os.environ.get("WEBPACK_BUILD_DIR"):
     BASE_DIR = os.environ.get("WEBPACK_BUILD_DIR")
+
+WEBPACK_DEV_SERVER = 'http://localhost:3001'
 HIGHLIGHTER_BUNDLE_URLPATH = '/highlight.bundle.js'
 HIGHLIGHTER_BUNDLE_JS = os.path.join(BASE_DIR, 'dist/highlight.bundle.js')
 QUIZ_BUNDLE_URLPATH = '/quiz.bundle.js'
