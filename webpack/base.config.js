@@ -54,9 +54,9 @@ const config = {
   context: PATHS.buildPath,
   devtool: '#source-map',
   entry: {
-    highlightViewer: [
+    articleView: [
       'babel-polyfill',
-      './app/highlightViewer'
+      './app/articleView'
     ],
     highlight: [
       'babel-polyfill',
@@ -172,8 +172,8 @@ const config = {
     new HtmlWebpackPlugin({
       title: 'TextThresher',
       template: './app/templates/index_template.html',
-      chunks: ['highlightViewer'],
-      filename: 'highlightViewer.html',
+      chunks: ['articleView'],
+      filename: 'articleView.html',
       chunksSortMode: 'dependency',
     }),
     new webpack.NoEmitOnErrorsPlugin(),

@@ -23,6 +23,9 @@ HIGHLIGHTER_BUNDLE_JS = os.path.join(BASE_DIR, 'dist/highlight.bundle.js')
 QUIZ_BUNDLE_URLPATH = '/quiz.bundle.js'
 QUIZ_BUNDLE_JS = os.path.join(BASE_DIR, 'dist/quiz.bundle.js')
 
+ARTICLE_REVIEW_DEBUG_URLPATH = '/articleView.bundle.js'
+ARTICLE_REVIEW_STATIC_URLPATH = 'dist/articleView.bundle.js'
+
 # REST Framework settings
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -162,7 +165,7 @@ STATIC_URL = '/static/'
 # Copy Bootstrap and Modernizr as needed to appropriate Django static directory
 # e.g., researcher/static/researcher/
 STATICFILES_DIRS = [
-#   os.path.join(BASE_DIR, "vendor")
+   ('dist', os.path.join(BASE_DIR, "dist")),
 ]
 
 verbose = ( "[%(asctime)s] %(levelname)s "
