@@ -10,6 +10,8 @@ from django.views.generic import FormView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Min, Max
 from django.contrib import messages
+from django.utils.safestring import mark_safe
+from rest_framework.renderers import JSONRenderer
 
 from requests.compat import urljoin
 
@@ -29,6 +31,7 @@ from data.pybossa_api import generate_get_taskruns_worker
 from data.nlp_exporter import generate_nlp_tasks_worker
 from thresher.models import Article, Topic, UserProfile, Project
 from thresher.models import ParserError
+from thresher.serializers import ArticleSerializer
 
 def showParserErrorMessages(request):
     errors = ParserError.objects.order_by("timestamp").all()
@@ -481,9 +484,11 @@ class ArticleView(PermissionRequiredMixin, View):
 
     def get(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
+        article_json = JSONRenderer().render(ArticleSerializer(article, many=False).data)
         context = {
-            'article': article,
             'page_title': "Article Highlight Viewer",
+            'article': article,
+            'article_json': mark_safe(article_json)
         }
         # The default page load the articleView react app from Django static
         # files. Updating that requires 'npm run build' followed by

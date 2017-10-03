@@ -8,3 +8,7 @@ render(
   </App>,
   document.getElementById('react-root')
 );
+
+export function loadArticle(article) {
+  console.log(article['id']);
+};

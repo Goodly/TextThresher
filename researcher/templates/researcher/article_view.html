@@ -14,8 +14,8 @@
     </div>
     {% if debug_presenter %}
       <div>
-        Loading javascript from {{ articleview_bundle_js }}<br>
-        Use ?debugPresenter=true&amp;debugHost=url to set a different url.
+        Loading javascript from {{ articleview_debug_js }}<br>
+        Use ?debugPresenter=true&amp;debugHost=url to set a different host.
       </div>
       <script type="text/javascript" src="{{ articleview_debug_js }}">
       </script>
@@ -23,5 +23,8 @@
       <script type="text/javascript" src="{% static articleview_static_js %}">
       </script>
     {% endif %}
+    <script type="text/javascript">
+      thresher.articleView.loadArticle({{ article_json }});
+    </script>
   </div>
 {% endblock %}
