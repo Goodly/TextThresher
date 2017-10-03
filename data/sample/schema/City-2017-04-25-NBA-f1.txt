@@ -1,28 +1,50 @@
-title: City 
+version: v3
 
-1 City/state action
-2 City/state law
-3 Impact on city/state resources
-4 City council meeting
-5 City/state communication or oversight 
- 
+title: City
+
+0.01 st Which of the below subtopics are in the text?
+0.01.01 City/state action
+0.01.02 City/state law
+0.01.03 Impact on city/state resources
+0.01.04 City council meeting
+0.01.05 City/state communication or oversight
+if 0.01.01, then 1
+if 0.01.02, then 2
+if 0.01.03, then 3
+if 0.01.04, then 4
+if 0.01.05, then 5
+
+Instructions: The highlighted text gives information about a civilian government during the Occupy movement. We need your help to categorize this information. Please read the highlighted text and use the checklist to select which of the following categories of information are relevant to the highlighted text. Upon selecting a category, a bin will appear at the bottom of your screen with further questions pertaining to that category. You may check and uncheck categories at any point in the process. Please answer the following questions pertaining to the categories of information you selected in the above checkbox. You may check and uncheck categories at any point in the process. After you answer a given question, press "Next." When you are finished answering all the questions within a bin, please press "Continue." You may press "Back" at any point within each category. Once you have completed all bins, you will be asked to review your answers. When you are certain you have answered all questions in all bins correctly, press "Submit."
+
+glossary: Basic Need: n. a good or resource necessary to sustain an individual's physical wellbeing. Examples include: water, food, heat, electricity, and clothing.
+glossary: Code: n. a collection of written laws gathered together, usually covering specific subject matter.
+glossary: Dispersal order: n. a notice from a city/state official requesting protesters to leave the area in which they are currently protesting.
+glossary: Eviction order: n. an order from a city/state official demanding that protesters leave the area in which they are currently protesting or face arrest and/or criminal trespassing charges.
+glossary: Law: n. 1) any system of regulations to govern the conduct of the people of a community, society or nation, in response to the need for regularity, consistency and justice based upon collective human experience. 2) n. a statute, ordinance or regulation enacted by the legislative branch of a government and signed into law, or in some nations created by decree without any democratic process.
+glossary: Ordinance: n. a statute enacted by a city or town.
+glossary: Over-enforcement: n. a city/state official chose to enforce an order that they sometimes do not enforce
+glossary: Regglossary: ulation: n. rules and administrative codes issued by governmental agencies at all levels, municipal, county, state and federal.
+glossary: Semi-Permanent structure: n. any makeshift structure not secured to the ground.
+glossary: Under-enforcement: n. a city/state official chose not to enforce an order that they often do enforce foldable lunch tables, large tarps, wooden crates, etc.
+
+title: City/state action
 1.01 mc What kind of action is described in the highlighted text?
 1.01.01 An enforcement order from a city/state official
 1.01.02 City/state over-enforcement of an established law or code
 1.01.03 City/state under-enforcement of an established law or code
 1.01.04 A warning from a city/state official
-1.01.05 A formal statement from a city/state official 
+1.01.05 A formal statement from a city/state official
 1.01.06 A camp inspection conducted by a city/state official
 1.01.07 A park/plaza cleaning conducted by a city/state official
 1.01.08 Confiscation or destruction of protester property by a city/state official
 1.01.09 City/state official participating in an Occupy event
 1.01.10 A city/state official refusing or granting protesters a basic need
 1.02 mc What type of enforcement order did the city/state official issue?
-1.02.01 Park/plaza curfew 
-1.02.02 Informal dispersal order 
-1.02.03 Formal eviction notice 
-1.02.04 Prohibition of tents/structures 
-1.02.05 Other 
+1.02.01 Park/plaza curfew
+1.02.02 Informal dispersal order
+1.02.03 Formal eviction notice
+1.02.04 Prohibition of tents/structures
+1.02.05 Other
 1.03 cl Which of the following information does the text provide about the time of the curfew?
 1.03.01 Exact start time
 1.03.02 Approximate start time
@@ -30,7 +52,7 @@ title: City
 1.03.04 Approximate end time
 1.03.05 Information not given
 1.04 tm Exactly when does the curfew start?
-1.05 mc Approximately when does the curfew start? 
+1.05 mc Approximately when does the curfew start?
 1.05.01 Predawn (12am-6am)
 1.05.02 Morning (6am-12pm)
 1.05.03 Midday (12pm-3pm)
@@ -44,7 +66,7 @@ title: City
 1.07.03 Midday (12pm-3pm)
 1.07.04 Afternoon (3pm-6pm)
 1.07.05 Evening (6pm-9pm)
-1.07.06 Night (9pm-12am) 
+1.07.06 Night (9pm-12am)
 1.08 mc Which of the following information does the text provide about the date the enforcement order goes into effect?
 1.08.01 Exact date
 1.08.02 Approximate date
@@ -112,9 +134,9 @@ title: City
 1.18.07 Facebook or twitter post
 1.18.08 Other
 1.19 mc What type of warning did the city/state official send to protesters?
-1.19.01 Park/plaza curfew 
+1.19.01 Park/plaza curfew
 1.19.02 Informal dispersal warning
-1.19.03 Threat of eviction 
+1.19.03 Threat of eviction
 1.19.04 Against overnight camping
 1.19.05 Against tents/structures
 1.19.06 Safety/sanitation
@@ -126,7 +148,7 @@ title: City
 1.20.04 Approximate end time
 1.20.05 Information not given
 1.21 tm Exactly when does the curfew start (This is a duplicate question)?
-1.22 mc Approximately when does the curfew start (This is a duplicate question)? 
+1.22 mc Approximately when does the curfew start (This is a duplicate question)?
 1.22.01 Predawn (12am-6am)
 1.22.02 Morning (6am-12pm)
 1.22.03 Midday (12pm-3pm)
@@ -197,7 +219,7 @@ title: City
 1.35.02 Police department
 1.35.03 Other
 1.36 mc Which of the following information does the text provide about the date the confiscated items were available for retrieval?
-1.36.01 Exact date 
+1.36.01 Exact date
 1.36.02 Approximate date
 1.36.03 Information not given
 1.37 tm Exactly when were the confiscated items available for retrieval?
@@ -214,7 +236,7 @@ title: City
 1.39.04 Electrical equipment
 1.39.05 Personal property (e.g., clothing, backpacks, cell phones, wallets)
 1.39.06 Other
-1.40 cl Which of the following does the text discuss? 
+1.40 cl Which of the following does the text discuss?
 1.40.01 City/state officer participating in a distinct protest event (e.g., march, rally, demonstration)
 1.40.02 City/state officer participating in ongoing camp activities (e.g., general assembly meeting, overnight camping)
 1.41 cl What kind of ongoing camp activity did the city/state officer participate in?
@@ -264,7 +286,7 @@ title: City
 1.48.05 Evening (6pm-9pm)
 1.48.06 Night (9pm-12am)
 1.49 tm Exactly what time did the action end?
-1.50 mc Approximately what time did the action end? 
+1.50 mc Approximately what time did the action end?
 1.50.01 Predawn (12am-6am)
 1.50.02 Morning (6am-12pm)
 1.50.03 Midday (12pm-3pm)
@@ -320,11 +342,11 @@ if 1.01.any, then 1.46
 if 1.46.01, then 1.47
 if 1.46.02, then 1.48
 if 1.46.03, then 1.49
-if 1.46.04, then 1.50       
+if 1.46.04, then 1.50
 
-
+title: City/state law
 2.01 cl What kind of ordinance, code, or law does the text discuss?
-2.01.01 City ordinance, code, or law 
+2.01.01 City ordinance, code, or law
 2.01.02 State ordinance, code, or law
 2.02 mc What is the subject of the ordinance, code, or law?
 2.02.01 Overnight camping
@@ -347,7 +369,7 @@ if 1.46.04, then 1.50
 2.04.04 Approximate end time
 2.04.05 Information not given
 2.05 tm Exactly when does the curfew start?
-2.06 mc Approximately when does the curfew start? 
+2.06 mc Approximately when does the curfew start?
 2.06.01 Predawn (12am-6am)
 2.06.02 Morning (6am-12pm)
 2.06.03 Midday (12pm-3pm)
@@ -367,7 +389,7 @@ if 1.46.04, then 1.50
 2.09.02 Only if permitted
 2.09.03 No
 2.10 mc Is the city ordinance, code, or law a new or existing rule?
-2.10.01 New 
+2.10.01 New
 2.10.02 Existing
 
 if 2.01.any, then 2.02
@@ -380,7 +402,7 @@ if 2.04.04, then 2.08
 if 2.02.03, then 2.09
 if 2.01.any, then 2.10
 
-
+title: Impact on city/state resources
 3.01 cl Which of the following information does the text discuss?
 3.01.01 A cost incurred by the city from managing the local Occupy protest
 3.01.02 A disrupted city function due to an Occupy event
@@ -451,7 +473,7 @@ if 3.01.02, then 3.11
 if 3.11.01, then 3.12
 if 3.11.02, then 3.13
 
-
+title: City council meeting
 4.01 cl What type of actors were present at the city council meeting?
 4.01.01 Governor
 4.01.02 Mayor
@@ -480,7 +502,7 @@ if 3.11.02, then 3.13
 4.05.05 Evening (6pm-9pm)
 4.05.06 Night (9pm-12am)
 4.06 tm Exactly what time did the city council meeting end?
-4.07 mc Approximately what time did the city council meeting end? 
+4.07 mc Approximately what time did the city council meeting end?
 4.07.01 Predawn (12am-6am)
 4.07.02 Morning (6am-12pm)
 4.07.03 Midday (12pm-3pm)
@@ -498,14 +520,14 @@ if 3.11.02, then 3.13
 4.10 mc Did the vote pass?
 4.10.01 Yes
 4.10.02 No
-4.11 mc Were there any protesters present at the city council meeting? 
+4.11 mc Were there any protesters present at the city council meeting?
 4.11.01 Yes
 4.11.02 No
 4.12 mc Which of the following information does the text provide about the number of protesters present at the city council meeting?
-4.12.01 Exact number 
-4.12.02 Approximate number 
+4.12.01 Exact number
+4.12.02 Approximate number
 4.12.03 Information not given
-4.13 tx Exactly how many protesters were present? 
+4.13 tx Exactly how many protesters were present?
 4.14 mc Approximately how many protesters were present?
 4.14.01 "A few," "a handful," "a small group": 2-5
 4.14.02 "Several," "a group”: 6-10
@@ -533,7 +555,7 @@ if 4.11.01, then 4.12
 if 4.12.01, then 4.13
 if 4.12.02, then 4.14
 
-
+title: City/state communication or oversight
 5.01 cl Which of the following information does the text provide about intra-city/state interactions?
 5.01.01 City/state officer communicating with city/state/police
 5.01.02 City/state officer overseeing actions of city/state/police
@@ -547,12 +569,12 @@ if 4.12.02, then 4.14
 5.03 mc What kind of communication did the city government official have with the city government?
 5.04 mc What kind of communication did the city government official have with the state government?
 5.05 mc What kind of communication did the city government official have with the police?
-5.05.01 Consultation with police officer/s 
+5.05.01 Consultation with police officer/s
 5.05.02 Reassignment of police officer/s and/or their responsibilities
 5.06 mc What kind of communication did the city government official have with the city government (duplicated)?
 5.07 mc What kind of communication did the city government official have with the state government (duplicated)?
 5.08 mc What kind of communication did the city government official have with the police (duplicated)?
-5.08.01 Consultation with police officer/s 
+5.08.01 Consultation with police officer/s
 5.08.02 Reassignment of police officer/s and/or their responsibilities
 5.09 cl Which city government actor/s initiated the communication?
 5.09.01 Mayor
@@ -649,7 +671,7 @@ if 4.12.02, then 4.14
 5.21 mc What kind of oversight did the state government official have over the city government?
 5.22 mc What kind of oversight did the state government official have over the state government?
 5.23 mc What kind of oversight did the state government official have over the police?
-5.23.01 Consultation with police officer/s 
+5.23.01 Consultation with police officer/s
 5.23.02 Reassignment of police officer/s and/or their responsibilities
 5.24 cl Which city government actor/s initiated the oversight?
 5.24.01 Mayor
@@ -770,19 +792,3 @@ if 5.17.06, then 5.23
 if 5.17.06, then 5.25
 if 5.17.06, then 5.31
 
-
-Instructions: The highlighted text gives information about a civilian government during the Occupy movement. We need your help to categorize this information. Please read the highlighted text and use the checklist to select which of the following categories of information are relevant to the highlighted text. Upon selecting a category, a bin will appear at the bottom of your screen with further questions pertaining to that category. You may check and uncheck categories at any point in the process.
- 
-Please answer the following questions pertaining to the categories of information you selected in the above checkbox. You may check and uncheck categories at any point in the process. After you answer a given question, press "Next." When you are finished answering all the questions within a bin, please press "Continue." You may press "Back" at any point within each category. Once you have completed all bins, you will be asked to review your answers. When you are certain you have answered all questions in all bins correctly, press "Submit."
-
- 
-Basic Need  - n. a good or resource necessary to sustain an individual's physical wellbeing. Examples include: water, food, heat, electricity, and clothing.
-Code  - n. a collection of written laws gathered together, usually covering specific subject matter.  
-Dispersal order - n. a notice from a city/state official requesting protesters to leave the area in which they are currently protesting.
-Eviction order - n. an order from a city/state official demanding that protesters leave the area in which they are currently protesting or face arrest and/or criminal trespassing charges.
-Law - n. 1) any system of regulations to govern the conduct of the people of a community, society or nation, in response to the need for regularity, consistency and justice based upon collective human experience. 2) n. a statute, ordinance or regulation enacted by the legislative branch of a government and signed into law, or in some nations created by decree without any democratic process. 
-Ordinance - n. a statute enacted by a city or town. 
-Over-enforcement  - n. a city/state official chose to enforce an order that they sometimes do not enforce 
-Regulation  - n. rules and administrative codes issued by governmental agencies at all levels, municipal, county, state and federal.  
-Semi-Permanent structure  - n. any makeshift structure not secured to the ground.   
-Under-enforcement - n. a city/state official chose not to enforce an order that they often do enforce foldable lunch tables, large tarps, wooden crates, etc.

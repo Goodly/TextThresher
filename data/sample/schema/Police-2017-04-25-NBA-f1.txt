@@ -1,9 +1,56 @@
+version: v3
+
 title: Police
 
-1 Event type
-2 Event setting and composition (location, attendance and crowd composition/demographics, police gear/tactics, time/duration)
-3 Arrests/injuries
+0.01 st Which of the below subtopics are in the text?
+0.01.01 Event type
+0.01.02 Event setting and composition (location, attendance and crowd composition/demographics, police gear/tactics, time/duration)
+0.01.03 Arrests/injuries
+if 0.01.01, then 1
+if 0.01.02, then 2
+if 0.01.03, then 3
+ 
+instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below.
+ 
+glossary: anarchists: sometimes referred to as the “black block” – protesters who see themselves aligned with the occupy movement and often engage in acts of destruction, vandalism and provocation of police
 
+glossary: arrests of protest organizers: police arrest individual organizers at their home, place of business or at any other site away from camp. Arrest does not occur during a protester march, demonstration, blocking action, etc.
+
+glossary: barricade: police set up barricades or fences to prevent protesters from accessing particular buildings, walkways or streets
+
+glossary: counterprotesters: people who are protesting against the occupy movement
+
+glossary: independent: citizen or other person not affiliated with the camp, media, police, or city
+
+glossary: notable non-event: police do not do what others including protesters, city officials and/or media expect them to do (ex. Campers prepare for a police raid and the police do not show up.)
+
+glossary: propaganda campaign against Occupy: police use a predefined set of talking points (whether true or false) to sway public opinion against the occupy movement. This may be done through traditional media or social media sites such as Twitter, Facebook, etc.
+
+glossary: protest zone: police create space where protesters are allowed and expected to engage in their protest activities
+
+glossary: raid: police show up at camp in large numbers relative to the number of campers with the intention of driving campers out, removing tents and structures, and returning the site to its pre-occupy state.
+
+glossary: riot gear: any combination of handheld shields, helmets, face shields, batons, or body armor.
+
+glossary: showdown: police show up without an obvious intention to raid but with large numbers relative to the number of campers. Police make demand on campers that they know the campers don’t want to agree to. Setting up a tense situation which may evolve into a raid situation.
+
+glossary: skirmish line: police establish lines of officers (often in riot gear) to prevent protesters from accessing particular buildings walkways or streets
+
+glossary: snatch 'n' grab arrests: police target individuals for arrest, especially key organizers, at the camp or during a protester-initiated march, demonstration, or blocking action, etc.
+
+glossary: space-taking: see "barricade," "skirmish lines," "protest zone." Police presence that creates physical boundaries or other obstacles that restrict where protesters may protest; establishing of perimeter barricades or fences or lines of police for containment or strategic incapacitation purposes
+
+glossary: statement: Police chief, high-level officer or official spokesperson gives a statement to the press through spoken word or writing. Includes press releases, opinion, editorials, open letters, blog posts, interviews
+
+glossary: surveillance of camp: police use video or smaller number of officers to watch over camp activities or general assemblies.
+
+glossary: surveillance of individual: police use video or smaller number of officers to watch individual protest organizers at their home, place of business or any other site away from camp.
+
+glossary: undercover infiltration: police send an undercover officer/s to pose as camp participants in general assemblies, camp activities, protester marches, demonstration or blocking activities
+
+glossary: warnings/threats: police inform campers about impending enforcement of curfew orders with intention of coercing a change in behavior
+
+title: Event type
 1.01 dd What type of event is described in the highlighted text?
   1.01.01 Raid of camp
   1.01.02 Showdown at the camp
@@ -103,6 +150,7 @@ if 1.09.any, then 1.11
 if 1.11.01, then 1.12
 if 1.11.02, then 1.12
 
+title: Event setting and composition (location, attendance and crowd composition/demographics, police gear/tactics, time/duration)
 2.01 mc Which of the following information does the text give about the event's location?
   2.01.01 The exact location or address
   2.01.02 An approximate location, or clues about where the event took place (e.g. "the small group of protesters marched down Market Street)
@@ -288,7 +336,8 @@ if 2.20.02, then 2.22
 if 2.20.03, then 2.23
 if 2.20.04, then 2.24
 if 2.20.05, then 2.25
- 
+
+title: Arrests/injuries
 3.01 mc Which of the following information does the text give about arrests that occurred during the event?
   3.01.01 The exact number
   3.01.02 An estimate or approximate number
@@ -363,43 +412,3 @@ if 3.14.01, then 3.15
 if 3.14.02, then 3.16
 if 3.17.01, then 3.18
 if 3.17.02, then 3.19
- 
-instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below.
- 
-glossary: anarchists: sometimes referred to as the “black block” – protesters who see themselves aligned with the occupy movement and often engage in acts of destruction, vandalism and provocation of police
-
-glossary: arrests of protest organizers: police arrest individual organizers at their home, place of business or at any other site away from camp. Arrest does not occur during a protester march, demonstration, blocking action, etc.
-
-glossary: barricade: police set up barricades or fences to prevent protesters from accessing particular buildings, walkways or streets
-
-glossary: counterprotesters: people who are protesting against the occupy movement
-
-glossary: independent: citizen or other person not affiliated with the camp, media, police, or city
-
-glossary: notable non-event: police do not do what others including protesters, city officials and/or media expect them to do (ex. Campers prepare for a police raid and the police do not show up.)
-
-glossary: propaganda campaign against Occupy: police use a predefined set of talking points (whether true or false) to sway public opinion against the occupy movement. This may be done through traditional media or social media sites such as Twitter, Facebook, etc.
-
-glossary: protest zone: police create space where protesters are allowed and expected to engage in their protest activities
-
-glossary: raid: police show up at camp in large numbers relative to the number of campers with the intention of driving campers out, removing tents and structures, and returning the site to its pre-occupy state.
-
-glossary: riot gear: any combination of handheld shields, helmets, face shields, batons, or body armor.
-
-glossary: showdown: police show up without an obvious intention to raid but with large numbers relative to the number of campers. Police make demand on campers that they know the campers don’t want to agree to. Setting up a tense situation which may evolve into a raid situation.
-
-glossary: skirmish line: police establish lines of officers (often in riot gear) to prevent protesters from accessing particular buildings walkways or streets
-
-glossary: snatch 'n' grab arrests: police target individuals for arrest, especially key organizers, at the camp or during a protester-initiated march, demonstration, or blocking action, etc.
-
-glossary: space-taking: see "barricade," "skirmish lines," "protest zone." Police presence that creates physical boundaries or other obstacles that restrict where protesters may protest; establishing of perimeter barricades or fences or lines of police for containment or strategic incapacitation purposes
-
-glossary: statement: Police chief, high-level officer or official spokesperson gives a statement to the press through spoken word or writing. Includes press releases, opinion, editorials, open letters, blog posts, interviews
-
-glossary: surveillance of camp: police use video or smaller number of officers to watch over camp activities or general assemblies.
-
-glossary: surveillance of individual: police use video or smaller number of officers to watch individual protest organizers at their home, place of business or any other site away from camp.
-
-glossary: undercover infiltration: police send an undercover officer/s to pose as camp participants in general assemblies, camp activities, protester marches, demonstration or blocking activities
-
-glossary: warnings/threats: police inform campers about impending enforcement of curfew orders with intention of coercing a change in behavior

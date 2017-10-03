@@ -14,40 +14,6 @@ if 0.01.03, then 3
 if 0.01.04, then 4
 if 0.01.05, then 5
 
-Instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below. 
- 
-glossary: blocking action: protesters intentionally block access to transportation or commercial infrastructure. E.g. protesters block access to government buildings, streets, sidewalks, light rail systems, bank buildings, shipping ports, etc.
- 
-glossary: camp: 
- 
-glossary: community response:
- 
-glossary: counter-protester: individual protesting against the occupy movement
-  
-glossary: disrupting an on-going event of the perceived 1%: protesters disrupt an event held by people they oppose eg protesters shout down politician who is speaking, intentionally disrupt city council meeting, or interrupt the proceedings of a fundraiser, etc.
-  
-glossary: divestment action: protesters close their accounts with banks they oppose and encourage others to do so as well.
-  
-glossary: establishing a camp: protesters set up two or more tents with the intention of camping multiple nights on location.
- 
-glossary: independent: citizen or other person not affiliated with the camp, media, police, or city
- 
-glossary: injuries:
- 
-glossary: march/parade: protesters move along a path usually chanting and holding signs. Note: if protesters spend time at their starting point or destination listening to speeches or musicians, that should be counted as a rally (an event separate from the march/parade).
- 
-glossary: moving a camp to a new location: protesters pack up tents and structures and leave the site of their encampment and establish a camp at a new location. Note: if only some campers leave the original camp the event should be categorized as the establishment of a new camp. (NOTE: implies the dissolution of the previous camp, so only count it as a move if the other camp is dissolving in the process. if the old camp survives while some of the people move to a new location, the move to a new location should simply be coded as the establishment of a new camp.)
-  
-glossary: rally/demonstration: protesters stay in one spot while listening to speeches or musicians, chanting, carrying signs, etc.
- 
-glossary: strategic violence: protesters carry out a pre-planned act of violence against other humans eg. Kidnapping, bombing, assassination, assault. Note: only use this classification for the event if it is clear that the highlighted text describes activities that were planned in advance.
-  
-glossary: strategic sabotage: protesters carry out pre-planned act of destruction of physical property eg vandalism, setting fires, breaking windows, etc. Note: only use this classification for the event if it is clear that the highlighted text describes activities that were planned in advance.
-    
-glossary: strike: protesters and allies refuse to work at a specified time. Sometimes participants will carry signs and attempt to shame people who do not participate.
-    
-glossary: voluntary dissolution of a camp: protesters pack up tents and structures and leave the site of their encampment without being directly forced by police officers.
-
 title: Event type
 1.01 dd What type of event is described in the highlighted text?
 1.01.01 March/Parade
@@ -463,3 +429,36 @@ title: Community response
  
 if 5.01.any, then 5.02
  
+Instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below. 
+ 
+glossary: blocking action: protesters intentionally block access to transportation or commercial infrastructure. E.g. protesters block access to government buildings, streets, sidewalks, light rail systems, bank buildings, shipping ports, etc.
+ 
+glossary: camp: 
+ 
+glossary: community response:
+ 
+glossary: counter-protester: individual protesting against the occupy movement
+  
+glossary: disrupting an on-going event of the perceived 1%: protesters disrupt an event held by people they oppose eg protesters shout down politician who is speaking, intentionally disrupt city council meeting, or interrupt the proceedings of a fundraiser, etc.
+  
+glossary: divestment action: protesters close their accounts with banks they oppose and encourage others to do so as well.
+  
+glossary: establishing a camp: protesters set up two or more tents with the intention of camping multiple nights on location.
+ 
+glossary: independent: citizen or other person not affiliated with the camp, media, police, or city
+ 
+glossary: injuries:
+ 
+glossary: march/parade: protesters move along a path usually chanting and holding signs. Note: if protesters spend time at their starting point or destination listening to speeches or musicians, that should be counted as a rally (an event separate from the march/parade).
+ 
+glossary: moving a camp to a new location: protesters pack up tents and structures and leave the site of their encampment and establish a camp at a new location. Note: if only some campers leave the original camp the event should be categorized as the establishment of a new camp. (NOTE: implies the dissolution of the previous camp, so only count it as a move if the other camp is dissolving in the process. if the old camp survives while some of the people move to a new location, the move to a new location should simply be coded as the establishment of a new camp.)
+  
+glossary: rally/demonstration: protesters stay in one spot while listening to speeches or musicians, chanting, carrying signs, etc.
+ 
+glossary: strategic violence: protesters carry out a pre-planned act of violence against other humans eg. Kidnapping, bombing, assassination, assault. Note: only use this classification for the event if it is clear that the highlighted text describes activities that were planned in advance.
+  
+glossary: strategic sabotage: protesters carry out pre-planned act of destruction of physical property eg vandalism, setting fires, breaking windows, etc. Note: only use this classification for the event if it is clear that the highlighted text describes activities that were planned in advance.
+    
+glossary: strike: protesters and allies refuse to work at a specified time. Sometimes participants will carry signs and attempt to shame people who do not participate.
+    
+glossary: voluntary dissolution of a camp: protesters pack up tents and structures and leave the site of their encampment without being directly forced by police officers.

@@ -29,30 +29,25 @@ from thresher.models import (Article, Topic, Question, Answer,
                              ArticleHighlight, HighlightGroup,
                              Contributor, ParserError)
 
-ANALYSIS_TYPES = {}
 HIGH_ID = 20000
 
 class TopicsSchemaParser(object):
     """
     Parses a json schema of topics and questions and populates the database
     """
-    def __init__(self, topic_obj, schema, dependencies):
+    def __init__(self, schema):
         """
         topic_obj: The Topic object that is the parent of subtopics in schema
         schema: A json schema as a string or loaded json with subtopics
         dependencies: The list of answers that point to another question
         """
-        self.topic_obj = topic_obj
         # if the schema is a string, tries to load it as json, otherwise,
         # assumes it's already json
         if isinstance(schema, str) or isinstance(schema, unicode):
             self.schema_json = json.loads(schema)
         else:
             self.schema_json = schema
-        # ensure that the analysis_type is valid
-        if not isinstance(topic_obj, Topic):
-            raise ValueError("schema must be an instance of Topic model")
-        self.dep = dependencies
+        self.topic_obj = None
 
     def load_answers(self, answers, question):
         """
@@ -110,20 +105,38 @@ class TopicsSchemaParser(object):
             questions = topic_args.pop('questions')
             # Change id to order
             topic_args['order'] = topic_args.pop('id')
-            # Set reference to parent
-            topic_args['parent'] = self.topic_obj
+            # now the topics each have their own dependencies
+            # topics should already have their own glossary and instructions
             # Create the topic with the values in topic_args
             topic = Topic.objects.create(**topic_args)
+            if self.topic_obj is None:
+                try:
+                    topic.save()
+                except ValidationError:
+                    # we've already loaded this schema, pull it into memory.
+                    print "Schema already exists. It will be overwritten"
+                    curr_schema_obj = Topic.objects.get(name=self.schema_json['title'])
+                    # We can't just delete the object because this will delete all TUAs associated with it.
+                    # Instead, we update the Analysis Type and delete all the topics associated with it.
+                    # When the id is set, django automatically knows to update instead of creating a new entry.
+                    topic.id = curr_schema_obj.id
+                    # Save the updated object
+                    topic.save()
+                    # delete all topics associated with this Analysis Type
+                    # This will CASCADE DELETE all questions and answers as well
+                    Topic.objects.filter(parent=topic).delete()
+                self.topic_obj = topic
             self.load_questions(questions, topic)
 
-    def load_dependencies(self):
+    def load_dependencies(self, dependencies):
         """
         Loads dependencies into targeted answers.
         """
         # Report as many errors as possible to aid someone in
         # debugging a schema. Don't bail on first error.
-        for dep in self.dep:
+        for dep in dependencies:
             try:
+                # we will not have parent topics anymore
                 topic_obj = Topic.objects.get(parent=self.topic_obj,
                                               order=dep.topic)
             except Topic.DoesNotExist:
@@ -164,48 +177,10 @@ class TopicsSchemaParser(object):
                 answer_obj.save()
 
 def load_schema(schema):
-    schema_name = schema['title']
-    # old schemas don't have a 'parent' for schemas
-    if 'parent' in schema:
-        schema_parent = schema['parent']
-        if schema_parent:
-            parent = Topic.objects.get(name=schema_parent)
-        else:
-            parent = None
-    else:
-        parent = None
-    schema_obj = Topic.objects.create(
-        parent=parent,
-        name=schema_name,
-        instructions=schema['instructions'],
-        glossary=schema['glossary'],
-        order=0   # Give root topics order of 0 so they sort ahead of their subtopics
-    )
-    try:
-        schema_obj.save()
-    except ValidationError:
-        # we've already loaded this schema, pull it into memory.
-        print "Schema already exists. It will be overwritten"
-        curr_schema_obj = Topic.objects.get(name=schema_name)
-        # We can't just delete the object because this will delete all TUAs associated with it.
-        # Instead, we update the Analysis Type and delete all the topics associated with it.
-        # When the id is set, django automatically knows to update instead of creating a new entry.
-        schema_obj.id = curr_schema_obj.id
-        # Save the updated object
-        schema_obj.save()
-        # delete all topics associated with this Analysis Type
-        # This will CASCADE DELETE all questions and answers as well
-        Topic.objects.filter(parent=schema_obj).delete()
-
-    ANALYSIS_TYPES[schema_name] = schema_obj
-
     # Load the topics, questions and answers of the schema
-    schema_parser = TopicsSchemaParser(topic_obj=schema_obj,
-                                       schema=schema['topics'],
-                                       dependencies=schema['dependencies'])
+    schema_parser = TopicsSchemaParser(schema=schema['topics'])
     schema_parser.load_topics()
-    schema_parser.load_dependencies()
-    return schema_obj.id
+    schema_parser.load_dependencies(schema['dependencies'])
 
 def load_article(article):
     new_id = int(article['metadata']['article_number'])
@@ -257,8 +232,6 @@ def load_annotations(article, article_obj):
     for tua_type, tuas in article['tuas'].iteritems():
         try:
             topic = Topic.objects.filter(name=tua_type)[0]
-            #analysis_type = (ANALYSIS_TYPES.get(tua_type) or
-            #                 Topic.objects.get(name=tua_type))
         except IndexError:
             # No analysis type loaded--create a dummy type.
             topic = Topic.objects.create(
@@ -266,7 +239,6 @@ def load_annotations(article, article_obj):
                 instructions='',
                 glossary='',
             )
-            ANALYSIS_TYPES[tua_type] = topic
             print("made a dummy topic: %s" % tua_type)
 #           raise ValueError("No TUA type '" + tua_type +
 #                            "' registered. Have you loaded the schemas?")

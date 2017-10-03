@@ -1,11 +1,33 @@
+version: v3
+
 title: Camp
 
-1 Camp Setting and Composition: Size, crowd composition, permit information, visibility
-2 Camp Organization and Issues: Leadership, facilities, and resources; problems and difficulties  
-3 Camp Community Impact and Social Media: Community and individual opinions about camp, donations made to the camp, social media/internet presence
-4 Camp Statements: Speech acts by members of the camp
-5 Camp Meetings: General assembly information and activity        
+0.01 st Which of the below subtopics are in the text?
+0.01.01 Camp Setting and Composition: Size, crowd composition, permit information, visibility
+0.01.02 Camp Organization and Issues: Leadership, facilities, and resources; problems and difficulties  
+0.01.03 Camp Community Impact and Social Media: Community and individual opinions about camp, donations made to the camp, social media/internet presence
+0.01.04 Camp Statements: Speech acts by members of the camp
+0.01.05 Camp Meetings: General assembly information and activity
+if 0.01.01, then 1
+if 0.01.02, then 2
+if 0.01.03, then 3
+if 0.01.04, then 4
+if 0.01.05, then 5
 
+Instructions: We need your help to figure out details about an Occupy campsite. Please answer the following questions about the highlighted text.
+
+glossary: allowed: see "permit." Whether formally permitted or not, certain actions may be informally tolerated by the city government and/or police; this is usually demonstrated by intentional non-enforcement of local codes and laws, which may or may not be announced directly to the protesters. Examples: "Despite having several anti-camping and park curfew ordinances, the city has announced that they will not take action to remove the Occupy campers or their tents."; "The camp does not have an official permit to exist on park grounds, but the city is allowing the camp to stay as long as it remains clean and quiet."
+
+glossary: general assembly: also known as "GAs," "assemblies," and "camp meetings." Meetings held by Occupy camps during which protesters may discuss the camp's goals, strategies, difficulties, and/or other topics related to the Occupy movement. General assembly meetings usually occur at an Occupy campsite, but may also be held in different parts of a city (such as a park, restaurant, or house). Typically, general assembly meetings follow certain codes of conduct, such as obtaining 80% consensus on votes, wiggling fingers to show approval, and using the crowd's voices to repeat and amplify a single speaker, but these practices vary across camps.  
+
+glossary: liaison: a person who acts as a point of communication between the protesters and another party, which usually involves the city government and/or police. May be a formal or informal position held by one or more people at a camp.
+
+glossary: location instability: condition resulting from factors that prevent a camp from being able to remain in a particular place over time. Often, location instability is caused by city ordinances that prevent staying at a camp overnight, which often results in campers relocating or dismantling their camp every night; it may also be caused by other factors, such as conflicting community events in the camp location, or a lack of campers who are willing to stay at the camp overnight. 
+
+glossary: panhandling: the act of begging for money, food, shelter, or other goods and services. As many Occupy camps either house or are located near homeless people, aggressive panhandling may pose a threat to the safety of the protesters.
+
+
+title: Camp Setting and Composition: Size, crowd composition, permit information, visibility
 1.01 cl Which of the following does the text discuss? Select all that apply:
 1.01.01 The number of people and/or the size of the crowd at the camp
 1.01.02 Demographics or descriptions of the crowd at the camp
@@ -212,6 +234,7 @@ if 1.16.04, then 1.20
 if 1.01.04, then 1.22
 if 1.01.05, then 1.28 
 
+title: Camp Organization and Issues: Leadership, facilities, and resources; problems and difficulties  
 2.01 cl Which of the following does the text discuss? Select all that apply:
 2.01.01 Camp leadership and operation structure (formal or informal leaders, leadership groups, camp rules or codes of conduct, designated liaisons between the camp and the city, etc.) 
 2.01.02 Camp committees, teams, working groups, services, and/or facilities (groups of camp members working together on a specific aspect of the local movement such as a media committee or security team; facilities or services provided to people at the camp, often located in designated tents)
@@ -321,6 +344,7 @@ if 2.08.02, then 2.10
 if 2.08.03, then 2.11
 if 2.08.04, then 2.12
 
+title: Camp Community Impact and Social Media: Community and individual opinions about camp, donations made to the camp, social media/internet presence
 3.01 cl Which of the following does the text discuss? Select all that apply:
 3.01.01 Community and individual opinions about camp
 3.01.02 Donations made to the camp
@@ -412,6 +436,7 @@ if 3.13.01, then 3.14
 if 3.10.03, then 3.16
 if 3.10.04, then 3.17
 
+title: Camp Statements: Speech acts by members of the camp
 4.01 mc What kind of official statement is this?
 4.01.01 Speaking at a press conference
 4.01.02 Informal interview with news media
@@ -440,6 +465,7 @@ if 3.10.04, then 3.17
 If 4.03.01, then 4.04
 If 4.03.02, then 4.05
 
+title: Camp Meetings: General assembly information and activity        
 5.01 mc Which of the following does the text discuss?
 5.01.01 Information about GA meetings in general
 5.01.02 Information about a specific general assembly meeting
@@ -591,14 +617,3 @@ if 5.22.06, then 5.23
 if 5.23.01, then 5.24
 if 5.23.02, then 5.25
 
-Instructions: We need your help to figure out details about an Occupy campsite. Please answer the following questions about the highlighted text.
-
-glossary: allowed: see "permit." Whether formally permitted or not, certain actions may be informally tolerated by the city government and/or police; this is usually demonstrated by intentional non-enforcement of local codes and laws, which may or may not be announced directly to the protesters. Examples: "Despite having several anti-camping and park curfew ordinances, the city has announced that they will not take action to remove the Occupy campers or their tents."; "The camp does not have an official permit to exist on park grounds, but the city is allowing the camp to stay as long as it remains clean and quiet."
-
-glossary: general assembly: also known as "GAs," "assemblies," and "camp meetings." Meetings held by Occupy camps during which protesters may discuss the camp's goals, strategies, difficulties, and/or other topics related to the Occupy movement. General assembly meetings usually occur at an Occupy campsite, but may also be held in different parts of a city (such as a park, restaurant, or house). Typically, general assembly meetings follow certain codes of conduct, such as obtaining 80% consensus on votes, wiggling fingers to show approval, and using the crowd's voices to repeat and amplify a single speaker, but these practices vary across camps.  
-
-glossary: liaison: a person who acts as a point of communication between the protesters and another party, which usually involves the city government and/or police. May be a formal or informal position held by one or more people at a camp.
-
-glossary: location instability: condition resulting from factors that prevent a camp from being able to remain in a particular place over time. Often, location instability is caused by city ordinances that prevent staying at a camp overnight, which often results in campers relocating or dismantling their camp every night; it may also be caused by other factors, such as conflicting community events in the camp location, or a lack of campers who are willing to stay at the camp overnight. 
-
-glossary: panhandling: the act of begging for money, food, shelter, or other goods and services. As many Occupy camps either house or are located near homeless people, aggressive panhandling may pose a threat to the safety of the protesters.
