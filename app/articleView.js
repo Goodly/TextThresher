@@ -9,6 +9,6 @@ render(
   document.getElementById('react-root')
 );
 
-export function loadArticle(article) {
-  console.log(article['id']);
+export function loadArticle(articleFetchURL) {
+  console.log(articleFetchURL);
 };
