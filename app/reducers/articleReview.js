@@ -1,20 +1,29 @@
+import { displayStates } from 'components/displaystates';
+
 const initialState = {
-  articleNormalized: {}
+  articleNormalized: {},
+  displayState: displayStates.BEFORE_LOAD,
+  lastDisplayState: displayStates.BEFORE_LOAD,
+  error: null,
 };
 
 export function articleReview(state = initialState, action) {
   switch (action.type) {
     case 'FETCH_ARTICLE_REVIEW':
-      return Object.assign({}, initialState, { isFetching: true });
+      return Object.assign({}, initialState, {
+        displayState: displayStates.BEFORE_LOAD,
+      });
     case 'FETCH_ARTICLE_REVIEW_SUCCESS':
       return {
         ...state,
         articleNormalized: action.normalizedData,
-        isFetching: false
+        displayState: displayStates.TASK_LOADED,
       }
     case 'FETCH_ARTICLE_REVIEW_FAIL':
-      // TODO: Put a helpful error message in the UI.
-      throw action.error;
+      return {
+        ...state,
+        error: action.error,
+      }
     default:
       return state;
   }
