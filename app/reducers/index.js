@@ -5,7 +5,7 @@ import { highlight } from './highlight';
 import { quiz } from './quiz';
 import { project } from './project.js';
 import { task } from './task';
-import { djangoHighlightTasks } from './djangoHighlights';
+import { articleReview } from './articleReview';
 
 const rootReducer = combineReducers({
   article,
@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
   quiz,
   project,
   task,
-  djangoHighlightTasks,
+  articleReview,
 });
 
 export default rootReducer;
