@@ -31,6 +31,20 @@ def parse_schema(schema_file):
         for line in f:
             raw_line = line.strip()
 
+            if '#' in raw_line:
+                hashsplit = raw_line.split("#")
+
+                single = hashsplit[0].count('\'')
+                escaped_single = hashsplit[0].count('\\\'')
+
+                double = hashsplit[0].count('\"')
+                escaped_double = hashsplit[0].count('\\\"')
+
+                smart = hashsplit[0].count('\xe2')
+
+                if (single - escaped_single) % 2 == 0 and (double - escaped_double + smart) % 2 == 0:
+                    raw_line = hashsplit[0]
+
             # Throw out blank lines
             if not raw_line:
                 continue
