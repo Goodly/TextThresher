@@ -35,15 +35,17 @@ def parse_schema(schema_file):
                 hashsplit = raw_line.split("#")
 
                 single = hashsplit[0].count('\'')
+                smart_single = hashsplit[0].count('\xe2\x80\x98') + hashsplit[0].count('\xe2\x80\x99')
                 escaped_single = hashsplit[0].count('\\\'')
 
                 double = hashsplit[0].count('\"')
+                smart_double = hashsplit[0].count('\xe2\x80\x9c') + hashsplit[0].count('\xe2\x80\x9d')
+
                 escaped_double = hashsplit[0].count('\\\"')
-
-                smart = hashsplit[0].count('\xe2')
-
-                if (single - escaped_single) % 2 == 0 and (double - escaped_double + smart) % 2 == 0:
+                if (single + smart_single - escaped_single) % 2 == 0 and (double + smart_double - escaped_double) % 2 == 0:
                     raw_line = hashsplit[0]
+
+            raw_line = raw_line.strip()
 
             # Throw out blank lines
             if not raw_line:
