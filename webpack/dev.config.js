@@ -7,7 +7,7 @@ const config = require('../webpack.config.js');
 
 const PUBLIC_HOST = config.devServer.public;
 
-config.entry.articleView.unshift(
+config.entry.articleReview.unshift(
   `webpack-dev-server/client?http://${PUBLIC_HOST}`,
   'webpack/hot/only-dev-server'
 );

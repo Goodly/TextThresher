@@ -466,7 +466,7 @@ class RemoteProjectDeleteView(PermissionRequiredMixin, View):
         return redirect(reverse('researcher:index'))
 
 
-class ArticleView(PermissionRequiredMixin, View):
+class ArticleReview(PermissionRequiredMixin, View):
     template_name = 'researcher/article_view.html'
     login_url = reverse_lazy('admin:login')
     redirect_field_name = 'next'
@@ -496,8 +496,8 @@ class ArticleView(PermissionRequiredMixin, View):
         context['debug_presenter'] = debug_presenter
         context['debug_server'] = debug_server
         if debug_presenter:
-            context['articleview_debug_js'] = urljoin(debug_server,
+            context['articlereview_debug_js'] = urljoin(debug_server,
                                    settings.ARTICLE_REVIEW_DEBUG_URLPATH)
         else:
-            context['articleview_static_js'] = settings.ARTICLE_REVIEW_STATIC_URLPATH
+            context['articlereview_static_js'] = settings.ARTICLE_REVIEW_STATIC_URLPATH
         return render(request, self.template_name, context)

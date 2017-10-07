@@ -7,7 +7,7 @@ from rest_framework.generics import RetrieveAPIView
 from models import Article
 from serializers import ArticleSerializer2
 
-class ArticleView(RetrieveAPIView):
+class ArticleReview(RetrieveAPIView):
     """
     /article/view/id
 

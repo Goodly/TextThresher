@@ -54,9 +54,9 @@ const config = {
   context: PATHS.buildPath,
   devtool: '#source-map',
   entry: {
-    articleView: [
+    articleReview: [
       'babel-polyfill',
-      './app/articleView'
+      './app/articleReview'
     ],
     highlight: [
       'babel-polyfill',
@@ -172,8 +172,8 @@ const config = {
     new HtmlWebpackPlugin({
       title: 'TextThresher',
       template: './app/templates/index_template.html',
-      chunks: ['articleView'],
-      filename: 'articleView.html',
+      chunks: ['articleReview'],
+      filename: 'articleReview.html',
       chunksSortMode: 'dependency',
     }),
     new webpack.NoEmitOnErrorsPlugin(),

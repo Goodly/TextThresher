@@ -25,8 +25,8 @@ HIGHLIGHTER_BUNDLE_JS = os.path.join(BASE_DIR, 'dist/highlight.bundle.js')
 QUIZ_BUNDLE_URLPATH = '/quiz.bundle.js'
 QUIZ_BUNDLE_JS = os.path.join(BASE_DIR, 'dist/quiz.bundle.js')
 
-ARTICLE_REVIEW_DEBUG_URLPATH = '/articleView.bundle.js'
-ARTICLE_REVIEW_STATIC_URLPATH = 'dist/articleView.bundle.js'
+ARTICLE_REVIEW_DEBUG_URLPATH = '/articleReview.bundle.js'
+ARTICLE_REVIEW_STATIC_URLPATH = 'dist/articleReview.bundle.js'
 
 # REST Framework settings
 REST_FRAMEWORK = {
