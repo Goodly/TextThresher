@@ -41,6 +41,9 @@ const config = {
     host: WEBPACK_LISTEN_IP,
     port: WEBPACK_PORT,
     hot: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    },
     stats: {
       assets: true,
       colors: true,
