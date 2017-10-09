@@ -3,10 +3,10 @@ import { render } from 'react-dom';
 import { bindActionCreators } from 'redux';
 
 import App, { store } from 'containers/App';
-import * as articleReviewActions from 'actions/articleReview';
-import fetchArticleReview from 'django/articleReview';
+import * as articleViewActions from 'actions/articleView';
+import fetchArticleView from 'django/articleView';
 
-let reduxActions = bindActionCreators(articleReviewActions, store.dispatch);
+let reduxActions = bindActionCreators(articleViewActions, store.dispatch);
 
 render(
   <App>
@@ -17,5 +17,5 @@ render(
 
 export function loadArticle(articleFetchURL) {
   console.log(`Fetching: ${articleFetchURL}`);
-  fetchArticleReview(reduxActions, articleFetchURL);
+  fetchArticleView(reduxActions, articleFetchURL);
 };

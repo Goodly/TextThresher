@@ -7,7 +7,7 @@ const initialState = {
   error: null,
 };
 
-export function articleReview(state = initialState, action) {
+export function articleView(state = initialState, action) {
   switch (action.type) {
     case 'FETCH_ARTICLE_REVIEW':
       return Object.assign({}, initialState, {
