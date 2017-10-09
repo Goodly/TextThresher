@@ -5,10 +5,10 @@ var webpack = require('webpack');
 
 const config = require('../webpack.config.js');
 
-const PUBLIC_PATH = config.output.publicPath;
+const PUBLIC_HOST = config.devServer.public;
 
-config.entry.app.unshift(
-  `webpack-dev-server/client?${PUBLIC_PATH}`,
+config.entry.articleView.unshift(
+  `webpack-dev-server/client?http://${PUBLIC_HOST}`,
   'webpack/hot/only-dev-server'
 );
 
@@ -16,4 +16,4 @@ config.plugins.push(
   new webpack.HotModuleReplacementPlugin()
 );
 
-module.exports = config
+module.exports = config;

@@ -1,0 +1,30 @@
+{% extends parent_template|default:"researcher/base.html" %}
+{% load static %}
+{% block title %} {{ page_title }} {% endblock %}
+{% block content %}
+  <div class="content-container">
+    <h1 class="main-label">
+      {{ page_title }}
+    </h1>
+
+    <div class="main-container">
+      <div id="react-root">
+        Howdy!
+      </div>
+    </div>
+    {% if debug_presenter %}
+      <div>
+        Loading javascript from {{ articleview_debug_js }}<br>
+        Use ?debugPresenter=true&amp;debugHost=url to set a different host.
+      </div>
+      <script type="text/javascript" src="{{ articleview_debug_js }}">
+      </script>
+    {% else %}
+      <script type="text/javascript" src="{% static articleview_static_js %}">
+      </script>
+    {% endif %}
+    <script type="text/javascript">
+      thresher.articleView.loadArticle("{% url 'api:article_view' article.id %}");
+    </script>
+  </div>
+{% endblock %}

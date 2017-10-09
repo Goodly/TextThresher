@@ -9,7 +9,7 @@ const PROTOCOL = 'http';
 const WEBPACK_LISTEN_IP = process.env.WEBPACK_LISTEN_IP || 'localhost';
 const WEBPACK_HOSTNAME = process.env.WEBPACK_HOSTNAME || 'localhost';
 const WEBPACK_PORT = parseInt(process.env.WEBPACK_PORT, 10) || 3001;
-const PUBLIC_HOST = `${PROTOCOL}://${WEBPACK_HOSTNAME}:${WEBPACK_PORT}/`;
+const PUBLIC_HOST = `${WEBPACK_HOSTNAME}:${WEBPACK_PORT}`;
 const PUBLIC_PATH = '/';
 
 // Default to building outside container using host mounted dir and tools
@@ -24,7 +24,6 @@ const PATHS = {
   app: path.resolve(buildPath, './app'),
   dist: path.resolve(buildPath, './dist'),
   staticRoot: path.resolve(buildPath, './app/staticroot'),
-  vendorPath: path.resolve(buildPath, './vendor'),
 };
 
 function execCmd(command) {
@@ -36,7 +35,7 @@ function execCmd(command) {
 
 const config = {
   devServer: {
-    contentBase: [PATHS.staticRoot, PATHS.vendorPath],
+    contentBase: [PATHS.staticRoot],
     public: PUBLIC_HOST,
     publicPath: PUBLIC_PATH,
     host: WEBPACK_LISTEN_IP,
@@ -55,9 +54,9 @@ const config = {
   context: PATHS.buildPath,
   devtool: '#source-map',
   entry: {
-    app: [
+    articleView: [
       'babel-polyfill',
-      './app/index'
+      './app/articleView'
     ],
     highlight: [
       'babel-polyfill',
@@ -77,7 +76,9 @@ const config = {
     filename: '[name].bundle.js',
     chunkFilename: '[id].chunk.js',
     sourceMapFilename: "[name].bundle.js.map",
-    publicPath: PUBLIC_PATH
+    publicPath: PUBLIC_PATH,
+    library: ["thresher", "[name]"],
+    libraryTarget: "var"
   },
   module: {
     rules: [
@@ -171,9 +172,9 @@ const config = {
     new HtmlWebpackPlugin({
       title: 'TextThresher',
       template: './app/templates/index_template.html',
-      chunks: ['app'],
+      chunks: ['articleView'],
+      filename: 'articleView.html',
       chunksSortMode: 'dependency',
-      filename: 'index.html',
     }),
     new webpack.NoEmitOnErrorsPlugin(),
   ],

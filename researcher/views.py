@@ -2,6 +2,7 @@ import logging
 logger = logging.getLogger(__name__)
 import tarfile, tempfile
 
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -9,6 +10,8 @@ from django.views.generic import FormView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Min, Max
 from django.contrib import messages
+
+from requests.compat import urljoin
 
 from researcher.forms import UploadArticlesForm, UploadSchemaForm
 from researcher.forms import NLPArticlesForm
@@ -461,3 +464,40 @@ class RemoteProjectDeleteView(PermissionRequiredMixin, View):
         project = get_object_or_404(Project, pk=pk)
         job = delete_remote_project(project)
         return redirect(reverse('researcher:index'))
+
+
+class ArticleView(PermissionRequiredMixin, View):
+    template_name = 'researcher/article_view.html'
+    login_url = reverse_lazy('admin:login')
+    redirect_field_name = 'next'
+    permission_required = (
+        u'thresher.add_articlehighlight',
+        u'thresher.change_articlehighlight',
+        u'thresher.delete_articlehighlight',
+        u'thresher.add_highlightgroup',
+        u'thresher.change_highlightgroup',
+        u'thresher.delete_highlightgroup',
+    )
+
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        context = {
+            'page_title': "Article Highlight Viewer",
+            'article': article,
+        }
+        # The default page load the articleView react app from Django static
+        # files. Updating that requires 'npm run build' followed by
+        # './manage.py collectstatic' in the thresher_api container.
+        # Developers should add "?debugPresenter=true" to the URL to load a
+        # script tag pointed at localhost:3001/dist/articleReview.bundle.js
+        # and run 'npm run dev' for easy debugging.
+        debug_presenter = request.GET.get("debugPresenter", False)
+        debug_server = request.GET.get("debugHost", settings.WEBPACK_DEV_SERVER)
+        context['debug_presenter'] = debug_presenter
+        context['debug_server'] = debug_server
+        if debug_presenter:
+            context['articleview_debug_js'] = urljoin(debug_server,
+                                   settings.ARTICLE_REVIEW_DEBUG_URLPATH)
+        else:
+            context['articleview_static_js'] = settings.ARTICLE_REVIEW_STATIC_URLPATH
+        return render(request, self.template_name, context)

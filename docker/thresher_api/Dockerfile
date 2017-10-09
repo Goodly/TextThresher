@@ -124,5 +124,6 @@ COPY /docker/bashrc_to_docker /root/.bashrc
 COPY /docker/bashrc_to_docker ${HOME}/.bashrc
 EXPOSE 5000
 
+USER ${USER}
 # Runs migrate, then replaces sh with 'exec gunicorn...'
 CMD ["bash", "docker/thresher_api/migrate_and_run.sh"]

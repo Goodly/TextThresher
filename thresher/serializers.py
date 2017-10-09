@@ -1,9 +1,9 @@
 import json
 from rest_framework import serializers
 from models import (Article, Topic, Question, Answer,
-                    HighlightGroup, SubmittedAnswer, NLPHints,
-                    Project, ArticleHighlight, UserProfile)
-
+                    ArticleHighlight, HighlightGroup,
+                    QuizTaskRun, SubmittedAnswer,
+                    NLPHints, Project, Contributor)
 
 # Custom JSON field
 # All JSON now using native JSONB fields in Postgres.
@@ -28,36 +28,51 @@ class JSONSerializerField(serializers.Field):
 # Serializers define the API representation of the models.
 
 class ProjectSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Project
         fields = ('id', 'name', 'description')
 
-class SubmittedAnswerSerializer(serializers.ModelSerializer):
+class ContributorSerializer(serializers.ModelSerializer):
+    unique_label = serializers.SerializerMethodField()
 
+    def get_unique_label(self, obj):
+        if obj.username:
+            return obj.username
+        elif obj.pybossa_user_id:
+            return str(obj.pybossa_user_id)
+        else:
+            return str(obj.id)
+
+    class Meta:
+        model = Contributor
+        fields = ('id', 'unique_label')
+
+class SubmittedAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubmittedAnswer
         fields = ('id', 'answer')
 
-    def create(self, validated_data):
-        user_data = validated_data.pop('user')
-        highlight_data = validated_data.pop('highlight_group')
-        submitted_answer = SubmittedAnswer.objects.create(**validated_data)
-        highlight_group = HighlightGroup.objects.update(submitted_answer=submitted_answer, **highlight_data)
-        user = UserProfile.objects.update(submitted_answer=submitted_answer, **user_data)
-        return submitted_answer
-
 class HighlightGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = HighlightGroup
-        fields = ('id', 'offsets', 'case_number', 'topic')
+        fields = ('id', 'article_highlight', 'topic',
+                   'case_number', 'offsets')
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
     highlights = HighlightGroupSerializer(many=True)
+    contributor = ContributorSerializer(many=False)
 
     class Meta:
         model = ArticleHighlight
-        fields = ('id', 'highlights', 'created_by')
+        fields = ('id', 'article', 'contributor', 'highlights')
+
+class ArticleSerializer2(serializers.ModelSerializer):
+    highlight_taskruns = ArticleHighlightSerializer(many=True)
+
+    class Meta:
+        model = Article
+        fields = ('id', 'article_number', 'text', 'metadata',
+                  'highlight_taskruns')
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -77,14 +92,6 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'question_number', 'question_type', 'question_text',
                   'next_questions', 'hint_type', 'answers')
-
-    def create(self, validated_data):
-        answers = validated_data.pop('answers')
-        question = Question.objects.create(**validated_data)
-        for answer in answers:
-            Answer.objects.create(question=question, **answer)
-        return question
-
 
 # Used to export questions in format recognized by NLP-Hints program
 class NLPQuestionSerializer(serializers.Serializer):

@@ -3,44 +3,9 @@
 <head>
   <meta charset="utf-8">
   <title><%= htmlWebpackPlugin.options.title %></title>
-
-  <!-- resources -->
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-  <style>
-    .crowdcrafting { color: white; background-color: rgb(46, 64, 74) }
-  </style>
 </head>
 <body>
-  <!-- This app will be embedded in a Pybossa page with a header
-       and footer. Provide a rough header and footer to assist coding
-       the layout for now.
-  -->
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <h1>This is a big header.</h1>
-      </div>
-    </div>
-  </nav>
-  <!-- Pybossa sets body padding-top: 60px to start page below fixed navbar.
-       This template is only used in testing, so put in a div that only
-       picks up our padding-top in testing.
-  -->
-  <div class="move-below-navbar">
-  </div>
   <div id="react-root">
   </div>
-  <footer role="contentinfo">
-    <div class="container-fluid crowdcrafting">
-      <div class="container">
-        <h1><p>This is a big footer.</p>
-            <p>Even more footer here.</p>
-        </h1>
-      </div>
-    </div>
-  </footer>
 </body>
 </html>
