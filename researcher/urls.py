@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^remoteproject/(?P<pk>[0-9]+)/delete/$',
         views.RemoteProjectDeleteView.as_view(),
         name='remote_project_delete'),
-    url(r'^article/review/(?P<pk>[0-9]+)/$',
-        views.ArticleReview.as_view(),
-        name='article_review')
+    url(r'^article/view/(?P<pk>[0-9]+)/$',
+        views.ArticleView.as_view(),
+        name='article_view')
 ]
