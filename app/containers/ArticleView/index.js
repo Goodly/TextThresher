@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { displayStates } from 'components/displaystates';
 import * as articleViewActions from 'actions/articleView';
 
+import './styles.scss';
+
 const mapStateToProps = state => {
   return {
     database: state.articleView.database,
@@ -46,8 +48,10 @@ export class ArticleView extends React.Component {
           text = db.entities.articles[article_id].text;
         };
         return (
-          <div>
-            {text}
+          <div className="article-viewer">
+            <div className="article-click-box">
+              {text}
+            </div>
           </div>
         );
     };
