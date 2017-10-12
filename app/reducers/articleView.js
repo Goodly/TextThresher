@@ -1,7 +1,7 @@
 import { displayStates } from 'components/displaystates';
 
 const initialState = {
-  articleNormalized: {},
+  database: {},
   displayState: displayStates.BEFORE_LOAD,
   lastDisplayState: displayStates.BEFORE_LOAD,
   error: null,
@@ -16,7 +16,13 @@ export function articleView(state = initialState, action) {
     case 'FETCH_ARTICLE_REVIEW_SUCCESS':
       return {
         ...state,
-        articleNormalized: action.normalizedData,
+        database: action.normalizedData,
+        displayState: displayStates.TASK_LOADED,
+      }
+    case 'DISPLAY_ARTICLE_VIEW':
+      return {
+        ...state,
+        article_id,
         displayState: displayStates.TASK_LOADED,
       }
     case 'FETCH_ARTICLE_REVIEW_FAIL':
