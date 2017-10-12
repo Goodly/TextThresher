@@ -97,11 +97,60 @@ def parse_article(raw_text, filename):
         raise ArticleParseError("Only found Useless tuas!",
                                 ArticleParseError.DUPLICATE_ERROR)
 
+    #print(clean_text)
     # Warning: brackets left over are usually bad news.
-    if '[' in clean_text or ']' in clean_text:
-        print "Unparsed brackets left in article:", article_number
-#        raise ArticleParseError("Brackets remain in clean text!",
-#                                ArticleParseError.BRACKET_WARNING)
+
+    #Trace highlights
+    index = 0
+    highlight_open = False
+    highlights = []
+
+    while index < len(clean_text):
+
+        #Assume that highlights cannot have internal square brackets... throw error.
+        if (clean_text[index] == "[" and highlight_open):
+            raise Exception("Extra [ in " + filename + " article number " + article_number + "\n")
+
+        #Assume that right square bracket with its corresponding left square bracket is an error.
+        elif (clean_text[index] == "]" and not highlight_open):
+            raise Exception("Extra ] in " + filename + " article number " + article_number + "\n")
+
+        #Start of highlight.
+        elif clean_text[index] == "[":
+            highlight_open = True
+            start = index
+
+        #Close of highlight... Remove highlight from text.
+        elif clean_text[index] == "]" and highlight_open:
+            highlight = {'start': start, 'end': index, 'text': clean_text[start:index+1]}
+            clean_text = clean_text[0:start] + clean_text[index+1:]
+            index -= index+1 - start
+            highlights.append(highlight)
+            highlight_open = False
+        index += 1
+
+    #Find highlight offsets with new clean doc
+    offsets = []
+    for highlight in highlights:
+        text = highlight['text'][1:-1].strip()
+        text_length = len(text)
+
+        start_index = clean_text.find(text)
+        if start_index == -1:
+            raise Exception("Highlight '" + text + "' not recognized in " + filename + "\n")
+        end_index = start_index + text_length
+        offsets.append([start_index, end_index])
+
+
+    #1. make error type in pybossa_api.py
+    #2. try/catch in load_data.py (where parse_document is used)
+
+    #Can I delete below the comments below?
+    #if '[' in clean_text or ']' in clean_text:
+    #    print "Unparsed brackets left in article:", article_number
+    #        raise ArticleParseError("Brackets remain in clean text!",
+    #                                ArticleParseError.BRACKET_WARNING)
+    #
 
     # print out our data.
     # TODO: store this somewhere.
@@ -115,6 +164,7 @@ def parse_article(raw_text, filename):
         'periodical': periodical,
         'periodical_code': periodical_code,
         'filename': filename,
+        'highlight_offsets': offsets,
     }
     return {
         'metadata': metadata,
@@ -396,7 +446,7 @@ def parse_documents(directory_path, error_directory_paths):
 if __name__ == '__main__':
     DATA_FOLDER = os.path.dirname(os.path.abspath(__file__))
     ARTICLE_FOLDER = os.path.join(DATA_FOLDER, "sample/articles")
-    OUTPUT_FOLDER = os.path.join(DATA_FOLDER, "DocumentsParsed")
+    OUTPUT_FOLDER = os.path.join(DATA_FOLDER, "DocumentsParsed/all_articles")
     FILENAME_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DocumentErrors/filename")
     HEADER_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DocumentErrors/header")
     TEXT_ERROR_FOLDER = os.path.join(DATA_FOLDER, "DocumentErrors/text")

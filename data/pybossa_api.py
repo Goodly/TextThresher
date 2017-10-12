@@ -36,6 +36,9 @@ class ImproperConfigForRemote(Exception):
 class InvalidTaskRun(Exception):
     pass
 
+class DecidingForceParserError(Exception):
+    pass
+
 @django_rq.job('task_exporter', timeout=60, result_ttl=24*3600)
 def create_or_update_remote_project_worker(project_id,
                                            debug_presenter=False,
