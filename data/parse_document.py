@@ -97,9 +97,6 @@ def parse_article(raw_text, filename):
         raise ArticleParseError("Only found Useless tuas!",
                                 ArticleParseError.DUPLICATE_ERROR)
 
-    #print(clean_text)
-    # Warning: brackets left over are usually bad news.
-
     #Trace highlights
     index = 0
     highlight_open = False
@@ -111,7 +108,7 @@ def parse_article(raw_text, filename):
         if (clean_text[index] == "[" and highlight_open):
             raise Exception("Extra [ in " + filename + " article number " + article_number + "\n")
 
-        #Assume that right square bracket with its corresponding left square bracket is an error.
+        #Assume that right square bracket without its corresponding left square bracket is an error.
         elif (clean_text[index] == "]" and not highlight_open):
             raise Exception("Extra ] in " + filename + " article number " + article_number + "\n")
 
@@ -140,10 +137,6 @@ def parse_article(raw_text, filename):
             raise Exception("Highlight '" + text + "' not recognized in " + filename + "\n")
         end_index = start_index + text_length
         offsets.append([start_index, end_index])
-
-
-    #1. make error type in pybossa_api.py
-    #2. try/catch in load_data.py (where parse_document is used)
 
     #Can I delete below the comments below?
     #if '[' in clean_text or ']' in clean_text:
