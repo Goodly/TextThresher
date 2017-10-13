@@ -1,5 +1,7 @@
 import React from 'react';
 
+let debug = require('debug')('thresher:TextSpanner');
+
 export class Spanner extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +13,7 @@ export class Spanner extends React.Component {
   render() {
     return (
       <div>
-        Spanner results go here.
+        {this.props.children}
       </div>
     );
   }

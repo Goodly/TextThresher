@@ -59,9 +59,9 @@ export class ArticleView extends React.Component {
                 editorState={editorState}
                 displayState={displayState}
                 blockStyleFn={getBlockStyle}
-                customStyleMap={styleMap}
-              />
-              {text}
+                customStyleMap={styleMap}>
+                {text}
+              </Spanner>
             </div>
           </div>
         );
