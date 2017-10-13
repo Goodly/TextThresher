@@ -1,2 +1,2 @@
 export {Spanner} from './components/Spanner';
-export {SpannerState} from './model/SpannerState';
+export {EditorState} from './model/EditorState';

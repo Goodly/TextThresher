@@ -11,7 +11,7 @@ export class Spanner extends React.Component {
   render() {
     return (
       <div>
-        Spanner
+        Spanner results go here.
       </div>
     );
   }
