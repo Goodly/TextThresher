@@ -55,7 +55,7 @@ def parse_schema(schema_file):
         linecount = 1
         version3 = False
         first_line = True
-        curr_topic_id = -1
+        current_topic = None
         for line in f:
             raw_line = line.strip()
 
@@ -83,15 +83,17 @@ def parse_schema(schema_file):
             # Infer the line type and parse accordingly
             type_id, data = raw_line.split(None, 1)
             if type_id.lower() == TITLE_ID:
-                parse_title(data, parsed_schema, version3)
+                current_topic = parse_title(data, parsed_schema, version3)
             elif type_id.lower() == INSTRUCTIONS_ID:
-                parse_instructions(data, parsed_schema, curr_topic_id)
+                parse_instructions(data, current_topic)
             elif type_id.lower() == GLOSSARY_ID:
-                parse_glossary(data, parsed_schema, curr_topic_id)
+                parse_glossary(data, current_topic)
             elif type_id.lower() == DEPENDENCY_ID:
                 parse_dependency(data, parsed_schema)
             elif unicode(type_id[0]).isnumeric():
-                curr_topic_id = parse_question_entry(type_id, data, parsed_schema)
+                topic_id = parse_question_entry(type_id, data, current_topic)
+                if current_topic['id'] is None:
+                    current_topic['id'] = topic_id
             elif type_id.lower() == VERSION_ID and first_line:
                 version3 = data.strip() == VERSION_NUM
                 first_line = False
@@ -114,23 +116,24 @@ def parse_title(title, output, version3):
     if version3:
         if 'topics' not in output:
             output['topics'] = []
-        # id should take on the value of the topic_id in the question block below
-        output['topics'].append({
+        # id will be set by next question encountered
+        current_topic = {
             'id': None,
             'name': title,
             'questions': [],
-        })
+            'glossary': {},
+            'instructions': '',
+        }
+    output['topics'].append(current_topic)
+    return current_topic
 
-def parse_instructions(instructions, output, curr_topic_id):
-    ind = [i for i in range(len(output['topics'])) if output['topics'][i]['id'] == curr_topic_id][0]
-    output['topics'][ind]['instructions'] = instructions
 
-def parse_glossary(glossary_entry, output, curr_topic_id):
-    ind = [i for i in range(len(output['topics'])) if output['topics'][i]['id'] == curr_topic_id][0]
-    if 'glossary' not in output['topics'][ind]:
-        output['topics'][ind]['glossary'] = {}
+def parse_instructions(instructions, current_topic):
+    current_topic['instructions'] = instructions
+
+def parse_glossary(glossary_entry, current_topic):
     term, definition = glossary_entry.split(':', 1)
-    output['topics'][ind]['glossary'][term.strip()] = definition.strip()
+    current_topic['glossary'][term.strip()] = definition.strip()
 
 def parse_dependency(dependency, output):
 
@@ -164,7 +167,7 @@ def infer_hint_type(question):
     else:
         return 'NONE';
 
-def parse_question_entry(entry_id, data, output):
+def parse_question_entry(entry_id, data, current_topic):
     type_bits = entry_id.split('.')
     num_bits = len(type_bits)
     if num_bits == 1:
@@ -182,16 +185,12 @@ def parse_question_entry(entry_id, data, output):
         })
     elif num_bits == 2:
         topic_id, question_id = type_bits
-        ind_list = [i for i in range(len(output['topics'])) if output['topics'][i]['id'] is None]
-        if len(ind_list) > 0:
-            output['topics'][ind_list[0]]['id'] = topic_id
         question_id = type_bits[1]
-        topic = [t for t in output['topics'] if t['id'] == topic_id][0]
         question_type, question_text = data.split(None, 1)
         hint_type = infer_hint_type(question_text)
         if question_type in QUESTION_TYPES:
             question_type = QUESTION_TYPES[question_type]
-        topic['questions'].append({
+        current_topic['questions'].append({
             'question_number': question_id,
             'question_text': question_text,
             'question_type': question_type,
@@ -201,11 +200,7 @@ def parse_question_entry(entry_id, data, output):
         })
     else:
         topic_id, question_id, answer_id = type_bits
-        ind_list = [i for i in range(len(output['topics'])) if output['topics'][i]['id'] is None]
-        if len(ind_list) > 0:
-            output['topics'][ind_list[0]]['id'] = topic_id
-        topic = [t for t in output['topics'] if t['id'] == topic_id][0]
-        question = [q for q in topic['questions'] if q['question_number'] == question_id][0]
+        question = [q for q in current_topic['questions'] if q['question_number'] == question_id][0]
         question['answers'].append({
             'answer_number': answer_id,
             'answer_content': data,
