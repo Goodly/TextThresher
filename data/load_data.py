@@ -31,156 +31,126 @@ from thresher.models import (Article, Topic, Question, Answer,
 
 HIGH_ID = 20000
 
-class TopicsSchemaParser(object):
+def load_answers(answers, question):
     """
-    Parses a json schema of topics and questions and populates the database
+    Creates the answers instances for a given question.
+    answers: A list of answers
+    question: The question that answers belongs to
     """
-    def __init__(self, schema):
-        """
-        topic_obj: The Topic object that is the parent of subtopics in schema
-        schema: A json schema as a string or loaded json with subtopics
-        dependencies: The list of answers that point to another question
-        """
-        # if the schema is a string, tries to load it as json, otherwise,
-        # assumes it's already json
-        if isinstance(schema, str) or isinstance(schema, unicode):
-            self.schema_json = json.loads(schema)
+    # In the Quiz front-end, tracking colors assigned to answers
+    # is vastly simplified if every question can be counted on to have
+    # at least one answer with a unique ID, including
+    # question_type == 'TEXT', 'DATE', or 'TIME'.
+    if len(answers) == 0:
+        answers.append({
+            'answer_number': 1,
+            'question': question,
+            'answer_content': 'placeholder answer for ' + question.question_type
+        })
+        if question.question_type in ['RADIO', 'CHECKBOX']:
+            logger.error("Question number {} of type {} in topic '{}' "
+                         "should have answers."
+                         .format(question.question_number,
+                                 question.question_type,
+                                 question.topic.name
+                         )
+            )
+
+    # find the corresponding topic and question ids
+    for answer_args in answers:
+        answer_args['question'] = question
+        # Create the answer in the database
+        answer = Answer.objects.create(**answer_args)
+
+def load_questions(questions, topic):
+    """
+    Creates the questions instances for the given topic.
+    questions: A list of questions
+    topic: The topic that questions belongs to
+    """
+    for question_args in questions:
+        # Create the topic
+        question_args['topic'] = topic
+        # Store the answers for later
+        answers = question_args.pop('answers')
+        # Create the Question
+        question = Question.objects.create(**question_args)
+        # Load the Question's answers
+        load_answers(answers, question)
+
+def load_topics(topics):
+    """
+    Loads all the topics, their questions and their answers.
+    """
+    root_topic = None
+    for topic_args in topics:
+        # Get the questions to add them later
+        questions = topic_args.pop('questions')
+        # Change id to order
+        topic_args['order'] = int(topic_args.pop('id'))
+        # Set reference to parent (will be None for first topic...)
+        topic_args['parent'] = root_topic
+        # topics should already have their own glossary and instructions
+        # Create the topic with the values in topic_args
+        topic = Topic.objects.create(**topic_args)
+        if root_topic is None:
+            root_topic = topic
+        load_questions(questions, topic)
+
+    return root_topic
+
+def load_dependencies(dependencies, root_topic):
+    """
+    Loads dependencies into targeted answers.
+    """
+    for dep in dependencies:
+        if root_topic.order == dep.topic:
+            topic_obj = root_topic
         else:
-            self.schema_json = schema
-        self.topic_obj = None
-
-    def load_answers(self, answers, question):
-        """
-        Creates the answers instances for a given question.
-        answers: A list of answers
-        question: The question that answers belongs to
-        """
-        # In the Quiz front-end, tracking colors assigned to answers
-        # is vastly simplified if every question can be counted on to have
-        # at least one answer with a unique ID, including
-        # question_type == 'TEXT', 'DATE', or 'TIME'.
-        if len(answers) == 0:
-            answers.append({
-                'answer_number': 1,
-                'question': question,
-                'answer_content': 'placeholder answer for ' + question.question_type
-            })
-            if question.question_type in ['RADIO', 'CHECKBOX']:
-                logger.error("Question number {} of type {} in topic '{}' "
-                             "should have answers."
-                             .format(question.question_number,
-                                     question.question_type,
-                                     question.topic.name
-                             )
-                )
-
-        # find the corresponding topic and question ids
-        for answer_args in answers:
-            answer_args['question'] = question
-            # Create the answer in the database
-            answer = Answer.objects.create(**answer_args)
-
-    def load_questions(self, questions, topic):
-        """
-        Creates the questions instances for the given topic.
-        questions: A list of questions
-        topic: The topic that questions belongs to
-        """
-        for question_args in questions:
-            # Create the topic
-            question_args['topic'] = topic
-            # Store the answers for later
-            answers = question_args.pop('answers')
-            # Create the Question
-            question = Question.objects.create(**question_args)
-            # Load the Question's answers
-            self.load_answers(answers, question)
-
-    def load_topics(self):
-        """
-        Loads all the topics, their questions and their answers.
-        """
-        for topic_args in self.schema_json:
-            # Get the questions to add them later
-            questions = topic_args.pop('questions')
-            # Change id to order
-            topic_args['order'] = topic_args.pop('id')
-            # now the topics each have their own dependencies
-            # topics should already have their own glossary and instructions
-            # Create the topic with the values in topic_args
-            topic = Topic.objects.create(**topic_args)
-            if self.topic_obj is None:
-                try:
-                    topic.save()
-                except ValidationError:
-                    # we've already loaded this schema, pull it into memory.
-                    print "Schema already exists. It will be overwritten"
-                    curr_schema_obj = Topic.objects.get(name=self.schema_json['title'])
-                    # We can't just delete the object because this will delete all TUAs associated with it.
-                    # Instead, we update the Analysis Type and delete all the topics associated with it.
-                    # When the id is set, django automatically knows to update instead of creating a new entry.
-                    topic.id = curr_schema_obj.id
-                    # Save the updated object
-                    topic.save()
-                    # delete all topics associated with this Analysis Type
-                    # This will CASCADE DELETE all questions and answers as well
-                    Topic.objects.filter(parent=topic).delete()
-                self.topic_obj = topic
-            self.load_questions(questions, topic)
-
-    def load_dependencies(self, dependencies):
-        """
-        Loads dependencies into targeted answers.
-        """
-        # Report as many errors as possible to aid someone in
-        # debugging a schema. Don't bail on first error.
-        for dep in dependencies:
             try:
-                # we will not have parent topics anymore
-                topic_obj = Topic.objects.get(parent=self.topic_obj,
+                topic_obj = Topic.objects.get(parent=root_topic,
                                               order=dep.topic)
             except Topic.DoesNotExist:
                 logger.error("%s\nDidn't find topic number %d" % (dep, dep.topic,))
                 continue
 
-            try:
-                question_obj = Question.objects.get(topic=topic_obj,
-                                                    question_number=dep.question)
-            except Question.DoesNotExist:
-                logger.error("%s\nDidn't find question number %d" % (dep, dep.question,))
-                continue
+        try:
+            question_obj = Question.objects.get(topic=topic_obj,
+                                                question_number=dep.question)
+        except Question.DoesNotExist:
+            logger.error("%s\nDidn't find question number %d" % (dep, dep.question,))
+            continue
 
-            try:
-                next_question_obj = Question.objects.get(topic=topic_obj,
-                                    question_number=dep.next_question)
-            except Question.DoesNotExist:
-                logger.error("%s\nDidn't find next question number %d" % (dep, dep.next_question,))
-                continue
+        try:
+            next_question_obj = Question.objects.get(topic=topic_obj,
+                                question_number=dep.next_question)
+        except Question.DoesNotExist:
+            logger.error("%s\nDidn't find next question number %d" % (dep, dep.next_question,))
+            continue
 
-            if dep.answer == 'any':
-                # Any answer to this question activates this next_question
-                # Note that text box and date questions do not have
-                # any Answer records to store next_questions, but still use .any
-                # e.g., where T is the topic number and Q is a question number:
-                # if T.Qx.any, then T.Qy
-                question_obj.next_questions.append(next_question_obj.id)
-                question_obj.save()
-            else:
-                # This answer activates this next_question
-                try:
-                    answer_obj = Answer.objects.get(question=question_obj,
-                                                    answer_number=int(dep.answer))
-                except Answer.DoesNotExist:
-                    logger.error("%s\nDidn't find answer number %d" % (dep, dep.answer,))
-                    continue
-                answer_obj.next_questions.append(next_question_obj.id)
-                answer_obj.save()
+        if dep.answer == 'any':
+            # Any answer to this question activates this next_question
+            # Note that text box and date questions do not have
+            # any Answer records to store next_questions, but still use .any
+            # e.g., where T is the topic number and Q is a question number:
+            # if T.Qx.any, then T.Qy
+            question_obj.next_questions.append(next_question_obj.id)
+            question_obj.save()
+        else:
+            # This answer activates this next_question
+            try:
+                answer_obj = Answer.objects.get(question=question_obj,
+                                                answer_number=int(dep.answer))
+            except Answer.DoesNotExist:
+                logger.error("%s\nDidn't find answer number %d" % (dep, dep.answer,))
+                continue
+            answer_obj.next_questions.append(next_question_obj.id)
+            answer_obj.save()
 
 def load_schema(schema):
     # Load the topics, questions and answers of the schema
-    schema_parser = TopicsSchemaParser(schema=schema['topics'])
-    schema_parser.load_topics()
-    schema_parser.load_dependencies(schema['dependencies'])
+    root_topic = load_topics(schema['topics'])
+    load_dependencies(schema['dependencies'], root_topic)
 
 def load_article(article):
     new_id = int(article['metadata']['article_number'])
@@ -299,10 +269,7 @@ def load_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-s', '--schema-dir',
-        help='Directory holding schemas in version 1 format.')
-    parser.add_argument(
-        '-v2', '--schema-v2-dir',
-        help='Directory holding schema files in version 2 format.')
+        help='Directory holding schemas in version 3 format.')
     parser.add_argument(
         '-d', '--article-dir',
         help='Directory with articles to load')
@@ -319,12 +286,8 @@ if __name__ == '__main__':
     created_by = init_defaults.createNick(groups=[researchers])
     args = load_args()
     if args.schema_dir:
-        print "Loading schemas in version 1 format"
+        print "Loading schemas in version 3 format"
         load_schema_dir(args.schema_dir)
-        print "Finished loading schemas"
-    if args.schema_v2_dir:
-        print "Loading schemas in version 2 format"
-        load_schema_v2_dir(args.schema_v2_dir)
         print "Finished loading schemas"
     if args.article_dir:
         load_article_dir(args.article_dir, args.with_annotations)
