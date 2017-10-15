@@ -13,7 +13,7 @@ GLOSSARY_ID = 'glossary:'
 DEPENDENCY_ID = 'if'
 DEPENDENCY_TARGET = 'then'
 VERSION_ID = 'version:'
-VERSION_NUM = 'v3'
+VERSION_NUM = '3'
 
 QUESTION_TYPES = {'mc' : 'RADIO',
                   'dd' : 'RADIO', # old label
@@ -53,7 +53,7 @@ def parse_schema(schema_file):
     load_defaults(parsed_schema)
     with open(schema_file, 'r') as f:
         linecount = 1
-        version3 = False
+        version = ''
         first_line = True
         current_topic = None
         for line in f:
@@ -82,8 +82,25 @@ def parse_schema(schema_file):
 
             # Infer the line type and parse accordingly
             type_id, data = raw_line.split(None, 1)
-            if type_id.lower() == TITLE_ID:
-                current_topic = parse_title(data, parsed_schema, version3)
+            if type_id.lower() == VERSION_ID and first_line:
+                version = data.strip()
+                first_line = False
+                if version != '3':
+                    msg = ("'version: 3' must be first non-blank line. "
+                           "Found '{}'".format(raw_line))
+                    timestamp = datetime.datetime.now(pytz.utc)
+                    raise ParseSchemaException(msg, 'ParseSchemaException',
+                                               schema_file, linecount,
+                                               timestamp)
+            elif first_line:
+                msg = ("'version: 3' must be first non-blank line. "
+                       "Found '{}'".format(type_id))
+                timestamp = datetime.datetime.now(pytz.utc)
+                raise ParseSchemaException(msg, 'ParseSchemaException',
+                                           schema_file, linecount,
+                                           timestamp)
+            elif type_id.lower() == TITLE_ID:
+                current_topic = parse_title(data, parsed_schema)
             elif type_id.lower() == INSTRUCTIONS_ID:
                 parse_instructions(data, current_topic)
             elif type_id.lower() == GLOSSARY_ID:
@@ -94,9 +111,6 @@ def parse_schema(schema_file):
                 topic_id = parse_question_entry(type_id, data, current_topic)
                 if current_topic['id'] is None:
                     current_topic['id'] = topic_id
-            elif type_id.lower() == VERSION_ID and first_line:
-                version3 = data.strip() == VERSION_NUM
-                first_line = False
             else:
                 # type_id is wrong or split lines returned wrong stuffs
                 msg = "Invalid type_id {}".format(type_id)
@@ -109,21 +123,15 @@ def parse_schema(schema_file):
 
     return parsed_schema
 
-def parse_title(title, output, version3):
-    # only put in a title for the first title (that will be the root topic)
-    if 'title' not in output:
-        output['title'] = title
-    if version3:
-        if 'topics' not in output:
-            output['topics'] = []
-        # id will be set by next question encountered
-        current_topic = {
-            'id': None,
-            'name': title,
-            'questions': [],
-            'glossary': {},
-            'instructions': '',
-        }
+def parse_title(title, output):
+    # id will be set by next question encountered
+    current_topic = {
+        'id': None,
+        'name': title,
+        'questions': [],
+        'glossary': {},
+        'instructions': '',
+    }
     output['topics'].append(current_topic)
     return current_topic
 
