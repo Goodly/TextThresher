@@ -16,10 +16,8 @@ VERSION_ID = 'version:'
 VERSION_NUM = '3'
 
 QUESTION_TYPES = {'mc' : 'RADIO',
-                  'dd' : 'RADIO', # old label
                   'cl' : 'CHECKBOX',
                   'tx' : 'TEXT',
-                  'tb' : 'TEXT', # old label
                   'dt' : 'DATE',
                   'tm' : 'TIME',
                   'st' : 'SUBTOPIC'}
@@ -46,9 +44,7 @@ class ParseSchemaException(Exception):
                              self.timestamp))
 
 def load_defaults(output):
-    output['parent'] = ''
     output['topics'] = []
-    output['glossary'] = {}
     output['dependencies'] = []
 
 def parse_schema(schema_file):
@@ -146,13 +142,20 @@ def parse_glossary(glossary_entry, current_topic):
 
 def parse_dependency(dependency, output):
 
+    # Parsing two formats:
+    # if t.q.a, then t
+    # if t.q.a, then t.q
+    # t is a topic number
+    # q is a question number
+    # a can be an answer number or 'any'
+
     splitted_dependency = dependency.split(', ')
     source_phrase = splitted_dependency[0]
     target_phrase = splitted_dependency[1].split(' ')[1]
     source_topic_id, source_question_id, source_answer_id = (
         source_phrase.split('.'))
     target_dependency = target_phrase.split('.')
-    # -1 if there is no target_question. find a better null value?
+    # -1 if there is no target_question.
     target_question = target_dependency[1] if len(target_dependency) > 1 else -1
     target_topic = target_dependency[0]
 
@@ -209,11 +212,9 @@ def parse_question_entry(entry_id, data, current_topic):
     return topic_id
 
 def print_data(output):
-    print "Here's the current parsed data:"
     import pprint; pprint.pprint(output)
 
 def print_dependencies(output):
-    print "Print dependencies:"
     import pprint; pprint.pprint(output['dependencies'])
 
 if __name__ == '__main__':
