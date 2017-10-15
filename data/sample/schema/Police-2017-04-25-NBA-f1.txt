@@ -1,4 +1,4 @@
-version: v3
+version: 3
 
 title: Police
 
@@ -113,9 +113,7 @@ title: Event type
   1.10.05 Other
   1.10.06 Information not given
 1.11 cl What is the title or role of the speaker? Select all that apply: (Please highlight both the title and the name of each actor selected.)
-  1.11.01 Police Chief, Commissioner, Superintendent, or Sheriff
-    Assistant Police Chief, Commissioner, Superintendent, or Sheriff
-    Deputy Chief, Commissioner, or Superintendent
+  1.11.01 Police Chief, Commissioner, Superintendent, or Sheriff Assistant Police Chief, Commissioner, Superintendent, or Sheriff Deputy Chief, Commissioner, or Superintendent
   1.11.02 Commander or Inspector
   1.11.03 Colonel
   1.11.04 Major
