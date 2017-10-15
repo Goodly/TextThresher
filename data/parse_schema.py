@@ -27,16 +27,19 @@ QUESTION_TYPES = {'mc' : 'RADIO',
 Dependency = namedtuple('Dependency',
     ['topic', 'question', 'answer', 'next_question', 'next_topic'])
 
+class SimpleParseException(Exception):
+    pass
+
 class ParseSchemaException(Exception):
 
-    def __init__(self, message, errtype, file_name, linenum, timestamp, *args):
+    def __init__(self, message, file_name, linenum, *args):
+        super(ParseSchemaException, self).__init__(message, file_name,
+                                                   linenum, *args)
         self.message = message
-        self.errtype = errtype
+        self.errtype = 'ParseSchemaException'
         self.file_name = file_name
         self.linenum = linenum
-        self.timestamp = timestamp
-        super(ParseSchemaException, self).__init__(message, errtype, file_name,
-                                                   linenum, timestamp, *args)
+        self.timestamp = datetime.datetime.now(pytz.utc)
     def log(self):
         logger.error("In line {} of file {}, {} error: {}, at {:%Y-%m-%d %H:%M:%S %Z}"
                      .format(self.linenum, self.file_name, self.errtype, self.message,
@@ -80,44 +83,43 @@ def parse_schema(schema_file):
                 linecount += 1
                 continue
 
-            # Infer the line type and parse accordingly
-            type_id, data = raw_line.split(None, 1)
-            if type_id.lower() == VERSION_ID and first_line:
-                version = data.strip()
-                first_line = False
-                if version != '3':
+            try:
+                # Infer the line type and parse accordingly
+                type_id, data = raw_line.split(None, 1)
+                if type_id.lower() == VERSION_ID and first_line:
+                    version = data.strip()
+                    first_line = False
+                    if version != '3':
+                        msg = ("'version: 3' must be first non-blank line. "
+                              "Found '{}'".format(raw_line))
+                        raise ParseSchemaException(msg, schema_file, linecount)
+                elif first_line:
                     msg = ("'version: 3' must be first non-blank line. "
-                           "Found '{}'".format(raw_line))
-                    timestamp = datetime.datetime.now(pytz.utc)
-                    raise ParseSchemaException(msg, 'ParseSchemaException',
-                                               schema_file, linecount,
-                                               timestamp)
-            elif first_line:
-                msg = ("'version: 3' must be first non-blank line. "
-                       "Found '{}'".format(type_id))
-                timestamp = datetime.datetime.now(pytz.utc)
-                raise ParseSchemaException(msg, 'ParseSchemaException',
-                                           schema_file, linecount,
-                                           timestamp)
-            elif type_id.lower() == TITLE_ID:
-                current_topic = parse_title(data, parsed_schema)
-            elif type_id.lower() == INSTRUCTIONS_ID:
-                parse_instructions(data, current_topic)
-            elif type_id.lower() == GLOSSARY_ID:
-                parse_glossary(data, current_topic)
-            elif type_id.lower() == DEPENDENCY_ID:
-                parse_dependency(data, parsed_schema)
-            elif unicode(type_id[0]).isnumeric():
-                topic_id = parse_question_entry(type_id, data, current_topic)
-                if current_topic['id'] is None:
-                    current_topic['id'] = topic_id
-            else:
-                # type_id is wrong or split lines returned wrong stuffs
-                msg = "Invalid type_id {}".format(type_id)
-                timestamp = datetime.datetime.now(pytz.utc)
-                raise ParseSchemaException(msg, 'ParseSchemaException',
-                                           schema_file, linecount,
-                                           timestamp)
+                          "Found '{}'".format(type_id))
+                    raise ParseSchemaException(msg, schema_file, linecount)
+                elif type_id.lower() == TITLE_ID:
+                    current_topic = parse_title(data, parsed_schema)
+                elif type_id.lower() == INSTRUCTIONS_ID:
+                    parse_instructions(data, current_topic)
+                elif type_id.lower() == GLOSSARY_ID:
+                    parse_glossary(data, current_topic)
+                elif type_id.lower() == DEPENDENCY_ID:
+                    parse_dependency(data, parsed_schema)
+                elif type_id[0].isdigit():
+                    topic_id = parse_question_entry(type_id, data, current_topic)
+                    if current_topic['id'] is None:
+                        current_topic['id'] = topic_id
+                else:
+                    # type_id is wrong or split lines returned wrong stuff
+                    msg = "Invalid type_id {}".format(type_id)
+                    raise ParseSchemaException(msg, schema_file, linecount)
+            except SimpleParseException as e:
+                raise ParseSchemaException(e.message, schema_file, linecount)
+            except ValueError as e:
+                # split will raise a ValueError if it can't find a split point
+                # so let's tell the researcher what line of the schema caused
+                # that instead of a stacktrace.
+                raise ParseSchemaException(e.message, schema_file, linecount)
 
             linecount += 1
 
@@ -134,7 +136,6 @@ def parse_title(title, output):
     }
     output['topics'].append(current_topic)
     return current_topic
-
 
 def parse_instructions(instructions, current_topic):
     current_topic['instructions'] = instructions
@@ -178,20 +179,7 @@ def infer_hint_type(question):
 def parse_question_entry(entry_id, data, current_topic):
     type_bits = entry_id.split('.')
     num_bits = len(type_bits)
-    if num_bits == 1:
-        try:
-            topics_id = int(type_bits[0])
-        except ValueError:
-            return
-        topic_id = type_bits[0]
-        if 'topics' not in output:
-            output['topics'] = []
-        output['topics'].append({
-            'id': topic_id,
-            'name': data.strip(),
-            'questions': [],
-        })
-    elif num_bits == 2:
+    if num_bits == 2:
         topic_id, question_id = type_bits
         question_id = type_bits[1]
         question_type, question_text = data.split(None, 1)
@@ -206,13 +194,18 @@ def parse_question_entry(entry_id, data, current_topic):
             'hint_type': hint_type,
 
         })
-    else:
+    elif num_bits == 3:
         topic_id, question_id, answer_id = type_bits
         question = [q for q in current_topic['questions'] if q['question_number'] == question_id][0]
         question['answers'].append({
             'answer_number': answer_id,
             'answer_content': data,
         })
+    else:
+        raise SimpleParseException(
+            "Expected topic.question or topic.question.answer. Found '{}'"
+            .format(entry_id)
+        )
     return topic_id
 
 def print_data(output):
@@ -222,7 +215,6 @@ def print_data(output):
 def print_dependencies(output):
     print "Print dependencies:"
     import pprint; pprint.pprint(output['dependencies'])
-
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
