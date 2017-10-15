@@ -23,7 +23,6 @@ from django.db import transaction
 from data import init_defaults
 from data.parse_document import parse_document
 from data.parse_schema import parse_schema, ParseSchemaException
-from data.parse_schema_v2 import parse_schema as parse_schema_v2
 
 from thresher.models import (Article, Topic, Question, Answer,
                              ArticleHighlight, HighlightGroup,
@@ -247,12 +246,6 @@ def load_schema_dir(dirpath):
     for schema_file in schema_files:
         print "Loading schema:", schema_file
         load_schema_atomic(schema_file, os.path.join(dirpath, schema_file))
-
-def load_schema_v2_dir(dirpath):
-    schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
-    for schema_file in schema_files:
-        with transaction.atomic():
-            load_schema(parse_schema_v2(os.path.join(dirpath, schema_file)))
 
 def load_article_dir(dirpath, with_annotations=False):
     for article_filename in os.listdir(dirpath):
