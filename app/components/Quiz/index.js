@@ -321,7 +321,11 @@ export class Quiz extends Component {
       }
     }
     console.log("Did not find the question with id:"+String(this.props.question_id));
-    return <div></div>;
+    return (
+      <div>
+        Did not find the question with id: {this.props.question_id}
+      </div>
+    );
   }
 
   mapQuestions(questions) {
