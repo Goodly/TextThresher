@@ -233,13 +233,14 @@ class Question(models.Model):
 
     # Question type
     QUESTION_TYPE_CHOICES = (
-            ('RADIO', 'Single answer - radio buttons'),
-            ('CHECKBOX', 'Multiple answer - checkboxes'),
+            ('RADIO', 'Radio buttons'),
+            ('CHECKBOX', 'Checkboxes'),
+            ('SELECT_SUBTOPIC', 'Subtopic checkboxes'),
             ('TEXT', 'Text'),
             ('DATE', 'Date'),
             ('TIME', 'Time'),
     )
-    question_type = models.CharField(max_length=10,
+    question_type = models.CharField(max_length=16,
                                      choices=QUESTION_TYPE_CHOICES)
 
     hint_type = models.CharField(max_length=10,
