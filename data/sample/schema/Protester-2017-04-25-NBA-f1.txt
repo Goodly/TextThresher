@@ -8,11 +8,11 @@ title: Protester
 0.01.03 Arrests/injuries
 0.01.04 Permit
 0.01.05 Community response
-if 0.01.01, then 1
-if 0.01.02, then 2
-if 0.01.03, then 3
-if 0.01.04, then 4
-if 0.01.05, then 5
+if 0.01.01, then 1.*
+if 0.01.02, then 2.*
+if 0.01.03, then 3.*
+if 0.01.04, then 4.*
+if 0.01.05, then 5.*
 
 Instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below. 
  
@@ -97,7 +97,7 @@ if 1.01.05, then 1.02
 if 1.01.08, then 1.03
 if 1.01.10, then 1.05
 if 1.01.11, then 1.06
-if 1.03.any, then 1.04
+if 1.03.*, then 1.04
  
 title: Event setting and composition (location, attendance, time/duration)
 2.01 mc Which of the following information does the text give about the event's location?
@@ -272,12 +272,12 @@ if 2.01.01, then 2.02
 if 2.01.02, then 2.03
 if 2.04.01, then 2.05
 if 2.04.02, then 2.06
-if 2.05.any, then 2.07
-if 2.06.any, then 2.07
+if 2.05.*, then 2.07
+if 2.06.*, then 2.07
 if 2.08.01, then 2.09
 if 2.08.02, then 2.10
-if 2.09.any, then 2.11
-if 2.10.any, then 2.11
+if 2.09.*, then 2.11
+if 2.10.*, then 2.11
 if 2.17.01, then 2.18
 if 2.17.02, then 2.19
 if 2.17.03, then 2.20
@@ -375,7 +375,7 @@ title: Arrests/injuries
 
 if 3.01.01, then 3.02
 if 3.01.02, then 3.03
-if 3.03.any, then 3.04
+if 3.03.*, then 3.04
 if 3.05.01, then 3.06
 if 3.05.02, then 3.07
 if 3.08.01, then 3.09
@@ -461,5 +461,5 @@ title: Community response
 5.02.04 Somewhat supportive, slightly positive 
 5.02.05 Strongly supportive, very positive, enthusiastic
  
-if 5.01.any, then 5.02
+if 5.01.*, then 5.02
  

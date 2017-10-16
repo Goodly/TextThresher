@@ -8,11 +8,11 @@ title: Camp
 0.01.03 Camp Community Impact and Social Media: Community and individual opinions about camp, donations made to the camp, social media/internet presence
 0.01.04 Camp Statements: Speech acts by members of the camp
 0.01.05 Camp Meetings: General assembly information and activity
-if 0.01.01, then 1
-if 0.01.02, then 2
-if 0.01.03, then 3
-if 0.01.04, then 4
-if 0.01.05, then 5
+if 0.01.01, then 1.*
+if 0.01.02, then 2.*
+if 0.01.03, then 3.*
+if 0.01.04, then 4.*
+if 0.01.05, then 5.*
 
 Instructions: We need your help to figure out details about an Occupy campsite. Please answer the following questions about the highlighted text.
 
@@ -215,7 +215,7 @@ if 1.02.01, then 1.03
 if 1.02.02, then 1.04
 if 1.02.03, then 1.06
 if 1.02.03, then 1.11 
-if 1.04.any, then 1.05
+if 1.04.*, then 1.05
 if 1.06.01, then 1.07
 if 1.06.02, then 1.08
 if 1.06.03, then 1.09
@@ -226,7 +226,7 @@ if 1.01.03, then 1.12
 if 1.12.01, then 1.13
 if 1.12.02, then 1.14
 if 1.12.03, then 1.16
-if 1.14.any, then 1.15
+if 1.14.*, then 1.15
 if 1.16.01, then 1.17
 if 1.16.02, then 1.18
 if 1.16.03, then 1.19

@@ -106,11 +106,11 @@ def load_dependencies(dependencies, root_topic):
     if 1.01.05, then 1.02
     Dependency(topic=1, question=1, answer='05', next_topic=1, next_question=2),
 
-    if 1.03.any, then 1.04
-    Dependency(topic=1, question=3, answer='any', next_topic=1, next_question=4)
+    if 1.03.*, then 1.04
+    Dependency(topic=1, question=3, answer='*', next_topic=1, next_question=4)
 
-    if 0.01.01, then 1
-    Dependency(topic=0, question=1, answer='01', next_topic=1, next_question=-1)
+    if 0.01.01, then 1.*
+    Dependency(topic=0, question=1, answer='01', next_topic=1, next_question='*')
     """
     for dep in dependencies:
         if root_topic.order == dep.topic:
@@ -131,7 +131,7 @@ def load_dependencies(dependencies, root_topic):
             continue
 
         answer_obj = None
-        if dep.answer != 'any':
+        if dep.answer != '*':
             # This answer activates this next_question
             try:
                 answer_obj = Answer.objects.get(question=question_obj,
@@ -148,26 +148,24 @@ def load_dependencies(dependencies, root_topic):
             continue
 
         next_question_obj = None
-        if dep.next_question != -1:
+        if dep.next_question != '*':
             try:
                 next_question_obj = Question.objects.get(topic=next_topic_obj,
-                                    question_number=dep.next_question)
+                                    question_number=int(dep.next_question))
             except Question.DoesNotExist:
                 logger.error("%s\nDidn't find next question number %d" % (dep, dep.next_question,))
                 continue
 
         if answer_obj and next_question_obj:
+            # if Tx.Qx.A, then Ty.Qy
             answer_obj.next_questions.append(next_question_obj.id)
             answer_obj.save()
         elif not answer_obj and next_question_obj:
-            # Any answer to this question activates this next_question
-            # Note that text box and date questions do not have
-            # any Answer records to store next_questions, but still use .any
-            # e.g., where T is the topic number and Q is a question number:
-            # if T.Qx.any, then T.Qy
+            # if Tx.Qx.*, then Ty.Qy
             question_obj.next_questions.append(next_question_obj.id)
             question_obj.save()
         elif answer_obj and not next_question_obj:
+            # if Tx.Qx.A, then Ty.*
             logger.info("%s\nTODO: Save valid subtopic 'then' clause." % (dep,))
         else:
             logger.error("%s\nInvalid 'if' clause." % (dep,))
