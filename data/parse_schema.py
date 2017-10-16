@@ -16,14 +16,15 @@ VERSION_ID = 'version:'
 VERSION_NUM = '3'
 
 QUESTION_TYPES = {'mc' : 'RADIO',
+                  'dd' : 'RADIO', # deprecated label
                   'cl' : 'CHECKBOX',
                   'tx' : 'TEXT',
                   'dt' : 'DATE',
                   'tm' : 'TIME',
-                  'st' : 'SUBTOPIC'}
+                  'st' : 'SELECT_SUBTOPIC'}
 
 Dependency = namedtuple('Dependency',
-    ['topic', 'question', 'answer', 'next_question', 'next_topic'])
+    ['topic', 'question', 'answer', 'next_topic', 'next_question'])
 
 class SimpleParseException(Exception):
     pass
@@ -169,8 +170,8 @@ def parse_dependency(dependency, output):
     output['dependencies'].append(Dependency(source_topic_id,
                                              source_question_id,
                                              source_answer_id,
-                                             target_question,
-                                             target_topic))
+                                             target_topic,
+                                             target_question))
 
 def infer_hint_type(question):
     match = re.search("WHERE|WHO|HOW MANY|WHEN", question, re.IGNORECASE)
@@ -189,6 +190,12 @@ def parse_question_entry(entry_id, data, current_topic):
         hint_type = infer_hint_type(question_text)
         if question_type in QUESTION_TYPES:
             question_type = QUESTION_TYPES[question_type]
+        else:
+            valid_types = ', '.join(QUESTION_TYPES.keys())
+            raise SimpleParseException(
+                "Expected question type like {}. Found '{}'"
+                .format(valid_types, question_type)
+            )
         current_topic['questions'].append({
             'question_number': question_id,
             'question_text': question_text,
