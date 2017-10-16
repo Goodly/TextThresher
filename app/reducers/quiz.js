@@ -36,45 +36,6 @@ const initialState = {
   review: false,
 };
 
-// Currently there is always a root topic with one or more sub-topics.
-// Also, for now the root topic does not start with any questions.
-// If there is more than one sub-topic, generate an initial question
-// asking which subtopics are in the text, and add that question to
-// the root topic. Our generated initial question is given id -1.
-// So our queue starts out with question id -1.
-// Note we have to generate ids < 0 to avoid colliding with database ids.
-function addSubtopicQuestion(task) {
-  let topictree = task.topictree;
-  let answer_list = [];
-  let topTopic = null;
-  const { noncontingent } = questionSets(topictree);
-  // questions are sorted by id, so number subtopics like -6, -5, ..., -2
-  const start_id = -topictree.length - 2;
-  topictree.forEach( (topic, i) => {
-    if(topic.id !== task.topTopicId) {
-      let next_questions = topic.questions.map( (question) => question.id );
-      next_questions = next_questions.filter( (q_id) => noncontingent.has(q_id) );
-      answer_list.push({
-        id: start_id + i,
-        answer_number: i + 1,
-        answer_content: topic.name,
-        next_questions: next_questions
-      });
-    } else {
-      topTopic = topic;
-    };
-  });
-  let sub_question = {
-    id: -1,
-    question_number: 0,
-    question_type: 'SELECT_SUBTOPIC',
-    question_text: 'Which of these subtopics are in the bold-faced text?',
-    answers: answer_list,
-    next_questions: []
-  };
-  topTopic.questions.unshift(sub_question);
-};
-
 // Compute three sets:
 // The set of all question IDs
 // the set of all questions mentioned in 'next_questions' fields
@@ -208,8 +169,7 @@ export function quiz(state = initialState, action) {
       }
     }
     case 'FETCH_TASK_SUCCESS': {
-      addSubtopicQuestion(action.task);
-      sortQuestionsByNumber(action.task.topictree)
+      sortQuestionsByNumber(action.task.topictree);
       const taskDB = normalize(action.task, quizTaskSchema);
       const answer_selected = ImmutableMap();
       next_color_index = 0; // Reset color pool
@@ -221,14 +181,19 @@ export function quiz(state = initialState, action) {
         topic_highlights,
         []
       );
+      let queue = updateQueue(action.task, answer_selected);
+      let curr_question_id = -1;
+      if (queue.length > 0) {
+        curr_question_id = queue[0];
+      };
       return {
         ...state,
         currTask: action.task,
         db: taskDB,
         abridged,
         abridged_highlights,
-        curr_question_id: -1,
-        queue: updateQueue(action.task, answer_selected),
+        curr_question_id,
+        queue,
         curr_answer_id: -100,
         answer_selected,
         answer_colors: ImmutableMap(),
