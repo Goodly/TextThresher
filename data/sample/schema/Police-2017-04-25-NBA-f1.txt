@@ -6,9 +6,9 @@ title: Police
 0.01.01 Event type
 0.01.02 Event setting and composition (location, attendance and crowd composition/demographics, police gear/tactics, time/duration)
 0.01.03 Arrests/injuries
-if 0.01.01, then 1
-if 0.01.02, then 2
-if 0.01.03, then 3
+if 0.01.01, then 1.*
+if 0.01.02, then 2.*
+if 0.01.03, then 3.*
  
 instructions: The highlighted text describes an event occurring during the Occupy movement. We need your help to categorize what kind of event this was. Compare the information in the highlighted text to the definitions in the table below.
  
@@ -143,8 +143,8 @@ if 1.01.09, then 1.06
 if 1.01.11, then 1.07
 if 1.01.13, then 1.08
 if 1.01.14, then 1.09
-if 1.09.any, then 1.10
-if 1.09.any, then 1.11
+if 1.09.*, then 1.10
+if 1.09.*, then 1.11
 if 1.11.01, then 1.12
 if 1.11.02, then 1.12
 
@@ -319,10 +319,10 @@ if 2.01.01, then 2.02
 if 2.01.02, then 2.03
 if 2.04.01, then 2.05
 if 2.04.02, then 2.06
-if 2.06.any, then 2.07
+if 2.06.*, then 2.07
 if 2.08.01, then 2.09
 if 2.08.02, then 2.10
-if 2.10.any, then 2.11
+if 2.10.*, then 2.11
 if 2.12.01, then 2.13
 if 2.12.02, then 2.14
 if 2.12.03, then 2.15 
@@ -399,7 +399,7 @@ title: Arrests/injuries
  
 if 3.01.01, then 3.02
 if 3.01.02, then 3.03
-if 3.03.any, then 3.04
+if 3.03.*, then 3.04
 if 3.05.01, then 3.06
 if 3.05.02, then 3.07
 if 3.08.01, then 3.09

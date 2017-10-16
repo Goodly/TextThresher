@@ -8,11 +8,11 @@ title: City
 0.01.03 Impact on city/state resources
 0.01.04 City council meeting
 0.01.05 City/state communication or oversight
-if 0.01.01, then 1
-if 0.01.02, then 2
-if 0.01.03, then 3
-if 0.01.04, then 4
-if 0.01.05, then 5
+if 0.01.01, then 1.*
+if 0.01.02, then 2.*
+if 0.01.03, then 3.*
+if 0.01.04, then 4.*
+if 0.01.05, then 5.*
 
 Instructions: The highlighted text gives information about a civilian government during the Occupy movement. We need your help to categorize this information. Please read the highlighted text and use the checklist to select which of the following categories of information are relevant to the highlighted text. Upon selecting a category, a bin will appear at the bottom of your screen with further questions pertaining to that category. You may check and uncheck categories at any point in the process. Please answer the following questions pertaining to the categories of information you selected in the above checkbox. You may check and uncheck categories at any point in the process. After you answer a given question, press "Next." When you are finished answering all the questions within a bin, please press "Continue." You may press "Back" at any point within each category. Once you have completed all bins, you will be asked to review your answers. When you are certain you have answered all questions in all bins correctly, press "Submit."
 
@@ -337,8 +337,8 @@ if 1.40.02, then 1.41
 if 1.01.10, then 1.42
 if 1.42.01, then 1.43
 if 1.42.02, then 1.44
-if 1.01.any, then 1.45
-if 1.01.any, then 1.46
+if 1.01.*, then 1.45
+if 1.01.*, then 1.46
 if 1.46.01, then 1.47
 if 1.46.02, then 1.48
 if 1.46.03, then 1.49
@@ -392,7 +392,7 @@ title: City/state law
 2.10.01 New
 2.10.02 Existing
 
-if 2.01.any, then 2.02
+if 2.01.*, then 2.02
 if 2.02.01, then 2.03
 if 2.02.02, then 2.04
 if 2.04.01, then 2.05
@@ -400,7 +400,7 @@ if 2.04.02, then 2.06
 if 2.04.03, then 2.07
 if 2.04.04, then 2.08
 if 2.02.03, then 2.09
-if 2.01.any, then 2.10
+if 2.01.*, then 2.10
 
 title: Impact on city/state resources
 3.01 cl Which of the following information does the text discuss?
@@ -461,7 +461,7 @@ title: Impact on city/state resources
 3.13.09 “Overnight” or “More than 1 day”: 24 or more hours
 
 if 3.01.01, then 3.02
-if 3.02.any, then 3.03
+if 3.02.*, then 3.03
 if 3.01.01, then 3.04
 if 3.04.01, then 3.05
 if 3.04.02, then 3.06
@@ -545,7 +545,7 @@ title: City council meeting
 4.14.14 "Tens of thousands": 20,001-90,000
 4.14.15 “Hundreds of thousands”: 100,000 or more
 
-if 4.01.any, then 4.02
+if 4.01.*, then 4.02
 if 4.03.01, then 4.04
 if 4.03.02, then 4.05
 if 4.03.03, then 4.06

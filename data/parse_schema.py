@@ -143,9 +143,10 @@ def parse_glossary(glossary_entry, current_topic):
 
 def parse_dependency(dependency, output):
 
-    # Parsing two formats:
-    # if t.q.a, then t
+    # Parsing three formats:
     # if t.q.a, then t.q
+    # if t.q.*, then t.q
+    # if t.q.a, then t.*
     # t is a topic number
     # q is a question number
     # a can be an answer number or 'any'
@@ -155,18 +156,22 @@ def parse_dependency(dependency, output):
     target_phrase = splitted_dependency[1].split(' ')[1]
     source_topic_id, source_question_id, source_answer_id = (
         source_phrase.split('.'))
-    target_dependency = target_phrase.split('.')
-    # -1 if there is no target_question.
-    target_question = target_dependency[1] if len(target_dependency) > 1 else -1
-    target_topic = target_dependency[0]
+    target_topic, target_question = target_dependency = target_phrase.split('.')
 
     source_topic_id = int(source_topic_id)
     source_question_id = int(source_question_id)
-    target_question = int(target_question)
     target_topic = int(target_topic)
 
-    # Do not convert source_answer_id to int, because value might be 'any'
-    # source_answer_id = int(source_answer_id)
+    if not unicode(source_answer_id).isnumeric() and source_answer_id != '*':
+        raise SimpleParseException(
+            "Expected answer number or wildcard '*'. Found '{}'"
+            .format(source_answer_id)
+        )
+    if not unicode(target_question).isnumeric() and target_question != '*':
+        raise SimpleParseException(
+            "Expected question number or wildcard '*'. Found '{}'"
+            .format(target_question)
+        )
     output['dependencies'].append(Dependency(source_topic_id,
                                              source_question_id,
                                              source_answer_id,
@@ -231,7 +236,7 @@ if __name__ == '__main__':
 
     try:
         output = parse_schema(args.filename[0])
-        print_data(output)
-        # print_dependencies(output)
+        # print_data(output)
+        print_dependencies(output)
     except ParseSchemaException as e:
         e.log()
