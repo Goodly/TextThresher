@@ -60,6 +60,7 @@ def load_answers(answers, question):
         answer_args['question'] = question
         # Create the answer in the database
         answer = Answer.objects.create(**answer_args)
+        answer_args['id'] = answer.id
 
 def load_questions(questions, topic):
     """
@@ -74,12 +75,16 @@ def load_questions(questions, topic):
         answers = question_args.pop('answers')
         # Create the Question
         question = Question.objects.create(**question_args)
+        question_args['id'] = question.id
         # Load the Question's answers
         load_answers(answers, question)
+        # Restore answers, now with ids
+        question_args['answers'] = answers
 
 def load_topics(topics):
     """
     Loads all the topics, their questions and their answers.
+    Replaces schema ids with actual database ids
     """
     root_topic = None
     for topic_args in topics:
@@ -92,13 +97,26 @@ def load_topics(topics):
         # topics should already have their own glossary and instructions
         # Create the topic with the values in topic_args
         topic = Topic.objects.create(**topic_args)
+        topic_args['id'] = topic.id
         if root_topic is None:
             root_topic = topic
         load_questions(questions, topic)
+        # Restore questions, now with ids
+        topic_args['questions'] = questions
 
     return root_topic
 
-def load_dependencies(dependencies, root_topic):
+# Return a dictionary keyed on topic id, return an array of question ids in that topic
+def make_question_lists(topics):
+    questions_by_topic_id = {}
+    for topic_args in topics:
+        question_ids = []
+        for question_args in topic_args['questions']:
+            question_ids.append(question_args['id'])
+        questions_by_topic_id[topic_args['id']] = question_ids
+    return questions_by_topic_id
+
+def load_dependencies(schema, root_topic):
     """
     Loads dependencies into targeted answers.
     Must cover these scenarios:
@@ -112,7 +130,10 @@ def load_dependencies(dependencies, root_topic):
     if 0.01.01, then 1.*
     Dependency(topic=0, question=1, answer='01', next_topic=1, next_question='*')
     """
-    for dep in dependencies:
+
+    questions_by_topic_id = make_question_lists(schema['topics'])
+
+    for dep in schema['dependencies']:
         if root_topic.order == dep.topic:
             topic_obj = root_topic
         else:
@@ -166,14 +187,15 @@ def load_dependencies(dependencies, root_topic):
             question_obj.save()
         elif answer_obj and not next_question_obj:
             # if Tx.Qx.A, then Ty.*
-            logger.info("%s\nTODO: Save valid subtopic 'then' clause." % (dep,))
+            answer_obj.next_questions.extend(questions_by_topic_id[next_topic_obj.id])
+            answer_obj.save()
         else:
             logger.error("%s\nInvalid 'if' clause." % (dep,))
 
 def load_schema(schema):
     # Load the topics, questions and answers of the schema
     root_topic = load_topics(schema['topics'])
-    load_dependencies(schema['dependencies'], root_topic)
+    load_dependencies(schema, root_topic)
 
 def load_article(article):
     new_id = int(article['metadata']['article_number'])
