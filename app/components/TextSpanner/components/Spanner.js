@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-let debug = require('debug')('thresher:TextSpanner');
+import { EditorState, DisplayState } from '../model/EditorState';
+
+const debug = require('debug')('thresher:TextSpanner');
 
 export class Spanner extends React.Component {
   constructor(props) {
@@ -8,12 +11,24 @@ export class Spanner extends React.Component {
   }
 
   static propTypes = {
+    editorState: PropTypes.instanceOf(EditorState),
+    displayState: PropTypes.instanceOf(DisplayState),
+    blockStyleFn: PropTypes.func.isRequired,
+    customStyleMap: PropTypes.object.isRequired,
   }
 
   render() {
+    const editorState = this.props.editorState;
+    const text = editorState.getText();
     return (
       <div>
-        {this.props.children}
+        {editorState.getBlockList().map( (block) => {
+          return (
+            <div key={block.key}>
+              {text.substring(block.start, block.end)}
+            </div>
+          );
+        })}
       </div>
     );
   }

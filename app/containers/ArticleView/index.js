@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { displayStates } from 'components/displaystates';
@@ -30,9 +31,9 @@ export class ArticleView extends React.Component {
     if (this.props.error) {
       let e = this.props.error;
       return (
-          <div>
-            {e.name}: {e.message}
-          </div>
+        <div>
+          {e.name}: {e.message}
+        </div>
       );
     };
     switch (this.props.displayState) {
@@ -50,7 +51,7 @@ export class ArticleView extends React.Component {
         let displayState = editorState.createDisplayState();
         if (db && db.entities && db.entities.articles) {
           text = db.entities.articles[article_id].text;
-          editorState = convertToSpanner(article_id, db);
+          editorState = convertToSpanner(editorState, article_id, db);
         };
         return (
           <div className="article-viewer">
@@ -59,9 +60,8 @@ export class ArticleView extends React.Component {
                 editorState={editorState}
                 displayState={displayState}
                 blockStyleFn={getBlockStyle}
-                customStyleMap={styleMap}>
-                {text}
-              </Spanner>
+                customStyleMap={styleMap}
+              />
             </div>
           </div>
         );
