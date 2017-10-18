@@ -22,9 +22,10 @@ export class Spanner extends React.Component {
     const text = editorState.getText();
     return (
       <div>
-        {editorState.getBlockList().map( (block) => {
+        {editorState.getBlockList().map( (block, i) => {
+          const style = this.props.blockStyleFn(block, i);
           return (
-            <div key={block.key}>
+            <div key={block.key} style={style}>
               {text.substring(block.start, block.end)}
             </div>
           );

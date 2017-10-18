@@ -78,10 +78,16 @@ const styleMap = {
   },
 };
 
-// adapt this for even-odd styling of sentences...
-function getBlockStyle(block) {
-  switch (block.getType()) {
-    case 'div': return 'some-css-style';
+// sequence_number can be used for even/odd styling...
+function getBlockStyle(block, sequence_number) {
+  switch (block.blockType) {
+    case 'unstyled': {
+      if (sequence_number % 2) {
+        return { backgroundColor: 'lightgray' };
+      } else {
+        return {backgroundColor: 'white' };
+      };
+    }
     default: return null;
   }
 }

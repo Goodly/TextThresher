@@ -22,7 +22,7 @@ export class ContentState {
     return this._text;
   }
 
-  _addBlock(blockType, start, end, depth, config) {
+  _addBlock({blockType, start, end, depth, config}) {
     const block = new Block({
       key: generateRandomKey(),
       blockType,

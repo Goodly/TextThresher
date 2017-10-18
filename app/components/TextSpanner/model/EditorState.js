@@ -29,8 +29,8 @@ export class EditorState {
     return this.contentState.getText();
   }
 
-  _addBlock(blockType, start, end, depth, config) {
-    this.contentState.addBlock(blockType, start, end, depth, config);
+  _addBlock(block) {
+    this.contentState.addBlock(block);
   }
 
   _getBlockList() {
