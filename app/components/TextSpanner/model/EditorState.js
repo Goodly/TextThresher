@@ -4,15 +4,18 @@ import generateRandomKey from '../utils/generateRandomKey';
 
 import { ContentState } from './ContentState';
 import { DisplayState } from './DisplayState';
+import { LayerState } from './LayerState';
 
 const debug = require('debug')('thresher:TextSpanner');
 
 export class EditorState {
   constructor() {
-    this.createDisplayState = this._createDisplayState.bind(this);
     this.setText = this._setText.bind(this);
     this.getText = this._getText.bind(this);
+    this.createDisplayState = this._createDisplayState.bind(this);
     this.displayStateMap = new Map();
+    this.createLayerState = this._createLayerState.bind(this);
+    this.layerStateMap = new Map();
     this.contentState = new ContentState();
   }
 
@@ -35,5 +38,13 @@ export class EditorState {
     this.displayStateMap[key] = displayState;
     debug(`created DisplayState ${key}`)
     return displayState;
+  }
+
+  _createLayerState(layerLabelData) {
+    let layerState = new LayerState(layerLabelData);
+    let key = layerState.getKey();
+    this.layerStateMap[key] = layerState;
+    debug(`created LayerState ${key}`)
+    return layerState;
   }
 }

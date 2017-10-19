@@ -1,6 +1,5 @@
 const debug = require('debug')('thresher:TextSpanner');
 
-
 export function findLineBreaks(text) {
   // Must create RegExp on every call to init lastIndex.
   const lineBreak = /\r\n?|\n/g
@@ -19,17 +18,6 @@ export function findLineBreaks(text) {
   return lineOffsets;
 };
 
-export function loadAnnotatedArticle(editorState, article_id, database) {
-  const db = database.entities;
-  const article = db.articles[article_id];
-  editorState = editorState.setText(article.text);
-  article.highlight_taskruns.forEach( (ht) => {
-      ht.highlights.map( (hg) => {
-      });
-  });
-  return editorState;
-}
-
 export function displayLinesAsBlocks(displayState, article_id, database) {
   const article = database.entities.articles[article_id];
   let lineOffsets = findLineBreaks(article.text);
@@ -43,4 +31,30 @@ export function displayLinesAsBlocks(displayState, article_id, database) {
     });
   });
   return displayState;
+}
+
+export function loadAnnotatedArticle(editorState, article_id, database) {
+  const db = database.entities;
+  const article = db.articles[article_id];
+  editorState = editorState.setText(article.text);
+  article.highlight_taskruns.forEach( (taskrun) => {
+    taskrun.highlights.forEach( (hg) => {
+      let layer = editorState.createLayerState({
+        contributor: taskrun.contributor.unique_label,
+        topicName: hg.topic_name,
+        caseNumber: hg.case_number,
+      });
+      hg.offsets.forEach( (offset) => {
+        layer.addAnnotation({
+          contributor: taskrun.contributor.unique_label,
+          topicName: hg.topic_name,
+          caseNumber: hg.case_number,
+          start: offset[0],
+          end: offset[1],
+          extra: {},
+        });
+      });
+    });
+  });
+  return editorState;
 }

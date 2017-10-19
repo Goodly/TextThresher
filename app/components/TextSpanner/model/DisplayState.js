@@ -7,8 +7,7 @@ import generateRandomKey from '../utils/generateRandomKey';
 const debug = require('debug')('thresher:TextSpanner');
 
 const defaultDisplayStateRecord = {
-  visibleLayers: [],
-}
+};
 
 const DisplayStateRecord = Record(defaultDisplayStateRecord);
 
