@@ -53,9 +53,19 @@ class SubmittedAnswerSerializer(serializers.ModelSerializer):
         fields = ('id', 'answer')
 
 class HighlightGroupSerializer(serializers.ModelSerializer):
+    topic_name = serializers.SerializerMethodField()
+    topic_order = serializers.SerializerMethodField()
+
+    def get_topic_name(self, obj):
+        return obj.topic.name
+
+    def get_topic_order(self, obj):
+        return obj.topic.order
+
     class Meta:
         model = HighlightGroup
         fields = ('id', 'article_highlight', 'topic',
+                   'topic_name', 'topic_order',
                    'case_number', 'offsets')
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
