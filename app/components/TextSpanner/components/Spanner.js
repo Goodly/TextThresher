@@ -23,18 +23,27 @@ export class Spanner extends React.Component {
     const displayState = this.props.displayState;
     const blockPropsFn = this.props.blockPropsFn;
     const text = editorState.getText();
+
+    function renderBlock(block, i) {
+      const mergeProps = blockPropsFn(block, i);
+      /* if block.hasChildren() {
+
+         }
+      */
+      return React.cloneElement(
+        <div key={block.key}
+             data-offset-start={block.start}
+             data-offset-end={block.end}>
+          {text.substring(block.start, block.end)}
+        </div>,
+        mergeProps
+      );
+    };
+
     return (
       <div>
         {displayState.getBlockList().map( (block, i) => {
-          const mergeProps = blockPropsFn(block, i);
-          return React.cloneElement(
-            <div key={block.key}
-                 data-offset-start={block.start}
-                 data-offset-end={block.end}>
-              {text.substring(block.start, block.end)}
-            </div>,
-            mergeProps
-          );
+          return renderBlock(block, i);
         })}
       </div>
     );

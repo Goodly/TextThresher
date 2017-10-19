@@ -27,7 +27,7 @@ export class DisplayState extends DisplayStateRecord {
   }
 
   _getBlockList(text) {
-    return Array.from(this._blockList);
+    return this._blockList;
   }
 
   _addBlock({blockType, start, end, depth, config}) {
