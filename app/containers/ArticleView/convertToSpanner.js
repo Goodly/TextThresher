@@ -20,8 +20,13 @@ export function findLineBreaks(text) {
 };
 
 export function loadAnnotatedArticle(editorState, article_id, database) {
-  const article = database.entities.articles[article_id];
+  const db = database.entities;
+  const article = db.articles[article_id];
   editorState = editorState.setText(article.text);
+  article.highlight_taskruns.forEach( (ht) => {
+      ht.highlights.map( (hg) => {
+      });
+  });
   return editorState;
 }
 

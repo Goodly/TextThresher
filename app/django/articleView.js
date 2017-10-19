@@ -6,13 +6,7 @@ import { normalize, schema } from 'normalizr';
 
 let debug = require('debug')('thresher:articleView');
 
-let highlight = new schema.Entity('highlights');
-let highlightTaskRun = new schema.Entity('taskRuns', {
-  highlights: [ highlight ]
-});
-let article = new schema.Entity('articles', {
-  highlight_taskruns: [ highlightTaskRun ]
-});
+let article = new schema.Entity('articles', {});
 
 export default function fetchArticleView(reduxActions, articleFetchURL) {
   reduxActions.initArticleView();

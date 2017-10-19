@@ -14,26 +14,26 @@ export class Spanner extends React.Component {
   static propTypes = {
     editorState: PropTypes.instanceOf(EditorState).isRequired,
     displayState: PropTypes.instanceOf(DisplayState).isRequired,
-    blockStyleFn: PropTypes.func.isRequired,
+    blockPropsFn: PropTypes.func.isRequired,
     customStyleMap: PropTypes.object.isRequired,
   }
 
   render() {
     const editorState = this.props.editorState;
     const displayState = this.props.displayState;
-    const blockStyleFn = this.props.blockStyleFn;
+    const blockPropsFn = this.props.blockPropsFn;
     const text = editorState.getText();
     return (
       <div>
         {displayState.getBlockList().map( (block, i) => {
-          const style = blockStyleFn(block, i);
-          return (
+          const mergeProps = blockPropsFn(block, i);
+          return React.cloneElement(
             <div key={block.key}
-                 style={style}
                  data-offset-start={block.start}
                  data-offset-end={block.end}>
               {text.substring(block.start, block.end)}
-            </div>
+            </div>,
+            mergeProps
           );
         })}
       </div>

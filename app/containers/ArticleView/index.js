@@ -59,7 +59,7 @@ export class ArticleView extends React.Component {
               <Spanner
                 editorState={editorState}
                 displayState={displayState}
-                blockStyleFn={getBlockStyle}
+                blockPropsFn={getBlockProps}
                 customStyleMap={styleMap}
               />
             </div>
@@ -79,15 +79,16 @@ const styleMap = {
 };
 
 // sequence_number can be used for even/odd styling...
-function getBlockStyle(block, sequence_number) {
+function getBlockProps(block, sequence_number) {
+  let props = {};
   switch (block.blockType) {
     case 'unstyled': {
       if (sequence_number % 2) {
-        return { backgroundColor: 'lightgray' };
+        props['style'] = { backgroundColor: 'lightgray' };
       } else {
-        return {backgroundColor: 'white' };
+        props['style'] = { backgroundColor: 'white' };
       };
     }
-    default: return null;
   }
+  return props;
 }
