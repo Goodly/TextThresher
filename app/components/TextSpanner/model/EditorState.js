@@ -3,6 +3,7 @@ import { Record } from 'immutable';
 import generateRandomKey from '../utils/generateRandomKey';
 
 import { ContentState } from './ContentState';
+import { DisplayState } from './DisplayState';
 
 const debug = require('debug')('thresher:TextSpanner');
 
@@ -11,8 +12,6 @@ export class EditorState {
     this.createDisplayState = this._createDisplayState.bind(this);
     this.setText = this._setText.bind(this);
     this.getText = this._getText.bind(this);
-    this.addBlock = this._addBlock.bind(this);
-    this.getBlockList = this._getBlockList.bind(this);
     this.displayStateMap = new Map();
     this.contentState = new ContentState();
   }
@@ -21,22 +20,14 @@ export class EditorState {
     return new EditorState();
   }
 
-  _setText(text) {
-    this.contentState.setText(text);
-  }
-
   _getText() {
     return this.contentState.getText();
   }
 
-  _addBlock(block) {
-    this.contentState.addBlock(block);
+  _setText(text) {
+    this.contentState.setText(text);
+    return this;
   }
-
-  _getBlockList() {
-    return this.contentState.getBlockList();
-  }
-
 
   _createDisplayState() {
     let displayState = new DisplayState();
@@ -44,23 +35,5 @@ export class EditorState {
     this.displayStateMap[key] = displayState;
     debug(`created DisplayState ${key}`)
     return displayState;
-  }
-}
-
-const defaultDisplayStateRecord = {
-  visibleLayers: [],
-}
-
-const DisplayStateRecord = Record(defaultDisplayStateRecord);
-
-export class DisplayState extends DisplayStateRecord {
-  constructor() {
-    super();
-    this.getKey = this._getKey.bind(this);
-    this._key = generateRandomKey();
-  }
-
-  _getKey() {
-    return this._key;
   }
 }

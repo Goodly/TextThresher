@@ -19,13 +19,17 @@ export function findLineBreaks(text) {
   return lineOffsets;
 };
 
-export function convertToSpanner(editorState, article_id, database) {
-  let article = database.entities.articles[article_id];
-  editorState.setText(article.text);
-  let end = article.text.length;
+export function loadAnnotatedArticle(editorState, article_id, database) {
+  const article = database.entities.articles[article_id];
+  editorState = editorState.setText(article.text);
+  return editorState;
+}
+
+export function displayLinesAsBlocks(displayState, article_id, database) {
+  const article = database.entities.articles[article_id];
   let lineOffsets = findLineBreaks(article.text);
   lineOffsets.forEach( (offset) => {
-    editorState.addBlock({
+    displayState.addBlock({
       blockType: 'unstyled',
       start: offset.start,
       end: offset.end,
@@ -33,5 +37,5 @@ export function convertToSpanner(editorState, article_id, database) {
       config: {}
     });
   });
-  return editorState;
+  return displayState;
 }

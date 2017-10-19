@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { displayStates } from 'components/displaystates';
 import * as articleViewActions from 'actions/articleView';
 import { Spanner, EditorState } from 'components/TextSpanner';
-import { convertToSpanner } from './convertToSpanner';
+import { loadAnnotatedArticle, displayLinesAsBlocks } from './convertToSpanner';
 
 import './styles.scss';
 
@@ -46,12 +46,12 @@ export class ArticleView extends React.Component {
       case displayStates.TASK_LOADED:
         let db = this.props.database;
         let article_id = this.props.article_id;
-        let text;
         let editorState = EditorState.createEmpty();
         let displayState = editorState.createDisplayState();
         if (db && db.entities && db.entities.articles) {
-          text = db.entities.articles[article_id].text;
-          editorState = convertToSpanner(editorState, article_id, db);
+          let text = db.entities.articles[article_id].text;
+          editorState = loadAnnotatedArticle(editorState, article_id, db);
+          displayState = displayLinesAsBlocks(displayState, article_id, db);
         };
         return (
           <div className="article-viewer">
