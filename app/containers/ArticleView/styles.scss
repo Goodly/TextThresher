@@ -8,5 +8,35 @@
     @include newspaper;
     padding: 1em;
     border: 1px solid silver;
+
+    .Police {
+      background-color: rgb(241,96,97);
+      font-style: italic;
+    }
+
+    .Protester {
+      background-color: rgb(253,212,132);
+      font-weight: bold;
+    }
+
+    .Camp {
+      background-color: rgb(175,215,146);
+    }
+
+    .Government {
+      color: rgb(168,210,191);
+    }
+
+    .Strategy {
+      border: 1px solid red;
+    }
+
+    .Legal_Action {
+      color: rgb(255,153,000);
+    }
+
+    .Useless {
+      color: darkgray;
+    }
   }
 }

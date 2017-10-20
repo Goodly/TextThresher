@@ -15,7 +15,8 @@ export default function fetchArticleView(reduxActions, articleFetchURL) {
     .then(articleWithAnnotations => {
       let normalizedData = normalize(articleWithAnnotations, article);
       reduxActions.storeArticleView(normalizedData);
-    }).catch( error => {
+    })
+    .catch( error => {
       reduxActions.errorArticleView(error);
     });
 }

@@ -22,6 +22,7 @@ export class EditorState {
     // each displayState. A displayState is a selection of which layers
     // to display.
     this._characterClasses = new Map();
+    this.getSpans = this._getSpans.bind(this);
   }
 
   static createEmpty() {
@@ -60,31 +61,37 @@ export class EditorState {
     // n.b. temporary, layer sequencing will be from displayState
     for (let layer of this._layerStateMap.values()) {
       for (let annotation of layer.getAnnotationList()) {
-        for (let i=annotation.start; i < annotation.end; i++) {
-          charClasses[i].push(annotation.key);
+        // Throw if we get bad start/end
+        let start = Math.min(annotation.start, text.length);
+        let end = Math.min(annotation.end, text.length);
+        for (let i=start; i < end; i++) {
+          charClasses[i].push(annotation.topicName);
         };
       };
     }
-    // Now group spans with same layers
+    this._characterClasses[displayState.key] = charClasses;
+  }
+
+  // Group characters into contiguous spans with same layers
+  _getSpans(displayState, start, end) {
+    let text = this.getText();
+    let charClasses = this._characterClasses[displayState.key];
     let spans = [];
-    let spanStart = 0;
+    let spanStart = start;
+    // Should throw error if !end<charClasses.length
+    end = Math.min(end, charClasses.length);
     let spanLayers = charClasses[spanStart];
-    for (let k=0; k < charClasses.length; k++) {
+    for (let k=start; k < end; k++) {
       if ( ! eqArray(spanLayers, charClasses[k])) {
-        if (spanLayers.length > 0) {
-          let spanShouldBe = text.substring(spanStart, k);
-          spans.push({start: spanStart, end: k, spanLayers, spanShouldBe});
-        };
+        let spanShouldBe = text.substring(spanStart, k);
+        spans.push({start: spanStart, end: k, spanLayers, spanShouldBe});
         spanStart = k;
         spanLayers = charClasses[spanStart];
       };
     };
-    if (spanLayers.length > 0) {
-      let spanShouldBe = text.substring(spanStart, charClasses.length);
-      spans.push({start: spanStart, end: charClasses.length, spanLayers, spanShouldBe});
-    };
-    this._characterClasses[displayState.key] = spans;
-    debug(spans);
+    let spanShouldBe = text.substring(spanStart, end);
+    spans.push({start: spanStart, end: end, spanLayers, spanShouldBe});
+    return spans;
   }
 }
 

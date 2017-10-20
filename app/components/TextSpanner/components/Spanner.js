@@ -26,7 +26,15 @@ export class Spanner extends React.Component {
     editorState.generateCharacterClasses(displayState);
 
     function renderSpans(start, end) {
-      return text.substring(start, end);
+      let spans = editorState.getSpans(displayState, start, end);
+      return (spans.map( (span, i) => {
+        let classNames = span.spanLayers.join(' ');
+        return (
+          <span key={i} className={classNames} title={classNames}>
+            {text.substring(span.start, span.end)}
+          </span>
+        );
+      }));
     };
 
     function renderBlock(block, i) {
