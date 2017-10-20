@@ -23,6 +23,11 @@ export class Spanner extends React.Component {
     const displayState = this.props.displayState;
     const blockPropsFn = this.props.blockPropsFn;
     const text = editorState.getText();
+    editorState.generateCharacterClasses(displayState);
+
+    function renderSpans(start, end) {
+      return text.substring(start, end);
+    };
 
     function renderBlock(block, i) {
       const mergeProps = blockPropsFn(block, i);
@@ -34,7 +39,7 @@ export class Spanner extends React.Component {
         <div key={block.key}
              data-offset-start={block.start}
              data-offset-end={block.end}>
-          {text.substring(block.start, block.end)}
+          {renderSpans(block.start, block.end)}
         </div>,
         mergeProps
       );

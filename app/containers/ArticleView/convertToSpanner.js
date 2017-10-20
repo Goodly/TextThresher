@@ -51,7 +51,7 @@ export function loadAnnotatedArticle(editorState, article_id, database) {
           caseNumber: hg.case_number,
           start: offset[0],
           end: offset[1],
-          extra: {},
+          extra: {textShouldBe: offset[2]},
         });
       });
     });
