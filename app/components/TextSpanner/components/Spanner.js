@@ -23,12 +23,12 @@ export class Spanner extends React.Component {
     const displayState = this.props.displayState;
     const blockPropsFn = this.props.blockPropsFn;
     const text = editorState.getText();
-    editorState.generateCharacterClasses(displayState);
+    editorState.generateCharacterClasses();
 
-    function renderSpans(start, end) {
-      let spans = editorState.getSpans(displayState, start, end);
+    function renderSpans(block) {
+      let spans = editorState.getSpans(block);
       return (spans.map( (span, i) => {
-        let classNames = span.spanLayers.join(' ');
+        let classNames = span.spanAnnotations.join(' ');
         return (
           <span key={i} className={classNames} title={classNames}>
             {text.substring(span.start, span.end)}
@@ -47,7 +47,7 @@ export class Spanner extends React.Component {
         <div key={block.key}
              data-offset-start={block.start}
              data-offset-end={block.end}>
-          {renderSpans(block.start, block.end)}
+          {renderSpans(block)}
         </div>,
         mergeProps
       );

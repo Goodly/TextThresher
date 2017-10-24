@@ -5,6 +5,7 @@ import generateRandomKey from '../utils/generateRandomKey';
 import { ContentState } from './ContentState';
 import { DisplayState } from './DisplayState';
 import { LayerState } from './LayerState';
+import { SpanSegment } from './SpanSegment';
 
 const debug = require('debug')('thresher:TextSpanner');
 
@@ -18,11 +19,9 @@ export class EditorState {
     this.createLayerState = this._createLayerState.bind(this);
     this._layerStateMap = new Map();
     this.generateCharacterClasses = this._generateCharacterClasses.bind(this);
-    // This map key is the displayState key. This caches the characterClasses for
-    // each displayState. A displayState is a selection of which layers
-    // to display.
-    this._characterClasses = new Map();
+    this._characterClasses = [];
     this.getSpans = this._getSpans.bind(this);
+    this._spansForDisplayState = new Map();
   }
 
   static createEmpty() {
@@ -38,6 +37,9 @@ export class EditorState {
     return this;
   }
 
+  // Note there can be multiple displayStates, which specify
+  // hierarchical blocks to display and an ordering of these layers
+  // for merging styles.
   _createDisplayState() {
     let displayState = new DisplayState();
     let key = displayState.getKey();
@@ -54,11 +56,12 @@ export class EditorState {
     return layerState;
   }
 
-  _generateCharacterClasses(displayState) {
+  // This generates and caches the characterClasses which is dependent only
+  // on the ContentState and un-ordered LayerState.
+  // (Ordering of layers for rendering is controlled by DisplayState.)
+  _generateCharacterClasses() {
     let text = this.getText();
     let charClasses = Array.from(new Array(text.length), (_, index) => new Array() );
-    // This returns layers in the order they were added.
-    // n.b. temporary, layer sequencing will be from displayState
     for (let layer of this._layerStateMap.values()) {
       for (let annotation of layer.getAnnotationList()) {
         // Throw if we get bad start/end
@@ -69,28 +72,40 @@ export class EditorState {
         };
       };
     }
-    this._characterClasses[displayState.key] = charClasses;
+    this._characterClasses = charClasses;
   }
 
   // Group characters into contiguous spans with same layers
-  _getSpans(displayState, start, end) {
+  // Cache by block key, as this result is a function
+  // of the block.start and block.end values.
+  _getSpans(block) {
+    let {start, end} = block;
+    // If we already computed this, return the cached version
+    if (this._spansForDisplayState.has(block.key)) {
+      return this._spansForDisplayState.get(block.key);
+    };
     let text = this.getText();
-    let charClasses = this._characterClasses[displayState.key];
+    let charClasses = this._characterClasses;
     let spans = [];
     let spanStart = start;
     // Should throw error if !end<charClasses.length
     end = Math.min(end, charClasses.length);
-    let spanLayers = charClasses[spanStart];
+    let spanAnnotations = charClasses[spanStart];
     for (let k=start; k < end; k++) {
-      if ( ! eqArray(spanLayers, charClasses[k])) {
+      if ( ! eqArray(spanAnnotations, charClasses[k])) {
         let spanShouldBe = text.substring(spanStart, k);
-        spans.push({start: spanStart, end: k, spanLayers, spanShouldBe});
+        spans.push(new SpanSegment(
+          {start: spanStart, end: k, spanAnnotations, spanShouldBe}
+        ));
         spanStart = k;
-        spanLayers = charClasses[spanStart];
+        spanAnnotations = charClasses[spanStart];
       };
     };
     let spanShouldBe = text.substring(spanStart, end);
-    spans.push({start: spanStart, end: end, spanLayers, spanShouldBe});
+    spans.push(new SpanSegment(
+      {start: spanStart, end, spanAnnotations, spanShouldBe}
+    ));
+    this._spansForDisplayState.set(block.key, spans);
     return spans;
   }
 }
