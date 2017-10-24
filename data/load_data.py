@@ -3,6 +3,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "thresher_backend.settings")
 
 import logging
 logger = logging.getLogger(__name__)
+import pytz, datetime
 
 import django
 django.setup()
@@ -96,7 +97,19 @@ def load_topics(topics):
         topic_args['parent'] = root_topic
         # topics should already have their own glossary and instructions
         # Create the topic with the values in topic_args
-        topic = Topic.objects.create(**topic_args)
+        topic, created = Topic.objects.get_or_create(
+            name=topic_args['name'],
+            parent=topic_args['parent'],
+            defaults=topic_args
+        )
+        # If reloading a root topic, cascade delete prior
+        # subtopics, questions and answers.
+        # But Submitted Answers are protected, so if any have been
+        # loaded for this schema, the deletion will fail.
+        if root_topic is None and not created:
+            Question.objects.filter(topic=topic).delete()
+            Topic.objects.filter(parent=topic).delete()
+
         topic_args['id'] = topic.id
         if root_topic is None:
             root_topic = topic
@@ -277,6 +290,14 @@ def save_parse_exception_message(e):
                                file_name=e.file_name, linenum=e.linenum,
                                timestamp=e.timestamp)
 
+def save_exception_message(e, orig_filename):
+    timestamp = datetime.datetime.now(pytz.utc)
+    logger.error("{} while loading {} at {:%Y-%m-%d %H:%M:%S %Z}"
+                 .format(e.message, orig_filename, timestamp))
+    ParserError.objects.create(message=e.message, errtype=e.errtype,
+                               file_name=orig_filename, linenum=0,
+                               timestamp=timestamp)
+
 def load_schema_atomic(orig_filename, actual_filepath):
     try:
         with transaction.atomic():
@@ -286,6 +307,8 @@ def load_schema_atomic(orig_filename, actual_filepath):
         e.file_name = orig_filename
         e.log()
         save_parse_exception_message(e)
+    except ValidationError as e:
+        save_exception_message(e, orig_filename)
 
 def load_schema_dir(dirpath):
     schema_files = sorted(fnmatch.filter(os.listdir(dirpath), '*.txt'))
