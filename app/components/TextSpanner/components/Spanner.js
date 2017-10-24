@@ -15,22 +15,25 @@ export class Spanner extends React.Component {
     editorState: PropTypes.instanceOf(EditorState).isRequired,
     displayState: PropTypes.instanceOf(DisplayState).isRequired,
     blockPropsFn: PropTypes.func.isRequired,
-    customStyleMap: PropTypes.object.isRequired,
+    mergeStyleFn: PropTypes.func.isRequired,
   }
 
   render() {
     const editorState = this.props.editorState;
     const displayState = this.props.displayState;
     const blockPropsFn = this.props.blockPropsFn;
+    const mergeStyleFn = this.props.mergeStyleFn;
     const text = editorState.getText();
-    editorState.generateCharacterClasses();
 
     function renderSpans(block) {
       let spans = editorState.getSpans(block);
       return (spans.map( (span, i) => {
-        let classNames = span.spanAnnotations.join(' ');
+        let orderedLayers = displayState.getOrderedLayersFor(span.spanAnnotations);
+        let mergedStyle = mergeStyleFn(orderedLayers);
+        let titleList = orderedLayers.map( (ola) => ola.annotation.topicName );
+        let title = titleList.join(', ');
         return (
-          <span key={i} className={classNames} title={classNames}>
+          <span key={i} style={mergedStyle} title={title}>
             {text.substring(span.start, span.end)}
           </span>
         );

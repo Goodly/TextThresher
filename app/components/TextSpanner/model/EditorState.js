@@ -17,9 +17,10 @@ export class EditorState {
     this.createDisplayState = this._createDisplayState.bind(this);
     this._displayStateMap = new Map();
     this.createLayerState = this._createLayerState.bind(this);
+    this.getLayers = this._getLayers.bind(this);
     this._layerStateMap = new Map();
-    this.generateCharacterClasses = this._generateCharacterClasses.bind(this);
-    this._characterClasses = [];
+    this.collectCharacterAnnotations = this._collectCharacterAnnotations.bind(this);
+    this._charAnnotations = null; // will be array of arrays
     this.getSpans = this._getSpans.bind(this);
     this._spansForDisplayState = new Map();
   }
@@ -42,7 +43,7 @@ export class EditorState {
   // for merging styles.
   _createDisplayState() {
     let displayState = new DisplayState();
-    let key = displayState.getKey();
+    let key = displayState.key;
     this._displayStateMap.set(key, displayState);
     debug(`created DisplayState ${key}`)
     return displayState;
@@ -50,29 +51,35 @@ export class EditorState {
 
   _createLayerState(layerLabelData) {
     let layerState = new LayerState(layerLabelData);
-    let key = layerState.getKey();
+    let key = layerState.key;
     this._layerStateMap.set(key, layerState);
     debug(`created LayerState ${key}`)
     return layerState;
   }
 
-  // This generates and caches the characterClasses which is dependent only
+  _getLayers() {
+    return this._layerStateMap.values();
+  };
+
+  // This generates and caches the characterClasses.
+  // This is an array of arrays with the annotations for each
+  // character in the text. This is dependent only
   // on the ContentState and un-ordered LayerState.
   // (Ordering of layers for rendering is controlled by DisplayState.)
-  _generateCharacterClasses() {
+  _collectCharacterAnnotations() {
     let text = this.getText();
-    let charClasses = Array.from(new Array(text.length), (_, index) => new Array() );
+    let charAnnotations = Array.from(new Array(text.length), (_, index) => new Array() );
     for (let layer of this._layerStateMap.values()) {
       for (let annotation of layer.getAnnotationList()) {
         // Throw if we get bad start/end
         let start = Math.min(annotation.start, text.length);
         let end = Math.min(annotation.end, text.length);
         for (let i=start; i < end; i++) {
-          charClasses[i].push(annotation.topicName);
+          charAnnotations[i].push(annotation.key);
         };
       };
     }
-    this._characterClasses = charClasses;
+    this._charAnnotations = charAnnotations;
   }
 
   // Group characters into contiguous spans with same layers
@@ -84,21 +91,25 @@ export class EditorState {
     if (this._spansForDisplayState.has(block.key)) {
       return this._spansForDisplayState.get(block.key);
     };
+    // See if we need to build the array of annotations per character
+    if (this._charAnnotations === null) {
+      this.collectCharacterAnnotations();
+    };
     let text = this.getText();
-    let charClasses = this._characterClasses;
+    let charAnnotations = this._charAnnotations;
     let spans = [];
     let spanStart = start;
-    // Should throw error if !end<charClasses.length
-    end = Math.min(end, charClasses.length);
-    let spanAnnotations = charClasses[spanStart];
+    // Should throw error if !end<charAnnotations.length
+    end = Math.min(end, charAnnotations.length);
+    let spanAnnotations = charAnnotations[spanStart];
     for (let k=start; k < end; k++) {
-      if ( ! eqArray(spanAnnotations, charClasses[k])) {
+      if ( ! eqArray(spanAnnotations, charAnnotations[k])) {
         let spanShouldBe = text.substring(spanStart, k);
         spans.push(new SpanSegment(
           {start: spanStart, end: k, spanAnnotations, spanShouldBe}
         ));
         spanStart = k;
-        spanAnnotations = charClasses[spanStart];
+        spanAnnotations = charAnnotations[spanStart];
       };
     };
     let spanShouldBe = text.substring(spanStart, end);

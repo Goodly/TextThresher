@@ -6,6 +6,7 @@ import { displayStates } from 'components/displaystates';
 import * as articleViewActions from 'actions/articleView';
 import { Spanner, EditorState } from 'components/TextSpanner';
 import { loadAnnotatedArticle, displayLinesAsBlocks } from './convertToSpanner';
+import { colors } from 'utils/colors';
 
 import './styles.scss';
 
@@ -53,6 +54,9 @@ export class ArticleView extends React.Component {
           editorState = loadAnnotatedArticle(editorState, article_id, db);
           displayState = displayLinesAsBlocks(displayState, article_id, db);
         };
+        // Add un-ordered layers from editorState to displayState ordered list
+        displayState.setDisplayLayers(editorState.getLayers());
+        // TODO: Render layer list
         return (
           <div className="article-viewer">
             <div className="article-click-box">
@@ -60,7 +64,7 @@ export class ArticleView extends React.Component {
                 editorState={editorState}
                 displayState={displayState}
                 blockPropsFn={getBlockProps}
-                customStyleMap={styleMap}
+                mergeStyleFn={getStyleFn}
               />
             </div>
           </div>
@@ -69,13 +73,26 @@ export class ArticleView extends React.Component {
   };
 };
 
-const styleMap = {
-  CODE: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
-    fontSize: 16,
-    padding: 2,
-  },
+function getStyleFn(orderedLayers) {
+  let style = {};
+  if (orderedLayers.length >= 1) {
+    style = Object.assign(style, {
+      backgroundColor: colors[orderedLayers[0].order],
+    });
+  }
+  if (orderedLayers.length >= 2)  {
+    style = Object.assign(style, {
+      borderStyle: 'solid',
+      borderWidth: '1px',
+      borderColor: 'red',
+    });
+  };
+  if (orderedLayers.length >= 3)  {
+    style = Object.assign(style, {
+      color: 'white',
+    });
+  };
+  return style;
 };
 
 // sequence_number can be used for even/odd styling...
