@@ -180,15 +180,6 @@ class Topic(models.Model):
 
     instructions = models.TextField()
 
-    def validate_unique(self, exclude=None):
-        qs = Topic.objects.filter(name=self.name)
-        if qs.filter(parent=self.parent).exists() and self.id != qs[0].id:
-            raise ValidationError('Subtopics need to be unique.')
-
-    def save(self, *args, **kwargs):
-        self.validate_unique()
-        super(Topic, self).save(*args, **kwargs)
-
     class Meta:
         unique_together = ("parent", "name")
 
@@ -406,7 +397,7 @@ class SubmittedAnswer(models.Model):
                                related_name="submitted_answers",
                                null=True,
                                db_constraint=False,
-                               on_delete=models.CASCADE)
+                               on_delete=models.PROTECT)
 
     answer_text = models.TextField(default="")
 
