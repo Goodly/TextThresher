@@ -65,6 +65,9 @@ def parse_document(fullpath, filename):
     return parse_article(raw_text, filename)
 
 def parse_article(raw_text, filename):
+
+    # Convert to UTF-8, removing the Windows BOM if present
+    raw_text = raw_text.decode('utf-8-sig', errors='strict')
     # extract info from the file name
     article_number, city, state, periodical, periodical_code = parse_filename(filename)
 
@@ -144,10 +147,6 @@ def parse_header(raw_text):
     lines = raw_text.splitlines()
     header_rownum = 1
     for i, line in enumerate(lines):
-        # Remove windows UTF-8 junk
-        if line.startswith(codecs.BOM_UTF8):
-            line = line[3:]
-
         # Skip blank lines
         if not line.strip():
             continue
@@ -358,9 +357,9 @@ def join_safe(separator, bits_to_join):
     return reduce(merge_safe, bits_to_join, '')
 
 def requires_separator(a, b):
-    no_separator_chars_left = ['\n', '\x9c']
-    no_separator_chars_right = ['\n', ',', '.',]
-    no_separator_pair_right = ['"\n', '" ']
+    no_separator_chars_left = [u'\n', u'\u009c']
+    no_separator_chars_right = [u'\n', u',', u'.',]
+    no_separator_pair_right = [u'"\n', u'" ']
     return (a[-1] not in no_separator_chars_left
             and b[0] not in no_separator_chars_right
             and b[0:2] not in no_separator_pair_right)
