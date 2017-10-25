@@ -74,6 +74,8 @@ export class ArticleView extends React.Component {
 };
 
 function getStyleFn(orderedLayers) {
+  // orderedLayers is an array of objects with keys:
+  // {order, layer, annotation}
   let style = {};
   if (orderedLayers.length >= 1) {
     style = Object.assign(style, {

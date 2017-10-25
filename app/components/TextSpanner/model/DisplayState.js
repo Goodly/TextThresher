@@ -38,7 +38,6 @@ export class DisplayState extends DisplayStateRecord {
       depth,
       config
     });
-    debug(`created Block ${block['key']}`)
     debug(block);
     this._blockList.push(block);
     return this;

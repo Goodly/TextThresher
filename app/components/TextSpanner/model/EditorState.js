@@ -71,7 +71,7 @@ export class EditorState {
     let charAnnotations = Array.from(new Array(text.length), (_, index) => new Array() );
     for (let layer of this._layerStateMap.values()) {
       for (let annotation of layer.getAnnotationList()) {
-        // Throw if we get bad start/end
+        // TODO: Throw if we get bad start/end
         let start = Math.min(annotation.start, text.length);
         let end = Math.min(annotation.end, text.length);
         for (let i=start; i < end; i++) {
@@ -99,7 +99,7 @@ export class EditorState {
     let charAnnotations = this._charAnnotations;
     let spans = [];
     let spanStart = start;
-    // Should throw error if !end<charAnnotations.length
+    // TODO: Throw error if !end<charAnnotations.length
     end = Math.min(end, charAnnotations.length);
     let spanAnnotations = charAnnotations[spanStart];
     for (let k=start; k < end; k++) {
