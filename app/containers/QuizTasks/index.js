@@ -64,6 +64,7 @@ export class RealQuiz extends Quiz {
     if (task !== null) {
       this.props.storeTask(task, onSaveAndNext);
       this.props.storeQuizTask(task.info);
+      this.props.activeQuestion(this.props.question_id);
     } else {
       // Set redux to DONE mode or navigate to a DONE url
       this.props.storeTasksDone();
