@@ -499,13 +499,21 @@ class ArticleView(PermissionRequiredMixin, View):
 
     def get(self, request):
         queryset = Article.objects.all().order_by('article_number')
-        articles = ArticleNumberIn(request.GET, queryset=queryset).qs
-        article_list = [a.article_number for a in articles]
-        article_numbers = ','.join(map(str, article_list))
+        if request.GET.get('article_number__in'):
+            articles = ArticleNumberIn(request.GET, queryset=queryset).qs
+            article_list = [a.article_number for a in articles]
+            article_numbers = ','.join(map(str, article_list))
+            url_to_fetch_articles = (reverse('api:article_list') +
+              '?article_number__in=' + article_numbers
+            )
+        else:
+            # Don't enumerate article ids in api URL if not explicitly requested
+            articles = None
+            article_numbers = None
+            url_to_fetch_articles = reverse('api:article_list')
         context = {
             'page_title': "Article Highlight Viewer",
-            'articles': articles,
-            'article_numbers': article_numbers,
+            'url_to_fetch_articles': url_to_fetch_articles,
         }
         # The default page load the articleView react app from Django static
         # files. Updating that requires 'npm run build' followed by

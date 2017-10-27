@@ -8,6 +8,7 @@ import { Spanner, EditorState } from 'components/TextSpanner';
 import { loadAnnotatedArticle, displayLinesAsBlocks } from './convertToSpanner';
 import { ArticleMetaData } from 'components/ArticleMetaData';
 import { ArticleSlider } from 'components/ArticleSlider';
+import { Pager } from 'components/Pager';
 import { colors } from 'utils/colors';
 
 const debug = require('debug')('thresher:ArticleView');
@@ -74,7 +75,12 @@ export class ArticleView extends React.Component {
               article_index={this.state.article_index}
               article_ids={article_ids}
               onChange={(evt) => {
-                this.setState({article_index: evt.target.value});
+                this.setState({article_index: Number(evt.target.value)});
+              }}
+            />
+            <Pager
+              onChange={(index) => {
+                this.setState({article_index: index});
               }}
             />
             <ArticleMetaData metadata={article.metadata} />
