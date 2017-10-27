@@ -75,6 +75,7 @@ class CreateProjectForm(forms.Form):
 
     # TODO: show min tokens only after Quiz is selected
     min_tokens_per_highlight = forms.IntegerField(min_value=0)
+    max_tokens_per_highlight = forms.IntegerField(min_value=0)
 
     pybossa_url = forms.CharField(required=True,
                                   label="Pybossa server URL",

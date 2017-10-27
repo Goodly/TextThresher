@@ -73,6 +73,7 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
 
     # Filter the highlights based on the min tokens provided on project creation
     min_tokens_per_highlight = project.task_config['min_tokens']
+    max_tokens_per_highlight = project.task_config['max_tokens']
     for topic_hlght in topicHighlights:
         highlight_offsets = topic_hlght.offsets
         print "Debug info: HighlightGroup {}: {}".format(topic_hlght.id, highlight_offsets)
@@ -82,7 +83,8 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
             offset_str = offset[2]
             tokens = re.split(PATTERN, offset_str)
             total_count += len(tokens)
-        if total_count < min_tokens_per_highlight:
+        if (total_count < min_tokens_per_highlight
+            or total_count > max_tokens_per_highlight):
             exclude_ids.append(topic_hlght.id)
             print "Excluded HighlightGroup: {}".format(topic_hlght.id)
 
