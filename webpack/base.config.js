@@ -233,7 +233,7 @@ if (process.env.CLEANDIST) {
     }),
     new OnBuildPlugin(function () {
       // copy files from the 'app/staticroot/' dir
-      execCmd(`cp -arv ${PATHS.app}/staticroot/* ${PATHS.dist}`); // */
+      execCmd(`cp -aRv ${PATHS.app}/staticroot/* ${PATHS.dist}`); // */
       console.log('\n');
     })
   )
