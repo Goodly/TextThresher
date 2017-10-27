@@ -9,12 +9,13 @@ import { loadAnnotatedArticle, displayLinesAsBlocks } from './convertToSpanner';
 import { ArticleMetaData } from 'components/ArticleMetaData';
 import { colors } from 'utils/colors';
 
+const debug = require('debug')('thresher:ArticleView');
+
 import './styles.scss';
 
 const mapStateToProps = state => {
   return {
     database: state.articleView.database,
-    article_id: state.articleView.database.result,
     displayState: state.articleView.displayState,
     error: state.articleView.error,
   };
@@ -47,7 +48,7 @@ export class ArticleView extends React.Component {
         );
       case displayStates.TASK_LOADED:
         let db = this.props.database;
-        let article_id = this.props.article_id;
+        let article_id = this.props.database.result.results[0];
         let editorState = EditorState.createEmpty();
         let displayState = editorState.createDisplayState();
         let article = null;

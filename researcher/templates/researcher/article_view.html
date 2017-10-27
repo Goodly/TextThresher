@@ -24,7 +24,7 @@
       </script>
     {% endif %}
     <script type="text/javascript">
-      thresher.articleView.loadArticle("{% url 'api:article_view' article.id %}");
+      thresher.articleView.loadArticle("{% url 'api:article_list' %}?article_number__in={{article_numbers}}");
     </script>
   </div>
 {% endblock %}

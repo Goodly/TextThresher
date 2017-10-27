@@ -6,14 +6,15 @@ import { normalize, schema } from 'normalizr';
 
 let debug = require('debug')('thresher:articleView');
 
-let article = new schema.Entity('articles', {});
+let articleSchema = new schema.Entity('articles', {});
+let pageSchema = {results: [articleSchema]};
 
 export default function fetchArticleView(reduxActions, articleFetchURL) {
   reduxActions.initArticleView();
   return fetch(articleFetchURL)
     .then(response => response.json())
     .then(articleWithAnnotations => {
-      let normalizedData = normalize(articleWithAnnotations, article);
+      let normalizedData = normalize(articleWithAnnotations, pageSchema);
       reduxActions.storeArticleView(normalizedData);
     })
     .catch( error => {

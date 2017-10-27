@@ -471,6 +471,18 @@ class RemoteProjectDeleteView(PermissionRequiredMixin, View):
         job = delete_remote_project(project)
         return redirect(reverse('researcher:index'))
 
+from django_filters import BaseInFilter, NumberFilter
+from django_filters import FilterSet
+
+class NumberInFilter(BaseInFilter, NumberFilter):
+    pass
+
+class ArticleNumberIn(FilterSet):
+    article_number__in = NumberInFilter(name='article_number', lookup_expr='in')
+
+    class Meta:
+        model = Article
+        fields = ('article_number',)
 
 class ArticleView(PermissionRequiredMixin, View):
     template_name = 'researcher/article_view.html'
@@ -485,11 +497,15 @@ class ArticleView(PermissionRequiredMixin, View):
         u'thresher.delete_highlightgroup',
     )
 
-    def get(self, request, pk):
-        article = get_object_or_404(Article, pk=pk)
+    def get(self, request):
+        queryset = Article.objects.all().order_by('article_number')
+        articles = ArticleNumberIn(request.GET, queryset=queryset).qs
+        article_list = [a.article_number for a in articles]
+        article_numbers = ','.join(map(str, article_list))
         context = {
             'page_title': "Article Highlight Viewer",
-            'article': article,
+            'articles': articles,
+            'article_numbers': article_numbers,
         }
         # The default page load the articleView react app from Django static
         # files. Updating that requires 'npm run build' followed by
