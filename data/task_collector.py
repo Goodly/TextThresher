@@ -65,6 +65,22 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
     # Set up Prefetch that will cache just the highlights matching
     # this topic to article.highlight_taskruns[n].highlightsForTopic
     topicHighlights = HighlightGroup.objects.filter(topic=topic)
+    exclude_ids = []
+
+    # Filter the highlights based on the min tokens provided on project creation
+    min_tokens_per_highlight = project.task_config['min_tokens']
+    for topic_hlght in topicHighlights:
+        highlight_offsets = topic_hlght.offsets
+        # Count the total char tokens
+        total_count = 0
+        for offset in highlight_offsets:
+            total_count += offset[1] - offset[0]
+        if total_count < min_tokens_per_highlight:
+            exclude_ids.append(topic_hlght.id)
+            print "Excluded HighlightGroup: {}".format(topic_hlght.id)
+
+    topicHighlights = topicHighlights.exclude(id__in=exclude_ids)
+
     fetchHighlights = Prefetch("highlight_taskruns__highlights",
                                queryset=topicHighlights,
                                to_attr="highlightsForTopic")
