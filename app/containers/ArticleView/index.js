@@ -7,6 +7,7 @@ import * as articleViewActions from 'actions/articleView';
 import { Spanner, EditorState } from 'components/TextSpanner';
 import { loadAnnotatedArticle, displayLinesAsBlocks } from './convertToSpanner';
 import { ArticleMetaData } from 'components/ArticleMetaData';
+import { ArticleSlider } from 'components/ArticleSlider';
 import { colors } from 'utils/colors';
 
 const debug = require('debug')('thresher:ArticleView');
@@ -28,6 +29,8 @@ const mapStateToProps = state => {
 export class ArticleView extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {article_index: 0};
+    this.cache = new Map();
   }
 
   render() {
@@ -48,20 +51,32 @@ export class ArticleView extends React.Component {
         );
       case displayStates.TASK_LOADED:
         let db = this.props.database;
-        let article_id = this.props.database.result.results[0];
+        let article_ids = this.props.database.result.results;
+        let article_id = article_ids[this.state.article_index];
+        let article = db.entities.articles[article_id];
         let editorState = EditorState.createEmpty();
         let displayState = editorState.createDisplayState();
-        let article = null;
-        if (db && db.entities && db.entities.articles) {
+        if (this.cache.has(article_id)) {
+          let cache = this.cache.get(article_id);
+          editorState = cache.editorState;
+          displayState = cache.displayState;
+        } else {
           editorState = loadAnnotatedArticle(editorState, article_id, db);
           displayState = displayLinesAsBlocks(displayState, article_id, db);
-          article = db.entities.articles[article_id];
+          this.cache.set(article_id, {editorState, displayState});
         };
         // Add un-ordered layers from editorState to displayState ordered list
         displayState.setDisplayLayers(editorState.getLayers());
         // TODO: Render layer list
         return (
           <div className="article-viewer">
+            <ArticleSlider
+              article_index={this.state.article_index}
+              article_ids={article_ids}
+              onChange={(evt) => {
+                this.setState({article_index: evt.target.value});
+              }}
+            />
             <ArticleMetaData metadata={article.metadata} />
             <div className="article-click-box">
               <Spanner
