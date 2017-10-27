@@ -184,6 +184,9 @@ class Topic(models.Model):
 
     instructions = models.TextField()
 
+    # new options, for highlights right now but can be extended
+    options = JSONField(default={})
+
     class Meta:
         unique_together = ("parent", "name")
 

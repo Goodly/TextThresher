@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 TITLE_ID = 'title:'
 INSTRUCTIONS_ID = 'instructions:'
 GLOSSARY_ID = 'glossary:'
+OPTIONS_ID = 'options'
 DEPENDENCY_ID = 'if'
 DEPENDENCY_TARGET = 'then'
 VERSION_ID = 'version:'
@@ -102,6 +103,8 @@ def parse_schema(schema_file):
                     parse_glossary(data, current_topic)
                 elif type_id.lower() == DEPENDENCY_ID:
                     parse_dependency(data, parsed_schema, linecount)
+                elif type_id.lower() == OPTIONS_ID:
+                    parse_options(data, current_topic)
                 elif type_id[0].isdigit():
                     topic_number = parse_question_entry(type_id, data, current_topic)
                     if current_topic['topic_number'] is None:
@@ -130,6 +133,7 @@ def parse_title(title, output):
         'topic_number': None,
         'questions': [],
         'glossary': {},
+        'options': {},
         'instructions': '',
     }
     output['topics'].append(current_topic)
@@ -175,6 +179,15 @@ def parse_dependency(dependency, output, linecount):
                                              target_topic,
                                              target_question,
                                              linecount))
+
+def parse_options(options, current_topic):
+    splitted_options = options.split(' ')
+    question = options[0]
+    option_type = options[1]
+
+    if option_type not in current_topic['options']:
+        current_topic['options'][option_type] = []
+    current_topic['options'][option_type].append(question)
 
 def infer_hint_type(question):
     match = re.search("WHERE|WHO|HOW MANY|WHEN", question, re.IGNORECASE)
