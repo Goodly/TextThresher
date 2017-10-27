@@ -34,7 +34,11 @@ export class Spanner extends React.Component {
         let title = titleList.join(', ');
         // TODO: Set a good key
         return (
-          <span key={i} style={mergedStyle} title={title}>
+          <span key={i}
+                data-offset-start={span.start}
+                data-offset-end={span.end}
+                style={mergedStyle}
+                title={title}>
             {text.substring(span.start, span.end)}
           </span>
         );

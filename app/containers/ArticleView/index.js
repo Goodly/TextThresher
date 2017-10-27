@@ -6,6 +6,7 @@ import { displayStates } from 'components/displaystates';
 import * as articleViewActions from 'actions/articleView';
 import { Spanner, EditorState } from 'components/TextSpanner';
 import { loadAnnotatedArticle, displayLinesAsBlocks } from './convertToSpanner';
+import { ArticleMetaData } from 'components/ArticleMetaData';
 import { colors } from 'utils/colors';
 
 import './styles.scss';
@@ -49,16 +50,18 @@ export class ArticleView extends React.Component {
         let article_id = this.props.article_id;
         let editorState = EditorState.createEmpty();
         let displayState = editorState.createDisplayState();
+        let article = null;
         if (db && db.entities && db.entities.articles) {
-          let text = db.entities.articles[article_id].text;
           editorState = loadAnnotatedArticle(editorState, article_id, db);
           displayState = displayLinesAsBlocks(displayState, article_id, db);
+          article = db.entities.articles[article_id];
         };
         // Add un-ordered layers from editorState to displayState ordered list
         displayState.setDisplayLayers(editorState.getLayers());
         // TODO: Render layer list
         return (
           <div className="article-viewer">
+            <ArticleMetaData metadata={article.metadata} />
             <div className="article-click-box">
               <Spanner
                 editorState={editorState}
