@@ -79,8 +79,8 @@ export class ArticleView extends React.Component {
               }}
             />
             <Pager
-              onChange={(index) => {
-                this.setState({article_index: index});
+              resetIndex={() => {
+                this.setState({article_index: 0});
               }}
             />
             <ArticleMetaData metadata={article.metadata} />
@@ -128,7 +128,7 @@ function getBlockProps(block, sequence_number) {
   switch (block.blockType) {
     case 'unstyled': {
       if (sequence_number % 2) {
-        props['style'] = { backgroundColor: 'lightgray' };
+        props['style'] = { backgroundColor: 'whitesmoke' };
       } else {
         props['style'] = { backgroundColor: 'white' };
       };

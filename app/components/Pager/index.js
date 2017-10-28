@@ -21,24 +21,22 @@ export class Pager extends React.Component {
   }
 
   static propTypes = {
-    onChange: PropTypes.func.isRequired,
+    resetIndex: PropTypes.func.isRequired,
   }
 
   render() {
-    let reduxActions = {
-      initArticleView: this.props.initArticleView,
-      storeArticleView: this.props.storeArticleView,
-      errorArticleView: this.props.errorArticleView,
-    };
     let elem = [];
     let result = this.props.database.result;
     if (result.previous !== null) {
       elem.push(
         <a key="prev"
            onClick={ (e) => {
-             fetchArticleView(reduxActions, result.previous);
+             fetchArticleView(this.props, result.previous)
+               .then( () => {this.props.resetIndex()} );
              e.preventDefault();
-           }}>
+           }}
+           style={{'cursor': 'pointer'}}
+           className="previous-group-button">
            Previous Group
         </a>);
     };
@@ -46,10 +44,12 @@ export class Pager extends React.Component {
       elem.push(
         <a key="next"
            onClick={ (e) => {
-             fetchArticleView(reduxActions, result.next);
+             fetchArticleView(this.props, result.next)
+               .then( () => {this.props.resetIndex()} );
              e.preventDefault();
            }}
-           style={{'float': 'right'}}>
+           style={{'cursor': 'pointer', 'float': 'right'}}
+           className="next-group-button">
            Next Group
         </a>);
     };

@@ -16,9 +16,9 @@ export class ArticleSlider extends React.Component {
     return (
       <input type="range"
              value={this.props.article_index}
-             min="0"
+             min={0}
              max={this.props.article_ids.length - 1}
-             step="1"
+             step={1}
              onChange={this.props.onChange}
       />
     );

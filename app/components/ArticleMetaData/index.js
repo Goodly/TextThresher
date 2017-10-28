@@ -60,7 +60,7 @@ export class ArticleMetaData extends React.Component {
       };
     };
 
-    fieldOrder = [{name: 'filename', label: 'File name'}];
+    fieldOrder = [{name: 'filename', label: 'Filename'}];
     let filename = appendIfExists(metadata, fieldOrder);
     if (filename !== '') {
       elements.push(
