@@ -1,38 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as articleViewActions from 'actions/articleView';
-import fetchArticleView from 'django/articleView';
 
-const mapStateToProps = state => {
-  return {
-    database: state.articleView.database,
-  };
-}
-
-@connect (
-  mapStateToProps,
-  dispatch => bindActionCreators(articleViewActions, dispatch)
-)
 export class Pager extends React.Component {
   constructor(props) {
     super(props);
   }
 
   static propTypes = {
-    resetIndex: PropTypes.func.isRequired,
+    result: PropTypes.object.isRequired,
+    fetchArticles: PropTypes.func.isRequired,
   }
 
   render() {
     let elem = [];
-    let result = this.props.database.result;
+    let result = this.props.result;
     if (result.previous !== null) {
       elem.push(
         <a key="prev"
            onClick={ (e) => {
-             fetchArticleView(this.props, result.previous)
-               .then( () => {this.props.resetIndex()} );
+             this.props.fetchArticles(result.previous);
              e.preventDefault();
            }}
            style={{'cursor': 'pointer'}}
@@ -44,8 +30,7 @@ export class Pager extends React.Component {
       elem.push(
         <a key="next"
            onClick={ (e) => {
-             fetchArticleView(this.props, result.next)
-               .then( () => {this.props.resetIndex()} );
+             this.props.fetchArticles(result.next);
              e.preventDefault();
            }}
            style={{'cursor': 'pointer', 'float': 'right'}}

@@ -2,14 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { displayStates } from 'components/displaystates';
+
 import * as articleViewActions from 'actions/articleView';
+import fetchArticleView from 'django/articleView';
+
+import { displayStates } from 'components/displaystates';
+import { colors } from 'utils/colors';
+
 import { Spanner, EditorState } from 'components/TextSpanner';
 import { loadAnnotatedArticle, displayLinesAsBlocks } from './convertToSpanner';
 import { ArticleMetaData } from 'components/ArticleMetaData';
 import { ArticleSlider } from 'components/ArticleSlider';
 import { Pager } from 'components/Pager';
-import { colors } from 'utils/colors';
 
 const debug = require('debug')('thresher:ArticleView');
 
@@ -30,8 +34,19 @@ const mapStateToProps = state => {
 export class ArticleView extends React.Component {
   constructor(props) {
     super(props);
+    this.fetchArticles = this._fetchArticles.bind(this);
+    this.setIndex = this._setIndex.bind(this);
     this.state = {article_index: 0};
     this.cache = new Map();
+  }
+
+  _setIndex(article_index) {
+    this.setState({article_index: article_index});
+  }
+
+  _fetchArticles(url_to_fetch_articles) {
+     this.setIndex(0);
+     fetchArticleView(this.props, url_to_fetch_articles);
   }
 
   render() {
@@ -75,14 +90,10 @@ export class ArticleView extends React.Component {
               article_index={this.state.article_index}
               article_ids={article_ids}
               onChange={(evt) => {
-                this.setState({article_index: Number(evt.target.value)});
+                this.setIndex(Number(evt.target.value));
               }}
             />
-            <Pager
-              resetIndex={() => {
-                this.setState({article_index: 0});
-              }}
-            />
+            <Pager result={db.result} fetchArticles={this.fetchArticles} />
             <ArticleMetaData metadata={article.metadata} />
             <div className="article-click-box">
               <Spanner
