@@ -71,9 +71,13 @@ export class EditorState {
     let charAnnotations = Array.from(new Array(text.length), (_, index) => new Array() );
     for (let layer of this._layerStateMap.values()) {
       for (let annotation of layer.getAnnotationList()) {
-        // TODO: Throw if we get bad start/end
-        let start = Math.min(annotation.start, text.length);
-        let end = Math.min(annotation.end, text.length);
+        let start = annotation.start;
+        let end = annotation.end;
+        if (start < 0 || start >= text.length || end < 0 || end > text.length) {
+          throw new Error("Invalid offsets in annotation layer: ["
+            + String(start) + "," + String(end) + "], topic:"
+            + annotation.topicName);
+        };
         for (let i=start; i < end; i++) {
           charAnnotations[i].push(annotation.key);
         };
@@ -86,7 +90,6 @@ export class EditorState {
   // Cache by block key, as this result is a function
   // of the block.start and block.end values.
   _getSpans(block) {
-    let {start, end} = block;
     // If we already computed this, return the cached version
     if (this._spansForDisplayState.has(block.key)) {
       return this._spansForDisplayState.get(block.key);
@@ -95,12 +98,15 @@ export class EditorState {
     if (this._charAnnotations === null) {
       this.collectCharacterAnnotations();
     };
+    let {start, end} = block;
     let text = this.getText();
+    if (start < 0 || start >= text.length || end < 0 || end > text.length) {
+      throw new Error("Invalid offsets in block: ["
+        + String(start) + "," + String(end) + "]");
+    };
     let charAnnotations = this._charAnnotations;
     let spans = [];
     let spanStart = start;
-    // TODO: Throw error if !end<charAnnotations.length
-    end = Math.min(end, charAnnotations.length);
     let spanAnnotations = charAnnotations[spanStart];
     for (let k=start; k < end; k++) {
       if ( ! eqArray(spanAnnotations, charAnnotations[k])) {
