@@ -32,9 +32,8 @@ export class Spanner extends React.Component {
         let mergedStyle = mergeStyleFn(orderedLayers);
         let titleList = orderedLayers.map( (ola) => ola.annotation.topicName );
         let title = titleList.join(', ');
-        // TODO: Set a good key
         return (
-          <span key={i}
+          <span key={span.key}
                 data-offset-start={span.start}
                 data-offset-end={span.end}
                 style={mergedStyle}
