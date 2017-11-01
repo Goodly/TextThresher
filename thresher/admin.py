@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+
 # Retrieve user model set by AUTH_USER_MODEL in settings.py
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -54,6 +57,16 @@ class ProjectAdmin(admin.ModelAdmin):
 
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('id', 'article_number', metadata_filename)
+
+    actions = ['view_articles']
+
+    def view_articles(self, request, queryset):
+        selected = [ str(article.article_number) for article in queryset ]
+        return HttpResponseRedirect(reverse("researcher:article_view") +
+                                    "?article_number__in={}"
+                                    .format(",".join(selected)))
+
+    view_articles.short_description = "View article highlights"
 
 
 class TopicAdmin(admin.ModelAdmin):
