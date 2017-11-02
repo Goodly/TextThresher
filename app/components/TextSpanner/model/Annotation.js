@@ -7,7 +7,8 @@ const debug = require('debug')('thresher:TextSpanner');
 const defaultAnnotationRecord = {
   key: '',
   topicName: '',
-  caseNumber: '',
+  topicOrder: 0,
+  caseNumber: 0,
   start: 0,
   end: 0,
   contributor: {},

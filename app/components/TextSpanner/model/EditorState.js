@@ -58,7 +58,7 @@ export class EditorState {
   }
 
   _getLayers() {
-    return this._layerStateMap.values();
+    return Array.from(this._layerStateMap.values());
   };
 
   // This generates and caches the characterClasses.

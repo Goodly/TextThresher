@@ -35,7 +35,6 @@ export class LayerState extends LayerStateRecord {
       end,
       extra,
     });
-    debug(annotation);
     this._annotationList.push(annotation);
     return this;
   }

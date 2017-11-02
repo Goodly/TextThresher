@@ -7,12 +7,14 @@ export function loadAnnotatedArticle(editorState, article) {
       let layer = editorState.createLayerState({
         contributor: taskrun.contributor.unique_label,
         topicName: hg.topic_name,
+        topicOrder: hg.topic_order,
         caseNumber: hg.case_number,
       });
       hg.offsets.forEach( (offset) => {
         layer.addAnnotation({
           contributor: taskrun.contributor.unique_label,
           topicName: hg.topic_name,
+          topicOrder: hg.topic_order,
           caseNumber: hg.case_number,
           start: offset[0],
           end: offset[1],

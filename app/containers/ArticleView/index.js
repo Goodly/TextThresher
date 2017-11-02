@@ -10,8 +10,10 @@ import { displayStates } from 'components/displaystates';
 import { colors } from 'utils/colors';
 import Color from 'color';
 
-import { Spanner, EditorState } from 'components/TextSpanner';
-import { displayLinesAsBlocks } from 'components/TextSpanner/utils';
+import { Spanner,
+         EditorState,
+         displayLinesAsBlocks,
+         sortLayersByTopicAndCase } from 'components/TextSpanner';
 import { loadAnnotatedArticle } from './convertToSpanner';
 import { ArticleMetaData } from 'components/ArticleMetaData';
 import { ArticleSlider } from 'components/ArticleSlider';
@@ -84,8 +86,10 @@ export class ArticleView extends React.Component {
           displayState = displayLinesAsBlocks(displayState, article.text);
           this.cache.set(article_id, {editorState, displayState});
         };
-        // Add un-ordered layers from editorState to displayState ordered list
-        displayState.setDisplayLayers(editorState.getLayers());
+        let layers = editorState.getLayers();
+        layers.sort(sortLayersByTopicAndCase);
+        debug(layers);
+        displayState.setDisplayLayers(layers);
         // TODO: Render layer list
         return (
           <div className="article-viewer">

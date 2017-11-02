@@ -1,3 +1,4 @@
+import { sortLabelsByTopicAndCase } from '../model/LayerLabel';
 const debug = require('debug')('thresher:TextSpanner');
 
 export function findLineBreaks(text) {
@@ -30,4 +31,8 @@ export function displayLinesAsBlocks(displayState, text) {
     });
   });
   return displayState;
+}
+
+export function sortLayersByTopicAndCase(a, b) {
+  return sortLabelsByTopicAndCase(a.layerLabel, b.layerLabel);
 }
