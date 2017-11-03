@@ -4,7 +4,6 @@ import os
 import re
 import sys
 from datetime import date
-import codecs
 
 # This file is in the data folder.
 # Format of the article filenames.
@@ -61,14 +60,14 @@ class ArticleParseError(Exception):
 
 
 def parse_document(fullpath, filename):
-    with codecs.open(fullpath, mode='r', encoding='utf-8-sig', errors='strict') as f:
+    with open(fullpath, 'r') as f:
         raw_text = f.read()
     return parse_article(raw_text, filename)
 
 def parse_article(raw_text, filename):
 
     # Convert to UTF-8, removing the Windows BOM if present
-    raw_text = codecs.decode(raw_text, 'utf-8-sig', 'strict')
+    raw_text = raw_text.decode('utf-8-sig', errors='strict')
     # extract info from the file name
     article_number, city, state, periodical, periodical_code = parse_filename(filename)
 
@@ -428,7 +427,7 @@ if __name__ == '__main__':
     def dthandler(obj):
         if isinstance(obj, date):
             return obj.isoformat()
-    json.dump(data, codecs.open(outfile, mode='w', encoding='utf-8-sig', errors='strict'), default=dthandler,
+    json.dump(data, open(outfile, 'w'), default=dthandler,
               sort_keys=True,
               indent=4,
               separators=(',', ': '))
