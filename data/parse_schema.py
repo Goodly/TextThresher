@@ -3,6 +3,7 @@ from collections import namedtuple
 import re
 import pytz, datetime
 import logging
+import codecs
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
@@ -24,8 +25,14 @@ QUESTION_TYPES = {'mc' : 'RADIO',
                   'tm' : 'TIME',
                   'st' : 'SELECT_SUBTOPIC'}
 
+OPTION_TYPES = {'nohighlight': 'NOHIGHLIGHT',
+                'optionalhighlight': 'OPTIONALHIGHLIGHT'}
+
 Dependency = namedtuple('Dependency',
     ['topic', 'question', 'answer', 'next_topic', 'next_question', 'linenum'])
+
+Option = namedtuple('Option',
+    ['topic', 'question', 'answer', 'option'])
 
 class SimpleParseException(Exception):
     pass
@@ -48,11 +55,12 @@ class ParseSchemaException(Exception):
 def load_defaults(output):
     output['topics'] = []
     output['dependencies'] = []
+    output['options'] = []
 
 def parse_schema(schema_file):
     parsed_schema = {}
     load_defaults(parsed_schema)
-    with open(schema_file, 'r') as f:
+    with codecs.open(schema_file, mode='r', encoding='utf-8-sig', errors='strict') as f:
         linecount = 1
         version = ''
         first_line = True
@@ -104,7 +112,7 @@ def parse_schema(schema_file):
                 elif type_id.lower() == DEPENDENCY_ID:
                     parse_dependency(data, parsed_schema, linecount)
                 elif type_id.lower() == OPTIONS_ID:
-                    parse_options(data, current_topic)
+                    parse_options(data, parsed_schema)
                 elif type_id[0].isdigit():
                     topic_number = parse_question_entry(type_id, data, current_topic)
                     if current_topic['topic_number'] is None:
@@ -133,7 +141,6 @@ def parse_title(title, output):
         'topic_number': None,
         'questions': [],
         'glossary': {},
-        'options': {},
         'instructions': '',
     }
     output['topics'].append(current_topic)
@@ -180,21 +187,28 @@ def parse_dependency(dependency, output, linecount):
                                              target_question,
                                              linecount))
 
-def parse_options(options, current_topic):
+def parse_options(options, output):
     splitted_options = options.split(' ')
-    question = options[0]
-    option_type = options[1]
+    topic_id, question_id, answer_id = splitted_options[0].split('.')
+    option_type = splitted_options[1]
 
-    if option_type not in current_topic['options']:
-        current_topic['options'][option_type] = []
-    current_topic['options'][option_type].append(question)
+    if option_type not in OPTION_TYPES:
+        valid_types = ', '.join(OPTION_TYPES.keys())
+        raise SimpleParseException(
+            "Expected option type like {}. Found '{}'"
+            .format(valid_types, option_type))
+
+    output['options'].append(Option(topic_id,
+                                    question_id,
+                                    answer_id,
+                                    OPTION_TYPES[option_type]))
 
 def infer_hint_type(question):
     match = re.search("WHERE|WHO|HOW MANY|WHEN", question, re.IGNORECASE)
     if match:
         return match.group(0).upper()
     else:
-        return 'NONE';
+        return 'NONE'
 
 def parse_question_entry(entry_num, data, current_topic):
     type_bits = entry_num.split('.')
@@ -247,7 +261,7 @@ if __name__ == '__main__':
 
     try:
         output = parse_schema(args.filename[0])
-        # print_data(output)
-        print_dependencies(output)
+        print_data(output)
+        # print_dependencies(output)
     except ParseSchemaException as e:
         e.log()

@@ -272,6 +272,10 @@ title: Event setting and composition (location, attendance, time/duration)
 2.22.07 “Half a day”: 12-15 hours
 2.22.08 “A full day”: 16-24 hours
 2.22.09 “Overnight” or “More than 1 day”
+
+options 2.04.03 nohighlight
+options 2.15.08 nohighlight
+options 2.17.06 nohighlight
  
 if 2.01.01, then 2.02
 if 2.01.02, then 2.03

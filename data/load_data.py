@@ -137,6 +137,12 @@ def make_lookup_question_id(schema):
     for topic_args in schema['topics']:
         topic_number = topic_args['topic_number']
         lookup_question_id.setdefault(topic_number, {})
+
+# Return a dictionary keyed on topic id, return an array of question ids in that topic
+def make_question_lists(topics):
+    questions_by_topic_id = {}
+    for topic_args in topics:
+        question_ids = []
         for question_args in topic_args['questions']:
             question_number = question_args['question_number']
             lookup_question_id[topic_number][question_number] = question_args['id']
@@ -257,10 +263,38 @@ def load_dependencies(schema, root_topic):
         else:
             raise SchemaLoadError("Line {}: Invalid 'if' clause.".format(dep))
 
+def load_options(schema, root_topic):
+    for option in schema['options']:
+        if root_topic.order == option.topic:
+            topic_obj = root_topic
+        else:
+            try:
+                topic_obj = Topic.objects.get(parent=root_topic,
+                                                order=option.topic)
+            except Topic.DoesNotExist:
+                logger.error("%s\nDidn't find topic number %d" % (option, option.topic,))
+                continue
+        try:
+            question_obj = Question.objects.get(topic=topic_obj,
+                                                question_number=option.question)
+        except Question.DoesNotExist:
+            logger.error("%s\nDidn't find question number %d" % (option, option.question,))
+            continue
+        try:
+            answer_obj = Answer.objects.get(question=question_obj,
+                                            answer_number=int(option.answer))
+        except Answer.DoesNotExist:
+            logger.error("%s\nDidn't find answer number %d" % (option, option.answer,))
+            continue
+
+        answer_obj.options.append(option.option)
+        answer_obj.save()
+
 def load_schema(schema):
     # Load the topics, questions and answers of the schema
     root_topic = load_topics(schema['topics'])
     load_dependencies(schema, root_topic)
+    load_options(schema, root_topic)
 
 def load_article(article):
     new_id = int(article['metadata']['article_number'])
