@@ -14,15 +14,23 @@ export class Spanner extends React.Component {
   static propTypes = {
     editorState: PropTypes.instanceOf(EditorState).isRequired,
     displayState: PropTypes.instanceOf(DisplayState).isRequired,
-    blockPropsFn: PropTypes.func.isRequired,
-    mergeStyleFn: PropTypes.func.isRequired,
+    blockPropsFn: PropTypes.func,
+    mergeStyleFn: PropTypes.func,
+    wrapSpanFn: PropTypes.func,
   }
+
+  static defaultProps = {
+    blockPropsFn: ((block, sequence_number) => {}),
+    mergeStyleFn: ((orderedLayers) => {}),
+    wrapSpanFn: ((span) => span)
+  };
 
   render() {
     const editorState = this.props.editorState;
     const displayState = this.props.displayState;
     const blockPropsFn = this.props.blockPropsFn;
     const mergeStyleFn = this.props.mergeStyleFn;
+    const wrapSpanFn = this.props.wrapSpanFn;
     const text = editorState.getText();
 
     function renderSpans(block) {
@@ -32,7 +40,7 @@ export class Spanner extends React.Component {
         let mergedStyle = mergeStyleFn(orderedLayers);
         let titleList = orderedLayers.map( (ola) => ola.annotation.topicName );
         let title = titleList.join(', ');
-        return (
+        return (wrapSpanFn(
           <span key={span.key}
                 data-offset-start={span.start}
                 data-offset-end={span.end}
@@ -40,16 +48,12 @@ export class Spanner extends React.Component {
                 title={title}>
             {text.substring(span.start, span.end)}
           </span>
-        );
+        ));
       }));
     };
 
     function renderBlock(block, i) {
       const mergeProps = blockPropsFn(block, i);
-      /* if block.hasChildren() {
-
-         }
-      */
       return React.cloneElement(
         <div key={block.key}
              data-offset-start={block.start}
