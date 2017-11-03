@@ -272,7 +272,7 @@ class Answer(models.Model):
     next_questions = JSONField(default=[])
 
     # new options, for highlights right now but can be extended
-    options = JSONField(default=[])
+    options = JSONField(default={})
 
     class Meta:
         unique_together = ("question", "answer_number")
