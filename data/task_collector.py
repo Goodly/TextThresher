@@ -1,6 +1,5 @@
 import logging
 logger = logging.getLogger(__name__)
-import re
 
 from itertools import groupby
 
@@ -17,8 +16,6 @@ from thresher.serializers import (ProjectSerializer,
                                   HighlightGroupSerializer,
                                   NLPQuestionSerializer,
                                   NLPHintSerializer)
-
-PATTERN = re.compile("\s+")
 
 
 def collectNLPTasks(articles=None):
@@ -75,18 +72,12 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
     min_tokens_per_highlight = project.task_config['min_tokens']
     max_tokens_per_highlight = project.task_config['max_tokens']
     for topic_hlght in topicHighlights:
-        highlight_offsets = topic_hlght.offsets
-        print "Debug info: HighlightGroup {}: {}".format(topic_hlght.id, highlight_offsets)
-        # Count the total char tokens
-        total_count = 0
-        for offset in highlight_offsets:
-            offset_str = offset[2]
-            tokens = re.split(PATTERN, offset_str)
-            total_count += len(tokens)
+        total_count = topic_hlght.token_count()
         if (total_count < min_tokens_per_highlight
             or total_count > max_tokens_per_highlight):
             exclude_ids.append(topic_hlght.id)
-            print "Excluded HighlightGroup: {}".format(topic_hlght.id)
+            logger.info("Excluded HighlightGroup: {} {} {} tokens".
+                        format(topic_hlght.id, topic_hlght.topic.name, total_count))
 
     topicHighlights = topicHighlights.exclude(id__in=exclude_ids)
 

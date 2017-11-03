@@ -222,6 +222,37 @@ h1.main-label {
     line-height: 4px;
 }
 
+.form-container label[for="id_min_tokens_per_highlight"]::before {
+    content: "Token counts:";
+    display: block;
+    font-size: 18px;
+    font-weight: normal;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    margin-left: -10px;
+}
+
+.form-container label[for="id_min_tokens_per_highlight"],
+.form-container label[for="id_max_tokens_per_highlight"] {
+    display: inline-block;
+    margin-top: 3px;
+    margin-bottom: 0px;
+    margin-left: 5px;
+    font-size: 14px;
+    line-height: 4px;
+}
+
+.form-container #id_min_tokens_per_highlight {
+    margin-bottom: 0px;
+}
+
+.form-container #id_min_tokens_per_highlight,
+.form-container #id_max_tokens_per_highlight {
+    margin-left: 10px;
+    font-size: 11px;
+    line-height: 4px;
+}
+
 .form-selector,
 .form-container input,
 .form-container textarea,

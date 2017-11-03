@@ -207,6 +207,8 @@ class CreateProjectView(PermissionRequiredMixin, View):
         debug_presenter = request.GET.get("debugPresenter", False)
         initial = { 'starting_article_id': agg['id__min'],
                     'ending_article_id': agg['id__max'],
+                    'min_tokens_per_highlight': 1,
+                    'max_tokens_per_highlight': 1000,
                     'pybossa_url': profile.pybossa_url,
                     'pybossa_api_key': profile.pybossa_api_key,
                     'debug_presenter': debug_presenter
