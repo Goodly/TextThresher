@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Map as ImmutableMap } from 'immutable';
+import Color from 'color';
 
 import Question from 'components/Question';
 import HighlightTool from 'components/HighlightTool';
@@ -10,6 +11,15 @@ import ThankYou from 'components/ThankYou';
 import ShowHelp from 'components/ShowHelp';
 import SelectHint from 'components/SelectHint';
 import { displayStates } from 'components/displaystates';
+
+import { Spanner,
+         EditorState,
+         displayLinesAsBlocks,
+       } from 'components/TextSpanner';
+import { QuizLayerTypes, sortLayersByAnswerId } from 'model/QuizLayerLabel';
+import { loadTopicHighlights, loadHints } from './convertToSpanner';
+
+const debug = require('debug')('thresher:Quiz');
 
 import { styles } from './styles.scss';
 
@@ -375,23 +385,37 @@ export class Quiz extends Component {
       console.log(hint_offsets);
     };
 
-    const { abridged, abridged_highlights, abridged_hints } = abridgeText(
-      article_text,
-      topic_highlights,
-      hint_offsets
-    );
-
-    let annotations = combineAnnotations(abridged, abridged_highlights, abridged_hints);
-
     const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
 
-    return (
+    let editorState = EditorState.createEmpty();
+    editorState = editorState.setText(article_text);
+    editorState = loadTopicHighlights(editorState, topic_highlights);
+    editorState = loadHints(editorState, hint_offsets);
+
+    let displayState = editorState.createDisplayState();
+    displayState = displayLinesAsBlocks(displayState, article_text);
+    let layers = editorState.getLayers();
+    layers.sort(sortLayersByAnswerId);
+    debug(sortLayersByAnswerId);
+    debug(layers);
+    displayState.setDisplayLayers(layers);
+
+/*
       <HighlightTool text={abridged}
                      colors={color_array}
                      topics={answer_ids}
                      currentTopicId={this.props.answer_id}
                      hints_offsets={annotations}
       />
+*/
+    return (
+      <div className="article-click-box">
+        <Spanner
+          editorState={editorState}
+          displayState={displayState}
+          mergeStyleFn={getStyle}
+        />
+      </div>
     );
   }
 
@@ -439,7 +463,7 @@ export class Quiz extends Component {
       return <ShowHelp closeHelp={ () => { this.props.showHelp(false); } } />
     }
 
-    var topic_highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
+    var topic_highlights = this.props.currTask ? this.props.currTask.highlights : [];
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 
     let saveAndNextButton =  <div/>;
@@ -479,4 +503,21 @@ export class Quiz extends Component {
         </div>
     )
   }
+}
+
+function getStyle(orderedLayers) {
+  // orderedLayers is an array of objects with keys:
+  // {order, layer, annotation}
+  let style = {};
+  debug(orderedLayers);
+  for (let layer of orderedLayers) {
+    let layerType = layer.layer.layerLabel.layerType;
+    if (layerType === QuizLayerTypes.TOPIC) {
+      Object.assign(style, { fontWeight: 'bold' });
+    }
+    if (layerType === QuizLayerTypes.HINT) {
+      Object.assign(style, { fontStyle: 'italic' });
+    }
+  }
+  return style;
 }
