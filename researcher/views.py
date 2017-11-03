@@ -207,6 +207,8 @@ class CreateProjectView(PermissionRequiredMixin, View):
         debug_presenter = request.GET.get("debugPresenter", False)
         initial = { 'starting_article_id': agg['id__min'],
                     'ending_article_id': agg['id__max'],
+                    'min_tokens_per_highlight': 1,
+                    'max_tokens_per_highlight': 1000,
                     'pybossa_url': profile.pybossa_url,
                     'pybossa_api_key': profile.pybossa_api_key,
                     'debug_presenter': debug_presenter
@@ -241,6 +243,10 @@ class CreateProjectView(PermissionRequiredMixin, View):
                              .values_list('id', flat=True))
             logger.info("%d topics selected" % len(topic_ids))
             task_config = { 'topic_ids': topic_ids }
+            task_type = cleaned_data['task_type']
+            if task_type == 'QUIZ':
+                task_config['min_tokens'] = cleaned_data['min_tokens_per_highlight']
+                task_config['max_tokens'] = cleaned_data['max_tokens_per_highlight']
 
             # Need to catch failure if attempting to create a duplicate name
             # or short_name on remote. Project model sets unique_together.
@@ -249,7 +255,7 @@ class CreateProjectView(PermissionRequiredMixin, View):
                 name = cleaned_data['name'],
                 short_name = cleaned_data['short_name'],
                 description = cleaned_data['description'],
-                task_type = cleaned_data['task_type'],
+                task_type = task_type,
                 task_config = task_config,
                 pybossa_url = cleaned_data['pybossa_url'],
                 pybossa_api_key = cleaned_data['pybossa_api_key']

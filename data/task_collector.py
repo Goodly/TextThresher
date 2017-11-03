@@ -17,6 +17,7 @@ from thresher.serializers import (ProjectSerializer,
                                   NLPQuestionSerializer,
                                   NLPHintSerializer)
 
+
 def collectNLPTasks(articles=None):
     taskList = [{
                   "article_id": article.id,
@@ -65,6 +66,21 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
     # Set up Prefetch that will cache just the highlights matching
     # this topic to article.highlight_taskruns[n].highlightsForTopic
     topicHighlights = HighlightGroup.objects.filter(topic=topic)
+    exclude_ids = []
+
+    # Filter the highlights based on the min tokens provided on project creation
+    min_tokens_per_highlight = project.task_config['min_tokens']
+    max_tokens_per_highlight = project.task_config['max_tokens']
+    for topic_hlght in topicHighlights:
+        total_count = topic_hlght.token_count()
+        if (total_count < min_tokens_per_highlight
+            or total_count > max_tokens_per_highlight):
+            exclude_ids.append(topic_hlght.id)
+            logger.info("Excluded HighlightGroup: {} {} {} tokens".
+                        format(topic_hlght.id, topic_hlght.topic.name, total_count))
+
+    topicHighlights = topicHighlights.exclude(id__in=exclude_ids)
+
     fetchHighlights = Prefetch("highlight_taskruns__highlights",
                                queryset=topicHighlights,
                                to_attr="highlightsForTopic")

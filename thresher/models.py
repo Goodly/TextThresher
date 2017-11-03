@@ -11,6 +11,10 @@ User = get_user_model()
 
 from data.nlp_hint_types import HINT_TYPE_CHOICES
 
+import re
+
+TOKEN_SPLIT_PATTERN = re.compile("\s+")
+
 
 # Use OneToOneFields to add attributes to User
 class UserProfile(models.Model):
@@ -331,6 +335,15 @@ class HighlightGroup(models.Model):
     article_highlight = models.ForeignKey(ArticleHighlight,
                                           related_name="highlights",
                                           on_delete=models.CASCADE)
+
+    def token_count(self):
+        # Count the total char tokens
+        count = 0
+        for offset in self.offsets:
+            offset_str = offset[2]
+            tokens = re.split(TOKEN_SPLIT_PATTERN, offset_str)
+            count += len(tokens)
+        return count
 
     def __unicode__(self):
         if self.topic:
