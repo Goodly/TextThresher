@@ -1,19 +1,19 @@
 import { Record } from 'immutable';
 
-import generateRandomKey from '../utils/generateRandomKey';
+import generateRandomKey from 'components/TextSpanner/utils/generateRandomKey';
 
 const debug = require('debug')('thresher:TextSpanner');
 
-const defaultLayerLabelRecord = {
+const defaultTopicLabelRecord = {
   contributor: '',
   topicName: '',
   topicOrder: 0,
   caseNumber: 0,
 }
 
-const LayerLabelRecord = Record(defaultLayerLabelRecord);
+const TopicLabelRecord = Record(defaultTopicLabelRecord);
 
-export class LayerLabel extends LayerLabelRecord {
+export class TopicLabel extends TopicLabelRecord {
   constructor(layerLabel) {
     layerLabel['key'] = generateRandomKey();
     super(layerLabel);
@@ -36,4 +36,8 @@ export function sortLabelsByTopicAndCase(a, b) {
   } else {
     return a.caseNumber - b.caseNumber;
   };
+}
+
+export function sortLayersByTopicAndCase(a, b) {
+  return sortLabelsByTopicAndCase(a.layerLabel, b.layerLabel);
 }

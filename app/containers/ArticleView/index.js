@@ -13,7 +13,8 @@ import Color from 'color';
 import { Spanner,
          EditorState,
          displayLinesAsBlocks,
-         sortLayersByTopicAndCase } from 'components/TextSpanner';
+       } from 'components/TextSpanner';
+import { sortLayersByTopicAndCase } from 'model/TopicLabel';
 import { loadAnnotatedArticle } from './convertToSpanner';
 import { ArticleMetaData } from 'components/ArticleMetaData';
 import { ArticleSlider } from 'components/ArticleSlider';
@@ -88,6 +89,7 @@ export class ArticleView extends React.Component {
         };
         let layers = editorState.getLayers();
         layers.sort(sortLayersByTopicAndCase);
+        debug(sortLayersByTopicAndCase);
         debug(layers);
         displayState.setDisplayLayers(layers);
         // TODO: Render layer list

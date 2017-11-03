@@ -1,6 +1,5 @@
 import { Record } from 'immutable';
 
-import { LayerLabel } from './LayerLabel';
 import { Annotation } from './Annotation';
 
 import generateRandomKey from '../utils/generateRandomKey';
@@ -14,9 +13,9 @@ const defaultLayerStateRecord = {
 const LayerStateRecord = Record(defaultLayerStateRecord);
 
 export class LayerState extends LayerStateRecord {
-  constructor(layerLabelValues) {
+  constructor(layerLabel) {
     super({key: generateRandomKey()});
-    this.layerLabel = new LayerLabel(layerLabelValues);
+    this.layerLabel = layerLabel;
     this._annotationList = [];
     this.addAnnotation = this._addAnnotation.bind(this);
     this.getAnnotationList = this._getAnnotationList.bind(this);
