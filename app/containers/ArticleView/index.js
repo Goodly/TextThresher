@@ -12,7 +12,8 @@ import Color from 'color';
 
 import { Spanner,
          EditorState,
-         displayLinesAsBlocks,
+         makeOffsetsFromLineBreaks,
+         makeBlocksFromOffsets,
        } from 'components/TextSpanner';
 import { sortLayersByTopicAndCase } from 'model/TopicLabel';
 import { loadAnnotatedArticle } from './convertToSpanner';
@@ -84,7 +85,8 @@ export class ArticleView extends React.Component {
           displayState = cache.displayState;
         } else {
           editorState = loadAnnotatedArticle(editorState, article);
-          displayState = displayLinesAsBlocks(displayState, article.text);
+          let blocks = makeBlocksFromOffsets(makeOffsetsFromLineBreaks(article.text));
+          displayState.setDisplayBlocks(blocks);
           this.cache.set(article_id, {editorState, displayState});
         };
         let layers = editorState.getLayers();
