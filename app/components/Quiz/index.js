@@ -14,6 +14,7 @@ import { displayStates } from 'components/displaystates';
 
 import { Spanner,
          EditorState,
+         makeOffsetsFromWhiteSpace,
          makeOffsetsFromLineBreaks,
          makeBlocksFromOffsets,
        } from 'components/TextSpanner';
@@ -383,6 +384,8 @@ export class Quiz extends Component {
 
     let editorState = EditorState.createEmpty();
     editorState = editorState.setText(article_text);
+    let tokenOffsets = makeOffsetsFromWhiteSpace(article_text);
+    editorState = editorState.setTokenization(tokenOffsets);
     editorState = loadTopicHighlights(editorState, topic_highlights);
 
     const hint_sets_for_article = this.props.db.entities.hint;

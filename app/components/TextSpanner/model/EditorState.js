@@ -13,6 +13,8 @@ export class EditorState {
   constructor() {
     this.setText = this._setText.bind(this);
     this.getText = this._getText.bind(this);
+    this.setTokenization = this._setTokenization.bind(this);
+    this.getTokenization = this._getTokenization.bind(this);
     this._contentState = new ContentState();
     this.createDisplayState = this._createDisplayState.bind(this);
     this._displayStateMap = new Map();
@@ -35,6 +37,15 @@ export class EditorState {
 
   _setText(text) {
     this._contentState.setText(text);
+    return this;
+  }
+
+  _getTokenization() {
+    return this._contentState.getTokenization();
+  }
+
+  _setTokenization(tokenOffsets) {
+    this._contentState.setTokenization(tokenOffsets);
     return this;
   }
 
