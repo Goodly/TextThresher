@@ -27,8 +27,9 @@ export function loadHints(editorState, hint_offsets) {
     layerType: QuizLayerTypes.HINT,
   });
   let layer = editorState.createLayerState(layerLabel);
-  hint_offsets.forEach( (offset) => {
+  hint_offsets.offsets.forEach( (offset) => {
     layer.addAnnotation({
+      topicName: hint_offsets.hint_type,
       start: offset[0],
       end: offset[1],
       extra: {textShouldBe: offset[2]},

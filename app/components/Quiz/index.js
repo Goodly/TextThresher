@@ -377,26 +377,25 @@ export class Quiz extends Component {
     if (this.props.displayHintSelectControl) {
       hint_type = this.props.displayHintType;
     };
-    const hint_sets_for_article = this.props.db.entities.hint;
-    let hint_offsets = [];
-    if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
-      hint_offsets = hint_sets_for_article[hint_type].offsets;
-      console.log('Found '+hint_offsets.length+' '+hint_type+' hints');
-      console.log(hint_offsets);
-    };
 
     const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
 
     let editorState = EditorState.createEmpty();
     editorState = editorState.setText(article_text);
     editorState = loadTopicHighlights(editorState, topic_highlights);
-    editorState = loadHints(editorState, hint_offsets);
+
+    const hint_sets_for_article = this.props.db.entities.hint;
+    if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
+      let hint_offsets = hint_sets_for_article[hint_type];
+      editorState = loadHints(editorState, hint_offsets);
+      debug('Found '+hint_offsets.offsets.length+' '+hint_type+' hints');
+      debug(hint_offsets);
+    };
 
     let displayState = editorState.createDisplayState();
     displayState = displayLinesAsBlocks(displayState, article_text);
     let layers = editorState.getLayers();
     layers.sort(sortLayersByAnswerId);
-    debug(sortLayersByAnswerId);
     debug(layers);
     displayState.setDisplayLayers(layers);
 
@@ -509,7 +508,6 @@ function getStyle(orderedLayers) {
   // orderedLayers is an array of objects with keys:
   // {order, layer, annotation}
   let style = {};
-  debug(orderedLayers);
   for (let layer of orderedLayers) {
     let layerType = layer.layer.layerLabel.layerType;
     if (layerType === QuizLayerTypes.TOPIC) {
