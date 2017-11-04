@@ -1,6 +1,8 @@
+import { Block } from '../model/Block';
+
 const debug = require('debug')('thresher:TextSpanner');
 
-export function findLineBreaks(text) {
+export function makeOffsetsFromLineBreaks(text) {
   // Must create RegExp on every call to init lastIndex.
   const lineBreak = /\r\n?|\n/g
   let lineOffsets = [];
@@ -18,16 +20,12 @@ export function findLineBreaks(text) {
   return lineOffsets;
 };
 
-export function displayLinesAsBlocks(displayState, text) {
-  let lineOffsets = findLineBreaks(text);
-  lineOffsets.forEach( (offset) => {
-    displayState.addBlock({
-      blockType: 'unstyled',
-      start: offset.start,
-      end: offset.end,
-      depth: 0,
-      config: {}
-    });
-  });
-  return displayState;
+export function makeBlocksFromOffsets(lineOffsets) {
+  return lineOffsets.map( (offset) => new Block({
+    blockType: 'unstyled',
+    start: offset.start,
+    end: offset.end,
+    depth: 0,
+    config: {}
+  }));
 }

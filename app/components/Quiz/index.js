@@ -14,7 +14,8 @@ import { displayStates } from 'components/displaystates';
 
 import { Spanner,
          EditorState,
-         displayLinesAsBlocks,
+         makeOffsetsFromLineBreaks,
+         makeBlocksFromOffsets,
        } from 'components/TextSpanner';
 import { QuizLayerTypes, sortLayersByAnswerId } from 'model/QuizLayerLabel';
 import { loadTopicHighlights, loadHints } from './convertToSpanner';
@@ -393,7 +394,8 @@ export class Quiz extends Component {
     };
 
     let displayState = editorState.createDisplayState();
-    displayState = displayLinesAsBlocks(displayState, article_text);
+    let blocks = makeBlocksFromOffsets(makeOffsetsFromLineBreaks(article_text));
+    displayState.setDisplayBlocks(blocks);
     let layers = editorState.getLayers();
     layers.sort(sortLayersByAnswerId);
     debug(layers);

@@ -16,7 +16,7 @@ export class DisplayState extends DisplayStateRecord {
   constructor() {
     super({key: generateRandomKey()});
     this._blockList = [];
-    this.addBlock = this._addBlock.bind(this);
+    this.setDisplayBlocks = this._setDisplayBlocks.bind(this);
     this.getBlockList = this._getBlockList.bind(this);
     this.setDisplayLayers = this._setDisplayLayers.bind(this);
     this._displayLayerArray = [];
@@ -30,15 +30,8 @@ export class DisplayState extends DisplayStateRecord {
     return this._blockList;
   }
 
-  _addBlock({blockType, start, end, depth, config}) {
-    const block = new Block({
-      blockType,
-      start,
-      end,
-      depth,
-      config
-    });
-    this._blockList.push(block);
+  _setDisplayBlocks(blockList) {
+    this._blockList = Array.from(blockList);
     return this;
   }
 
