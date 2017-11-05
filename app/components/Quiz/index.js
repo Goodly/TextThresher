@@ -14,6 +14,7 @@ import { displayStates } from 'components/displaystates';
 
 import { Spanner,
          EditorState,
+         BlockMaker,
          makeOffsetsFromWhiteSpace,
          makeOffsetsFromLineBreaks,
          makeBlocksFromOffsets,
@@ -30,6 +31,8 @@ import { introJs } from 'intro.js/intro.js';
 
 import { abridgeText,
          getAnswerAnnotations } from 'components/Quiz/contextWords';
+
+const CONTEXT_WORDS = 12;
 
 function eqSet(as, bs) {
   if (as.size !== bs.size) return false;
@@ -388,6 +391,15 @@ export class Quiz extends Component {
     editorState = editorState.setTokenization(tokenOffsets);
     editorState = loadTopicHighlights(editorState, topic_highlights);
 
+    // Calculate blocks with context words before we add hint layers.
+    let blockMaker = new BlockMaker();
+    blockMaker.setTokenization(
+      editorState.getText(),
+      editorState.getTokenization()
+    );
+    blockMaker.combineLayers(editorState.getLayers());
+    let blocks = blockMaker.getBlocksWithContext(CONTEXT_WORDS);
+
     const hint_sets_for_article = this.props.db.entities.hint;
     if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
       let hint_offsets = hint_sets_for_article[hint_type];
@@ -397,7 +409,6 @@ export class Quiz extends Component {
     };
 
     let displayState = editorState.createDisplayState();
-    let blocks = makeBlocksFromOffsets(makeOffsetsFromLineBreaks(article_text));
     displayState.setDisplayBlocks(blocks);
     let layers = editorState.getLayers();
     layers.sort(sortLayersByAnswerId);
@@ -417,6 +428,7 @@ export class Quiz extends Component {
         <Spanner
           editorState={editorState}
           displayState={displayState}
+          blockPropsFn={getBlockProps}
           mergeStyleFn={getStyle}
         />
       </div>
@@ -523,4 +535,19 @@ function getStyle(orderedLayers) {
     }
   }
   return style;
+}
+
+// sequence_number can be used for even/odd styling...
+function getBlockProps(block, sequence_number) {
+  let props = {};
+  switch (block.blockType) {
+    case 'unstyled': {
+      if (sequence_number % 2) {
+        props['style'] = { backgroundColor: 'whitesmoke' };
+      } else {
+        props['style'] = { backgroundColor: 'white' };
+      };
+    }
+  }
+  return props;
 }
