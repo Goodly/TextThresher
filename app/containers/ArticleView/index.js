@@ -18,7 +18,7 @@ import { Spanner,
 import { sortLayersByTopicAndCase } from 'model/TopicLabel';
 import { loadAnnotatedArticle } from './convertToSpanner';
 import { ArticleMetaData } from 'components/ArticleMetaData';
-import { ArticleSlider } from 'components/ArticleSlider';
+import { Slider } from 'components/Slider';
 import { Pager } from 'components/Pager';
 
 const debug = require('debug')('thresher:ArticleView');
@@ -97,9 +97,9 @@ export class ArticleView extends React.Component {
         // TODO: Render layer list
         return (
           <div className="article-viewer">
-            <ArticleSlider
-              article_index={this.state.article_index}
-              article_ids={article_ids}
+            <Slider
+              index={this.state.article_index}
+              values={article_ids}
               onChange={(evt) => {
                 this.setIndex(Number(evt.target.value));
               }}

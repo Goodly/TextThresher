@@ -1,25 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export class ArticleSlider extends React.Component {
+export class Slider extends React.Component {
   constructor(props) {
     super(props);
   }
 
   static propTypes = {
-    article_index: PropTypes.number.isRequired,
-    article_ids: PropTypes.array.isRequired,
+    index: PropTypes.number.isRequired,
+    values: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
+    style: PropTypes.object,
+  }
+
+  static defaultProps = {
+    style: {},
   }
 
   render() {
     return (
       <input type="range"
-             value={this.props.article_index}
+             value={this.props.index}
              min={0}
-             max={this.props.article_ids.length - 1}
+             max={this.props.values.length - 1}
              step={1}
              onChange={this.props.onChange}
+             style={this.props.style}
       />
     );
   }

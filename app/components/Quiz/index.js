@@ -31,8 +31,9 @@ import { introJs } from 'intro.js/intro.js';
 
 import { abridgeText,
          getAnswerAnnotations } from 'components/Quiz/contextWords';
+import { Slider } from 'components/Slider';
 
-const CONTEXT_WORDS = 12;
+const CONTEXT_WORD_VALUES = [0,1,2,3,4,5,6,7,8,9,10,12,20,50,100,200,400];
 
 function eqSet(as, bs) {
   if (as.size !== bs.size) return false;
@@ -136,10 +137,13 @@ export class Quiz extends Component {
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
     this.restartTutorial = this.restartTutorial.bind(this);
+    this.setContextWords = this.setContextWords.bind(this);
     this.intro = introJs();
     this.introStarted = false;
     this.state = {
       highlightsStyle: 'highlights-fixed',
+      contextWordsIndex: 4,
+      contextWords: CONTEXT_WORD_VALUES[4],
     };
   }
 
@@ -398,7 +402,7 @@ export class Quiz extends Component {
       editorState.getTokenization()
     );
     blockMaker.combineLayers(editorState.getLayers());
-    let blocks = blockMaker.getBlocksWithContext(CONTEXT_WORDS);
+    let blocks = blockMaker.getBlocksWithContext(this.state.contextWords);
 
     const hint_sets_for_article = this.props.db.entities.hint;
     if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
@@ -470,6 +474,13 @@ export class Quiz extends Component {
     }
   }
 
+  setContextWords(index) {
+    this.setState({
+      contextWordsIndex: index,
+      contextWords: CONTEXT_WORD_VALUES[index]
+    });
+  }
+
   render() {
     if (this.props.displayState === displayStates.TASKS_DONE) {
       return <ThankYou />
@@ -511,6 +522,14 @@ export class Quiz extends Component {
             <Project />
             { question_list }
             { saveAndNextButton }
+            <Slider
+              index={this.state.contextWordsIndex}
+              values={CONTEXT_WORD_VALUES}
+              onChange={(evt) => {
+                this.setContextWords(Number(evt.target.value));
+              }}
+              style={{marginTop: '10px'}}
+            />
             <SelectHint
               currTask={this.props.currTask}
               onChange={ (evt) => { this.props.setDisplayHintType(evt.target.value); }}
