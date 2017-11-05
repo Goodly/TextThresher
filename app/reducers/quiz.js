@@ -2,8 +2,6 @@ import { Map as ImmutableMap } from 'immutable';
 import { normalize, schema } from 'normalizr';
 import moment from 'moment';
 
-import { abridgeText } from 'components/Quiz/contextWords';
-
 // Schema for normalizing the task data structure into table like entities using
 // the database id as key, e.g.,
 // db.entities.topic[id], db.entities.question[id], db.entities.answer[id]
@@ -26,8 +24,6 @@ import { selectAnswer } from 'actions/quiz';
 const initialState = {
   currTask: null,
   db: { entities: {}, result: {} },
-  abridged: '',
-  abridged_highlights: [],
   curr_question_id: -1,
   queue: [-1],
   curr_answer_id: -100,
@@ -176,11 +172,6 @@ export function quiz(state = initialState, action) {
       const currTask = action.task;
       const topic_highlights = currTask.highlights[0].offsets;
       const article_text = currTask.article.text;
-      const { abridged, abridged_highlights } = abridgeText(
-        article_text,
-        topic_highlights,
-        []
-      );
       let queue = updateQueue(action.task, answer_selected);
       let curr_question_id = -1;
       if (queue.length > 0) {
@@ -190,8 +181,6 @@ export function quiz(state = initialState, action) {
         ...state,
         currTask: action.task,
         db: taskDB,
-        abridged,
-        abridged_highlights,
         curr_question_id,
         queue,
         curr_answer_id: -100,

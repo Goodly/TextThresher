@@ -29,64 +29,9 @@ import { styles } from './styles.scss';
 const style = require('intro.js/introjs.css');
 import { introJs } from 'intro.js/intro.js';
 
-import { abridgeText,
-         getAnswerAnnotations } from 'components/Quiz/contextWords';
 import { Slider } from 'components/Slider';
 
 const CONTEXT_WORD_VALUES = [0,1,2,3,4,5,6,7,8,9,10,12,20,50,100,200,400];
-
-function eqSet(as, bs) {
-  if (as.size !== bs.size) return false;
-  for (var a of as) if (!bs.has(a)) return false;
-  return true;
-};
-
-function combineAnnotations(abridged, abridged_highlights, abridged_hints) {
-  let annotations = [];
-  if (abridged.length == 0) {
-    return annotations;
-  };
-  abridged_highlights.forEach( (offset) => {
-    let offset_style = offset.concat(['b']);
-    annotations.push(offset_style);
-  });
-  abridged_hints.forEach( (offset) => {
-    let offset_style = offset.concat(['i']);
-    annotations.push(offset_style);
-  });
-  // Now need to eliminate overlaps.
-  // For each character in text, create a Set. Add each style for that char
-  // to the set.
-  let textFormat = Array.from(new Array(abridged.length), (_, index) => new Set() );
-  for (let offset of annotations) {
-    for (let k=offset[0]; k < offset[1]; k++) {
-      textFormat[k].add(offset[3]);
-    };
-  };
-  // Now convert back to offset tuples [start, end, substring, style]
-  annotations = [];
-  let styleStart = 0;
-  let style=textFormat[styleStart];
-  for (let k=1; k < textFormat.length; k++) {
-    if ( ! eqSet(style, textFormat[k])) {
-      if (style.size > 0) {
-        //Convert set {'i','b'} to 'ib'
-        let textStyle = Array.from(style.values()).join('');
-        let textspan = abridged.substring(styleStart, k);
-        annotations.push([styleStart, k, textspan, textStyle]);
-      };
-      styleStart = k;
-      style=textFormat[styleStart];
-    };
-  };
-  // n.b. slight cheat - we know abridged ends in ... and that ... is never
-  // annotated, so we can ignore the last k.
-  if (abridged_hints.length > 0) {
-    console.log('annotations');
-    console.log(annotations);
-  };
-  return annotations;
-};
 
 function makeHighlightDB(highlights) {
   let highlightDB = new Map();
@@ -150,7 +95,6 @@ export class Quiz extends Component {
   static propTypes = {
     currTask: React.PropTypes.object,
     db: React.PropTypes.object,
-    abridged: React.PropTypes.string,
     queue: React.PropTypes.array,
     question_id: React.PropTypes.number,
     answer_id: React.PropTypes.number,
@@ -256,8 +200,7 @@ export class Quiz extends Component {
     const savedQuiz = {
       article_id,
       article_text,
-      abridged_text: this.props.abridged,
-      abridged_highlights: this.props.abridged_highlights,
+      highlights: this.props.highlights,
       highlight_group_id,
       savedAnswers,
     };
@@ -387,7 +330,7 @@ export class Quiz extends Component {
       hint_type = this.props.displayHintType;
     };
 
-    const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
+    // const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
 
     let editorState = EditorState.createEmpty();
     editorState = editorState.setText(article_text);
