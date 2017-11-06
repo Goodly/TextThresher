@@ -25,15 +25,8 @@ export class LayerState extends LayerStateRecord {
     return this._annotationList;
   }
 
-  _addAnnotation({topicName, caseNumber, start, end, contributor, extra}) {
-    const annotation = new Annotation({
-      contributor,
-      topicName,
-      caseNumber,
-      start,
-      end,
-      extra,
-    });
+  _addAnnotation(initializer) {
+    const annotation = new Annotation(initializer);
     this._annotationList.push(annotation);
     return this;
   }

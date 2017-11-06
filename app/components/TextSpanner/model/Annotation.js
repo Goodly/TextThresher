@@ -9,6 +9,7 @@ const defaultAnnotationRecord = {
   topicName: '',
   topicOrder: 0,
   caseNumber: 0,
+  answer_id: 0,
   start: 0,
   end: 0,
   contributor: {},

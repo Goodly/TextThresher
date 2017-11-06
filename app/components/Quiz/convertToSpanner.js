@@ -37,3 +37,18 @@ export function loadHints(editorState, hint_offsets) {
   });
   return editorState;
 }
+
+export function loadWorkingHighlights(editorState, highlights) {
+  let layerLabel = new QuizLayerLabel({
+    layerType: QuizLayerTypes.ANSWER,
+  });
+  let layer = editorState.createLayerState(layerLabel);
+  highlights.forEach( (offset) => {
+    layer.addAnnotation({
+      answer_id: offset.topic,
+      start: offset.start,
+      end: offset.end,
+    });
+  });
+  return editorState;
+};

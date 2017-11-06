@@ -17,7 +17,10 @@ import { Spanner,
          makeOffsetsFromWhiteSpace,
        } from 'components/TextSpanner';
 import { QuizLayerTypes, sortLayersByAnswerId } from 'model/QuizLayerLabel';
-import { loadTopicHighlights, loadHints } from './convertToSpanner';
+import { loadTopicHighlights,
+         loadHints,
+         loadWorkingHighlights
+       } from './convertToSpanner';
 import { handleMakeHighlight } from
   'components/TextSpanner/handlers/makeHighlight';
 
@@ -352,6 +355,8 @@ export class Quiz extends Component {
       debug(hint_offsets);
     };
 
+    editorState = loadWorkingHighlights(editorState, this.props.highlights);
+
     let displayState = editorState.createDisplayState();
     displayState.setDisplayBlocks(blocks);
     let layers = editorState.getLayers();
@@ -367,7 +372,9 @@ export class Quiz extends Component {
           editorState={editorState}
           displayState={displayState}
           blockPropsFn={getBlockProps}
-          mergeStyleFn={getStyle}
+          mergeStyleFn={ (orderedLayers) => {
+            return getStyle(orderedLayers, this.props.answer_colors);
+          }}
         />
       </div>
     );
@@ -474,7 +481,7 @@ export class Quiz extends Component {
   }
 }
 
-function getStyle(orderedLayers) {
+function getStyle(orderedLayers, answer_colors) {
   // orderedLayers is an array of objects with keys:
   // {order, layer, annotation}
   let style = {};
@@ -486,7 +493,16 @@ function getStyle(orderedLayers) {
     if (layerType === QuizLayerTypes.HINT) {
       Object.assign(style, { fontStyle: 'italic' });
     }
-  }
+    if (layerType === QuizLayerTypes.ANSWER) {
+      if (answer_colors.has(layer.annotation.answer_id)) {
+        let bgColor = Color(answer_colors.get(layer.annotation.answer_id));
+        if (bgColor.dark()) {
+          bgColor = bgColor.fade(0.5);
+        };
+        Object.assign(style, { backgroundColor: bgColor });
+      };
+    };
+  };
   return style;
 }
 
