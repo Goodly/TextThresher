@@ -30,6 +30,10 @@ function getHighlight(selectionObj, blockMaker) {
     let start = startAnchor + selectionObj.anchorOffset;
     let startExtent = Number(extentNode.getAttribute("data-offset-start"));
     let end = startExtent + selectionObj.extentOffset;
+    // Don't turn clicks into a selection
+    if (start === end) {
+      return null;
+    };
     // Swap ends if drag went from right-to-left
     if (start > end) {
       let temp = start;
