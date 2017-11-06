@@ -16,11 +16,11 @@ import { Spanner,
          EditorState,
          BlockMaker,
          makeOffsetsFromWhiteSpace,
-         makeOffsetsFromLineBreaks,
-         makeBlocksFromOffsets,
        } from 'components/TextSpanner';
 import { QuizLayerTypes, sortLayersByAnswerId } from 'model/QuizLayerLabel';
 import { loadTopicHighlights, loadHints } from './convertToSpanner';
+import { handleMakeHighlight } from
+  'components/TextSpanner/handlers/makeHighlight';
 
 const debug = require('debug')('thresher:Quiz');
 
@@ -330,8 +330,6 @@ export class Quiz extends Component {
       hint_type = this.props.displayHintType;
     };
 
-    // const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
-
     let editorState = EditorState.createEmpty();
     editorState = editorState.setText(article_text);
     let tokenOffsets = makeOffsetsFromWhiteSpace(article_text);
@@ -363,6 +361,8 @@ export class Quiz extends Component {
     displayState.setDisplayLayers(layers);
 
 /*
+      const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
+
       <HighlightTool text={abridged}
                      colors={color_array}
                      topics={answer_ids}
@@ -371,7 +371,9 @@ export class Quiz extends Component {
       />
 */
     return (
-      <div className="article-click-box">
+      <div className="article-click-box"
+        onMouseUp={ () => handleMakeHighlight(blockMaker)}
+      >
         <Spanner
           editorState={editorState}
           displayState={displayState}

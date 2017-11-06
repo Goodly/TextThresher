@@ -18,6 +18,7 @@ export class BlockMaker {
     this._charToToken = [];
     this._selectedChars = [];
     this.setTokenization = this._setTokenization.bind(this)
+    this.getText = this._getText.bind(this);
     this.combineLayers = this._combineLayers.bind(this);
     this.lookLeft = this._lookLeft.bind(this);
     this.lookRight = this._lookRight.bind(this);
@@ -41,6 +42,11 @@ export class BlockMaker {
     });
     this._charToToken = charToToken;
   }
+
+  // Simplifies handleMakeHighlight.
+  _getText() {
+    return this._text;
+  };
 
   /* Create a data structure parallel to text like:
    * "The quick brown fox"
@@ -104,7 +110,11 @@ export class BlockMaker {
     let lastToken = tokenOffsets.length - 1;
     let onToken = lastToken;
     let correct_for_start = 0;
-    while ((end < charToToken.length) && (onToken = charToToken[end]) < 0) {
+    // end always points one character past the selection, but we want to
+    // start our check on the actual last character of the selection
+    end--;
+    while ((end > 0) && (end < charToToken.length)
+           && (onToken = charToToken[end]) < 0) {
       end++;
       correct_for_start = 1;
     };

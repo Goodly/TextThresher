@@ -41,6 +41,13 @@ export class DisplayState extends DisplayStateRecord {
     this._displayLayerArray = Array.from(layerArray);
   }
 
+  /* The main job of DisplayState is to track an ordered
+   * list of layers. (Layers have no order in EditorState.)
+   * This method goes through the layers in this DisplayState
+   * instance and creates a map from annotation.key to an object
+   * with an integer for the order of the layer, the layer object,
+   * and the annotation object.
+   */
   _generateAnnotationMap() {
     let annoToLayer = new Map();
     this._displayLayerArray.forEach( (layer, order) => {
@@ -51,8 +58,12 @@ export class DisplayState extends DisplayStateRecord {
     this._annotationToLayerMap = annoToLayer;
   }
 
-  // Takes an array of annotation object keys.
-  // Returns an ordered list of layers that those annotations are in.
+  /* Takes an array of annotation object keys.
+   * Returns an ordered list of objects with the order integer,
+   * the layer object, and the annotation object.
+   * Note that a layer could appear more than once if a span has
+   * overlapping annotations from that layer.
+   */
   _getOrderedLayersFor(spanAnnotations) {
     // Check if map of annotations to layers needs to be generated
     if (this._annotationToLayerMap === null) {
