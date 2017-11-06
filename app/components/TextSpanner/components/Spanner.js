@@ -47,7 +47,8 @@ export class Spanner extends React.Component {
                 style={mergedStyle}
                 title={title}>
             {text.substring(span.start, span.end)}
-          </span>
+          </span>,
+          orderedLayers
         ));
       }));
     };

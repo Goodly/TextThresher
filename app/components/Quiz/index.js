@@ -78,8 +78,11 @@ export class Quiz extends Component {
   constructor(props) {
     super(props);
 
+    this.wrapSpan = this.wrapSpan.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleDeleteKey = this.handleDeleteKey.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
@@ -90,7 +93,7 @@ export class Quiz extends Component {
     this.state = {
       highlightsStyle: 'highlights-fixed',
       contextWordsIndex: 4,
-      contextWords: CONTEXT_WORD_VALUES[4],
+      contextWords: CONTEXT_WORD_VALUES[10],
     };
   }
 
@@ -355,7 +358,9 @@ export class Quiz extends Component {
       debug(hint_offsets);
     };
 
-    editorState = loadWorkingHighlights(editorState, this.props.highlights);
+    editorState = loadWorkingHighlights(editorState,
+                                        this.props.highlights,
+                                        this.props.answer_id);
 
     let displayState = editorState.createDisplayState();
     displayState.setDisplayBlocks(blocks);
@@ -367,6 +372,8 @@ export class Quiz extends Component {
     return (
       <div className="article-click-box"
         onMouseUp={ () => handleMakeHighlight(blockMaker, this.props)}
+        onKeyDown={ this.handleDeleteKey }
+        tabIndex="0"
       >
         <Spanner
           editorState={editorState}
@@ -375,9 +382,25 @@ export class Quiz extends Component {
           mergeStyleFn={ (orderedLayers) => {
             return getStyle(orderedLayers, this.props.answer_colors);
           }}
+          wrapSpanFn={this.wrapSpan}
         />
       </div>
     );
+  }
+
+  wrapSpan(reactSpan, orderedLayers) {
+    // Re-create the old curHL.source data structure for now.
+    let sources = orderedLayers.map( (layer) => ({
+      start: layer.annotation.start,
+      end: layer.annotation.end,
+      top: layer.annotation.answer_id,
+      text: layer.annotation.extra.textShouldBe
+    }));
+    return React.cloneElement(reactSpan, {
+      onClick: (e) => {
+        this.handleSelect(sources, e);
+      }
+    });
   }
 
   handleScroll() {
@@ -412,6 +435,26 @@ export class Quiz extends Component {
     // 72 is 'h' key
     if (evt.keyCode === 72) {
       this.props.displayHintSelector( ! this.props.displayHintSelectControl);
+    }
+  }
+
+  handleDeleteKey(e) {
+    // Don't steal backspace and delete key from input elements!
+    if (document.activeElement.nodeName === "INPUT") {
+      return;
+    };
+    if (e.keyCode == 46 || e.keyCode == 8) {
+      if (this.props.selectedHighlight) {
+        if (this.props.selectedHighlight.length > 0) {
+          this.props.deleteHighlight(this.props.selectedHighlight);
+        }
+      }
+    }
+  }
+
+  handleSelect(source, e) {
+    if (source.length != 0) {
+      this.props.selectHighlight(source);
     }
   }
 
@@ -499,7 +542,7 @@ function getStyle(orderedLayers, answer_colors) {
         if (bgColor.dark()) {
           bgColor = bgColor.fade(0.5);
         };
-        Object.assign(style, { backgroundColor: bgColor });
+        Object.assign(style, { backgroundColor: bgColor.rgb().string() });
       };
     };
   };
