@@ -106,6 +106,7 @@ def parse_schema(schema_file):
                     topic_id = parse_question_entry(type_id, data, current_topic)
                     if current_topic['id'] is None:
                         current_topic['id'] = topic_id
+                        current_topic['number'] = topic_id
                 else:
                     # type_id is wrong or split lines returned wrong stuff
                     msg = "Invalid type_id {}".format(type_id)

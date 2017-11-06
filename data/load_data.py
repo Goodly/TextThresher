@@ -90,6 +90,7 @@ def load_topics(topics):
     root_topic = None
     for topic_args in topics:
         # Get the questions to add them later
+        topic_number = topic_args.pop('number')
         questions = topic_args.pop('questions')
         # Change id to order
         topic_args['order'] = int(topic_args.pop('id'))
@@ -111,6 +112,7 @@ def load_topics(topics):
             Topic.objects.filter(parent=topic).delete()
 
         topic_args['id'] = topic.id
+        topic_args['number'] = topic_number
         if root_topic is None:
             root_topic = topic
         load_questions(questions, topic)
@@ -119,6 +121,15 @@ def load_topics(topics):
 
     return root_topic
 
+def lookup_question_by_number(schema, topic_num, question_num):
+    for topic_args in schema['topics']:
+        if int(topic_args['number']) == topic_num:
+            for question_args in topic_args['questions']:
+                if int(question_args['question_number']) == question_num:
+                    return question_args['id']
+    logger.error("Didn't find question number {} {}".format(topic_num, question_num))
+    return -1
+
 # Compute three sets:
 # The set of all question IDs
 # the set of all questions mentioned in 'next_questions' fields
@@ -126,17 +137,18 @@ def load_topics(topics):
 # noncontingent = allQuestions - contingent
 def find_noncontingent_questions(schema):
     all_questions = set()
-    lookup_question_by_number = {}
     for topic_args in schema['topics']:
         for question_args in topic_args['questions']:
             all_questions.add(question_args['id'])
-            question_number = int(question_args['question_number'])
-            lookup_question_by_number[question_number] = question_args['id']
 
     contingent = set()
     for dep in schema['dependencies']:
         if dep.next_question != '*':
-            question_id = lookup_question_by_number[int(dep.next_question)]
+            question_id = lookup_question_by_number(
+                schema,
+                int(dep.next_topic),
+                int(dep.next_question)
+            )
             contingent.add(question_id)
 
     # compute set difference
