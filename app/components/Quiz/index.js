@@ -5,7 +5,6 @@ import { Map as ImmutableMap } from 'immutable';
 import Color from 'color';
 
 import Question from 'components/Question';
-import HighlightTool from 'components/HighlightTool';
 import Project from 'components/Project';
 import ThankYou from 'components/ThankYou';
 import ShowHelp from 'components/ShowHelp';
@@ -320,16 +319,6 @@ export class Quiz extends Component {
 
   displayHighlighter(topic_highlights) {
     const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
-    const questionDB = this.props.db.entities.question;
-    const question_id = this.props.question_id;
-    let hint_type = 'NONE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
-    if (questionDB && questionDB[question_id]) {
-      hint_type = questionDB[question_id].hint_type;
-    };
-    if (this.props.displayHintSelectControl) {
-      hint_type = this.props.displayHintType;
-    };
-
     let editorState = EditorState.createEmpty();
     editorState = editorState.setText(article_text);
     let tokenOffsets = makeOffsetsFromWhiteSpace(article_text);
@@ -344,6 +333,16 @@ export class Quiz extends Component {
     );
     blockMaker.combineLayers(editorState.getLayers());
     let blocks = blockMaker.getBlocksWithContext(this.state.contextWords);
+
+    const questionDB = this.props.db.entities.question;
+    const question_id = this.props.question_id;
+    let hint_type = 'NONE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
+    if (questionDB && questionDB[question_id]) {
+      hint_type = questionDB[question_id].hint_type;
+    };
+    if (this.props.displayHintSelectControl) {
+      hint_type = this.props.displayHintType;
+    };
 
     const hint_sets_for_article = this.props.db.entities.hint;
     if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
@@ -360,19 +359,9 @@ export class Quiz extends Component {
     debug(layers);
     displayState.setDisplayLayers(layers);
 
-/*
-      const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
-
-      <HighlightTool text={abridged}
-                     colors={color_array}
-                     topics={answer_ids}
-                     currentTopicId={this.props.answer_id}
-                     hints_offsets={annotations}
-      />
-*/
     return (
       <div className="article-click-box"
-        onMouseUp={ () => handleMakeHighlight(blockMaker)}
+        onMouseUp={ () => handleMakeHighlight(blockMaker, this.props)}
       >
         <Spanner
           editorState={editorState}
