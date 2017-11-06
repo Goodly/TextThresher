@@ -38,17 +38,21 @@ export function loadHints(editorState, hint_offsets) {
   return editorState;
 }
 
-export function loadWorkingHighlights(editorState, highlights) {
+export function loadWorkingHighlights(editorState, highlights, answer_id) {
   let layerLabel = new QuizLayerLabel({
     layerType: QuizLayerTypes.ANSWER,
   });
+  let text = editorState.getText();
   let layer = editorState.createLayerState(layerLabel);
   highlights.forEach( (offset) => {
-    layer.addAnnotation({
-      answer_id: offset.topic,
-      start: offset.start,
-      end: offset.end,
-    });
+    if (offset.topic === answer_id) {
+      layer.addAnnotation({
+        answer_id: offset.topic,
+        start: offset.start,
+        end: offset.end,
+        extra: {textShouldBe: text.substring(offset.start, offset.end)},
+      });
+    };
   });
   return editorState;
 };
