@@ -119,15 +119,45 @@ def load_topics(topics):
 
     return root_topic
 
-# Return a dictionary keyed on topic id, return an array of question ids in that topic
-def make_question_lists(topics):
-    questions_by_topic_id = {}
-    for topic_args in topics:
-        question_ids = []
+# Compute three sets:
+# The set of all question IDs
+# the set of all questions mentioned in 'next_questions' fields
+# and return the set difference:
+# noncontingent = allQuestions - contingent
+def find_noncontingent_questions(schema):
+    all_questions = set()
+    lookup_question_by_number = {}
+    for topic_args in schema['topics']:
         for question_args in topic_args['questions']:
-            question_ids.append(question_args['id'])
-        questions_by_topic_id[topic_args['id']] = question_ids
-    return questions_by_topic_id
+            all_questions.add(question_args['id'])
+            question_number = int(question_args['question_number'])
+            lookup_question_by_number[question_number] = question_args['id']
+
+    contingent = set()
+    for dep in schema['dependencies']:
+        if dep.next_question != '*':
+            question_id = lookup_question_by_number[int(dep.next_question)]
+            contingent.add(question_id)
+
+    # compute set difference
+    noncontingent = all_questions - contingent
+    return noncontingent
+
+# Return a dictionary keyed on topic id, for each topic return an array of
+# the NON-CONTINGENT question ids in that topic
+def make_question_lists(schema):
+    noncontingent = find_noncontingent_questions(schema)
+    nc_questions_by_topic_id = {}
+    for topic_args in schema['topics']:
+        question_ids = set()
+        for question_args in topic_args['questions']:
+            question_ids.add(question_args['id'])
+        logger.info("Non-contingent questions for {} {}"
+                    .format(topic_args['id'], topic_args['name']))
+        logger.info(question_ids & noncontingent)
+        # compute set intersection
+        nc_questions_by_topic_id[topic_args['id']] = question_ids & noncontingent
+    return nc_questions_by_topic_id
 
 def load_dependencies(schema, root_topic):
     """
@@ -144,7 +174,7 @@ def load_dependencies(schema, root_topic):
     Dependency(topic=0, question=1, answer='01', next_topic=1, next_question='*')
     """
 
-    questions_by_topic_id = make_question_lists(schema['topics'])
+    nc_questions_by_topic_id = make_question_lists(schema)
 
     for dep in schema['dependencies']:
         if root_topic.order == dep.topic:
@@ -200,7 +230,8 @@ def load_dependencies(schema, root_topic):
             question_obj.save()
         elif answer_obj and not next_question_obj:
             # if Tx.Qx.A, then Ty.*
-            answer_obj.next_questions.extend(questions_by_topic_id[next_topic_obj.id])
+            next_questions = nc_questions_by_topic_id[next_topic_obj.id]
+            answer_obj.next_questions.extend(next_questions)
             answer_obj.save()
         else:
             logger.error("%s\nInvalid 'if' clause." % (dep,))
