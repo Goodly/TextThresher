@@ -130,12 +130,6 @@ def load_topics(topics):
 
     return root_topic
 
-def make_lookup_topic_id(schema):
-    lookup_topic_id = {}
-    for topic_args in schema['topics']:
-        lookup_topic_id[topic_args['topic_number']] = topic_args['id']
-    return lookup_topic_id
-
 # Create a dict of dicts for looking up database ids for Questions
 # using its topic number and question number, e.g. 2.04
 def make_lookup_topic_id(schema):
@@ -195,7 +189,7 @@ def make_question_lists(schema, noncontingent):
         logger.info(question_ids & noncontingent)
     return nc_questions_by_topic_id
 
-def load_dependencies(schema, root_topic):
+def load_dependencies(schema):
     """
     Loads dependencies into targeted answers.
     Must cover these scenarios:
@@ -300,7 +294,7 @@ def load_options(schema, root_topic):
 def load_schema(schema):
     # Load the topics, questions and answers of the schema
     root_topic = load_topics(schema['topics'])
-    load_dependencies(schema, root_topic)
+    load_dependencies(schema)
     load_options(schema, root_topic)
 
 def load_article(article):
