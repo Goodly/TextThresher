@@ -82,7 +82,8 @@ class ArticleSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ('id', 'answer_number', 'answer_content', 'next_questions')
+        fields = ('id', 'answer_number', 'answer_content', 'next_questions',
+                  'options')
 
 class QuestionSerializer(serializers.ModelSerializer):
     # A nested serializer for all the answers (if any)

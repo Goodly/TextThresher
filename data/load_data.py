@@ -23,7 +23,7 @@ from django.db import transaction
 
 from data import init_defaults
 from data.parse_document import parse_document
-from data.parse_schema import parse_schema, ParseSchemaException
+from data.parse_schema import parse_schema, ParseSchemaException, OPTION_TYPES
 
 from thresher.models import (Article, Topic, Question, Answer,
                              ArticleHighlight, HighlightGroup,
@@ -44,11 +44,16 @@ def load_answers(answers, question):
     # is vastly simplified if every question can be counted on to have
     # at least one answer with a unique ID, including
     # question_type == 'TEXT', 'DATE', or 'TIME'.
+    empty_options = {}
+    for option_type in OPTION_TYPES.values():
+        empty_options[option_type] = False
+
     if len(answers) == 0:
         answers.append({
             'answer_number': 1,
             'question': question,
-            'answer_content': 'placeholder answer for ' + question.question_type
+            'answer_content': 'placeholder answer for ' + question.question_type,
+            'options': empty_options
         })
         if question.question_type in ['RADIO', 'CHECKBOX']:
             logger.error("Question number {} of type {} in topic '{}' "
@@ -62,6 +67,7 @@ def load_answers(answers, question):
     # find the corresponding topic and question ids
     for answer_args in answers:
         answer_args['question'] = question
+        answer_args['options'] = empty_options
         # Create the answer in the database
         answer = Answer.objects.create(**answer_args)
         answer_args['id'] = answer.id
@@ -132,6 +138,13 @@ def make_lookup_topic_id(schema):
 
 # Create a dict of dicts for looking up database ids for Questions
 # using its topic number and question number, e.g. 2.04
+def make_lookup_topic_id(schema):
+    lookup_topic_id = {}
+    for topic_args in schema['topics']:
+        lookup_topic_id[topic_args['topic_number']] = topic_args['id']
+    return lookup_topic_id
+
+# Return a dictionary keyed on topic id, return an array of question ids in that topic
 def make_lookup_question_id(schema):
     lookup_question_id = {}
     for topic_args in schema['topics']:
@@ -257,10 +270,38 @@ def load_dependencies(schema, root_topic):
         else:
             raise SchemaLoadError("Line {}: Invalid 'if' clause.".format(dep))
 
+def load_options(schema, root_topic):
+    for option in schema['options']:
+        if root_topic.order == option.topic:
+            topic_obj = root_topic
+        else:
+            try:
+                topic_obj = Topic.objects.get(parent=root_topic,
+                                                order=option.topic)
+            except Topic.DoesNotExist:
+                logger.error("%s\nDidn't find topic number %d" % (option, option.topic,))
+                continue
+        try:
+            question_obj = Question.objects.get(topic=topic_obj,
+                                                question_number=option.question)
+        except Question.DoesNotExist:
+            logger.error("%s\nDidn't find question number %d" % (option, option.question,))
+            continue
+        try:
+            answer_obj = Answer.objects.get(question=question_obj,
+                                            answer_number=int(option.answer))
+        except Answer.DoesNotExist:
+            logger.error("%s\nDidn't find answer number %d" % (option, option.answer,))
+            continue
+
+        answer_obj.options[option.option] = True
+        answer_obj.save()
+
 def load_schema(schema):
     # Load the topics, questions and answers of the schema
     root_topic = load_topics(schema['topics'])
     load_dependencies(schema, root_topic)
+    load_options(schema, root_topic)
 
 def load_article(article):
     new_id = int(article['metadata']['article_number'])
