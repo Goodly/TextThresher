@@ -349,18 +349,19 @@ def load_annotations(article, article_obj):
 
     article_highlight = ArticleHighlight.objects.create(article=article_obj,
                                                         contributor=contributor)
-
     for tua_type, tuas in article['tuas'].iteritems():
         try:
             topic = Topic.objects.filter(name=tua_type)[0]
         except IndexError:
             # No analysis type loaded--create a dummy type.
+            next_order = Topic.objects.aggregate(Max('order'))['order__max'] + 1
             topic = Topic.objects.create(
                 name=tua_type,
+                order=next_order,
                 instructions='',
                 glossary='',
             )
-            print("made a dummy topic: %s" % tua_type)
+            print("No match for existing topic, so made a dummy topic: %s" % tua_type)
 #           raise ValueError("No TUA type '" + tua_type +
 #                            "' registered. Have you loaded the schemas?")
 

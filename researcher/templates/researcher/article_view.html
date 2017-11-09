@@ -2,18 +2,18 @@
 {% load static %}
 {% block title %} {{ page_title }} {% endblock %}
 {% block content %}
-  <div class="content-container">
+  <div class="article-viewer-container">
     <h1 class="main-label">
       {{ page_title }}
     </h1>
 
-    <div class="main-container">
+    <div class="article-viewer-content">
       <div id="react-root">
-        Howdy!
+        Loading...
       </div>
     </div>
     {% if debug_presenter %}
-      <div>
+      <div class="debug-info">
         Loading javascript from {{ articleview_debug_js }}<br>
         Use ?debugPresenter=true&amp;debugHost=url to set a different host.
       </div>
@@ -24,7 +24,7 @@
       </script>
     {% endif %}
     <script type="text/javascript">
-      thresher.articleView.loadArticle("{% url 'api:article_view' article.id %}");
+      thresher.articleView.loadArticle("{{ url_to_fetch_articles }}");
     </script>
   </div>
 {% endblock %}

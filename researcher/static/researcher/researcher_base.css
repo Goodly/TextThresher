@@ -94,6 +94,19 @@ a.actual-name {
     padding: 20px 40px;
 }
 
+.article-viewer-container {
+    padding: 20px 40px;
+}
+
+.article-viewer-content {
+    min-height: 200px;
+}
+
+.debug-info {
+    margin-top: 20px;
+    font-size: 12px;
+}
+
 h1.main-label {
     padding: 0;
     margin-top: 0;

@@ -1,0 +1,12 @@
+@import 'app/styles/_variables.scss';
+@import 'app/styles/_mixins.scss';
+
+.article-viewer {
+  width: 90%;
+
+  .article-click-box {
+    @include newspaper;
+    padding: 1em;
+    border: 1px solid silver;
+  }
+}
