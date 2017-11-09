@@ -61,6 +61,7 @@ title: Event type
 1.01.09 Voluntary Dissolution of a camp
 1.01.10 Strategic Violence
 1.01.11 Strategic Sabotage
+
 1.02 mc What did the crowd block?
 1.02.01 Sidewalk 
 1.02.02 Street 
@@ -68,6 +69,7 @@ title: Event type
 1.02.04 Airport 
 1.02.05 Shipping port 
 1.02.06 Other
+
 1.03 mc What type of event did the protesters disrupt?
 1.03.01 Political campaign
 1.03.02 Politician's speech
@@ -75,6 +77,7 @@ title: Event type
 1.03.04 Auction
 1.03.05 Country Club event
 1.03.06 Other
+
 1.04 mc What is the title of the 1% who is being protested against?
 1.04.01 CEO of a company
 1.04.02 City mayor
@@ -82,19 +85,21 @@ title: Event type
 1.04.04 State legislator
 1.04.05 U.S. president
 1.04.06 Other
+
 1.05 mc What type of strategic violence occurred?
 1.05.01 Kidnapping 
 1.05.02 Assassination 
 1.05.03 Bombing 
 1.05.04 Assault 
 1.05.05 Other
+
 1.06 mc What type of strategic sabotage occurred?
 1.06.01 Pre-planned vandalism 
 1.06.02 Pre-planned arson 
 1.06.03 Other
  
-if 1.01.05, then 1.02
-if 1.01.08, then 1.03
+if 1.01.04, then 1.02
+if 1.01.07, then 1.03
 if 1.01.10, then 1.05
 if 1.01.11, then 1.06
 if 1.03.*, then 1.04
