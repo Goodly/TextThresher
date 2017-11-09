@@ -25,8 +25,6 @@ const mapStateToProps = state => {
   return {
     currTask: state.quiz.currTask,
     db: state.quiz.db,
-    abridged: state.quiz.abridged,
-    abridged_highlights: state.quiz.abridged_highlights,
     queue: state.quiz.queue,
     question_id: state.quiz.curr_question_id,
     answer_id: state.quiz.curr_answer_id,
@@ -34,6 +32,7 @@ const mapStateToProps = state => {
     answer_colors: state.quiz.answer_colors,
     review: state.quiz.review,
     highlights: state.highlight.highlights,
+    selectedHighlight: state.highlight.selectedHighlight,
     task: state.task,
     saveAndNext: state.task.saveAndNext,
     displayState: state.task.displayState,

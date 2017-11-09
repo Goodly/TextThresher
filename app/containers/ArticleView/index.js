@@ -12,12 +12,13 @@ import Color from 'color';
 
 import { Spanner,
          EditorState,
-         displayLinesAsBlocks,
+         makeOffsetsFromLineBreaks,
+         makeBlocksFromOffsets,
        } from 'components/TextSpanner';
 import { sortLayersByTopicAndCase } from 'model/TopicLabel';
 import { loadAnnotatedArticle } from './convertToSpanner';
 import { ArticleMetaData } from 'components/ArticleMetaData';
-import { ArticleSlider } from 'components/ArticleSlider';
+import { Slider } from 'components/Slider';
 import { Pager } from 'components/Pager';
 
 const debug = require('debug')('thresher:ArticleView');
@@ -84,7 +85,8 @@ export class ArticleView extends React.Component {
           displayState = cache.displayState;
         } else {
           editorState = loadAnnotatedArticle(editorState, article);
-          displayState = displayLinesAsBlocks(displayState, article.text);
+          let blocks = makeBlocksFromOffsets(makeOffsetsFromLineBreaks(article.text));
+          displayState.setDisplayBlocks(blocks);
           this.cache.set(article_id, {editorState, displayState});
         };
         let layers = editorState.getLayers();
@@ -95,9 +97,9 @@ export class ArticleView extends React.Component {
         // TODO: Render layer list
         return (
           <div className="article-viewer">
-            <ArticleSlider
-              article_index={this.state.article_index}
-              article_ids={article_ids}
+            <Slider
+              index={this.state.article_index}
+              values={article_ids}
               onChange={(evt) => {
                 this.setIndex(Number(evt.target.value));
               }}

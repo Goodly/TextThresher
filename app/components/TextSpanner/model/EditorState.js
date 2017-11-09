@@ -13,6 +13,8 @@ export class EditorState {
   constructor() {
     this.setText = this._setText.bind(this);
     this.getText = this._getText.bind(this);
+    this.setTokenization = this._setTokenization.bind(this);
+    this.getTokenization = this._getTokenization.bind(this);
     this._contentState = new ContentState();
     this.createDisplayState = this._createDisplayState.bind(this);
     this._displayStateMap = new Map();
@@ -35,6 +37,15 @@ export class EditorState {
 
   _setText(text) {
     this._contentState.setText(text);
+    return this;
+  }
+
+  _getTokenization() {
+    return this._contentState.getTokenization();
+  }
+
+  _setTokenization(tokenOffsets) {
+    this._contentState.setTokenization(tokenOffsets);
     return this;
   }
 
@@ -71,14 +82,8 @@ export class EditorState {
     let charAnnotations = Array.from(new Array(text.length), (_, index) => new Array() );
     for (let layer of this._layerStateMap.values()) {
       for (let annotation of layer.getAnnotationList()) {
-        let start = annotation.start;
-        let end = annotation.end;
-        if (start < 0 || start >= text.length || end < 0 || end > text.length) {
-          throw new Error("Invalid offsets in annotation layer: ["
-            + String(start) + "," + String(end) + "], topic:"
-            + annotation.topicName);
-        };
-        for (let i=start; i < end; i++) {
+        annotation.validate(text);
+        for (let i=annotation.start; i < annotation.end; i++) {
           charAnnotations[i].push(annotation.key);
         };
       };
@@ -90,6 +95,10 @@ export class EditorState {
   // Cache by block key, as this result is a function
   // of the block.start and block.end values.
   _getSpans(block) {
+    let text = this.getText();
+    if (text.length === 0) {
+      return [];
+    };
     // If we already computed this, return the cached version
     if (this._spansForDisplayState.has(block.key)) {
       return this._spansForDisplayState.get(block.key);
@@ -99,7 +108,6 @@ export class EditorState {
       this.collectCharacterAnnotations();
     };
     let {start, end} = block;
-    let text = this.getText();
     if (start < 0 || start >= text.length || end < 0 || end > text.length) {
       throw new Error("Invalid offsets in block: ["
         + String(start) + "," + String(end) + "]");

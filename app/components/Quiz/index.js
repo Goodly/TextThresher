@@ -2,75 +2,38 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Map as ImmutableMap } from 'immutable';
+import Color from 'color';
 
 import Question from 'components/Question';
-import HighlightTool from 'components/HighlightTool';
 import Project from 'components/Project';
 import ThankYou from 'components/ThankYou';
 import ShowHelp from 'components/ShowHelp';
 import SelectHint from 'components/SelectHint';
 import { displayStates } from 'components/displaystates';
 
+import { Spanner,
+         EditorState,
+         BlockMaker,
+         makeOffsetsFromWhiteSpace,
+       } from 'components/TextSpanner';
+import { QuizLayerTypes, sortLayersByAnswerId } from 'model/QuizLayerLabel';
+import { loadTopicHighlights,
+         loadHints,
+         loadWorkingHighlights
+       } from './convertToSpanner';
+import { handleMakeHighlight } from
+  'components/TextSpanner/handlers/makeHighlight';
+
+const debug = require('debug')('thresher:Quiz');
+
 import { styles } from './styles.scss';
 
 const style = require('intro.js/introjs.css');
 import { introJs } from 'intro.js/intro.js';
 
-import { abridgeText,
-         getAnswerAnnotations } from 'components/Quiz/contextWords';
+import { Slider } from 'components/Slider';
 
-function eqSet(as, bs) {
-  if (as.size !== bs.size) return false;
-  for (var a of as) if (!bs.has(a)) return false;
-  return true;
-};
-
-function combineAnnotations(abridged, abridged_highlights, abridged_hints) {
-  let annotations = [];
-  if (abridged.length == 0) {
-    return annotations;
-  };
-  abridged_highlights.forEach( (offset) => {
-    let offset_style = offset.concat(['b']);
-    annotations.push(offset_style);
-  });
-  abridged_hints.forEach( (offset) => {
-    let offset_style = offset.concat(['i']);
-    annotations.push(offset_style);
-  });
-  // Now need to eliminate overlaps.
-  // For each character in text, create a Set. Add each style for that char
-  // to the set.
-  let textFormat = Array.from(new Array(abridged.length), (_, index) => new Set() );
-  for (let offset of annotations) {
-    for (let k=offset[0]; k < offset[1]; k++) {
-      textFormat[k].add(offset[3]);
-    };
-  };
-  // Now convert back to offset tuples [start, end, substring, style]
-  annotations = [];
-  let styleStart = 0;
-  let style=textFormat[styleStart];
-  for (let k=1; k < textFormat.length; k++) {
-    if ( ! eqSet(style, textFormat[k])) {
-      if (style.size > 0) {
-        //Convert set {'i','b'} to 'ib'
-        let textStyle = Array.from(style.values()).join('');
-        let textspan = abridged.substring(styleStart, k);
-        annotations.push([styleStart, k, textspan, textStyle]);
-      };
-      styleStart = k;
-      style=textFormat[styleStart];
-    };
-  };
-  // n.b. slight cheat - we know abridged ends in ... and that ... is never
-  // annotated, so we can ignore the last k.
-  if (abridged_hints.length > 0) {
-    console.log('annotations');
-    console.log(annotations);
-  };
-  return annotations;
-};
+const CONTEXT_WORD_VALUES = [0,1,2,3,4,5,6,7,8,9,10,12,20,50,100,200,400];
 
 function makeHighlightDB(highlights) {
   let highlightDB = new Map();
@@ -115,23 +78,28 @@ export class Quiz extends Component {
   constructor(props) {
     super(props);
 
+    this.wrapSpan = this.wrapSpan.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleDeleteKey = this.handleDeleteKey.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
     this.restartTutorial = this.restartTutorial.bind(this);
+    this.setContextWords = this.setContextWords.bind(this);
     this.intro = introJs();
     this.introStarted = false;
     this.state = {
       highlightsStyle: 'highlights-fixed',
+      contextWordsIndex: 4,
+      contextWords: CONTEXT_WORD_VALUES[10],
     };
   }
 
   static propTypes = {
     currTask: React.PropTypes.object,
     db: React.PropTypes.object,
-    abridged: React.PropTypes.string,
     queue: React.PropTypes.array,
     question_id: React.PropTypes.number,
     answer_id: React.PropTypes.number,
@@ -237,8 +205,7 @@ export class Quiz extends Component {
     const savedQuiz = {
       article_id,
       article_text,
-      abridged_text: this.props.abridged,
-      abridged_highlights: this.props.abridged_highlights,
+      highlights: this.props.highlights,
       highlight_group_id,
       savedAnswers,
     };
@@ -358,6 +325,21 @@ export class Quiz extends Component {
 
   displayHighlighter(topic_highlights) {
     const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
+    let editorState = EditorState.createEmpty();
+    editorState = editorState.setText(article_text);
+    let tokenOffsets = makeOffsetsFromWhiteSpace(article_text);
+    editorState = editorState.setTokenization(tokenOffsets);
+    editorState = loadTopicHighlights(editorState, topic_highlights);
+
+    // Calculate blocks with context words before we add hint layers.
+    let blockMaker = new BlockMaker();
+    blockMaker.setTokenization(
+      editorState.getText(),
+      editorState.getTokenization()
+    );
+    blockMaker.combineLayers(editorState.getLayers());
+    let blocks = blockMaker.getBlocksWithContext(this.state.contextWords);
+
     const questionDB = this.props.db.entities.question;
     const question_id = this.props.question_id;
     let hint_type = 'NONE'; // data.nlp_hint_types.py: 'WHO', 'HOW MANY', 'WHEN', 'NONE'
@@ -367,32 +349,58 @@ export class Quiz extends Component {
     if (this.props.displayHintSelectControl) {
       hint_type = this.props.displayHintType;
     };
+
     const hint_sets_for_article = this.props.db.entities.hint;
-    let hint_offsets = [];
     if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
-      hint_offsets = hint_sets_for_article[hint_type].offsets;
-      console.log('Found '+hint_offsets.length+' '+hint_type+' hints');
-      console.log(hint_offsets);
+      let hint_offsets = hint_sets_for_article[hint_type];
+      editorState = loadHints(editorState, hint_offsets);
+      debug('Found '+hint_offsets.offsets.length+' '+hint_type+' hints');
+      debug(hint_offsets);
     };
 
-    const { abridged, abridged_highlights, abridged_hints } = abridgeText(
-      article_text,
-      topic_highlights,
-      hint_offsets
-    );
+    editorState = loadWorkingHighlights(editorState,
+                                        this.props.highlights,
+                                        this.props.answer_id);
 
-    let annotations = combineAnnotations(abridged, abridged_highlights, abridged_hints);
-
-    const { color_array, answer_ids } = getAnswerAnnotations(this.props.answer_colors);
+    let displayState = editorState.createDisplayState();
+    displayState.setDisplayBlocks(blocks);
+    let layers = editorState.getLayers();
+    layers.sort(sortLayersByAnswerId);
+    debug(layers);
+    displayState.setDisplayLayers(layers);
 
     return (
-      <HighlightTool text={abridged}
-                     colors={color_array}
-                     topics={answer_ids}
-                     currentTopicId={this.props.answer_id}
-                     hints_offsets={annotations}
-      />
+      <div className="article-click-box"
+        onMouseUp={ () => handleMakeHighlight(blockMaker, this.props)}
+        onKeyDown={ this.handleDeleteKey }
+        tabIndex="0"
+      >
+        <Spanner
+          editorState={editorState}
+          displayState={displayState}
+          blockPropsFn={getBlockProps}
+          mergeStyleFn={ (orderedLayers) => {
+            return getStyle(orderedLayers, this.props.answer_colors);
+          }}
+          wrapSpanFn={this.wrapSpan}
+        />
+      </div>
     );
+  }
+
+  wrapSpan(reactSpan, orderedLayers) {
+    // Re-create the old curHL.source data structure for now.
+    let sources = orderedLayers.map( (layer) => ({
+      start: layer.annotation.start,
+      end: layer.annotation.end,
+      top: layer.annotation.answer_id,
+      text: layer.annotation.extra.textShouldBe
+    }));
+    return React.cloneElement(reactSpan, {
+      onClick: (e) => {
+        this.handleSelect(sources, e);
+      }
+    });
   }
 
   handleScroll() {
@@ -430,6 +438,33 @@ export class Quiz extends Component {
     }
   }
 
+  handleDeleteKey(e) {
+    // Don't steal backspace and delete key from input elements!
+    if (document.activeElement.nodeName === "INPUT") {
+      return;
+    };
+    if (e.keyCode == 46 || e.keyCode == 8) {
+      if (this.props.selectedHighlight) {
+        if (this.props.selectedHighlight.length > 0) {
+          this.props.deleteHighlight(this.props.selectedHighlight);
+        }
+      }
+    }
+  }
+
+  handleSelect(source, e) {
+    if (source.length != 0) {
+      this.props.selectHighlight(source);
+    }
+  }
+
+  setContextWords(index) {
+    this.setState({
+      contextWordsIndex: index,
+      contextWords: CONTEXT_WORD_VALUES[index]
+    });
+  }
+
   render() {
     if (this.props.displayState === displayStates.TASKS_DONE) {
       return <ThankYou />
@@ -439,7 +474,7 @@ export class Quiz extends Component {
       return <ShowHelp closeHelp={ () => { this.props.showHelp(false); } } />
     }
 
-    var topic_highlights = this.props.currTask ? this.props.currTask.highlights[0].offsets : [];
+    var topic_highlights = this.props.currTask ? this.props.currTask.highlights : [];
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 
     let saveAndNextButton =  <div/>;
@@ -471,6 +506,14 @@ export class Quiz extends Component {
             <Project />
             { question_list }
             { saveAndNextButton }
+            <Slider
+              index={this.state.contextWordsIndex}
+              values={CONTEXT_WORD_VALUES}
+              onChange={(evt) => {
+                this.setContextWords(Number(evt.target.value));
+              }}
+              style={{marginTop: '10px'}}
+            />
             <SelectHint
               currTask={this.props.currTask}
               onChange={ (evt) => { this.props.setDisplayHintType(evt.target.value); }}
@@ -479,4 +522,44 @@ export class Quiz extends Component {
         </div>
     )
   }
+}
+
+function getStyle(orderedLayers, answer_colors) {
+  // orderedLayers is an array of objects with keys:
+  // {order, layer, annotation}
+  let style = {};
+  for (let layer of orderedLayers) {
+    let layerType = layer.layer.layerLabel.layerType;
+    if (layerType === QuizLayerTypes.TOPIC) {
+      Object.assign(style, { fontWeight: 'bold' });
+    }
+    if (layerType === QuizLayerTypes.HINT) {
+      Object.assign(style, { fontStyle: 'italic' });
+    }
+    if (layerType === QuizLayerTypes.ANSWER) {
+      if (answer_colors.has(layer.annotation.answer_id)) {
+        let bgColor = Color(answer_colors.get(layer.annotation.answer_id));
+        if (bgColor.dark()) {
+          bgColor = bgColor.fade(0.5);
+        };
+        Object.assign(style, { backgroundColor: bgColor.rgb().string() });
+      };
+    };
+  };
+  return style;
+}
+
+// sequence_number can be used for even/odd styling...
+function getBlockProps(block, sequence_number) {
+  let props = {};
+  switch (block.blockType) {
+    case 'unstyled': {
+      if (sequence_number % 2) {
+        props['style'] = { backgroundColor: 'whitesmoke' };
+      } else {
+        props['style'] = { backgroundColor: 'white' };
+      };
+    }
+  }
+  return props;
 }
