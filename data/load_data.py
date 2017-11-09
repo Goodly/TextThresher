@@ -138,17 +138,18 @@ def make_lookup_topic_id(schema):
 
 # Create a dict of dicts for looking up database ids for Questions
 # using its topic number and question number, e.g. 2.04
+def make_lookup_topic_id(schema):
+    lookup_topic_id = {}
+    for topic_args in schema['topics']:
+        lookup_topic_id[topic_args['topic_number']] = topic_args['id']
+    return lookup_topic_id
+
+# Return a dictionary keyed on topic id, return an array of question ids in that topic
 def make_lookup_question_id(schema):
     lookup_question_id = {}
     for topic_args in schema['topics']:
         topic_number = topic_args['topic_number']
         lookup_question_id.setdefault(topic_number, {})
-
-# Return a dictionary keyed on topic id, return an array of question ids in that topic
-def make_question_lists(topics):
-    questions_by_topic_id = {}
-    for topic_args in topics:
-        question_ids = []
         for question_args in topic_args['questions']:
             question_number = question_args['question_number']
             lookup_question_id[topic_number][question_number] = question_args['id']
