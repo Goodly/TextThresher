@@ -24,7 +24,7 @@ QUESTION_TYPES = {'mc' : 'RADIO',
                   'st' : 'SELECT_SUBTOPIC'}
 
 Dependency = namedtuple('Dependency',
-    ['topic', 'question', 'answer', 'next_topic', 'next_question'])
+    ['topic', 'question', 'answer', 'next_topic', 'next_question', 'linenum'])
 
 class SimpleParseException(Exception):
     pass
@@ -101,11 +101,11 @@ def parse_schema(schema_file):
                 elif type_id.lower() == GLOSSARY_ID:
                     parse_glossary(data, current_topic)
                 elif type_id.lower() == DEPENDENCY_ID:
-                    parse_dependency(data, parsed_schema)
+                    parse_dependency(data, parsed_schema, linecount)
                 elif type_id[0].isdigit():
-                    topic_id = parse_question_entry(type_id, data, current_topic)
-                    if current_topic['id'] is None:
-                        current_topic['id'] = topic_id
+                    topic_number = parse_question_entry(type_id, data, current_topic)
+                    if current_topic['topic_number'] is None:
+                        current_topic['topic_number'] = topic_number
                 else:
                     # type_id is wrong or split lines returned wrong stuff
                     msg = "Invalid type_id {}".format(type_id)
@@ -123,10 +123,11 @@ def parse_schema(schema_file):
     return parsed_schema
 
 def parse_title(title, output):
-    # id will be set by next question encountered
+    # topic_number will be set by next question encountered
     current_topic = {
         'id': None,
         'name': title,
+        'topic_number': None,
         'questions': [],
         'glossary': {},
         'instructions': '',
@@ -141,7 +142,7 @@ def parse_glossary(glossary_entry, current_topic):
     term, definition = glossary_entry.split(':', 1)
     current_topic['glossary'][term.strip()] = definition.strip()
 
-def parse_dependency(dependency, output):
+def parse_dependency(dependency, output, linecount):
 
     # Parsing three formats:
     # if t.q.a, then t.q
@@ -154,29 +155,26 @@ def parse_dependency(dependency, output):
     splitted_dependency = dependency.split(', ')
     source_phrase = splitted_dependency[0]
     target_phrase = splitted_dependency[1].split(' ')[1]
-    source_topic_id, source_question_id, source_answer_id = (
+    source_topic_num, source_question_num, source_answer_num = (
         source_phrase.split('.'))
     target_topic, target_question = target_dependency = target_phrase.split('.')
 
-    source_topic_id = int(source_topic_id)
-    source_question_id = int(source_question_id)
-    target_topic = int(target_topic)
-
-    if not unicode(source_answer_id).isnumeric() and source_answer_id != '*':
+    if not unicode(source_answer_num).isnumeric() and source_answer_num != '*':
         raise SimpleParseException(
             "Expected answer number or wildcard '*'. Found '{}'"
-            .format(source_answer_id)
+            .format(source_answer_num)
         )
     if not unicode(target_question).isnumeric() and target_question != '*':
         raise SimpleParseException(
             "Expected question number or wildcard '*'. Found '{}'"
             .format(target_question)
         )
-    output['dependencies'].append(Dependency(source_topic_id,
-                                             source_question_id,
-                                             source_answer_id,
+    output['dependencies'].append(Dependency(source_topic_num,
+                                             source_question_num,
+                                             source_answer_num,
                                              target_topic,
-                                             target_question))
+                                             target_question,
+                                             linecount))
 
 def infer_hint_type(question):
     match = re.search("WHERE|WHO|HOW MANY|WHEN", question, re.IGNORECASE)
@@ -185,12 +183,12 @@ def infer_hint_type(question):
     else:
         return 'NONE';
 
-def parse_question_entry(entry_id, data, current_topic):
-    type_bits = entry_id.split('.')
+def parse_question_entry(entry_num, data, current_topic):
+    type_bits = entry_num.split('.')
     num_bits = len(type_bits)
     if num_bits == 2:
-        topic_id, question_id = type_bits
-        question_id = type_bits[1]
+        topic_number, question_num = type_bits
+        question_num = type_bits[1]
         question_type, question_text = data.split(None, 1)
         hint_type = infer_hint_type(question_text)
         if question_type in QUESTION_TYPES:
@@ -202,7 +200,7 @@ def parse_question_entry(entry_id, data, current_topic):
                 .format(valid_types, question_type)
             )
         current_topic['questions'].append({
-            'question_number': question_id,
+            'question_number': question_num,
             'question_text': question_text,
             'question_type': question_type,
             'answers': [],
@@ -210,18 +208,18 @@ def parse_question_entry(entry_id, data, current_topic):
 
         })
     elif num_bits == 3:
-        topic_id, question_id, answer_id = type_bits
-        question = [q for q in current_topic['questions'] if q['question_number'] == question_id][0]
+        topic_number, question_num, answer_num = type_bits
+        question = [q for q in current_topic['questions'] if q['question_number'] == question_num][0]
         question['answers'].append({
-            'answer_number': answer_id,
+            'answer_number': answer_num,
             'answer_content': data,
         })
     else:
         raise SimpleParseException(
             "Expected topic.question or topic.question.answer. Found '{}'"
-            .format(entry_id)
+            .format(entry_num)
         )
-    return topic_id
+    return topic_number
 
 def print_data(output):
     import pprint; pprint.pprint(output)

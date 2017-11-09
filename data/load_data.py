@@ -31,6 +31,9 @@ from thresher.models import (Article, Topic, Question, Answer,
 
 HIGH_ID = 20000
 
+class SchemaLoadError(Exception):
+    pass
+
 def load_answers(answers, question):
     """
     Creates the answers instances for a given question.
@@ -72,7 +75,7 @@ def load_questions(questions, topic):
     for question_args in questions:
         # Create the topic
         question_args['topic'] = topic
-        # Store the answers for later
+        # Set answers aside, put them back after creating question
         answers = question_args.pop('answers')
         # Create the Question
         question = Question.objects.create(**question_args)
@@ -89,10 +92,11 @@ def load_topics(topics):
     """
     root_topic = None
     for topic_args in topics:
-        # Get the questions to add them later
+        topic_number = topic_args.pop('topic_number')
+        # Use topic number for sort order
+        topic_args['order'] = int(topic_number)
+        # Set questions aside, put them back after creating topic
         questions = topic_args.pop('questions')
-        # Change id to order
-        topic_args['order'] = int(topic_args.pop('id'))
         # Set reference to parent (will be None for first topic...)
         topic_args['parent'] = root_topic
         # topics should already have their own glossary and instructions
@@ -111,6 +115,7 @@ def load_topics(topics):
             Topic.objects.filter(parent=topic).delete()
 
         topic_args['id'] = topic.id
+        topic_args['topic_number'] = topic_number
         if root_topic is None:
             root_topic = topic
         load_questions(questions, topic)
@@ -119,15 +124,63 @@ def load_topics(topics):
 
     return root_topic
 
-# Return a dictionary keyed on topic id, return an array of question ids in that topic
-def make_question_lists(topics):
-    questions_by_topic_id = {}
-    for topic_args in topics:
-        question_ids = []
+def make_lookup_topic_id(schema):
+    lookup_topic_id = {}
+    for topic_args in schema['topics']:
+        lookup_topic_id[topic_args['topic_number']] = topic_args['id']
+    return lookup_topic_id
+
+# Create a dict of dicts for looking up database ids for Questions
+# using its topic number and question number, e.g. 2.04
+def make_lookup_question_id(schema):
+    lookup_question_id = {}
+    for topic_args in schema['topics']:
+        topic_number = topic_args['topic_number']
+        lookup_question_id.setdefault(topic_number, {})
         for question_args in topic_args['questions']:
-            question_ids.append(question_args['id'])
-        questions_by_topic_id[topic_args['id']] = question_ids
-    return questions_by_topic_id
+            question_number = question_args['question_number']
+            lookup_question_id[topic_number][question_number] = question_args['id']
+    return lookup_question_id
+
+# Compute three sets:
+# The set of all question IDs
+# the set of all questions mentioned in 'next_questions' fields
+# and return the set difference:
+# noncontingent = allQuestions - contingent
+def find_noncontingent_questions(schema, lookup_question_id):
+    all_questions = set()
+    for topic_args in schema['topics']:
+        for question_args in topic_args['questions']:
+            all_questions.add(question_args['id'])
+
+    contingent = set()
+    for dep in schema['dependencies']:
+        if dep.next_question != '*':
+            try:
+                question_id = lookup_question_id[dep.next_topic][dep.next_question]
+                contingent.add(question_id)
+            except KeyError:
+                raise SchemaLoadError("Line {}: Didn't find id for question number {}.{}"
+                                      .format(dep.linnum, dep.next_topic, dep.next_question))
+
+    # compute set difference
+    noncontingent = all_questions - contingent
+    return noncontingent
+
+# Return a dictionary keyed on topic id, for each topic return an array of
+# the NON-CONTINGENT question ids in that topic
+def make_question_lists(schema, noncontingent):
+    nc_questions_by_topic_id = {}
+    for topic_args in schema['topics']:
+        question_ids = set()
+        for question_args in topic_args['questions']:
+            question_ids.add(question_args['id'])
+        # compute set intersection
+        nc_questions_by_topic_id[topic_args['id']] = question_ids & noncontingent
+        logger.info("Non-contingent questions for {} {}"
+                    .format(topic_args['topic_number'], topic_args['name']))
+        logger.info(question_ids & noncontingent)
+    return nc_questions_by_topic_id
 
 def load_dependencies(schema, root_topic):
     """
@@ -135,75 +188,74 @@ def load_dependencies(schema, root_topic):
     Must cover these scenarios:
 
     if 1.01.05, then 1.02
-    Dependency(topic=1, question=1, answer='05', next_topic=1, next_question=2),
+    Dependency(topic='1', question='1', answer='05', next_topic='1', next_question='2'),
 
     if 1.03.*, then 1.04
-    Dependency(topic=1, question=3, answer='*', next_topic=1, next_question=4)
+    Dependency(topic='1, question='3', answer='*', next_topic='1', next_question='4')
 
     if 0.01.01, then 1.*
-    Dependency(topic=0, question=1, answer='01', next_topic=1, next_question='*')
+    Dependency(topic='0', question='1', answer='01', next_topic='1', next_question='*')
     """
 
-    questions_by_topic_id = make_question_lists(schema['topics'])
+    # The schema dependencies data structure uses topic and question
+    # identifiers like '2' or '2.04' that need to be translated to database ids.
+    lookup_topic_id = make_lookup_topic_id(schema)
+    lookup_question_id = make_lookup_question_id(schema)
+    noncontingent = find_noncontingent_questions(schema, lookup_question_id)
+    nc_questions_by_topic_id = make_question_lists(schema, noncontingent)
 
     for dep in schema['dependencies']:
-        if root_topic.order == dep.topic:
-            topic_obj = root_topic
-        else:
-            try:
-                topic_obj = Topic.objects.get(parent=root_topic,
-                                              order=dep.topic)
-            except Topic.DoesNotExist:
-                logger.error("%s\nDidn't find topic number %d" % (dep, dep.topic,))
-                continue
-
-        try:
-            question_obj = Question.objects.get(topic=topic_obj,
-                                                question_number=dep.question)
-        except Question.DoesNotExist:
-            logger.error("%s\nDidn't find question number %d" % (dep, dep.question,))
-            continue
-
+        question_obj = None
         answer_obj = None
-        if dep.answer != '*':
-            # This answer activates this next_question
+        try:
+            question_id = lookup_question_id[dep.topic][dep.question]
+        except KeyError:
+            raise SchemaLoadError("Line {}: Didn't find id for question number {}.{}"
+                                  .format(dep.linenum, dep.topic, dep.question))
+        # If answer is a wildcard, look up the question, else the answer
+        if dep.answer == '*':
+            # if Tx.Qx.*
             try:
-                answer_obj = Answer.objects.get(question=question_obj,
+                question_obj = Question.objects.get(id=question_id)
+            except Question.DoesNotExist:
+                raise SchemaLoadError("Line {}: Didn't find question number {}"
+                                      .format(dep.linenum, dep.question))
+        else:
+            # if Tx.Qx.A
+            try:
+                answer_obj = Answer.objects.get(question_id=question_id,
                                                 answer_number=int(dep.answer))
             except Answer.DoesNotExist:
-                logger.error("%s\nDidn't find answer number %d" % (dep, dep.answer,))
-                continue
+                raise SchemaLoadError("Line {}: Didn't find answer number {}"
+                                      .format(dep.linenum, dep.answer))
 
-        try:
-            next_topic_obj = Topic.objects.get(parent=root_topic,
-                                               order=dep.next_topic)
-        except Topic.DoesNotExist:
-            logger.error("%s\nDidn't find next topic number %d" % (dep, dep.next_topic,))
-            continue
-
-        next_question_obj = None
-        if dep.next_question != '*':
+        if dep.next_question == '*':
+            # then Ty.*
+            next_question_id = None
+        else:
+            # then Ty.Qy
             try:
-                next_question_obj = Question.objects.get(topic=next_topic_obj,
-                                    question_number=int(dep.next_question))
-            except Question.DoesNotExist:
-                logger.error("%s\nDidn't find next question number %d" % (dep, dep.next_question,))
-                continue
+                next_question_id = lookup_question_id[dep.next_topic][dep.next_question]
+            except KeyError:
+                raise SchemaLoadError("Line {}: Didn't find id for question number {}.{}"
+                                      .format(dep.linenum, dep.next_topic, dep.next_question))
 
-        if answer_obj and next_question_obj:
+        if answer_obj and next_question_id:
             # if Tx.Qx.A, then Ty.Qy
-            answer_obj.next_questions.append(next_question_obj.id)
+            answer_obj.next_questions.append(next_question_id)
             answer_obj.save()
-        elif not answer_obj and next_question_obj:
+        elif not answer_obj and next_question_id:
             # if Tx.Qx.*, then Ty.Qy
-            question_obj.next_questions.append(next_question_obj.id)
+            question_obj.next_questions.append(next_question_id)
             question_obj.save()
-        elif answer_obj and not next_question_obj:
+        elif answer_obj and not next_question_id:
             # if Tx.Qx.A, then Ty.*
-            answer_obj.next_questions.extend(questions_by_topic_id[next_topic_obj.id])
+            next_topic_id = lookup_topic_id[dep.next_topic]
+            next_questions = nc_questions_by_topic_id[next_topic_id]
+            answer_obj.next_questions.extend(next_questions)
             answer_obj.save()
         else:
-            logger.error("%s\nInvalid 'if' clause." % (dep,))
+            raise SchemaLoadError("Line {}: Invalid 'if' clause.".format(dep))
 
 def load_schema(schema):
     # Load the topics, questions and answers of the schema
@@ -294,7 +346,7 @@ def save_exception_message(e, orig_filename):
     timestamp = datetime.datetime.now(pytz.utc)
     logger.error("{} while loading {} at {:%Y-%m-%d %H:%M:%S %Z}"
                  .format(e.message, orig_filename, timestamp))
-    ParserError.objects.create(message=e.message, errtype=e.errtype,
+    ParserError.objects.create(message=e.message,
                                file_name=orig_filename, linenum=0,
                                timestamp=timestamp)
 
@@ -307,6 +359,8 @@ def load_schema_atomic(orig_filename, actual_filepath):
         e.file_name = orig_filename
         e.log()
         save_parse_exception_message(e)
+    except SchemaLoadError as e:
+        save_exception_message(e, orig_filename)
     except ValidationError as e:
         save_exception_message(e, orig_filename)
 
