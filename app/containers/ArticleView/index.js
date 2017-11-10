@@ -112,6 +112,7 @@ export class ArticleView extends React.Component {
                 displayState={displayState}
                 blockPropsFn={getBlockProps}
                 mergeStyleFn={this.colorCache.getStyleFn}
+                wrapSpanFn={wrapSpan}
               />
             </div>
           </div>
@@ -174,6 +175,15 @@ class ConsistentColors {
     };
     return style;
   };
+}
+
+function wrapSpan(reactSpan, orderedLayers) {
+  let titleList = orderedLayers.map( (ola) => ola.annotation.topicName );
+  titleList = titleList.filter( (topicName) => topicName !== '' );
+  let title = titleList.join(', ');
+  return React.cloneElement(reactSpan, {
+    title,
+  });
 }
 
 // sequence_number can be used for even/odd styling...

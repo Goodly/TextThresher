@@ -397,7 +397,11 @@ export class Quiz extends Component {
       top: layer.annotation.answer_id,
       text: layer.annotation.extra.textShouldBe
     }));
+    let titleList = orderedLayers.map( (ola) => ola.annotation.topicName );
+    titleList = titleList.filter( (topicName) => topicName !== '' );
+    let title = titleList.join(', ');
     return React.cloneElement(reactSpan, {
+      title,
       onClick: (e) => {
         this.handleSelect(sources, e);
       }

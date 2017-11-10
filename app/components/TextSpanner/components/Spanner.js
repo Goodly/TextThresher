@@ -38,14 +38,11 @@ export class Spanner extends React.Component {
       return (spans.map( (span, i) => {
         let orderedLayers = displayState.getOrderedLayersFor(span.spanAnnotations);
         let mergedStyle = mergeStyleFn(orderedLayers);
-        let titleList = orderedLayers.map( (ola) => ola.annotation.topicName );
-        let title = titleList.join(', ');
         return (wrapSpanFn(
           <span key={span.key}
                 data-offset-start={span.start}
                 data-offset-end={span.end}
-                style={mergedStyle}
-                title={title}>
+                style={mergedStyle}>
             {text.substring(span.start, span.end)}
           </span>,
           orderedLayers
