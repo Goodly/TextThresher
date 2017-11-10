@@ -92,7 +92,7 @@ export class Quiz extends Component {
     this.introStarted = false;
     this.state = {
       highlightsStyle: 'highlights-fixed',
-      contextWordsIndex: 4,
+      contextWordsIndex: 10,
       contextWords: CONTEXT_WORD_VALUES[10],
     };
   }
@@ -519,6 +519,9 @@ export class Quiz extends Component {
               }}
               style={{marginTop: '10px'}}
             />
+            <div className="contextWordControlHeader">
+              Number of context words to show: {CONTEXT_WORD_VALUES[this.state.contextWordsIndex]}
+            </div>
             <SelectHint
               currTask={this.props.currTask}
               onChange={ (evt) => { this.props.setDisplayHintType(evt.target.value); }}
