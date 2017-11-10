@@ -65,8 +65,12 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
 
     # Set up Prefetch that will cache just the highlights matching
     # this topic to article.highlight_taskruns[n].highlightsForTopic
-    topicHighlights = HighlightGroup.objects.filter(topic=topic)
     exclude_ids = []
+
+    # Pick the contributor based on what's selected in the GUI.
+    contributor_id = project.task_config['contributor_id']
+    topicHighlights = HighlightGroup.objects.filter(topic=topic,
+        article_highlight__contributor=contributor_id)
 
     # Filter the highlights based on the min tokens provided on project creation
     min_tokens_per_highlight = project.task_config['min_tokens']
