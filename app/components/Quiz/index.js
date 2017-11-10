@@ -264,7 +264,7 @@ export class Quiz extends Component {
 
     var rootTopicName = '';
     for(var i = 0; i < topic.length; i++) {
-      // Topics are sorted by their "order" field in ascending order.
+      // Topics are sorted by their topic_number field in ascending order.
       // The root topic is imported as order 0. So we're going to find
       // it first before any subtopic.
       if (this.props.currTask.topTopicId === topic[i].id) {

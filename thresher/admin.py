@@ -56,7 +56,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'article_number', metadata_filename)
+    list_display = ('id', 'batch_name', 'article_number', metadata_filename)
 
     actions = ['view_articles']
 
@@ -77,7 +77,7 @@ class TopicAdmin(admin.ModelAdmin):
             return "-"
     getParent.short_description = 'Parent'
 
-    list_display = ('id', 'getParent', 'order', 'name')
+    list_display = ('id', 'getParent', 'namespace', 'topic_number', 'name')
 
 
 class QuestionAdmin(admin.ModelAdmin):

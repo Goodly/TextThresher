@@ -54,18 +54,18 @@ class SubmittedAnswerSerializer(serializers.ModelSerializer):
 
 class HighlightGroupSerializer(serializers.ModelSerializer):
     topic_name = serializers.SerializerMethodField()
-    topic_order = serializers.SerializerMethodField()
+    topic_number = serializers.SerializerMethodField()
 
     def get_topic_name(self, obj):
         return obj.topic.name
 
-    def get_topic_order(self, obj):
-        return obj.topic.order
+    def get_topic_number(self, obj):
+        return obj.topic.topic_number
 
     class Meta:
         model = HighlightGroup
         fields = ('id', 'article_highlight', 'topic',
-                   'topic_name', 'topic_order',
+                   'topic_name', 'topic_number',
                    'case_number', 'offsets')
 
 class ArticleHighlightSerializer(serializers.ModelSerializer):
@@ -123,13 +123,13 @@ class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = ('id', 'parent', 'name',
-                  'order', 'glossary', 'instructions',
+                  'topic_number', 'glossary', 'instructions',
                   'questions')
 
 class RootTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
-        fields = ('id', 'name', 'order', 'glossary', 'instructions')
+        fields = ('id', 'name', 'topic_number', 'glossary', 'instructions')
 
 class NLPHintSerializer(serializers.ModelSerializer):
     class Meta:

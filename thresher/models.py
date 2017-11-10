@@ -153,8 +153,14 @@ class Task(models.Model):
 
 # Articles containing text for analysis
 class Article(models.Model):
-    # A number assigned by researcher. Not the autofield.
-    article_number = models.IntegerField(null=True)
+    # Mandatory article number assigned by researcher.
+    article_number = models.IntegerField(unique=True)
+
+    # batch_name is used to group articles into sets so they can be
+    # selected as groups for creating tasks. If the articles come from
+    # a directory hierarchy, it could be useful to store the directory
+    # path for the source article in this field.
+    batch_name = models.TextField(default="", db_index=True)
 
     # raw article text
     text = models.TextField()
@@ -176,8 +182,13 @@ class Topic(models.Model):
     # The name of the topic
     name = models.TextField()
 
-    # The order of a leaf-topic
-    order = models.IntegerField(null=True)
+    # Plan to replace parent/child hierarchy with a namespace
+    # Likely will be the filename of the source schema
+    namespace = models.CharField(default="", max_length=64)
+
+    # The order topics in this namespace are presented.
+    # renamed from 'order'
+    topic_number = models.IntegerField()
 
     # Glossary related to the topic under analysis
     glossary = JSONField(default={}) # as a JSON map
@@ -196,20 +207,20 @@ class Topic(models.Model):
     def getTopicTree(self):
         """ returns the topic with all levels of its subtopic tree """
         topicQuery = Topic.objects.raw("""
-            WITH RECURSIVE subtopic(id, parent_id, name, "order",
+            WITH RECURSIVE subtopic(id, parent_id, name, topic_number,
                                     glossary, instructions)
             AS (
-                SELECT id, parent_id, name, "order",
+                SELECT id, parent_id, name, topic_number,
                        glossary, instructions
                 FROM thresher_topic WHERE id=%s
               UNION ALL
-                SELECT t.id, t.parent_id, t.name, t.order,
+                SELECT t.id, t.parent_id, t.name, t.topic_number,
                        t.glossary, t.instructions
                 FROM subtopic, thresher_topic t
                 WHERE t.parent_id = subtopic.id
             )
-            SELECT id, parent_id, name, "order", glossary, instructions
-            FROM subtopic ORDER BY "order" LIMIT 500;
+            SELECT id, parent_id, name, topic_number, glossary, instructions
+            FROM subtopic ORDER BY topic_number LIMIT 500;
         """, [self.id])
         # Force query to execute and generate Topic models array
         return topicQuery[:]

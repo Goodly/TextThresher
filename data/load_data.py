@@ -98,9 +98,6 @@ def load_topics(topics):
     """
     root_topic = None
     for topic_args in topics:
-        topic_number = topic_args.pop('topic_number')
-        # Use topic number for sort order
-        topic_args['order'] = int(topic_number)
         # Set questions aside, put them back after creating topic
         questions = topic_args.pop('questions')
         # Set reference to parent (will be None for first topic...)
@@ -121,7 +118,6 @@ def load_topics(topics):
             Topic.objects.filter(parent=topic).delete()
 
         topic_args['id'] = topic.id
-        topic_args['topic_number'] = topic_number
         if root_topic is None:
             root_topic = topic
         load_questions(questions, topic)
@@ -266,12 +262,12 @@ def load_dependencies(schema):
 
 def load_options(schema, root_topic):
     for option in schema['options']:
-        if root_topic.order == option.topic:
+        if root_topic.topic_number == option.topic:
             topic_obj = root_topic
         else:
             try:
                 topic_obj = Topic.objects.get(parent=root_topic,
-                                                order=option.topic)
+                                              topic_number=option.topic)
             except Topic.DoesNotExist:
                 logger.error("%s\nDidn't find topic number %d" % (option, option.topic,))
                 continue
@@ -348,10 +344,11 @@ def load_annotations(article, article_obj):
             topic = Topic.objects.filter(name=tua_type)[0]
         except IndexError:
             # No analysis type loaded--create a dummy type.
-            next_order = Topic.objects.aggregate(Max('order'))['order__max'] + 1
+            last_number = Topic.objects.aggregate(Max('topic_number'))
+            next_number = last_number['topic_number__max'] + 1
             topic = Topic.objects.create(
                 name=tua_type,
-                order=next_order,
+                topic_number=next_number,
                 instructions='',
                 glossary='',
             )
