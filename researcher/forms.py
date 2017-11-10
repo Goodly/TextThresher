@@ -1,10 +1,9 @@
 from django.conf import settings
 from django import forms
-from django.forms.widgets import SelectMultiple, HiddenInput, TextInput, Textarea
-from django.forms.widgets import SelectMultiple, HiddenInput
-from django.forms.widgets import TextInput, Textarea
+from django.forms.widgets import (Select, SelectMultiple, HiddenInput,
+                                  TextInput, Textarea)
 
-from thresher.models import TASK_TYPE, Topic, Project
+from thresher.models import TASK_TYPE, Topic, Project, Contributor
 
 help_with_annotations = "Check this box to import any existing annotations and topics embedded in the articles."
 class UploadArticlesForm(forms.Form):
@@ -24,6 +23,10 @@ class SelectTopicsField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, t):
         return t.name
 
+class SelectContributorId(forms.ModelChoiceField):
+    def label_from_instance(self, c):
+        return c.__unicode__()
+
 class NLPArticlesForm(forms.Form):
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
@@ -39,6 +42,8 @@ help_select_topics = ("The selected topics will be used for task generation. <br
                       'Hold down "Control", or "Command" on a Mac, to select more than one.')
 help_with_debug_server = ("The task presenter for this project will be retrieved from this server.<br>"
                           "Use 'npm run dev' server to debug task presenters.")
+help_select_contributors = ("The contributors that you want to use the highlights of.")
+
 class CreateProjectForm(forms.Form):
     error_css_class = 'error'
     required_css_class = 'required'
@@ -72,6 +77,11 @@ class CreateProjectForm(forms.Form):
 
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
+
+    contributor_id = SelectContributorId(Contributor.objects.all(),
+                                label="Contributor",
+                                empty_label=None,
+                                help_text=help_select_contributors)
 
     # TODO: show min tokens only after Quiz is selected
     min_tokens_per_highlight = forms.IntegerField(min_value=0)
