@@ -360,6 +360,7 @@ export class Quiz extends Component {
 
     editorState = loadWorkingHighlights(editorState,
                                         this.props.highlights,
+                                        this.props.review,
                                         this.props.answer_id);
 
     let displayState = editorState.createDisplayState();
