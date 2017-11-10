@@ -21,8 +21,9 @@ import { loadTopicHighlights,
          loadHints,
          loadWorkingHighlights
        } from './convertToSpanner';
-import { handleMakeHighlight } from
+import { handleMakeHighlight, moveToTokenBoundaries } from
   'components/TextSpanner/handlers/makeHighlight';
+import { storeHighlight } from 'components/HighlightTool/storeUtility';
 
 const debug = require('debug')('thresher:Quiz');
 
@@ -372,7 +373,15 @@ export class Quiz extends Component {
 
     return (
       <div className="article-click-box"
-        onMouseUp={ () => handleMakeHighlight(blockMaker, this.props)}
+        onMouseUp={ () => {
+          let articleHighlight = handleMakeHighlight();
+          articleHighlight = moveToTokenBoundaries(blockMaker, articleHighlight);
+          let currentTopicId = this.props.answer_id;
+          if (articleHighlight !== null) {
+            let selectedText = articleHighlight.text;
+            storeHighlight(this.props, articleHighlight, currentTopicId, selectedText);
+          };
+        }}
         onKeyDown={ this.handleDeleteKey }
         tabIndex="0"
       >
