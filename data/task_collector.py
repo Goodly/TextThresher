@@ -31,6 +31,9 @@ def collectNLPTasks(articles=None):
 
 def collectHighlightTasks(articles=None, topics=None, project=None):
 
+    articles = articles.order_by("article_number").distinct()
+    logger.info("collectHighlightTasks sorting by article_number: {}".format(
+                [article.article_number for article in articles]))
     project_data = ProjectSerializer(project, many=False).data
     topics_data = RootTopicSerializer(topics, many=True).data
     return [{ "project": project_data,
@@ -90,8 +93,11 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
                 .filter(highlight_taskruns__highlights__topic=topic)
                 .prefetch_related(fetchHighlights)
                 .prefetch_related(fetchHints)
-                .order_by("id")
+                .order_by("article_number")
                 .distinct())
+    logger.info("collectQuizTasks sorting by article_number for topic {}: {}"
+                .format(topic.name, [article.article_number for article in articles])
+               )
 
     project_data = ProjectSerializer(project, many=False).data
     topictree_data = TopicSerializer(topictree, many=True).data
