@@ -22,6 +22,10 @@ class SelectTopicsField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, t):
         return t.name
 
+class SelectContributorId(forms.ChoiceField):
+    def label_from_instance(self, c):
+        return c.username
+
 class NLPArticlesForm(forms.Form):
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
@@ -73,7 +77,7 @@ class CreateProjectForm(forms.Form):
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
 
-    contributor_id = forms.ChoiceField([(obj.pybossa_user_id, obj.username) for obj in Contributor.objects.all()],
+    contributor_id = SelectContributorId([(obj.pybossa_user_id, obj.username) for obj in Contributor.objects.all()],
                                 help_text=help_select_contributors)
 
     # TODO: show min tokens only after Quiz is selected
