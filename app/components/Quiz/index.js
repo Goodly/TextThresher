@@ -80,6 +80,7 @@ export class Quiz extends Component {
     super(props);
 
     this.wrapSpan = this.wrapSpan.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleDeleteKey = this.handleDeleteKey.bind(this);
@@ -373,15 +374,7 @@ export class Quiz extends Component {
 
     return (
       <div className="article-click-box"
-        onMouseUp={ () => {
-          let articleHighlight = handleMakeHighlight();
-          articleHighlight = moveToTokenBoundaries(blockMaker, articleHighlight);
-          let currentTopicId = this.props.answer_id;
-          if (articleHighlight !== null) {
-            let selectedText = articleHighlight.text;
-            storeHighlight(this.props, articleHighlight, currentTopicId, selectedText);
-          };
-        }}
+        onMouseUp={ () => { this.handleMouseUp(blockMaker) }}
         onKeyDown={ this.handleDeleteKey }
         tabIndex="0"
       >
@@ -415,6 +408,15 @@ export class Quiz extends Component {
         this.handleSelect(sources, e);
       }
     });
+  }
+
+  handleMouseUp(blockMaker) {
+    let articleHighlight = handleMakeHighlight();
+    articleHighlight = moveToTokenBoundaries(blockMaker, articleHighlight);
+    let currentTopicId = this.props.answer_id;
+    if (articleHighlight !== null) {
+      storeHighlight(this.props, articleHighlight, currentTopicId);
+    };
   }
 
   handleScroll() {
