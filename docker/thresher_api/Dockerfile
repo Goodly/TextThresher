@@ -1,12 +1,12 @@
 #-------BUILD javascript task presenter in dist/ -----------------
-FROM python:2.7-slim as builder
-
+FROM python:2.7.13-slim as builder
 # Prep base
 RUN apt-get update -q
 WORKDIR /bd_build
 COPY /docker/bd_build /bd_build
 RUN ./prepare.sh
 
+ENV PYTHONIOENCODING UTF-8
 ENV TERM xterm
 # ARG vars exist only during build and can be overridden by --build-args
 ARG DEBIAN_FRONTEND=noninteractive
@@ -66,7 +66,7 @@ COPY /webpack.config.js .
 RUN npm run deploy:quiet
 
 #-------IMAGE FOR BOTH DJANGO SERVER & PYTHON RQ SERVICE----------------
-FROM python:2.7-slim as django
+FROM python:2.7.13-slim as django
 USER root
 
 # Prep base
@@ -76,6 +76,7 @@ COPY /docker/bd_build /bd_build
 RUN ./prepare.sh
 
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONIOENCODING UTF-8
 ENV TERM xterm
 # ARG vars exist only during build and can be overridden by --build-args
 ARG DEBIAN_FRONTEND=noninteractive
