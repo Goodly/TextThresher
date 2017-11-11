@@ -21,8 +21,9 @@ import { loadTopicHighlights,
          loadHints,
          loadWorkingHighlights
        } from './convertToSpanner';
-import { handleMakeHighlight } from
+import { handleMakeHighlight, moveToTokenBoundaries } from
   'components/TextSpanner/handlers/makeHighlight';
+import { storeHighlight } from 'components/HighlightTool/storeUtility';
 
 const debug = require('debug')('thresher:Quiz');
 
@@ -79,6 +80,7 @@ export class Quiz extends Component {
     super(props);
 
     this.wrapSpan = this.wrapSpan.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleDeleteKey = this.handleDeleteKey.bind(this);
@@ -92,7 +94,7 @@ export class Quiz extends Component {
     this.introStarted = false;
     this.state = {
       highlightsStyle: 'highlights-fixed',
-      contextWordsIndex: 4,
+      contextWordsIndex: 10,
       contextWords: CONTEXT_WORD_VALUES[10],
     };
   }
@@ -360,6 +362,7 @@ export class Quiz extends Component {
 
     editorState = loadWorkingHighlights(editorState,
                                         this.props.highlights,
+                                        this.props.review,
                                         this.props.answer_id);
 
     let displayState = editorState.createDisplayState();
@@ -371,7 +374,7 @@ export class Quiz extends Component {
 
     return (
       <div className="article-click-box"
-        onMouseUp={ () => handleMakeHighlight(blockMaker, this.props)}
+        onMouseUp={ () => { this.handleMouseUp(blockMaker) }}
         onKeyDown={ this.handleDeleteKey }
         tabIndex="0"
       >
@@ -396,11 +399,24 @@ export class Quiz extends Component {
       top: layer.annotation.answer_id,
       text: layer.annotation.extra.textShouldBe
     }));
+    let titleList = orderedLayers.map( (ola) => ola.annotation.topicName );
+    titleList = titleList.filter( (topicName) => topicName !== '' );
+    let title = titleList.join(', ');
     return React.cloneElement(reactSpan, {
+      title,
       onClick: (e) => {
         this.handleSelect(sources, e);
       }
     });
+  }
+
+  handleMouseUp(blockMaker) {
+    let articleHighlight = handleMakeHighlight();
+    articleHighlight = moveToTokenBoundaries(blockMaker, articleHighlight);
+    let currentTopicId = this.props.answer_id;
+    if (articleHighlight !== null) {
+      storeHighlight(this.props, articleHighlight, currentTopicId);
+    };
   }
 
   handleScroll() {
@@ -514,6 +530,9 @@ export class Quiz extends Component {
               }}
               style={{marginTop: '10px'}}
             />
+            <div className="contextWordControlHeader">
+              Number of context words to show: {CONTEXT_WORD_VALUES[this.state.contextWordsIndex]}
+            </div>
             <SelectHint
               currTask={this.props.currTask}
               onChange={ (evt) => { this.props.setDisplayHintType(evt.target.value); }}

@@ -1,23 +1,22 @@
-import overlap from 'components/HighlightTool/overlap';
-import mergeHighlights from 'components/HighlightTool/mergeHighlights';
-
 const debug = require('debug')('thresher:TextSpanner');
 
-export function handleMakeHighlight(blockMaker, highlightProps) {
-  let currentTopicId = highlightProps.answer_id;
+export function handleMakeHighlight() {
   let selectionObj = window.getSelection();
+  let articleHighlight = null;
   if (selectionObj && selectionObj.anchorNode && selectionObj.extentNode) {
-    let highlight = getHighlight(selectionObj, blockMaker);
-    if (highlight !== null) {
-      let fulltext = blockMaker.getText();
-      storeHighlight(highlightProps, highlight, currentTopicId, fulltext);
-    };
-    //removes selection after creating highlight
+    // If no selection, just a click, return null.
+    if (selectionObj.anchorNode === selectionObj.extentNode &&
+        selectionObj.anchorOffset === selectionObj.extentOffset) {
+      return null;
+    }
+    articleHighlight = getHighlight(selectionObj);
+    //remove selection after creating highlight
     window.getSelection().removeAllRanges();
   };
+  return articleHighlight;
 }
 
-function getHighlight(selectionObj, blockMaker) {
+function getHighlight(selectionObj) {
   let anchorNode = getElement(selectionObj.anchorNode);
   anchorNode.normalize();
   let extentNode = getElement(selectionObj.extentNode);
@@ -30,17 +29,20 @@ function getHighlight(selectionObj, blockMaker) {
     let start = startAnchor + selectionObj.anchorOffset;
     let startExtent = Number(extentNode.getAttribute("data-offset-start"));
     let end = startExtent + selectionObj.extentOffset;
-    // Don't turn clicks into a selection
-    if (start === end) {
-      return null;
-    };
     // Swap ends if drag went from right-to-left
     if (start > end) {
       let temp = start;
       start = end;
       end = temp;
     };
-    // Move to nearest token boundaries
+    return {start, end}
+  };
+  return null;
+}
+
+export function moveToTokenBoundaries(blockMaker, articleHighlight) {
+  if (articleHighlight !== null) {
+    let {start, end} = articleHighlight;
     start = blockMaker.lookLeft(start, 0);
     end = blockMaker.lookRight(end, 0);
     if (start < end) {
@@ -48,7 +50,7 @@ function getHighlight(selectionObj, blockMaker) {
       return {start, end, text: selectedText}
     };
   };
-  return null;
+  return articleHighlight;
 }
 
 function getElement(node) {
@@ -57,33 +59,4 @@ function getElement(node) {
     node = node.parentNode;
   };
   return node;
-}
-
-function storeHighlight(highlightProps, highlight, currentTopicId, text) {
-  let {start, end, new_text} = highlight;
-  highlightProps.deselectHighlight();
-  // Reducer does a merge...does not factor in caseNum
-  highlightProps.addHighlight(start, end, new_text, currentTopicId, text);
-  var newHighlight = {
-      start,
-      end,
-      text: new_text,
-      topic: currentTopicId,
-      caseNum: 1
-  };
-  // Now another merge pass?
-  var j = 0;
-  while (j < highlightProps.highlights.length) {
-    if (overlap(newHighlight, highlightProps.highlights[j])) {
-      var new_highlight = mergeHighlights([newHighlight, highlightProps.highlights[j]], text);
-      start = new_highlight[0].start;
-      end = new_highlight[0].end;
-      new_text = new_highlight[0].text
-      newHighlight = new_highlight[0];
-    }
-    j+=1;
-  }
-
-  var select_highlight = {start, end, text:new_text, topic:currentTopicId};
-  highlightProps.selectHighlight([select_highlight]);
 }

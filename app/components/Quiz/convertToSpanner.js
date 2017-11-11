@@ -38,14 +38,15 @@ export function loadHints(editorState, hint_offsets) {
   return editorState;
 }
 
-export function loadWorkingHighlights(editorState, highlights, answer_id) {
+export function loadWorkingHighlights(editorState, highlights,
+                                      reviewMode, answer_id) {
   let layerLabel = new QuizLayerLabel({
     layerType: QuizLayerTypes.ANSWER,
   });
   let text = editorState.getText();
   let layer = editorState.createLayerState(layerLabel);
   highlights.forEach( (offset) => {
-    if (offset.topic === answer_id) {
+    if (reviewMode === false || offset.topic === answer_id) {
       layer.addAnnotation({
         answer_id: offset.topic,
         start: offset.start,
