@@ -77,7 +77,7 @@ export class DisplayState extends DisplayStateRecord {
         orderedLayers.push(annoToLayer.get(annotationKey));
       };
     };
-    orderedLayers.sort( (a, b) => a.topic_number - b.topic_number );
+    orderedLayers.sort( (a, b) => a.order - b.order );
     return orderedLayers;
   }
 }

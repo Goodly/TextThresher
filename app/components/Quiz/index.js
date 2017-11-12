@@ -16,7 +16,7 @@ import { Spanner,
          BlockMaker,
          makeOffsetsFromWhiteSpace,
        } from 'components/TextSpanner';
-import { QuizLayerTypes, sortLayersByAnswerId } from 'model/QuizLayerLabel';
+import { QuizLayerTypes, sortLayersByAnswerId, moveAnswerToTop } from 'model/QuizLayerLabel';
 import { loadTopicHighlights,
          loadHints,
          loadWorkingHighlights
@@ -369,7 +369,9 @@ export class Quiz extends Component {
     displayState.setDisplayBlocks(blocks);
     let layers = editorState.getLayers();
     layers.sort(sortLayersByAnswerId);
-    debug(layers);
+    // Move current answer to end of list so it renders on
+    // top of any other answers.
+    layers = moveAnswerToTop(layers, this.props.answer_id);
     displayState.setDisplayLayers(layers);
 
     return (

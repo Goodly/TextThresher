@@ -57,3 +57,17 @@ export function sortLabelsByAnswerId(a, b) {
 export function sortLayersByAnswerId(a, b) {
   return sortLabelsByAnswerId(a.layerLabel, b.layerLabel);
 }
+
+export function moveAnswerToTop(layers, answer_id) {
+  let position = layers.findIndex( (layer) => {
+    return (layer.layerLabel.layerType === QuizLayerTypes.ANSWER &&
+            layer.layerLabel.answer_id === answer_id);
+  });
+  if (position !== -1) {
+    // Don't mutate input parameter
+    layers = Array.from(layers);
+    let extracted = layers.splice(position, 1);
+    layers = layers.concat(extracted);
+  };
+  return layers;
+}

@@ -27,7 +27,8 @@ export function loadTopicHighlights(editorState, topic_highlights) {
 }
 
 function fixBrokenWhenOffsets(fulltext, hint_offsets) {
-  if (hint_offsets.hint_type === "WHEN") {
+  if (hint_offsets.hint_type === "WHEN" ||
+      hint_offsets.hint_type === "HOW MANY") {
     let fixedOffsets = [];
     // Attempt to fix
     // Note that if the same word or phrase is hinted N times,
@@ -73,22 +74,19 @@ export function loadHints(editorState, hint_offsets) {
 
 export function loadWorkingHighlights(editorState, highlights,
                                       reviewMode, answer_id) {
-  let layerLabel = new QuizLayerLabel({
-    layerType: QuizLayerTypes.ANSWER,
-  });
   let text = editorState.getText();
-  let layer = editorState.createLayerState(layerLabel);
   highlights.forEach( (offset) => {
+    let layerLabel = new QuizLayerLabel({
+      layerType: QuizLayerTypes.ANSWER,
+      answer_id: offset.topic,
+    });
+    let layer = editorState.createLayerState(layerLabel);
     if (reviewMode === false || offset.topic === answer_id) {
-      let source = new QuizLayerLabel({
-        layerType: QuizLayerTypes.ANSWER,
-        answer_id: offset.topic,
-      });
       layer.addAnnotation({
         start: offset.start,
         end: offset.end,
         text: text.substring(offset.start, offset.end),
-        source,
+        source: layerLabel,
       });
     };
   });

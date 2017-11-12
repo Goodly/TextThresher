@@ -36,9 +36,7 @@ export class Annotation extends AnnotationRecord {
         + " Expected: '" + this.text
         + "' Found: '" + text.substring(start, end)
         + "'");
-      // When "WHEN" annotations are fixed, can throw error always
-      if (this.source.layerType === "HINT"  &&
-          this.source.hintType  === "WHEN") {
+      if (this.source.layerType === "HINT") {
         debug(msg);
       } else {
         throw new Error(msg);

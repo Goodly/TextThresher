@@ -56,7 +56,6 @@ export class EditorState {
     let displayState = new DisplayState();
     let key = displayState.key;
     this._displayStateMap.set(key, displayState);
-    debug(displayState)
     return displayState;
   }
 
@@ -64,7 +63,6 @@ export class EditorState {
     let layerState = new LayerState(layerLabelData);
     let key = layerState.key;
     this._layerStateMap.set(key, layerState);
-    debug(layerState)
     return layerState;
   }
 
