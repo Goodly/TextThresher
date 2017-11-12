@@ -26,13 +26,41 @@ export function loadTopicHighlights(editorState, topic_highlights) {
   return editorState;
 }
 
+function fixBrokenWhenOffsets(fulltext, hint_offsets) {
+  if (hint_offsets.hint_type === "WHEN") {
+    let fixedOffsets = [];
+    // Attempt to fix
+    // Note that if the same word or phrase is hinted N times,
+    // e.g., "Tuesday", this algorithm will label each occurrence
+    // N times.
+    hint_offsets.offsets.forEach( (offset) => {
+      if (fulltext.substring(offset[0], offset[1]) !== offset[2]) {
+        // broken, hint every occurrence of this word or phrase
+        let maybeStart = fulltext.indexOf(offset[2]);
+        while (maybeStart !== -1) {
+          let end = maybeStart + offset[2].length;
+          fixedOffsets.push([maybeStart, end, offset[2]]);
+          maybeStart = fulltext.indexOf(offset[2], end);
+        };
+      } else {
+          fixedOffsets.push(offset); // Not broken
+      };
+    });
+    return fixedOffsets;
+  };
+  return hint_offsets.offsets;
+}
+
 export function loadHints(editorState, hint_offsets) {
   let layerLabel = new QuizLayerLabel({
     layerType: QuizLayerTypes.HINT,
     hintType: hint_offsets.hint_type,
   });
   let layer = editorState.createLayerState(layerLabel);
-  hint_offsets.offsets.forEach( (offset) => {
+  let fulltext = editorState.getText();
+  // Remove next line when NLP WHEN hints fixed
+  let fixedOffsets = fixBrokenWhenOffsets(fulltext, hint_offsets);
+  fixedOffsets.forEach( (offset) => {
     layer.addAnnotation({
       start: offset[0],
       end: offset[1],
