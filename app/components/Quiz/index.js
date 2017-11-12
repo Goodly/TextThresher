@@ -417,7 +417,8 @@ export class Quiz extends Component {
     articleHighlight = moveToTokenBoundaries(blockMaker, articleHighlight);
     let currentTopicId = this.props.answer_id;
     if (articleHighlight !== null) {
-      storeHighlight(this.props, articleHighlight, currentTopicId);
+      let article_text = blockMaker.getText();
+      storeHighlight(this.props, articleHighlight, currentTopicId, article_text);
     };
   }
 
