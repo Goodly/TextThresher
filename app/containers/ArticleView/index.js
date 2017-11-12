@@ -178,7 +178,9 @@ class ConsistentColors {
 }
 
 function wrapSpan(reactSpan, orderedLayers) {
-  let titleList = orderedLayers.map( (ola) => ola.annotation.topicName );
+  let titleList = orderedLayers.map( (ola) => {
+    return ola.annotation.source.shortLabel();
+  });
   titleList = titleList.filter( (topicName) => topicName !== '' );
   let title = titleList.join(', ');
   return React.cloneElement(reactSpan, {

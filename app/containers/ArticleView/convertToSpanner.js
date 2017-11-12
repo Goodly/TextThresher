@@ -9,19 +9,16 @@ export function loadAnnotatedArticle(editorState, article) {
       let layerLabel = new TopicLabel({
         contributor: taskrun.contributor.unique_label,
         topicName: hg.topic_name,
-        topicOrder: hg.topic_order,
+        topicNumber: hg.topic_number,
         caseNumber: hg.case_number,
       });
       let layer = editorState.createLayerState(layerLabel);
       hg.offsets.forEach( (offset) => {
         layer.addAnnotation({
-          contributor: taskrun.contributor.unique_label,
-          topicName: hg.topic_name,
-          topicOrder: hg.topic_order,
-          caseNumber: hg.case_number,
           start: offset[0],
           end: offset[1],
-          extra: {textShouldBe: offset[2]},
+          text: offset[2],
+          source: layerLabel,
         });
       });
     });

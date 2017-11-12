@@ -397,9 +397,11 @@ export class Quiz extends Component {
       start: layer.annotation.start,
       end: layer.annotation.end,
       top: layer.annotation.answer_id,
-      text: layer.annotation.extra.textShouldBe
+      text: layer.annotation.text
     }));
-    let titleList = orderedLayers.map( (ola) => ola.annotation.topicName );
+    let titleList = orderedLayers.map( (ola) => {
+      return ola.annotation.source.shortLabel();
+    });
     titleList = titleList.filter( (topicName) => topicName !== '' );
     let title = titleList.join(', ');
     return React.cloneElement(reactSpan, {
@@ -556,8 +558,9 @@ function getStyle(orderedLayers, answer_colors) {
       Object.assign(style, { fontStyle: 'italic' });
     }
     if (layerType === QuizLayerTypes.ANSWER) {
-      if (answer_colors.has(layer.annotation.answer_id)) {
-        let bgColor = Color(answer_colors.get(layer.annotation.answer_id));
+      let answer_id = layer.annotation.source.answer_id;
+      if (answer_colors.has(answer_id)) {
+        let bgColor = Color(answer_colors.get(answer_id));
         if (bgColor.dark()) {
           bgColor = bgColor.fade(0.5);
         };
