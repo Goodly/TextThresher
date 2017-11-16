@@ -331,7 +331,7 @@ export class Quiz extends Component {
     editorState = editorState.setText(article_text);
     let tokenOffsets = makeOffsetsFromWhiteSpace(article_text);
     editorState = editorState.setTokenization(tokenOffsets);
-    editorState = loadTopicHighlights(editorState, topic_highlights);
+    loadTopicHighlights(editorState, topic_highlights);
 
     // Calculate blocks with context words before we add hint layers.
     let blockMaker = new BlockMaker();
@@ -355,15 +355,15 @@ export class Quiz extends Component {
     const hint_sets_for_article = this.props.db.entities.hint;
     if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
       let hint_offsets = hint_sets_for_article[hint_type];
-      editorState = loadHints(editorState, hint_offsets);
+      loadHints(editorState, hint_offsets);
       debug('Found '+hint_offsets.offsets.length+' '+hint_type+' hints');
       debug(hint_offsets);
     };
 
-    editorState = loadWorkingHighlights(editorState,
-                                        this.props.highlights,
-                                        this.props.review,
-                                        this.props.answer_id);
+    loadWorkingHighlights(editorState,
+                          this.props.highlights,
+                          this.props.review,
+                          this.props.answer_id);
 
     let displayState = editorState.createDisplayState();
     displayState.setDisplayBlocks(blocks);

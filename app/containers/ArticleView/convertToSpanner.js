@@ -23,5 +23,4 @@ export function loadAnnotatedArticle(editorState, article) {
       });
     });
   });
-  return editorState;
 }

@@ -23,7 +23,6 @@ export function loadTopicHighlights(editorState, topic_highlights) {
       });
     });
   });
-  return editorState;
 }
 
 function fixBrokenWhenOffsets(fulltext, hint_offsets) {
@@ -69,7 +68,6 @@ export function loadHints(editorState, hint_offsets) {
       source: layerLabel,
     });
   });
-  return editorState;
 }
 
 export function loadWorkingHighlights(editorState, highlights,
@@ -90,5 +88,4 @@ export function loadWorkingHighlights(editorState, highlights,
       });
     };
   });
-  return editorState;
 };
