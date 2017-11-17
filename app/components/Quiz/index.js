@@ -25,7 +25,6 @@ import { loadTopicHighlights,
        } from './convertToSpanner';
 import { handleMakeHighlight, moveToTokenBoundaries } from
   'components/TextSpanner/handlers/makeHighlight';
-import { storeHighlight } from 'components/HighlightTool/storeUtility';
 
 const debug = require('debug')('thresher:Quiz');
 
