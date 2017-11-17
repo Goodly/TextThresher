@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import argparse
 from collections import namedtuple
@@ -80,11 +81,11 @@ def parse_schema(orig_filename, schema_file):
                 hashsplit = raw_line.split("#")
 
                 single = hashsplit[0].count('\'')
-                smart_single = hashsplit[0].count('\xe2\x80\x98') + hashsplit[0].count('\xe2\x80\x99')
+                smart_single = hashsplit[0].count(u'‘') + hashsplit[0].count(u'’')
                 escaped_single = hashsplit[0].count('\\\'')
 
                 double = hashsplit[0].count('\"')
-                smart_double = hashsplit[0].count('\xe2\x80\x9c') + hashsplit[0].count('\xe2\x80\x9d')
+                smart_double = hashsplit[0].count(u'“') + hashsplit[0].count(u'”')
 
                 escaped_double = hashsplit[0].count('\\\"')
                 if (single + smart_single - escaped_single) % 2 == 0 and (double + smart_double - escaped_double) % 2 == 0:

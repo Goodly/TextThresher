@@ -345,7 +345,10 @@ def load_annotations(article, article_obj):
         except IndexError:
             # No analysis type loaded--create a dummy type.
             last_number = Topic.objects.aggregate(Max('topic_number'))
-            next_number = last_number['topic_number__max'] + 1
+            if last_number['topic_number__max'] is None:
+                next_number = 1
+            else:
+                next_number = last_number['topic_number__max'] + 1
             topic = Topic.objects.create(
                 name=tua_type,
                 topic_number=next_number,
@@ -403,7 +406,14 @@ def load_schema_dir(dirpath):
         print "Loading schema:", schema_file
         load_schema_atomic(schema_file, os.path.join(dirpath, schema_file))
 
+def parse_batch_name(orig_filename):
+    # If the filename is "/home/thresher/data/article-nytimes-100.tgz"
+    # then set batch_name to "article-nytimes-100"
+    basename = os.path.basename(orig_filename)
+    return os.path.splitext(basename)[0]
+
 def load_article_dir(dirpath, with_annotations=False):
+    batch_name = parse_batch_name(dirpath)
     for article_filename in os.listdir(dirpath):
         if os.path.splitext(article_filename)[1] != '.txt':
             continue
@@ -411,6 +421,8 @@ def load_article_dir(dirpath, with_annotations=False):
         with transaction.atomic():
             annotated_article = parse_document(fullpath, article_filename)
             article_obj = load_article(annotated_article)
+            article_obj.batch_name = batch_name
+            article_obj.save()
             if with_annotations:
                 load_annotations(annotated_article, article_obj)
 
