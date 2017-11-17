@@ -1,3 +1,4 @@
+import os
 import argparse
 from collections import namedtuple
 import re
@@ -57,9 +58,16 @@ def load_defaults(output):
     output['dependencies'] = []
     output['options'] = []
 
-def parse_schema(schema_file):
+def parse_namespace(orig_filename):
+    # If the filename is "/home/thresher/data/Protester-NBA-2017-11-17.txt"
+    # then set namespace to "Protester-NBA-2017-11-17"
+    basename = os.path.basename(orig_filename)
+    return os.path.splitext(basename)[0]
+
+def parse_schema(orig_filename, schema_file):
     parsed_schema = {}
     load_defaults(parsed_schema)
+    namespace = parse_namespace(orig_filename)
     with codecs.open(schema_file, mode='r', encoding='utf-8-sig', errors='strict') as f:
         linecount = 1
         version = ''
@@ -104,7 +112,7 @@ def parse_schema(schema_file):
                           "Found '{}'".format(type_id))
                     raise ParseSchemaException(msg, schema_file, linecount)
                 elif type_id.lower() == TITLE_ID:
-                    current_topic = parse_title(data, parsed_schema)
+                    current_topic = parse_title(data, parsed_schema, namespace)
                 elif type_id.lower() == INSTRUCTIONS_ID:
                     parse_instructions(data, current_topic)
                 elif type_id.lower() == GLOSSARY_ID:
@@ -133,10 +141,11 @@ def parse_schema(schema_file):
 
     return parsed_schema
 
-def parse_title(title, output):
+def parse_title(title, output, namespace):
     # topic_number will be set by next question encountered
     current_topic = {
         'id': None,
+        'namespace': namespace,
         'name': title,
         'topic_number': None,
         'questions': [],
@@ -260,7 +269,7 @@ if __name__ == '__main__':
     args = arg_parser.parse_args()
 
     try:
-        output = parse_schema(args.filename[0])
+        output = parse_schema(args.filename[0], args.filename[0])
         print_data(output)
         # print_dependencies(output)
     except ParseSchemaException as e:

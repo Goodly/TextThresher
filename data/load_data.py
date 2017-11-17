@@ -386,7 +386,7 @@ def save_exception_message(e, orig_filename):
 def load_schema_atomic(orig_filename, actual_filepath):
     try:
         with transaction.atomic():
-            load_schema(parse_schema(actual_filepath))
+            load_schema(parse_schema(orig_filename, actual_filepath))
     except ParseSchemaException as e:
         # Log original filename, not path or secure /tmp file used by RQ worker.
         e.file_name = orig_filename
