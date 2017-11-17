@@ -104,10 +104,10 @@ export class EditorState {
       return true;
     };
     // Layers reset their cacheID on every mutation.
-    // So every layer cache ID must be equal to the current cache ID for the
-    // current this._charAnnotations cache to be valid.
-    return this.getLayers().every(
-      (layer) => layer.getCacheID() === this._cacheID
+    // So if any layer cacheID does not match the current cacheID
+    // the current this._charAnnotations cache is invalid.
+    return this.getLayers().some(
+      (layer) => layer.getCacheID() !== this._cacheID
     );
   }
 

@@ -8,14 +8,14 @@ const debug = require('debug')('thresher:TextSpanner');
 
 const defaultLayerStateRecord = {
   key: '',
+  layerLabel: null,
 };
 
 const LayerStateRecord = Record(defaultLayerStateRecord);
 
 export class LayerState extends LayerStateRecord {
   constructor(layerLabel) {
-    super({key: generateRandomKey()});
-    this.layerLabel = layerLabel;
+    super({key: generateRandomKey(), layerLabel});
     this._annotationList = [];
     this.addAnnotation = this._addAnnotation.bind(this);
     this.deleteAnnotation = this._deleteAnnotation.bind(this);

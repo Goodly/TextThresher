@@ -16,10 +16,12 @@ import { Spanner,
          BlockMaker,
          makeOffsetsFromWhiteSpace,
        } from 'components/TextSpanner';
-import { QuizLayerTypes, sortLayersByAnswerId, moveAnswerToTop } from 'model/QuizLayerLabel';
+import { QuizLayerTypes,
+         sortLayersByAnswerId,
+         moveAnswerToTop } from 'model/QuizLayerLabel';
+import { QuizAnswers } from 'model/QuizAnswers';
 import { loadTopicHighlights,
          loadHints,
-         loadWorkingHighlights
        } from './convertToSpanner';
 import { handleMakeHighlight, moveToTokenBoundaries } from
   'components/TextSpanner/handlers/makeHighlight';
@@ -79,6 +81,7 @@ export class Quiz extends Component {
   constructor(props) {
     super(props);
 
+    this.loadEditorState = this.loadEditorState.bind(this);
     this.wrapSpan = this.wrapSpan.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
@@ -90,12 +93,18 @@ export class Quiz extends Component {
     this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
     this.restartTutorial = this.restartTutorial.bind(this);
     this.setContextWords = this.setContextWords.bind(this);
+    this.getStyle = this.getStyle.bind(this);
     this.intro = introJs();
     this.introStarted = false;
+    let editorState = EditorState.createEmpty();
+    let answerState = new QuizAnswers(editorState);
     this.state = {
       highlightsStyle: 'highlights-fixed',
       contextWordsIndex: 10,
       contextWords: CONTEXT_WORD_VALUES[10],
+      editorState,
+      answerState,
+      blockMaker: new BlockMaker(),
     };
   }
 
@@ -110,7 +119,6 @@ export class Quiz extends Component {
     saveAndNext: React.PropTypes.func,
     review: React.PropTypes.bool,
     done: React.PropTypes.bool,
-    highlights: React.PropTypes.array.isRequired,
   }
 
   componentDidMount() {
@@ -178,6 +186,33 @@ export class Quiz extends Component {
     window.removeEventListener('scroll', this.handleScroll);
     window.removeEventListener('keyup', this.handleKeyUp);
     this.intro.exit();
+  }
+
+  loadEditorState(currTask) {
+    const article_text = this.props.currTask.article.text;
+    let editorState = EditorState.createEmpty();
+    let answerState = new QuizAnswers(editorState);
+    editorState = editorState.setText(article_text);
+    let tokenOffsets = makeOffsetsFromWhiteSpace(article_text);
+    editorState = editorState.setTokenization(tokenOffsets);
+
+    const topic_highlights = this.props.currTask.highlights;
+    let topicLayer = loadTopicHighlights(editorState, topic_highlights);
+
+    let blockMaker = new BlockMaker();
+    blockMaker.setTokenization(
+      editorState.getText(),
+      editorState.getTokenization()
+    );
+    blockMaker.combineLayers([topicLayer]);
+
+    loadHints(editorState, this.props.db.entities.hint);
+
+    this.setState({
+      editorState,
+      answerState,
+      blockMaker,
+    });
   }
 
   allQuestionsAnswered = () => {
@@ -325,22 +360,21 @@ export class Quiz extends Component {
     });
   }
 
-  displayHighlighter(topic_highlights) {
-    const article_text = this.props.currTask != undefined ? this.props.currTask.article.text : '';
-    let editorState = EditorState.createEmpty();
-    editorState = editorState.setText(article_text);
-    let tokenOffsets = makeOffsetsFromWhiteSpace(article_text);
-    editorState = editorState.setTokenization(tokenOffsets);
-    loadTopicHighlights(editorState, topic_highlights);
+  displayHighlighter() {
+    let editorState = this.state.editorState;
+    let blockMaker = this.state.blockMaker;
 
-    // Calculate blocks with context words before we add hint layers.
-    let blockMaker = new BlockMaker();
-    blockMaker.setTokenization(
-      editorState.getText(),
-      editorState.getTokenization()
-    );
-    blockMaker.combineLayers(editorState.getLayers());
+    // Determine blocks to view given current contextWords setting
     let blocks = blockMaker.getBlocksWithContext(this.state.contextWords);
+    let displayState = editorState.createDisplayState();
+    displayState.setDisplayBlocks(blocks);
+
+    // Move current answer to end of list so it renders on
+    // top of any other answers.
+    let layers = editorState.getLayers();
+    layers.sort(sortLayersByAnswerId);
+    layers = moveAnswerToTop(layers, this.props.answer_id);
+    displayState.setDisplayLayers(layers);
 
     const questionDB = this.props.db.entities.question;
     const question_id = this.props.question_id;
@@ -351,28 +385,6 @@ export class Quiz extends Component {
     if (this.props.displayHintSelectControl) {
       hint_type = this.props.displayHintType;
     };
-
-    const hint_sets_for_article = this.props.db.entities.hint;
-    if (hint_sets_for_article && hint_sets_for_article[hint_type]) {
-      let hint_offsets = hint_sets_for_article[hint_type];
-      loadHints(editorState, hint_offsets);
-      debug('Found '+hint_offsets.offsets.length+' '+hint_type+' hints');
-      debug(hint_offsets);
-    };
-
-    loadWorkingHighlights(editorState,
-                          this.props.highlights,
-                          this.props.review,
-                          this.props.answer_id);
-
-    let displayState = editorState.createDisplayState();
-    displayState.setDisplayBlocks(blocks);
-    let layers = editorState.getLayers();
-    layers.sort(sortLayersByAnswerId);
-    // Move current answer to end of list so it renders on
-    // top of any other answers.
-    layers = moveAnswerToTop(layers, this.props.answer_id);
-    displayState.setDisplayLayers(layers);
 
     return (
       <div className="article-click-box"
@@ -385,7 +397,7 @@ export class Quiz extends Component {
           displayState={displayState}
           blockPropsFn={getBlockProps}
           mergeStyleFn={ (orderedLayers) => {
-            return getStyle(orderedLayers, this.props.answer_colors);
+            return this.getStyle(orderedLayers, hint_type);
           }}
           wrapSpanFn={this.wrapSpan}
         />
@@ -408,19 +420,27 @@ export class Quiz extends Component {
     let title = titleList.join(', ');
     return React.cloneElement(reactSpan, {
       title,
-      onClick: (e) => {
+/*      onClick: (e) => {
         this.handleSelect(sources, e);
-      }
+      } */
     });
   }
 
   handleMouseUp(blockMaker) {
     let articleHighlight = handleMakeHighlight();
+    // Don't make highlights if no answer selected
+    let answer_id = this.props.answer_id;
+    if (answer_id < 0) {
+      return;
+    };
     articleHighlight = moveToTokenBoundaries(blockMaker, articleHighlight);
-    let currentTopicId = this.props.answer_id;
     if (articleHighlight !== null) {
+      let {start, end} = articleHighlight;
       let article_text = blockMaker.getText();
-      storeHighlight(this.props, articleHighlight, currentTopicId, article_text);
+      articleHighlight['text'] = article_text.substring(start, end);
+      let answerState = this.state.answerState;
+      answerState.addHighlight(answer_id, articleHighlight);
+      this.setState({answerState});
     };
   }
 
@@ -495,7 +515,6 @@ export class Quiz extends Component {
       return <ShowHelp closeHelp={ () => { this.props.showHelp(false); } } />
     }
 
-    var topic_highlights = this.props.currTask ? this.props.currTask.highlights : [];
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 
     let saveAndNextButton =  <div/>;
@@ -513,7 +532,7 @@ export class Quiz extends Component {
               <div className="highlighter-help-text">
                 Look for answers in the bolded text.
               </div>
-              { this.displayHighlighter(topic_highlights) }
+              { this.displayHighlighter() }
             </div>
           </div>
 
@@ -546,32 +565,39 @@ export class Quiz extends Component {
         </div>
     )
   }
-}
 
-function getStyle(orderedLayers, answer_colors) {
-  // orderedLayers is an array of objects with keys:
-  // {order, layer, annotation}
-  let style = {};
-  for (let layer of orderedLayers) {
-    let layerType = layer.layer.layerLabel.layerType;
-    if (layerType === QuizLayerTypes.TOPIC) {
-      Object.assign(style, { fontWeight: 'bold' });
-    }
-    if (layerType === QuizLayerTypes.HINT) {
-      Object.assign(style, { fontStyle: 'italic' });
-    }
-    if (layerType === QuizLayerTypes.ANSWER) {
-      let answer_id = layer.annotation.source.answer_id;
-      if (answer_colors.has(answer_id)) {
-        let bgColor = Color(answer_colors.get(answer_id));
-        if (bgColor.dark()) {
-          bgColor = bgColor.fade(0.5);
+  getStyle(orderedLayers, hint_type) {
+    // orderedLayers is an array of objects with keys:
+    // {order, layer, annotation}
+    const answer_colors = this.props.answer_colors;
+    const reviewMode = this.props.review;
+    const active_answer_id = this.props.answer_id;
+    let style = {};
+    for (let layer of orderedLayers) {
+      let layerType = layer.layer.layerLabel.layerType;
+      if (layerType === QuizLayerTypes.TOPIC) {
+        Object.assign(style, { fontWeight: 'bold' });
+      }
+      if (layerType === QuizLayerTypes.HINT) {
+        if (layer.layer.layerLabel.hintType === hint_type) {
+          Object.assign(style, { fontStyle: 'italic' });
         };
-        Object.assign(style, { backgroundColor: bgColor.rgb().string() });
+      }
+      if (layerType === QuizLayerTypes.ANSWER) {
+        let answer_id = layer.annotation.source.answer_id;
+        if (reviewMode === false || active_answer_id === answer_id) {
+          if (answer_colors.has(answer_id)) {
+            let bgColor = Color(answer_colors.get(answer_id));
+            if (bgColor.dark()) {
+              bgColor = bgColor.fade(0.5);
+            };
+            Object.assign(style, { backgroundColor: bgColor.rgb().string() });
+          };
+        };
       };
     };
-  };
-  return style;
+    return style;
+  }
 }
 
 // sequence_number can be used for even/odd styling...
