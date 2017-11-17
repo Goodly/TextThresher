@@ -16,6 +16,7 @@ const defaultQuizLayerLabelRecord = {
   hintType: '',
   topicName: '',
   answer_id: 0,
+  question_id: 0,
   question_number: 0,
 }
 
@@ -30,23 +31,28 @@ export class QuizLayerLabel extends QuizLayerLabelRecord {
   }
 
   shortLabel() {
-    let label = this.layerType;
+    let label = '';
     switch (this.layerType) {
       case QuizLayerTypes.HINT:
-        label += ": " + this.hintType;
+        label = "Hint: " + this.hintType;
         break;
       case QuizLayerTypes.TOPIC:
-        label += ": " + this.topicName;
+        label = "Topic: " + this.topicName;
         break;
       case QuizLayerTypes.ANSWER:
-        label += ": " + String(this.question_number);
+        label = "Question: " + String(this.question_number);
         break;
     };
     return label;
   }
 
   fullLabel() {
-    return this.layerType + " " + this.shortLabel();
+    let label = this.shortLabel();
+    if (this.layerType === QuizLayerTypes.ANSWER) {
+      label += " q_id:" + String(this.question_id);
+      label += " a_id:" + String(this.answer_id);
+    };
+    return label;
   };
 }
 

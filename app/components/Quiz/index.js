@@ -406,28 +406,32 @@ export class Quiz extends Component {
   }
 
   wrapSpan(reactSpan, orderedLayers) {
-    // Re-create the old curHL.source data structure for now.
-    let sources = orderedLayers.map( (layer) => ({
-      start: layer.annotation.start,
-      end: layer.annotation.end,
-      top: layer.annotation.answer_id,
-      text: layer.annotation.text
-    }));
-    let titleList = orderedLayers.map( (ola) => {
+    // Let's just show labels for answers, not topics or hints
+    const answerHighlights = orderedLayers.filter( (ola) =>
+      ola.layer.layerLabel.layerType === QuizLayerTypes.ANSWER
+    );
+    const titleList = answerHighlights.map( (ola) => {
       return ola.annotation.source.shortLabel();
     });
-    titleList = titleList.filter( (topicName) => topicName !== '' );
-    let title = titleList.join(', ');
-    return React.cloneElement(reactSpan, {
-      title,
-/*      onClick: (e) => {
-        this.handleSelect(sources, e);
-      } */
-    });
+    const title = titleList.join(', ');
+    let mergeProps = { title };
+    // Create select handler for just the topmost highlight
+    if (answerHighlights.length > 0) {
+      const annotation = answerHighlights.slice(-1)[0].annotation;
+      Object.assign(mergeProps, {
+        onClick: (evt) => {
+          this.handleSelect(evt, annotation);
+        }
+      });
+    };
+    return React.cloneElement(reactSpan, mergeProps);
   }
 
   handleMouseUp(blockMaker) {
     let articleHighlight = handleMakeHighlight();
+    let question_id = this.props.question_id;
+    let question = this.props.db.entities.question[question_id];
+    let question_number = question.question_number;
     // Don't make highlights if no answer selected
     let answer_id = this.props.answer_id;
     if (answer_id < 0) {
@@ -439,9 +443,31 @@ export class Quiz extends Component {
       let article_text = blockMaker.getText();
       articleHighlight['text'] = article_text.substring(start, end);
       let answerState = this.state.answerState;
-      answerState.addHighlight(answer_id, articleHighlight);
+      answerState.addHighlight(answer_id, articleHighlight,
+                               question_id, question_number);
       this.setState({answerState});
     };
+  }
+
+  handleSelect(evt, annotation) {
+    // Activate the question for this highlight
+    const question_id = annotation.source.question_id;
+    this.props.activeQuestion(question_id);
+    let answerState = this.state.answerState;
+    answerState.selectHighlight(annotation);
+    this.setState({answerState});
+  }
+
+  handleDeleteKey(e) {
+    // Don't steal backspace and delete key from input elements!
+    if (document.activeElement.nodeName === "INPUT") {
+      return;
+    };
+    if (e.keyCode == 46 || e.keyCode == 8) {
+      let answerState = this.state.answerState;
+      answerState.deleteSelection();
+      this.setState({answerState});
+    }
   }
 
   handleScroll() {
@@ -476,26 +502,6 @@ export class Quiz extends Component {
     // 72 is 'h' key
     if (evt.keyCode === 72) {
       this.props.displayHintSelector( ! this.props.displayHintSelectControl);
-    }
-  }
-
-  handleDeleteKey(e) {
-    // Don't steal backspace and delete key from input elements!
-    if (document.activeElement.nodeName === "INPUT") {
-      return;
-    };
-    if (e.keyCode == 46 || e.keyCode == 8) {
-      if (this.props.selectedHighlight) {
-        if (this.props.selectedHighlight.length > 0) {
-          this.props.deleteHighlight(this.props.selectedHighlight);
-        }
-      }
-    }
-  }
-
-  handleSelect(source, e) {
-    if (source.length != 0) {
-      this.props.selectHighlight(source);
     }
   }
 
@@ -592,6 +598,12 @@ export class Quiz extends Component {
               bgColor = bgColor.fade(0.5);
             };
             Object.assign(style, { backgroundColor: bgColor.rgb().string() });
+          };
+          if (this.state.answerState.highlightSelected(layer.annotation.key)) {
+            Object.assign(style, {
+              borderTop: '1px solid red',
+              borderBottom: '1px solid red'
+            });
           };
         };
       };
