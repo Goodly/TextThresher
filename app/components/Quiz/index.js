@@ -38,32 +38,21 @@ import { Slider } from 'components/Slider';
 
 const CONTEXT_WORD_VALUES = [0,1,2,3,4,5,6,7,8,9,10,12,20,50,100,200,400];
 
-function makeHighlightDB(highlights) {
-  let highlightDB = new Map();
-  for (const entry of highlights) {
-    const answer_id = entry.topic;
-    if (highlightDB.has(answer_id)) {
-      highlightDB.get(answer_id).push(entry);
-    } else {
-      highlightDB.set(answer_id, [entry]);
-    };
-  };
-  return highlightDB;
-};
-
 // Note: There may be saved answers for questions no longer
 // in the queue because the contingency rule for the question is no
 // longer active. We don't want to save those answers.
 // Use the queue to identify which questions' answers to save.
-function saveQuizAnswers(queue, answer_selected, highlights, questionDB) {
-  const highlightDB = makeHighlightDB(highlights);
+// Note, for now answer_selected has the answered questions, and
+// answerState has any highlights for those answers.
+function saveQuizAnswers(questionDB, queue, answer_selected, answerState) {
   let savedQuiz = [];
   queue.forEach( (question_id) => {
     if (answer_selected.has(question_id)) {
       let answerMap = answer_selected.get(question_id);
       for (let answer of answerMap.values()) {
-        if (highlightDB.has(answer.answer_id)) {
-          answer['highlights'] = highlightDB.get(answer.answer_id);
+        if (answerState.hasAnswer(answer.answer_id)) {
+          const annotations = answerState.getAnswerAnnotations(answer.answer_id);
+          answer['highlights'] = annotations;
         } else {
           answer['highlights'] = [];
         };
@@ -231,23 +220,23 @@ export class Quiz extends Component {
   // will bind 'this' of the class. (React.createClass does automatically.)
   onSaveAndNext = () => {
     window.scrollTo(0, 0);
+    const questionDB = this.props.db.entities.question;
     const queue = this.props.queue;
     const answer_selected = this.props.answer_selected;
-    const highlights = this.props.highlights;
-    const highlight_group_id = this.props.currTask.highlights[0].id;
-    const questionDB = this.props.db.entities.question;
-    const savedAnswers = saveQuizAnswers(queue, answer_selected, highlights, questionDB);
+    const answerState = this.state.answerState;
+    const savedAnswers = saveQuizAnswers(questionDB, queue, answer_selected, answerState);
     const article_id = this.props.currTask ? this.props.currTask.article.id : '';
     const article_text = this.props.currTask ? this.props.currTask.article.text : '';
+    const highlight_group_id = this.props.currTask.highlights[0].id;
     const savedQuiz = {
       article_id,
       article_text,
-      highlights: this.props.highlights,
       highlight_group_id,
       savedAnswers,
     };
     this.props.clearAnswers();
-    this.props.clearHighlights();
+    // Don't have to reset answerState, as it and editorState will be
+    // created fresh on next task load.
     this.props.saveAndNext(savedQuiz);
   }
 

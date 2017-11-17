@@ -21,6 +21,8 @@ export class QuizAnswers {
     this._answerHighlightLayers = new Map();
     this._selectedAnnotations = new Map();
     this.addHighlight = this.addHighlight.bind(this);
+    this.hasAnswer = this.hasAnswer.bind(this);
+    this.getAnswerAnnotations = this.getAnswerAnnotations.bind(this);
     this.selectHighlight = this.selectHighlight.bind(this);
     this.highlightSelected = this.highlightSelected.bind(this);
     this.deleteSelection = this.deleteSelection.bind(this);
@@ -46,6 +48,20 @@ export class QuizAnswers {
       text: new_highlight.text,
       source: layer.layerLabel,
     });
+  }
+
+  hasAnswer(answer_id) {
+    return this._answerHighlightLayers.has(answer_id);
+  }
+
+  getAnswerAnnotations(answer_id) {
+    const layer = this._answerHighlightLayers.get(answer_id);
+    const annotations = layer.getAnnotationList();
+    let serializable = annotations.map( (anno) => {
+      let {start, end, text} = anno;
+      return {start, end, text, answer_id};
+    });
+    return serializable;
   }
 
   selectHighlight(annotation) {
