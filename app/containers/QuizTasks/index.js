@@ -6,7 +6,6 @@ import { Quiz } from 'components/Quiz';
 // actions
 import { storeProject } from 'actions/project';
 import * as quizActions from 'actions/quiz';
-import * as highlightActions from 'actions/highlight';
 import * as taskActions from 'actions/task';
 
 // Function to start loading tasks from Pybossa server
@@ -17,7 +16,6 @@ import { getUpdatedProject } from 'pybossa/fetchproject';
 const assembledActionCreators = Object.assign(
   { storeProject },
   quizActions,
-  highlightActions,
   taskActions
 );
 
@@ -31,8 +29,6 @@ const mapStateToProps = state => {
     answer_selected: state.quiz.answer_selected,
     answer_colors: state.quiz.answer_colors,
     review: state.quiz.review,
-    highlights: state.highlight.highlights,
-    selectedHighlight: state.highlight.selectedHighlight,
     task: state.task,
     saveAndNext: state.task.saveAndNext,
     displayState: state.task.displayState,
@@ -64,6 +60,7 @@ export class RealQuiz extends Quiz {
       this.props.storeTask(task, onSaveAndNext);
       this.props.storeQuizTask(task.info);
       this.props.activeQuestion(this.props.question_id);
+      this.loadEditorState(task.info);
     } else {
       // Set redux to DONE mode or navigate to a DONE url
       this.props.storeTasksDone();

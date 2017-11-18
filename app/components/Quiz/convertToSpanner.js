@@ -23,7 +23,7 @@ export function loadTopicHighlights(editorState, topic_highlights) {
       });
     });
   });
-  return editorState;
+  return layer;
 }
 
 function fixBrokenWhenOffsets(fulltext, hint_offsets) {
@@ -52,7 +52,13 @@ function fixBrokenWhenOffsets(fulltext, hint_offsets) {
   return hint_offsets.offsets;
 }
 
-export function loadHints(editorState, hint_offsets) {
+export function loadHints(editorState, hint_db) {
+  for (let hintset in hint_db) {
+    loadHintLayer(editorState, hint_db[hintset]);
+  };
+}
+
+function loadHintLayer(editorState, hint_offsets) {
   let layerLabel = new QuizLayerLabel({
     layerType: QuizLayerTypes.HINT,
     hintType: hint_offsets.hint_type,
@@ -69,26 +75,4 @@ export function loadHints(editorState, hint_offsets) {
       source: layerLabel,
     });
   });
-  return editorState;
 }
-
-export function loadWorkingHighlights(editorState, highlights,
-                                      reviewMode, answer_id) {
-  let text = editorState.getText();
-  highlights.forEach( (offset) => {
-    let layerLabel = new QuizLayerLabel({
-      layerType: QuizLayerTypes.ANSWER,
-      answer_id: offset.topic,
-    });
-    let layer = editorState.createLayerState(layerLabel);
-    if (reviewMode === false || offset.topic === answer_id) {
-      layer.addAnnotation({
-        start: offset.start,
-        end: offset.end,
-        text: text.substring(offset.start, offset.end),
-        source: layerLabel,
-      });
-    };
-  });
-  return editorState;
-};

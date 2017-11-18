@@ -84,7 +84,7 @@ export class ArticleView extends React.Component {
           editorState = cache.editorState;
           displayState = cache.displayState;
         } else {
-          editorState = loadAnnotatedArticle(editorState, article);
+          loadAnnotatedArticle(editorState, article);
           let blocks = makeBlocksFromOffsets(makeOffsetsFromLineBreaks(article.text));
           displayState.setDisplayBlocks(blocks);
           this.cache.set(article_id, {editorState, displayState});
