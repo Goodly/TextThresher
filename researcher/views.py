@@ -73,7 +73,8 @@ class UploadArticlesView(PermissionRequiredMixin, View):
                 archive_file.flush()
                 logger.info("Archive copied to temp file %s: tar file format: %s"
                             % (archive_file.name, tarfile.is_tarfile(archive_file.name)))
-                import_archive(archive_file.name, request.user.userprofile.id, with_annotations)
+                import_archive(f.name, archive_file.name,
+                               request.user.userprofile.id, with_annotations)
 
             return redirect('/admin/thresher/article/')
         else:
