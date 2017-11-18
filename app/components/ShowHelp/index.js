@@ -4,6 +4,8 @@ import { markdown } from 'markdown';
 
 import { styles } from './styles.scss';
 
+const debug = require('debug')('thresher:Help');
+
 const mapStateToProps = state => {
   return {
     name: state.project.name,
@@ -23,46 +25,43 @@ class ShowHelp extends Component {
 
   parseVideoUrl(long_description) {
     var links = [];
-    var lines = long_description.split(/\r\n?|\n/)
+    var lines = long_description.split(/\r\n?|\n/);
     var found = false;
-    var links_start = long_description.length;
-    var ch_count = 0;
+    var links_start = lines.length;
     for (var i = 0; i < lines.length; i++) {
-      if (found && lines[i]) {
+      if (found && lines[i] !== '') {
         var start = lines[i].indexOf("|") + 1;
         var text = lines[i].substring(0, start - 1).trim();
         var url = lines[i].substring(start, lines[i].length).trim();
-        if (url.substring(0, 4) != 'http') {
+        if (url.substring(0, 4) !== 'http') {
           url = 'http://' + url;
         }
         links.push([text, url]);
       }
-      if (lines[i] === "+++options+++") {
+      if (lines[i].trim() === "+++options+++") {
         found = true;
-        links_start = ch_count;
+        links_start = i;
       }
-      ch_count = ch_count + lines[i].length + 1;
     }
-    return [links, links_start];
+    if (found) {
+      long_description = lines.slice(0, links_start).join('\n');
+    };
+    return {links, long_description};
   }
 
   render() {
     let name = this.props.name;
     let description = this.props.description;
-    let long_description = this.props.long_description;
-    // Find the help video URL
-    var parsed = this.parseVideoUrl(long_description);
-    var links = parsed[0];
-    var links_start = parsed[1];
-    long_description = long_description.substring(0, links_start + 1);
+    let long_desc = this.props.long_description;
+    // Find any help video URLs, and truncate them from the markdown.
+    let {links, long_description} = this.parseVideoUrl(long_desc);
 
-    console.log(links);
-    console.log(links_start);
-    console.log(long_description);
+    debug(links);
+    debug(long_description);
 
     var links_html;
     var markup;
-    if (links) {
+    if (links.length > 0) {
       links_html = links.map((link, index) =>
                     <div key={index}>
                       <a href={link[1]}>{link[0]}</a>
