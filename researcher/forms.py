@@ -1,6 +1,7 @@
 from django.conf import settings
 from django import forms
-from django.forms.widgets import Select, SelectMultiple, HiddenInput, TextInput, Textarea
+from django.forms.widgets import (Select, SelectMultiple, HiddenInput,
+                                  TextInput, Textarea)
 
 from thresher.models import TASK_TYPE, Topic, Project, Contributor
 
@@ -22,9 +23,9 @@ class SelectTopicsField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, t):
         return t.name
 
-class SelectContributorId(forms.ChoiceField):
+class SelectContributorId(forms.ModelChoiceField):
     def label_from_instance(self, c):
-        return c.username
+        return c.__unicode__()
 
 class NLPArticlesForm(forms.Form):
     starting_article_id = forms.IntegerField(min_value=0)
@@ -77,7 +78,9 @@ class CreateProjectForm(forms.Form):
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
 
-    contributor_id = SelectContributorId([(obj.pybossa_user_id, obj.username) for obj in Contributor.objects.all()],
+    contributor_id = SelectContributorId(Contributor.objects.all(),
+                                label="Contributor",
+                                empty_label=None,
                                 help_text=help_select_contributors)
 
     # TODO: show min tokens only after Quiz is selected

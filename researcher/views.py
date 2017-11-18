@@ -248,7 +248,8 @@ class CreateProjectView(PermissionRequiredMixin, View):
                 task_config['min_tokens'] = cleaned_data['min_tokens_per_highlight']
                 task_config['max_tokens'] = cleaned_data['max_tokens_per_highlight']
 
-                task_config['contributor_id'] = list(cleaned_data['contributor_id'])
+                task_config['contributor_id'] = cleaned_data['contributor_id'].id
+                logger.info("contributor id: {}".format(task_config['contributor_id']))
 
             # Need to catch failure if attempting to create a duplicate name
             # or short_name on remote. Project model sets unique_together.
