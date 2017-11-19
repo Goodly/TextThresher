@@ -334,7 +334,7 @@ def load_annotations(article, article_obj):
         annotators = "Unknown annotator"
 
     (contributor, created) = Contributor.objects.get_or_create(
-        username=annotators
+        username="Gold Standard"
     )
 
     article_highlight = ArticleHighlight.objects.create(article=article_obj,
