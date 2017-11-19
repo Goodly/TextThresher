@@ -30,7 +30,7 @@ class JSONSerializerField(serializers.Field):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'task_type', 'short_name', 'name', 'description')
 
 class ContributorSerializer(serializers.ModelSerializer):
     unique_label = serializers.SerializerMethodField()
