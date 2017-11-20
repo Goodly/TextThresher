@@ -64,7 +64,7 @@ class ShowHelp extends Component {
     if (links.length > 0) {
       links_html = links.map((link, index) =>
                     <div key={index}>
-                      <a href={link[1]}>{link[0]}</a>
+                      <a href={link[1]} target="_blank">{link[0]}</a>
                     </div>);
       markup = <div>{links_html}</div>;
     } else {
