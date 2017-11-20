@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Map as ImmutableMap } from 'immutable';
+import moment from 'moment';
 
 import { styles } from './styles.scss';
 
 const mapStateToProps = state => {
   return {
-    task: state.task.task.info,
+    info: state.task.task.info,
+    created: state.task.task.created,
     projectName: state.project.name,
     description: state.project.description,
   };
@@ -19,7 +21,8 @@ class Project extends Component {
   }
 
   static propTypes = {
-    task: React.PropTypes.object.isRequired,
+    info: React.PropTypes.object.isRequired,
+    created: React.PropTypes.string.isRequired,
     projectName: React.PropTypes.string.isRequired,
     description: React.PropTypes.string.isRequired,
     style: React.PropTypes.object,
@@ -39,17 +42,22 @@ class Project extends Component {
   }
 
   render() {
-    let currTask = this.props.task;
+    let currTask = this.props.info;
     let article_number = currTask.article.article_number;
     let batch_name = currTask.article.batch_name;
     let namespace = this.getTopicNamespace(currTask);
     let projectName = this.props.projectName;
     let description = this.props.description;
+    let createdDate = (moment(this.props.created)
+                       .format('LLL [UTC]'));
 
     return (
       <div className="progress-info" style={this.props.style}>
         <div className="task-metadata">
           Project: { projectName }
+        </div>
+        <div className="task-metadata">
+          Created: { createdDate }
         </div>
         <div className="task-metadata">
           Desc: {description}
