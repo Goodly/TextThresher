@@ -26,8 +26,8 @@ class Project extends Component {
   }
 
   getTopicNamespace(currTask) {
-    if (currTask.topicTree && currTask.topictree.length > 0) {
-      namespace = currTask.topictree[0].namespace;
+    if (currTask.topictree && currTask.topictree.length > 0) {
+      let namespace = currTask.topictree[0].namespace;
       return (
         <div className="task-metadata last">
           Question set: {namespace}

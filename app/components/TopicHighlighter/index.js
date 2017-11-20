@@ -184,7 +184,6 @@ export class TopicHighlighter extends Component {
             <button onClick={ () => { this.props.showHelp(true); } } className='show-help'>
               Help
             </button>
-            <Project />
             <div id='article-introjs'>
               <HighlightTool
                 text={this.props.article.text}
@@ -194,6 +193,7 @@ export class TopicHighlighter extends Component {
               />
             </div>
             <button onClick={this.onSaveAndNext} className='save-and-next'>Save and Next</button>
+            <Project />
           </div>
           <TopicInstruction instrStyle={this.state.instrStyle} />
         </div>
