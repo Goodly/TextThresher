@@ -88,8 +88,8 @@ export class Quiz extends Component {
     let answerState = new QuizAnswers(editorState);
     this.state = {
       highlightsStyle: 'highlights-fixed',
-      contextWordsIndex: 10,
-      contextWords: CONTEXT_WORD_VALUES[10],
+      contextWordsIndex: 5,
+      contextWords: CONTEXT_WORD_VALUES[5],
       editorState,
       answerState,
       blockMaker: new BlockMaker(),
@@ -509,6 +509,10 @@ export class Quiz extends Component {
       return <ShowHelp closeHelp={ () => { this.props.showHelp(false); } } />
     }
 
+    if (this.props.question_id === -1) {
+      return <div>Loading...</div>;
+    };
+
     var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
 
     let saveAndNextButton =  <div/>;
@@ -523,10 +527,18 @@ export class Quiz extends Component {
         <div className="quiz clearfix">
           <div className="quiz-introjs">
             <div className={`quiz-highlighter ${this.state.highlightsStyle}`}>
-              <div className="highlighter-help-text">
-                Look for answers in the bolded text.
-              </div>
               { this.displayHighlighter() }
+              <Slider
+                className="context-word-slider"
+                index={this.state.contextWordsIndex}
+                values={CONTEXT_WORD_VALUES}
+                onChange={(evt) => {
+                  this.setContextWords(Number(evt.target.value));
+                }}
+              />
+              <div className="context-word-label">
+                Number of extra words to show: {CONTEXT_WORD_VALUES[this.state.contextWordsIndex]}
+              </div>
             </div>
           </div>
 
@@ -538,19 +550,11 @@ export class Quiz extends Component {
               Help
             </button>
             <Project />
+            <div className="highlighter-help-text">
+              Look for answers in the bolded text.
+            </div>
             { question_list }
             { saveAndNextButton }
-            <Slider
-              index={this.state.contextWordsIndex}
-              values={CONTEXT_WORD_VALUES}
-              onChange={(evt) => {
-                this.setContextWords(Number(evt.target.value));
-              }}
-              style={{marginTop: '10px'}}
-            />
-            <div className="contextWordControlHeader">
-              Number of context words to show: {CONTEXT_WORD_VALUES[this.state.contextWordsIndex]}
-            </div>
             <SelectHint
               currTask={this.props.currTask}
               onChange={ (evt) => { this.props.setDisplayHintType(evt.target.value); }}

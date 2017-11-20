@@ -7,6 +7,8 @@ $article-min-height: 350px;
 $article-max-height: 550px;
 $left-col-width: 500px;
 $highlighter-help-text-height: 30px;
+$context-word-slider-height: 26px;
+$context-word-label-height: 26px;
 
 .project-title {
   margin-top: 0px;
@@ -50,6 +52,10 @@ $highlighter-help-text-height: 30px;
   }
 }
 
+.highlighter-help-text {
+  height: $highlighter-help-text-height;
+}
+
 // Need this wrapper for introJS to annotate. Layout breaks if
 // introJS tries to annotate an element with position: fixed
 .quiz-introjs {
@@ -65,15 +71,21 @@ $highlighter-help-text-height: 30px;
   padding-bottom: $space-above-footer;
   height: 100%;
 
-  .highlighter-help-text {
-    height: $highlighter-help-text-height;
+  .context-word-slider {
+    margin-top: 5px;
+    height: $context-word-slider-height;
+  }
+
+  .context-word-label {
+    height: $context-word-label-height;
   }
 
   .article-click-box {
     @include newspaper;
     min-height: $article-min-height;
     max-height: $article-max-height -
-                $highlighter-help-text-height -
+                $context-word-slider-height -
+                $context-word-label-height -
                 $space-above-footer;
     height: 100%;
     overflow: auto;

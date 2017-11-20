@@ -11,6 +11,7 @@ export class Slider extends React.Component {
     values: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
     style: PropTypes.object,
+    className: PropTypes.string,
   }
 
   static defaultProps = {
@@ -26,6 +27,7 @@ export class Slider extends React.Component {
              step={1}
              onChange={this.props.onChange}
              style={this.props.style}
+             className={this.props.className}
       />
     );
   }

@@ -22,8 +22,7 @@ class Project extends Component {
     let tasksCompleted = this.props.tasksCompleted;
     let progress = "Welcome!"
     if (tasksCompleted === 0) {
-      progress = "Welcome! Click the tutorial button to the right " +
-                 "if you need to see the tuorial again.";
+      progress = "Welcome!";
     } else if (tasksCompleted === 1) {
       progress = "You have completed your first task - nice!"
     } else if ((tasksCompleted > 1) && (tasksCompleted < 4)) {
