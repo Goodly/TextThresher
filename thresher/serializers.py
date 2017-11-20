@@ -30,7 +30,8 @@ class JSONSerializerField(serializers.Field):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'task_type', 'short_name', 'name', 'description')
+        fields = ('id', 'task_type', 'task_config',
+                  'short_name', 'name', 'description')
 
 class ContributorSerializer(serializers.ModelSerializer):
     unique_label = serializers.SerializerMethodField()
@@ -81,13 +82,13 @@ class ArticleSerializer2(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', 'article_number', 'text', 'metadata',
+        fields = ('id', 'article_number', 'batch_name', 'text', 'metadata',
                   'highlight_taskruns')
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = ('id', 'article_number', 'text', 'metadata')
+        fields = ('id', 'article_number', 'batch_name', 'text', 'metadata')
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -116,20 +117,21 @@ class NLPQuestionSerializer(serializers.Serializer):
         return obj.hint_type
 
 
-class TopicSerializer(serializers.ModelSerializer):
+class TopicSerializer2(serializers.ModelSerializer):
     # A nested serializer for all the questions
     questions = QuestionSerializer(many=True)
 
     class Meta:
         model = Topic
-        fields = ('id', 'parent', 'name',
-                  'topic_number', 'glossary', 'instructions',
+        fields = ('id', 'name', 'namespace', 'topic_number',
+                  'glossary', 'instructions',
                   'questions')
 
-class RootTopicSerializer(serializers.ModelSerializer):
+class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
-        fields = ('id', 'name', 'topic_number', 'glossary', 'instructions')
+        fields = ('id', 'name', 'namespace', 'topic_number',
+                  'glossary', 'instructions')
 
 class NLPHintSerializer(serializers.ModelSerializer):
     class Meta:

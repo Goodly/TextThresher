@@ -11,8 +11,8 @@ from thresher.models import NLPHints, HighlightGroup
 
 from thresher.serializers import (ProjectSerializer,
                                   ArticleSerializer,
-                                  RootTopicSerializer,
                                   TopicSerializer,
+                                  TopicSerializer2,
                                   HighlightGroupSerializer,
                                   NLPQuestionSerializer,
                                   NLPHintSerializer)
@@ -35,7 +35,7 @@ def collectHighlightTasks(articles=None, topics=None, project=None):
     logger.info("collectHighlightTasks sorting by article_number: {}".format(
                 [article.article_number for article in articles]))
     project_data = ProjectSerializer(project, many=False).data
-    topics_data = RootTopicSerializer(topics, many=True).data
+    topics_data = TopicSerializer(topics, many=True).data
     return [{ "project": project_data,
               "topics": topics_data,
               "article":
@@ -104,7 +104,7 @@ def collectQuizTasksForTopic(articles=None, topic=None, project=None):
                )
 
     project_data = ProjectSerializer(project, many=False).data
-    topictree_data = TopicSerializer(topictree, many=True).data
+    topictree_data = TopicSerializer2(topictree, many=True).data
 
     # With the prefetching config above, the loops below will
     # be hitting caches. Only 8 queries should be issued against 8 tables,
