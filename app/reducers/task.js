@@ -18,7 +18,7 @@ export function task(state = initialState, action) {
     case 'SAVE_TASK':
       return {
         ...state,
-        info: action.info,
+        task: action.task,
         saveAndNext: action.saveAndNext,
         displayState: displayStates.TASK_LOADED,
       }
@@ -50,11 +50,6 @@ export function task(state = initialState, action) {
           displayState: state.lastDisplayState
         };
       };
-    case 'TASK_PROGRESS':
-      return {
-        ...state,
-        progress: action.progress
-      }
     case 'TASKS_DONE':
       // Don't reset progress stats - displayed in ThankYou component.
       return {

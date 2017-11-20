@@ -20,7 +20,8 @@ class ShowHelp extends Component {
   }
 
   static propTypes = {
-    closeHelp: React.PropTypes.func.isRequired
+    closeHelp: React.PropTypes.func.isRequired,
+    style: React.PropTypes.object,
   }
 
   parseVideoUrl(long_description) {
@@ -76,7 +77,7 @@ class ShowHelp extends Component {
     };
 
     return (
-      <div className="display-help">
+      <div className="display-help" style={this.props.style}>
         <button onClick={ () => { this.props.closeHelp(); } } className='close-help-top'>
           Close Help
         </button>

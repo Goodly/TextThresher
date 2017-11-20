@@ -6,6 +6,7 @@ import Color from 'color';
 
 import Question from 'components/Question';
 import Project from 'components/Project';
+import Progress from 'components/Progress';
 import ThankYou from 'components/ThankYou';
 import ShowHelp from 'components/ShowHelp';
 import SelectHint from 'components/SelectHint';
@@ -241,7 +242,7 @@ export class Quiz extends Component {
 
   dispQuestion(question, showButton) {
     var next_id = question.id;
-    var prev_id = -1;
+    var prev_id = question.id;
     for(var k = 0; k < this.props.queue.length; k++) {
       if(question.id == this.props.queue[k]) {
         if(k < this.props.queue.length - 1) {
@@ -271,6 +272,7 @@ export class Quiz extends Component {
       : <div></div>;
     return (
       <div key={question.id}>
+        { buttons }
         <Question question={question} />
         { buttons }
       </div>
@@ -287,24 +289,11 @@ export class Quiz extends Component {
       </button>
       : <div></div>;
 
-    var rootTopicName = '';
     for(var i = 0; i < topic.length; i++) {
-      // Topics are sorted by their topic_number field in ascending order.
-      // The root topic is imported as order 0. So we're going to find
-      // it first before any subtopic.
-      if (this.props.currTask.topTopicId === topic[i].id) {
-        rootTopicName = topic[i].name + ':';
-      };
       for(var k = 0; k < topic[i].questions.length; k++) {
         if(this.props.question_id == topic[i].questions[k].id) {
-          if (this.props.currTask.topTopicId === topic[i].id) {
-            rootTopicName = ''; // Don't show root topic and topic when the same
-          };
           return (
             <div key={topic[i].id}>
-              <div style={{fontSize: '80%', color:'rgb(64,64,64)', marginBottom:'10px'}}>
-                {rootTopicName} {topic[i].name}
-              </div>
               { this.dispQuestion(topic[i].questions[k], true) }
               { review_button }
             </div>
@@ -549,7 +538,7 @@ export class Quiz extends Component {
             <button onClick={ () => { this.props.showHelp(true); } } className='show-help'>
               Help
             </button>
-            <Project />
+            <Progress />
             <div className="highlighter-help-text">
               Look for answers in the bolded text.
             </div>

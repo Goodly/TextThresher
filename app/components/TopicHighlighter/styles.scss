@@ -30,6 +30,7 @@
   margin-right: 1em;
 
   .article-click-box {
+    clear: both;
     @include newspaper;
     padding: 1em;
     border: 1px solid silver;
@@ -42,7 +43,8 @@
 
   button.show-help {
     float: right;
-    clear: right;
+    margin-right: 10px;
+    margin-bottom: 6px;
   }
 
   button.save-and-next {

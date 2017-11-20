@@ -119,10 +119,22 @@ $context-word-label-height: 26px;
 
   button.show-help {
     float: right;
-    clear: right;
+    margin-right: 10px;
+    margin-bottom: 6px;
+  }
+
+  button.previous-button {
+    margin: 6px 6px 6px 0px
+  }
+
+  button.next-button {
+    margin: 6px 6px 6px 0px
+  }
+
+  button.review-button {
+    margin: 6px 6px 6px 0px
   }
 
   button.save-and-next {
-    margin: 2em;
   }
 }
