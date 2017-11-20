@@ -7,6 +7,7 @@ import Color from 'color';
 import Question from 'components/Question';
 import Project from 'components/Project';
 import Progress from 'components/Progress';
+import QuizProgress from 'components/QuizProgress';
 import ThankYou from 'components/ThankYou';
 import ShowHelp from 'components/ShowHelp';
 import SelectHint from 'components/SelectHint';
@@ -539,7 +540,12 @@ export class Quiz extends Component {
               Help
             </button>
             <Progress />
-            <div className="highlighter-help-text">
+            <QuizProgress
+               style={{clear: 'right', marginBottom: '6px'}}
+               setActiveFn={this.props.activeQuestion}
+               answerState={this.state.answerState}
+            />
+            <div className="look-in-bold-text">
               Look for answers in the <b>bolded</b> text.
             </div>
             { question_list }

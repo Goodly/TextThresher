@@ -6,9 +6,6 @@ import { styles } from './styles.scss';
 
 const mapStateToProps = state => {
   return {
-    currTask: state.quiz.currTask,
-    queue: state.quiz.queue,
-    answer_selected: state.quiz.answer_selected,
     tasksCompleted: state.task.progress.done,
   };
 }
@@ -19,16 +16,13 @@ class Progress extends Component {
   }
 
   static propTypes = {
-    currTask: React.PropTypes.object.isRequired,
-    queue: React.PropTypes.array.isRequired,
-    answer_selected: React.PropTypes.instanceOf(ImmutableMap).isRequired,
     tasksCompleted: React.PropTypes.number.isRequired,
     style: React.PropTypes.object,
   }
 
   render() {
     let tasksCompleted = this.props.tasksCompleted;
-    let progress = "Welcome!"
+    let progress = "Welcome!";
     if (tasksCompleted === 0) {
       progress = "Welcome!";
     } else if (tasksCompleted === 1) {
@@ -46,7 +40,7 @@ class Progress extends Component {
     }
 
     return (
-      <div className="project-tasks-completed">
+      <div style={this.props.style} className="project-tasks-completed">
         { progress }
       </div>
     );

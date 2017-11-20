@@ -57,10 +57,7 @@ class Project extends Component {
           Project: { projectName }
         </div>
         <div className="task-metadata">
-          Created: { createdDate }
-        </div>
-        <div className="task-metadata">
-          Desc: {description}
+          Project uploaded: { createdDate }
         </div>
         <div className="task-metadata">
           Article: {article_number}

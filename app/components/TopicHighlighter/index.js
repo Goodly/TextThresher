@@ -5,6 +5,7 @@ import { colors } from 'utils/colors';
 import HighlightTool from 'components/HighlightTool';
 import { TopicPicker, TopicInstruction }  from 'components/TopicPicker';
 import Project from 'components/Project';
+import Progress from 'components/Progress';
 import ThankYou from 'components/ThankYou';
 import ShowHelp from 'components/ShowHelp';
 import { displayStates } from 'components/displaystates';
@@ -184,6 +185,7 @@ export class TopicHighlighter extends Component {
             <button onClick={ () => { this.props.showHelp(true); } } className='show-help'>
               Help
             </button>
+            <Progress />
             <div id='article-introjs'>
               <HighlightTool
                 text={this.props.article.text}
