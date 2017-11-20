@@ -540,10 +540,11 @@ export class Quiz extends Component {
             </button>
             <Progress />
             <div className="highlighter-help-text">
-              Look for answers in the bolded text.
+              Look for answers in the <b>bolded</b> text.
             </div>
             { question_list }
             { saveAndNextButton }
+            <Project />
             <SelectHint
               currTask={this.props.currTask}
               onChange={ (evt) => { this.props.setDisplayHintType(evt.target.value); }}

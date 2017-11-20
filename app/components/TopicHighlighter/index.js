@@ -166,6 +166,9 @@ export class TopicHighlighter extends Component {
     }
 
     let loadingClass = this.props.displayState === displayStates.BEFORE_LOAD ? 'loading' : '';
+    if (this.props.displayState === displayStates.BEFORE_LOAD) {
+      return <div>Loading...</div>;
+    };
 
     return (
       <div className={loadingClass}>

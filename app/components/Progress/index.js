@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Map as ImmutableMap } from 'immutable';
 
 import { styles } from './styles.scss';
 
 const mapStateToProps = state => {
   return {
-    tasksCompleted: state.task.progress.done
+    currTask: state.quiz.currTask,
+    queue: state.quiz.queue,
+    answer_selected: state.quiz.answer_selected,
+    tasksCompleted: state.task.progress.done,
   };
 }
 
@@ -14,9 +18,15 @@ class Progress extends Component {
     super(props);
   }
 
+  static propTypes = {
+    currTask: React.PropTypes.object.isRequired,
+    queue: React.PropTypes.array.isRequired,
+    answer_selected: React.PropTypes.instanceOf(ImmutableMap).isRequired,
+    tasksCompleted: React.PropTypes.number.isRequired,
+    style: React.PropTypes.object,
+  }
+
   render() {
-    let name = this.props.name;
-    let description = this.props.description;
     let tasksCompleted = this.props.tasksCompleted;
     let progress = "Welcome!"
     if (tasksCompleted === 0) {
@@ -36,10 +46,8 @@ class Progress extends Component {
     }
 
     return (
-      <div>
-        <div className="project-tasks-completed">
-          { progress }
-        </div>
+      <div className="project-tasks-completed">
+        { progress }
       </div>
     );
   }
