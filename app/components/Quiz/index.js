@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 import { Map as ImmutableMap } from 'immutable';
@@ -71,6 +72,7 @@ export class Quiz extends Component {
   constructor(props) {
     super(props);
 
+    this.setReviewMode = this.setReviewMode.bind(this);
     this.loadEditorState = this.loadEditorState.bind(this);
     this.wrapSpan = this.wrapSpan.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -95,20 +97,21 @@ export class Quiz extends Component {
       editorState,
       answerState,
       blockMaker: new BlockMaker(),
+      reviewMode: false,
     };
   }
 
   static propTypes = {
-    currTask: React.PropTypes.object,
-    db: React.PropTypes.object,
-    queue: React.PropTypes.array,
-    question_id: React.PropTypes.number,
-    answer_id: React.PropTypes.number,
-    answer_selected: React.PropTypes.instanceOf(ImmutableMap).isRequired,
-    answer_colors: React.PropTypes.instanceOf(ImmutableMap).isRequired,
-    saveAndNext: React.PropTypes.func,
-    review: React.PropTypes.bool,
-    done: React.PropTypes.bool,
+    currTask: PropTypes.object,
+    db: PropTypes.object,
+    queue: PropTypes.array,
+    question_id: PropTypes.number,
+    answer_id: PropTypes.number,
+    answer_selected: PropTypes.instanceOf(ImmutableMap).isRequired,
+    answer_colors: PropTypes.instanceOf(ImmutableMap).isRequired,
+    saveAndNext: PropTypes.func,
+    reviewMode: PropTypes.bool,
+    done: PropTypes.bool,
   }
 
   componentDidMount() {
@@ -176,6 +179,10 @@ export class Quiz extends Component {
     window.removeEventListener('scroll', this.handleScroll);
     window.removeEventListener('keyup', this.handleKeyUp);
     this.intro.exit();
+  }
+
+  setReviewMode(reviewMode) {
+    this.setState({reviewMode: reviewMode === true});
   }
 
   loadEditorState(currTask) {
@@ -266,11 +273,11 @@ export class Quiz extends Component {
           { "Prev" }
         </button>;
     var buttons = showButton ?
-      <div>
+      <div className="quiz-prev-next-buttons">
         { prev_button }
         { next_button }
       </div>
-      : <div></div>;
+      : <div className="quiz-prev-next-buttons"></div>;
     return (
       <div key={question.id}>
         { buttons }
@@ -285,7 +292,7 @@ export class Quiz extends Component {
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
     var review_button = last_question ?
       <button type="button" className="review-button"
-        onClick={() => { this.props.setReview(true); }}>
+        onClick={() => { this.setReviewMode(true); }}>
         { "Review" }
       </button>
       : <div></div>;
@@ -503,10 +510,10 @@ export class Quiz extends Component {
       return <div>Loading...</div>;
     };
 
-    var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
+    var question_list = this.state.reviewMode ? this.dispReview() : this.selectQuestion();
 
     let saveAndNextButton =  <div/>;
-    if (this.props.review && this.allQuestionsAnswered()) {
+    if (this.state.reviewMode && this.allQuestionsAnswered()) {
       saveAndNextButton =  <button className="save-and-next"
                                    onClick={ this.onSaveAndNext }>
                              Save and Next
@@ -564,7 +571,7 @@ export class Quiz extends Component {
     // orderedLayers is an array of objects with keys:
     // {order, layer, annotation}
     const answer_colors = this.props.answer_colors;
-    const reviewMode = this.props.review;
+    const reviewMode = this.state.reviewMode;
     const active_answer_id = this.props.answer_id;
     // If no layers, these must be context words
     if (orderedLayers.length === 0) {

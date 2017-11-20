@@ -31,7 +31,6 @@ const initialState = {
   curr_answer_id: -100,
   answer_selected: ImmutableMap(),
   answer_colors: ImmutableMap(),
-  review: false,
 };
 
 // Compute three sets:
@@ -183,7 +182,6 @@ export function quiz(state = initialState, action) {
         curr_answer_id: -100,
         answer_selected,
         answer_colors: ImmutableMap(),
-        review: false
       }
     }
     case 'FETCH_TASK_SUCCESS': {
@@ -208,7 +206,6 @@ export function quiz(state = initialState, action) {
         curr_answer_id: -100,
         answer_selected,
         answer_colors: ImmutableMap(),
-        review: false,
       }
     }
     case 'ANSWER_SELECTED': {
@@ -255,11 +252,6 @@ export function quiz(state = initialState, action) {
       };
       return state;
     }
-    case 'UPDATE_REVIEW':
-      return {
-        ...state,
-        review: action.review
-      }
     case 'UPDATE_ACTIVE_QUESTION': {
       // If the question is a single answer question like text or date,
       // then set the placeholder answer immediately to select a color.

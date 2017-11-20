@@ -90,7 +90,7 @@ class QuizProgress extends Component {
               if (this.hasAllHighlights(qid)) {
                 Object.assign(style, { backgroundColor: 'green' });
               } else {
-                Object.assign(style, { backgroundColor: 'indigo' });
+                Object.assign(style, { backgroundColor: 'purple' });
               };
             };
             return (

@@ -11,13 +11,6 @@ export function activeQuestion(q_id) {
   };
 }
 
-export function setReview(review) {
-  return {
-    type: 'UPDATE_REVIEW',
-    review
-  };
-}
-
 export function storeQuizTask(task) {
   return (dispatch, getState) => {
     dispatch({
