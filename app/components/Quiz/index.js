@@ -122,12 +122,12 @@ export class Quiz extends Component {
       },
       {
         'element': '.quiz-questions',
-        'intro': 'Next, read and answer the first question presented below the text. Selecting an answer will enable the highlighting tool.',
+        'intro': 'Next, read and answer the first question presented below the text. Selecting an answer usually enables the highlighting tool.',
         'position': 'left',
       },
       {
         'element': '.quiz-introjs',
-        'intro': 'Please highlight all relevant words and phrases of the text that justify your answer -- make sure to include every piece of the text which support the answer you chose. When you’ve finished highlighting all relevant text to justify your answer, please check your work, then press "Next" to move onto the next question.',
+        'intro': 'If the highlighter color well is shown, please highlight all relevant words and phrases of the text that justify your answer -- make sure to include every piece of the text which support the answer you chose. When you’ve finished highlighting all relevant text to justify your answer, please check your work, then press "Next" to move onto the next question.',
         'position': 'right',
       },
       {
@@ -566,6 +566,10 @@ export class Quiz extends Component {
     const answer_colors = this.props.answer_colors;
     const reviewMode = this.props.review;
     const active_answer_id = this.props.answer_id;
+    // If no layers, these must be context words
+    if (orderedLayers.length === 0) {
+      return { color: 'gray', fontSize: '0.9em' }
+    };
     let style = {};
     for (let layer of orderedLayers) {
       let layerType = layer.layer.layerLabel.layerType;
@@ -602,7 +606,7 @@ export class Quiz extends Component {
 
 // sequence_number can be used for even/odd styling...
 function getBlockProps(block, sequence_number) {
-  let props = {};
+  let props = { className: 'end-block-with-ellipsis' };
   switch (block.blockType) {
     case 'unstyled': {
       if (sequence_number % 2) {

@@ -142,3 +142,7 @@ $context-word-label-height: 26px;
     margin: 12px 6px 12px 0px
   }
 }
+
+.end-block-with-ellipsis::after {
+  content: "..."
+}
