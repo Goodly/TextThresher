@@ -28,8 +28,6 @@ const mapStateToProps = state => {
     answer_id: state.quiz.curr_answer_id,
     answer_selected: state.quiz.answer_selected,
     answer_colors: state.quiz.answer_colors,
-    review: state.quiz.review,
-    task: state.task,
     saveAndNext: state.task.saveAndNext,
     displayState: state.task.displayState,
     displayHintSelectControl: state.task.displayHintSelectControl,

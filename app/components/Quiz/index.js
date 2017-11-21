@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 import { Map as ImmutableMap } from 'immutable';
@@ -6,6 +7,8 @@ import Color from 'color';
 
 import Question from 'components/Question';
 import Project from 'components/Project';
+import Progress from 'components/Progress';
+import QuizProgress from 'components/QuizProgress';
 import ThankYou from 'components/ThankYou';
 import ShowHelp from 'components/ShowHelp';
 import SelectHint from 'components/SelectHint';
@@ -69,6 +72,7 @@ export class Quiz extends Component {
   constructor(props) {
     super(props);
 
+    this.setReviewMode = this.setReviewMode.bind(this);
     this.loadEditorState = this.loadEditorState.bind(this);
     this.wrapSpan = this.wrapSpan.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -88,25 +92,26 @@ export class Quiz extends Component {
     let answerState = new QuizAnswers(editorState);
     this.state = {
       highlightsStyle: 'highlights-fixed',
-      contextWordsIndex: 10,
-      contextWords: CONTEXT_WORD_VALUES[10],
+      contextWordsIndex: 5,
+      contextWords: CONTEXT_WORD_VALUES[5],
       editorState,
       answerState,
       blockMaker: new BlockMaker(),
+      reviewMode: false,
     };
   }
 
   static propTypes = {
-    currTask: React.PropTypes.object,
-    db: React.PropTypes.object,
-    queue: React.PropTypes.array,
-    question_id: React.PropTypes.number,
-    answer_id: React.PropTypes.number,
-    answer_selected: React.PropTypes.instanceOf(ImmutableMap).isRequired,
-    answer_colors: React.PropTypes.instanceOf(ImmutableMap).isRequired,
-    saveAndNext: React.PropTypes.func,
-    review: React.PropTypes.bool,
-    done: React.PropTypes.bool,
+    currTask: PropTypes.object,
+    db: PropTypes.object,
+    queue: PropTypes.array,
+    question_id: PropTypes.number,
+    answer_id: PropTypes.number,
+    answer_selected: PropTypes.instanceOf(ImmutableMap).isRequired,
+    answer_colors: PropTypes.instanceOf(ImmutableMap).isRequired,
+    saveAndNext: PropTypes.func,
+    reviewMode: PropTypes.bool,
+    done: PropTypes.bool,
   }
 
   componentDidMount() {
@@ -120,12 +125,12 @@ export class Quiz extends Component {
       },
       {
         'element': '.quiz-questions',
-        'intro': 'Next, read and answer the first question presented below the text. Selecting an answer will enable the highlighting tool.',
+        'intro': 'Next, read and answer the first question presented below the text. Selecting an answer usually enables the highlighting tool.',
         'position': 'left',
       },
       {
         'element': '.quiz-introjs',
-        'intro': 'Please highlight all relevant words and phrases of the text that justify your answer -- make sure to include every piece of the text which support the answer you chose. When you’ve finished highlighting all relevant text to justify your answer, please check your work, then press "Next" to move onto the next question.',
+        'intro': 'If the highlighter color well is shown, please highlight all relevant words and phrases of the text that justify your answer -- make sure to include every piece of the text which support the answer you chose. When you’ve finished highlighting all relevant text to justify your answer, please check your work, then press "Next" to move onto the next question.',
         'position': 'right',
       },
       {
@@ -174,6 +179,10 @@ export class Quiz extends Component {
     window.removeEventListener('scroll', this.handleScroll);
     window.removeEventListener('keyup', this.handleKeyUp);
     this.intro.exit();
+  }
+
+  setReviewMode(reviewMode) {
+    this.setState({reviewMode: reviewMode === true});
   }
 
   loadEditorState(currTask) {
@@ -241,7 +250,7 @@ export class Quiz extends Component {
 
   dispQuestion(question, showButton) {
     var next_id = question.id;
-    var prev_id = -1;
+    var prev_id = question.id;
     for(var k = 0; k < this.props.queue.length; k++) {
       if(question.id == this.props.queue[k]) {
         if(k < this.props.queue.length - 1) {
@@ -264,13 +273,14 @@ export class Quiz extends Component {
           { "Prev" }
         </button>;
     var buttons = showButton ?
-      <div>
+      <div className="quiz-prev-next-buttons">
         { prev_button }
         { next_button }
       </div>
-      : <div></div>;
+      : <div className="quiz-prev-next-buttons"></div>;
     return (
       <div key={question.id}>
+        { buttons }
         <Question question={question} />
         { buttons }
       </div>
@@ -282,29 +292,16 @@ export class Quiz extends Component {
     var last_question = this.props.question_id == this.props.queue[this.props.queue.length - 1];
     var review_button = last_question ?
       <button type="button" className="review-button"
-        onClick={() => { this.props.setReview(true); }}>
+        onClick={() => { this.setReviewMode(true); }}>
         { "Review" }
       </button>
       : <div></div>;
 
-    var rootTopicName = '';
     for(var i = 0; i < topic.length; i++) {
-      // Topics are sorted by their topic_number field in ascending order.
-      // The root topic is imported as order 0. So we're going to find
-      // it first before any subtopic.
-      if (this.props.currTask.topTopicId === topic[i].id) {
-        rootTopicName = topic[i].name + ':';
-      };
       for(var k = 0; k < topic[i].questions.length; k++) {
         if(this.props.question_id == topic[i].questions[k].id) {
-          if (this.props.currTask.topTopicId === topic[i].id) {
-            rootTopicName = ''; // Don't show root topic and topic when the same
-          };
           return (
             <div key={topic[i].id}>
-              <div style={{fontSize: '80%', color:'rgb(64,64,64)', marginBottom:'10px'}}>
-                {rootTopicName} {topic[i].name}
-              </div>
               { this.dispQuestion(topic[i].questions[k], true) }
               { review_button }
             </div>
@@ -509,10 +506,14 @@ export class Quiz extends Component {
       return <ShowHelp closeHelp={ () => { this.props.showHelp(false); } } />
     }
 
-    var question_list = this.props.review ? this.dispReview() : this.selectQuestion();
+    if (this.props.question_id === -1) {
+      return <div>Loading...</div>;
+    };
+
+    var question_list = this.state.reviewMode ? this.dispReview() : this.selectQuestion();
 
     let saveAndNextButton =  <div/>;
-    if (this.props.review && this.allQuestionsAnswered()) {
+    if (this.state.reviewMode && this.allQuestionsAnswered()) {
       saveAndNextButton =  <button className="save-and-next"
                                    onClick={ this.onSaveAndNext }>
                              Save and Next
@@ -523,10 +524,18 @@ export class Quiz extends Component {
         <div className="quiz clearfix">
           <div className="quiz-introjs">
             <div className={`quiz-highlighter ${this.state.highlightsStyle}`}>
-              <div className="highlighter-help-text">
-                Look for answers in the bolded text.
-              </div>
               { this.displayHighlighter() }
+              <Slider
+                className="context-word-slider"
+                index={this.state.contextWordsIndex}
+                values={CONTEXT_WORD_VALUES}
+                onChange={(evt) => {
+                  this.setContextWords(Number(evt.target.value));
+                }}
+              />
+              <div className="context-word-label">
+                Number of extra words to show: {CONTEXT_WORD_VALUES[this.state.contextWordsIndex]}
+              </div>
             </div>
           </div>
 
@@ -537,20 +546,18 @@ export class Quiz extends Component {
             <button onClick={ () => { this.props.showHelp(true); } } className='show-help'>
               Help
             </button>
-            <Project />
+            <Progress />
+            <QuizProgress
+               style={{clear: 'right', marginBottom: '6px'}}
+               setActiveFn={this.props.activeQuestion}
+               answerState={this.state.answerState}
+            />
+            <div className="look-in-bold-text">
+              Look for answers in the <b>bolded</b> text.
+            </div>
             { question_list }
             { saveAndNextButton }
-            <Slider
-              index={this.state.contextWordsIndex}
-              values={CONTEXT_WORD_VALUES}
-              onChange={(evt) => {
-                this.setContextWords(Number(evt.target.value));
-              }}
-              style={{marginTop: '10px'}}
-            />
-            <div className="contextWordControlHeader">
-              Number of context words to show: {CONTEXT_WORD_VALUES[this.state.contextWordsIndex]}
-            </div>
+            <Project />
             <SelectHint
               currTask={this.props.currTask}
               onChange={ (evt) => { this.props.setDisplayHintType(evt.target.value); }}
@@ -564,8 +571,12 @@ export class Quiz extends Component {
     // orderedLayers is an array of objects with keys:
     // {order, layer, annotation}
     const answer_colors = this.props.answer_colors;
-    const reviewMode = this.props.review;
+    const reviewMode = this.state.reviewMode;
     const active_answer_id = this.props.answer_id;
+    // If no layers, these must be context words
+    if (orderedLayers.length === 0) {
+      return { color: 'gray', fontSize: '0.9em' }
+    };
     let style = {};
     for (let layer of orderedLayers) {
       let layerType = layer.layer.layerLabel.layerType;
@@ -602,7 +613,7 @@ export class Quiz extends Component {
 
 // sequence_number can be used for even/odd styling...
 function getBlockProps(block, sequence_number) {
-  let props = {};
+  let props = { className: 'end-block-with-ellipsis' };
   switch (block.blockType) {
     case 'unstyled': {
       if (sequence_number % 2) {

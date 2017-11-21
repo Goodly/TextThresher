@@ -2,6 +2,8 @@ import { Map as ImmutableMap } from 'immutable';
 import { normalize, schema } from 'normalizr';
 import moment from 'moment';
 
+const debug = require('debug')('thresher:Quiz-reducer');
+
 // Schema for normalizing the task data structure into table like entities using
 // the database id as key, e.g.,
 // db.entities.topic[id], db.entities.question[id], db.entities.answer[id]
@@ -29,7 +31,6 @@ const initialState = {
   curr_answer_id: -100,
   answer_selected: ImmutableMap(),
   answer_colors: ImmutableMap(),
-  review: false,
 };
 
 // Compute three sets:
@@ -81,18 +82,38 @@ function questionSets(topictree) {
 function updateQueue(currTask, answer_selected) {
   const { noncontingent, lookupQuestionNext, lookupAnswerNext } =
     questionSets(currTask.topictree);
-  let activeQuestions = new Set(noncontingent);
-  // Iterate over ImmutableMaps to add questions activated by current answers
+  // Iterate over questions to add questions activated by current answers
   // based on current set of answers
-  for (let question_id of answer_selected.keys()) {
-    let next_questions = lookupQuestionNext[question_id];
-    let answerMap = answer_selected.get(question_id);
-    for (let answer_id of answerMap.keys()) {
-      next_questions = next_questions.concat(lookupAnswerNext[answer_id]);
+  let collectQuestions = new Set(noncontingent);
+  let questionsToCheck = new Set(noncontingent);
+  let alreadyChecked = new Set();
+  while (questionsToCheck.size > 0) {
+    let triggeredQuestions = new Set();
+    for (let question_id of questionsToCheck) {
+      if (answer_selected.has(question_id)) {
+        let next_questions = lookupQuestionNext[question_id];
+        let answerMap = answer_selected.get(question_id);
+        for (let answer_id of answerMap.keys()) {
+          next_questions = next_questions.concat(lookupAnswerNext[answer_id]);
+        };
+        next_questions.forEach( (question_id) => {
+          triggeredQuestions.add(question_id);
+          collectQuestions.add(question_id);
+        });
+      };
+      alreadyChecked.add(question_id);
     };
-    next_questions.forEach( (question_id) => activeQuestions.add(question_id) );
+    // Make sure we don't get trapped in a loop, don't recheck
+    // previously seen questions.
+    questionsToCheck = new Set();
+    for (let q of triggeredQuestions) {
+      if ( ! alreadyChecked.has(q) ) {
+        questionsToCheck.add(q);
+      };
+    };
+    debug(questionsToCheck);
   };
-  let queue = Array.from(activeQuestions);
+  let queue = Array.from(collectQuestions);
   return queue.sort((a, b) => { return a - b; });
 }
 
@@ -161,7 +182,6 @@ export function quiz(state = initialState, action) {
         curr_answer_id: -100,
         answer_selected,
         answer_colors: ImmutableMap(),
-        review: false
       }
     }
     case 'FETCH_TASK_SUCCESS': {
@@ -186,7 +206,6 @@ export function quiz(state = initialState, action) {
         curr_answer_id: -100,
         answer_selected,
         answer_colors: ImmutableMap(),
-        review: false,
       }
     }
     case 'ANSWER_SELECTED': {
@@ -233,11 +252,6 @@ export function quiz(state = initialState, action) {
       };
       return state;
     }
-    case 'UPDATE_REVIEW':
-      return {
-        ...state,
-        review: action.review
-      }
     case 'UPDATE_ACTIVE_QUESTION': {
       // If the question is a single answer question like text or date,
       // then set the placeholder answer immediately to select a color.

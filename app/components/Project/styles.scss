@@ -1,10 +1,13 @@
-.project-title {
-  font-weight: bold;
+.progress-info {
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 1;
+  color: SlateGray;
 }
 
-.project-description {
-  font-style: italic;
+.task-metadata {
 }
 
-.project-tasks-completed {
+.task-metadata.last {
+  margin-bottom: 10px;
 }

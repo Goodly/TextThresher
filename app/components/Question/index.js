@@ -24,7 +24,6 @@ const mapStateToProps = state => {
     answer_id: state.quiz.curr_answer_id,
     answers: state.quiz.answer_selected,
     answer_colors: state.quiz.answer_colors,
-    currTask: state.quiz.currTask
   };
 }
 
@@ -75,10 +74,9 @@ class Question extends Component {
 
   static propTypes = {
     question: React.PropTypes.object.isRequired,
-    answer_id: React.PropTypes.number,
+    answer_id: React.PropTypes.number.isRequired,
     answers: React.PropTypes.instanceOf(ImmutableMap).isRequired,
     answer_colors: React.PropTypes.instanceOf(ImmutableMap).isRequired,
-    currTask: React.PropTypes.object
   }
 
   activeAnswer(answer_id) {

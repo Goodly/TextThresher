@@ -1,54 +1,68 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Map as ImmutableMap } from 'immutable';
+import moment from 'moment';
 
 import { styles } from './styles.scss';
 
 const mapStateToProps = state => {
   return {
-    name: state.project.name,
+    info: state.task.task.info,
+    created: state.task.task.created,
+    projectName: state.project.name,
     description: state.project.description,
-    tasksCompleted: state.task.progress.done
   };
 }
 
 class Project extends Component {
   constructor(props) {
     super(props);
+    this.getTopicNamespace = this.getTopicNamespace.bind(this);
+  }
+
+  static propTypes = {
+    info: React.PropTypes.object.isRequired,
+    created: React.PropTypes.string.isRequired,
+    projectName: React.PropTypes.string.isRequired,
+    description: React.PropTypes.string.isRequired,
+    style: React.PropTypes.object,
+  }
+
+  getTopicNamespace(currTask) {
+    if (currTask.topictree && currTask.topictree.length > 0) {
+      let namespace = currTask.topictree[0].namespace;
+      return (
+        <div className="task-metadata last">
+          Question set: {namespace}
+        </div>
+      );
+    } else {
+      return <div></div>;
+    };
   }
 
   render() {
-    let name = this.props.name;
+    let currTask = this.props.info;
+    let article_number = currTask.article.article_number;
+    let batch_name = currTask.article.batch_name;
+    let namespace = this.getTopicNamespace(currTask);
+    let projectName = this.props.projectName;
     let description = this.props.description;
-    let tasksCompleted = this.props.tasksCompleted;
-    let progress = "Welcome!"
-    if (tasksCompleted === 0) {
-      progress = "Welcome! Click the tutorial button to the right " +
-                 "if you need to see the tuorial again.";
-    } else if (tasksCompleted === 1) {
-      progress = "You have completed your first task - nice!"
-    } else if ((tasksCompleted > 1) && (tasksCompleted < 4)) {
-      progress = "You have completed " + tasksCompleted + " tasks."
-    } else if (tasksCompleted < 10) {
-      progress = "You are doing well with " + tasksCompleted +
-      " tasks completed. Do you think you can complete 10?";
-    } else if (tasksCompleted < 20) {
-      progress = "You have completed " + tasksCompleted + " tasks. Thank you!"
-    } else if (tasksCompleted >= 20) {
-      progress = "You are awesome! You have completed " + tasksCompleted +
-      " tasks. Thank you very much for helping out so much!";
-    }
+    let createdDate = (moment(this.props.created)
+                       .format('LLL [UTC]'));
 
     return (
-      <div>
-        <div className="project-tasks-completed">
-          { progress }
+      <div className="progress-info" style={this.props.style}>
+        <div className="task-metadata">
+          Project: { projectName }
         </div>
-        <h1 className="project-title">
-          {name}
-        </h1>
-        <h4 className="project-description">
-          {description}
-        </h4>
+        <div className="task-metadata">
+          Project uploaded: { createdDate }
+        </div>
+        <div className="task-metadata">
+          Article: {article_number}
+        </div>
+        { namespace }
       </div>
     );
   }

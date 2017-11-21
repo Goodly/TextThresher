@@ -7,6 +7,8 @@ $article-min-height: 350px;
 $article-max-height: 550px;
 $left-col-width: 500px;
 $highlighter-help-text-height: 30px;
+$context-word-slider-height: 26px;
+$context-word-label-height: 26px;
 
 .project-title {
   margin-top: 0px;
@@ -22,6 +24,9 @@ $highlighter-help-text-height: 30px;
   padding-top: $space-under-header;
   padding-bottom: $space-above-footer;
   min-height: $article-min-height;
+
+  .look-in-bold-text {
+  }
 
   &__next {
     margin-top: 20px;
@@ -50,6 +55,10 @@ $highlighter-help-text-height: 30px;
   }
 }
 
+.highlighter-help-text {
+  height: $highlighter-help-text-height;
+}
+
 // Need this wrapper for introJS to annotate. Layout breaks if
 // introJS tries to annotate an element with position: fixed
 .quiz-introjs {
@@ -65,15 +74,21 @@ $highlighter-help-text-height: 30px;
   padding-bottom: $space-above-footer;
   height: 100%;
 
-  .highlighter-help-text {
-    height: $highlighter-help-text-height;
+  .context-word-slider {
+    margin-top: 5px;
+    height: $context-word-slider-height;
+  }
+
+  .context-word-label {
+    height: $context-word-label-height;
   }
 
   .article-click-box {
     @include newspaper;
     min-height: $article-min-height;
     max-height: $article-max-height -
-                $highlighter-help-text-height -
+                $context-word-slider-height -
+                $context-word-label-height -
                 $space-above-footer;
     height: 100%;
     overflow: auto;
@@ -107,10 +122,31 @@ $highlighter-help-text-height: 30px;
 
   button.show-help {
     float: right;
-    clear: right;
+    margin-right: 10px;
+    margin-bottom: 6px;
+  }
+
+  .quiz-prev-next-buttons {
+    height: 40px;
+  }
+
+  button.previous-button {
+    margin: 6px 6px 6px 0px
+  }
+
+  button.next-button {
+    margin: 6px 6px 6px 0px
+  }
+
+  button.review-button {
+    margin: 12px 6px 12px 0px
   }
 
   button.save-and-next {
-    margin: 2em;
+    margin: 12px 6px 12px 0px
   }
+}
+
+.end-block-with-ellipsis::after {
+  content: "..."
 }
