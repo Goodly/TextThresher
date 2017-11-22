@@ -68,6 +68,32 @@ def parse_article(raw_bytes, filename):
 
     # Convert to UTF-8, removing the Windows BOM if present
     raw_text = raw_bytes.decode('utf-8-sig', errors='strict')
+
+    # Allowing for initial blank lines and blank space, look for
+    # nickML marker +*+*
+    if re.match(r'(\s*\r\n?|\s*\n)*\s*\+\*\+\*', raw_text):
+        return parse_nickML(raw_text, filename)
+    else:
+        return parse_generic(raw_text, filename)
+
+def parse_generic(raw_text, filename):
+    basename = os.path.basename(filename)
+    match = re.search(r'^(?P<article_number>\d+)', basename)
+    if match:
+        article_number = match.group('article_number')
+    else:
+        raise ArticleParseError('No article number starting filename: ' + basename,
+                                ArticleParseError.FILENAME_ERROR)
+    metadata = {
+        'article_number': article_number,
+        'filename': filename,
+    }
+    return {
+        'metadata': metadata,
+        'text': raw_text,
+    }
+
+def parse_nickML(raw_text, filename):
     # extract info from the file name
     article_number, city, state, periodical, periodical_code = parse_filename(filename)
 

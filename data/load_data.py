@@ -312,10 +312,12 @@ def load_article(batch_name, article):
     except Article.DoesNotExist: # Not a duplicate.
         pass
 
-    date_published=article['metadata']['date_published']
-    if isinstance(date_published, date):
-        # JSON Serializer doesn't like dates
-        article['metadata']['date_published']=date_published.isoformat()
+    if 'date_published' in article['metadata']:
+        date_published=article['metadata']['date_published']
+        if isinstance(date_published, date):
+            # JSON Serializer doesn't like dates
+            article['metadata']['date_published']=date_published.isoformat()
+
     article_obj = Article(
         article_number=new_id,
         batch_name=batch_name,
@@ -328,11 +330,14 @@ def load_article(batch_name, article):
     return article_obj
 
 def load_annotations(article, article_obj):
+    if 'tuas' not in article:
+        return
+
     # In future usage, the articles being imported will not be highlighted
     # already and thus won't have 'annotators'.
-    annotators = ','.join(article['metadata']['annotators'])
-    if annotators == "":
-        annotators = "Unknown annotator"
+    annotators = "Unknown annotator"
+    if 'annotators' in article['metadata']:
+        annotators = ','.join(article['metadata']['annotators'])
 
     (contributor, created) = Contributor.objects.get_or_create(
         username="Gold Standard"
