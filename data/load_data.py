@@ -293,7 +293,7 @@ def load_schema(schema):
     load_dependencies(schema)
     load_options(schema, root_topic)
 
-def load_article(article):
+def load_article(batch_name, article):
     new_id = int(article['metadata']['article_number'])
 
     try: # Catch duplicate article ids and assign new ids.
@@ -306,8 +306,8 @@ def load_article(article):
             logger.warn("Article ID {} already assigned. New id is {}. "
                         "Recommend fixing source data".format(old_id, new_id))
         else:
-            # we've already loaded this article, so don't process its TUAs.
-            return
+            # already loaded this article, return None so TUAs not reloaded
+            return None
 
     except Article.DoesNotExist: # Not a duplicate.
         pass
@@ -318,6 +318,7 @@ def load_article(article):
         article['metadata']['date_published']=date_published.isoformat()
     article_obj = Article(
         article_number=new_id,
+        batch_name=batch_name,
         text=article['text'],
         metadata=article['metadata']
     )
@@ -420,10 +421,8 @@ def load_article_dir(dirpath, with_annotations=False):
         fullpath = os.path.join(dirpath, article_filename)
         with transaction.atomic():
             annotated_article = parse_document(fullpath, article_filename)
-            article_obj = load_article(annotated_article)
-            article_obj.batch_name = batch_name
-            article_obj.save()
-            if with_annotations:
+            article_obj = load_article(batch_name, annotated_article)
+            if article_obj and with_annotations:
                 load_annotations(annotated_article, article_obj)
 
 def load_args():
