@@ -243,6 +243,7 @@ export class Quiz extends Component {
       savedAnswers,
     };
     this.props.clearAnswers();
+    this.setReviewMode(false);
     // Don't have to reset answerState, as it and editorState will be
     // created fresh on next task load.
     this.props.saveAndNext(savedQuiz);
@@ -553,7 +554,7 @@ export class Quiz extends Component {
                answerState={this.state.answerState}
             />
             <div className="look-in-bold-text">
-              Look for answers in the <b>bolded</b> text.
+              Look for answers in the <b>bolded</b> text in the article at left.
             </div>
             { question_list }
             { saveAndNextButton }
