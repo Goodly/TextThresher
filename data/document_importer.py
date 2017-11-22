@@ -7,7 +7,8 @@ import django_rq
 from django.db import transaction
 
 from thresher.models import UserProfile
-from data.load_data import load_article, load_annotations, parse_batch_name
+from data.load_data import (load_article, parse_batch_name,
+                            load_annotations, highlight_all)
 from data.parse_document import parse_article
 
 def import_archive(orig_filename, filename, owner_profile_id, with_annotations=False):
@@ -33,5 +34,7 @@ def import_article(batch_name, raw_bytes, filename, owner_profile_id, with_annot
         annotated_article = parse_article(raw_bytes, filename)
         article_obj = load_article(batch_name, annotated_article)
         if article_obj and with_annotations:
+            if annotated_article['parser'] == 'generic':
+                highlight_all(annotated_article)
             load_annotations(annotated_article, article_obj)
     return article_obj.id

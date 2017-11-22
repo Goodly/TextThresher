@@ -330,17 +330,17 @@ def load_article(batch_name, article):
     return article_obj
 
 def load_annotations(article, article_obj):
+    # If articles being imported are not highlighted
+    # already they won't have 'tuas'.
     if 'tuas' not in article:
         return
 
-    # In future usage, the articles being imported will not be highlighted
-    # already and thus won't have 'annotators'.
-    annotators = "Unknown annotator"
-    if 'annotators' in article['metadata']:
-        annotators = ','.join(article['metadata']['annotators'])
+    contributor_name = "Unknown annotator"
+    if 'contributor' in article:
+        contributor_name = article['contributor']
 
     (contributor, created) = Contributor.objects.get_or_create(
-        username="Gold Standard"
+        username=contributor_name
     )
 
     article_highlight = ArticleHighlight.objects.create(article=article_obj,
@@ -418,6 +418,24 @@ def parse_batch_name(orig_filename):
     basename = os.path.basename(orig_filename)
     return os.path.splitext(basename)[0]
 
+topic_name_cache = None
+
+# Create a set of highlights that covers the entire article for
+# every root topic, so the Researcher can send these directly to the Quiz
+def highlight_all(parsed_article):
+    global topic_name_cache
+    if topic_name_cache is None:
+        # PE schemas start with topic_number 1
+        topic_name_cache = (Topic.objects.filter(topic_number=1)
+                            .values_list("name", flat=True))
+    text = parsed_article['text']
+    offset_list = [[0, len(text), text]]
+    tuas = {}
+    for topic_name in topic_name_cache:
+        tua = { 0: offset_list }
+        tuas[topic_name] = tua
+    parsed_article['tuas'] = tuas
+
 def load_article_dir(dirpath, with_annotations=False):
     batch_name = parse_batch_name(dirpath)
     for article_filename in os.listdir(dirpath):
@@ -428,6 +446,8 @@ def load_article_dir(dirpath, with_annotations=False):
             annotated_article = parse_document(fullpath, article_filename)
             article_obj = load_article(batch_name, annotated_article)
             if article_obj and with_annotations:
+                if annotated_article['parser'] == 'generic':
+                    highlight_all(annotated_article)
                 load_annotations(annotated_article, article_obj)
 
 def load_args():

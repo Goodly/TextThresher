@@ -91,6 +91,8 @@ def parse_generic(raw_text, filename):
     return {
         'metadata': metadata,
         'text': raw_text,
+        'contributor': u"Full Text Highlighted",
+        'parser': 'generic',
     }
 
 def parse_nickML(raw_text, filename):
@@ -147,7 +149,9 @@ def parse_nickML(raw_text, filename):
     return {
         'metadata': metadata,
         'text': clean_text,
-        'tuas': tuas
+        'tuas': tuas,
+        'contributor': u"Gold Standard DF",
+        'parser': 'nickML',
     }
 
 #    print "final clean text:", clean_text
