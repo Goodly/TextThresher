@@ -61,13 +61,41 @@ class ArticleParseError(Exception):
 
 def parse_document(fullpath, filename):
     with open(fullpath, 'r') as f:
-        raw_text = f.read()
-    return parse_article(raw_text, filename)
+        raw_bytes = f.read()
+    return parse_article(raw_bytes, filename)
 
-def parse_article(raw_text, filename):
+def parse_article(raw_bytes, filename):
 
     # Convert to UTF-8, removing the Windows BOM if present
-    raw_text = raw_text.decode('utf-8-sig', errors='strict')
+    raw_text = raw_bytes.decode('utf-8-sig', errors='strict')
+
+    # Allowing for initial blank lines and blank space, look for
+    # nickML marker +*+*
+    if re.match(r'(\s*\r\n?|\s*\n)*\s*\+\*\+\*', raw_text):
+        return parse_nickML(raw_text, filename)
+    else:
+        return parse_generic(raw_text, filename)
+
+def parse_generic(raw_text, filename):
+    basename = os.path.basename(filename)
+    match = re.search(r'^(?P<article_number>\d+)', basename)
+    if match:
+        article_number = match.group('article_number')
+    else:
+        raise ArticleParseError('No article number starting filename: ' + basename,
+                                ArticleParseError.FILENAME_ERROR)
+    metadata = {
+        'article_number': article_number,
+        'filename': filename,
+    }
+    return {
+        'metadata': metadata,
+        'text': raw_text,
+        'contributor': u"Full Text Highlighted",
+        'parser': 'generic',
+    }
+
+def parse_nickML(raw_text, filename):
     # extract info from the file name
     article_number, city, state, periodical, periodical_code = parse_filename(filename)
 
@@ -107,7 +135,6 @@ def parse_article(raw_text, filename):
 #                                ArticleParseError.BRACKET_WARNING)
 
     # print out our data.
-    # TODO: store this somewhere.
     metadata = {
         'annotators': annotators,
         'version': version,
@@ -122,7 +149,9 @@ def parse_article(raw_text, filename):
     return {
         'metadata': metadata,
         'text': clean_text,
-        'tuas': tuas
+        'tuas': tuas,
+        'contributor': u"Gold Standard DF",
+        'parser': 'nickML',
     }
 
 #    print "final clean text:", clean_text
@@ -384,7 +413,7 @@ def parse_documents(directory_path, error_directory_paths):
         print "PROCCESING FILE:", file_path, "..."
 
         try:
-            data.append(parse_document(full_path))
+            data.append(parse_document(full_path, os.path.basename(full_path)))
         except ArticleParseError as e:
             new_path = os.path.join(error_directory_paths[e.error_type],
                                     file_path)
