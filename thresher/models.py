@@ -47,11 +47,12 @@ class Contributor(models.Model):
         )
 
     def __unicode__(self):
-        return "id {} username {} pybossa user id {}".format(
-                self.id,
-                self.username,
-                self.pybossa_user_id
-        )
+        result = u"id {}".format(self.id)
+        if self.username != "":
+            result += u" " + self.username
+        if self.pybossa_user_id:
+            result += u" pybossa id: {}".format(self.pybossa_user_id)
+        return result
 
 
 TASK_TYPE = (
