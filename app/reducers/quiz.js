@@ -229,6 +229,7 @@ export function quiz(state = initialState, action) {
       return {
         ...state,
         queue: updateQueue(state.currTask, answer_selected),
+        curr_question_id: question_id,
         curr_answer_id: answer_id,
         answer_selected,
         answer_colors: updateAnswerColors(state, submittedAnswer)
@@ -288,6 +289,19 @@ export function quiz(state = initialState, action) {
       return {
         ...state,
         curr_answer_id
+      };
+    }
+    case 'UPDATE_ACTIVE_ANSWER': {
+      const curr_answer_id = action.answer_id;
+      const answerDB = state.db.entities.answer;
+      let curr_question_id = -1;
+      if (answerDB.hasOwnProperty(curr_answer_id)) {
+        curr_question_id = state.db.entities.answer[curr_answer_id].question_id;
+      }
+      return {
+        ...state,
+        curr_question_id,
+        curr_answer_id,
       };
     }
     default:

@@ -72,7 +72,18 @@ export class Quiz extends Component {
   constructor(props) {
     super(props);
 
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    this.componentWillUnmount = this.componentWillUnmount.bind(this);
+    this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
+    this.restartTutorial = this.restartTutorial.bind(this);
     this.setReviewMode = this.setReviewMode.bind(this);
+    this.answerAllowsHighlights = this.answerAllowsHighlights.bind(this);
+    this.answerStatusGreen = this.answerStatusGreen.bind(this);
+    this.noAnswerRequired = this.noAnswerRequired.bind(this);
+    this.questionInProgress = this.questionInProgress.bind(this);
+    this.questionStatusGreen = this.questionStatusGreen.bind(this);
+    this.allQuestionsAnswered = this.allQuestionsAnswered.bind(this);
     this.loadEditorState = this.loadEditorState.bind(this);
     this.wrapSpan = this.wrapSpan.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -80,10 +91,6 @@ export class Quiz extends Component {
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleDeleteKey = this.handleDeleteKey.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
-    this.componentDidUpdate = this.componentDidUpdate.bind(this);
-    this.startTutorialOnTaskLoad = this.startTutorialOnTaskLoad.bind(this);
-    this.restartTutorial = this.restartTutorial.bind(this);
     this.setContextWords = this.setContextWords.bind(this);
     this.getStyle = this.getStyle.bind(this);
     this.intro = introJs();
@@ -159,6 +166,12 @@ export class Quiz extends Component {
     this.startTutorialOnTaskLoad();
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('keyup', this.handleKeyUp);
+    this.intro.exit();
+  }
+
   startTutorialOnTaskLoad() {
     if (this.props.displayState === displayStates.TASK_LOADED) {
       if ( ! this.introStarted) {
@@ -175,15 +188,76 @@ export class Quiz extends Component {
     this.introStarted = true;
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-    window.removeEventListener('keyup', this.handleKeyUp);
-    this.intro.exit();
-  }
-
   setReviewMode(reviewMode) {
     this.setState({reviewMode: reviewMode === true});
   }
+
+  answerAllowsHighlights(answer_id) {
+    let answerDB = this.props.db.entities.answer;
+    let options = answerDB[answer_id].options;
+    return (options.NOHIGHLIGHT === false);
+  }
+
+  // Returns true if the answer does not require highlights
+  // OR returns true if the answer requires highlights and has at
+  // least one highlight.
+  answerStatusGreen(answer_id) {
+    const answerDB = this.props.db.entities.answer;
+    const options = answerDB[answer_id].options;
+    if ((options.NOHIGHLIGHT === true) ||
+        (options.OPTIONALHIGHLIGHT === true)) {
+      return true;
+    };
+    // highlight is required for this answer. Check if it
+    // has one or more highlights.
+    let answerState = this.state.answerState;
+    if (answerState.hasAnswer(answer_id)) {
+      const annotations = answerState.getAnswerAnnotations(answer_id);
+      return (annotations.length > 0);
+    };
+    return false;
+  }
+
+  noAnswerRequired(question_id) {
+    const questionDB = this.props.db.entities.question;
+    // Checkbox questions should be required to have None of the Above
+    // but for now they do not require an answer.
+    return (
+      questionDB[question_id].question_type === "CHECKBOX" ||
+      questionDB[question_id].question_type === "SELECT_SUBTOPIC"
+    );
+  }
+
+  questionInProgress(question_id) {
+    return (
+      this.noAnswerRequired(question_id) ||
+      this.props.answer_selected.has(question_id)
+    );
+  }
+
+  questionStatusGreen(question_id) {
+    if (this.noAnswerRequired(question_id)) {
+      return true;
+    };
+    const answer_selected = this.props.answer_selected;
+    if (! answer_selected.has(question_id)) {
+      return false;
+    };
+    const answerMap = answer_selected.get(question_id);
+    for (const answer of answerMap.values()) {
+      if (! this.answerStatusGreen(answer.answer_id)) {
+        return false;
+      };
+    };
+    return true;
+  }
+
+  allQuestionsAnswered() {
+    const queue = this.props.queue;
+    return queue.every( (question_id) => {
+      return this.questionStatusGreen(question_id);
+    });
+  };
 
   loadEditorState(currTask) {
     const article_text = this.props.currTask.article.text;
@@ -211,17 +285,6 @@ export class Quiz extends Component {
       blockMaker,
     });
   }
-
-  allQuestionsAnswered = () => {
-    const queue = this.props.queue;
-    const answer_selected = this.props.answer_selected;
-    const questionDB = this.props.db.entities.question;
-    // Every question must have an answer, except checkboxes
-    return queue.every( (question_id) =>
-      answer_selected.has(question_id) ||
-      questionDB[question_id].question_type === "CHECKBOX" ||
-      questionDB[question_id].question_type === "SELECT_SUBTOPIC");
-  };
 
   // Babel plugin transform-class-properties allows us to use
   // ES2016 property initializer syntax. So the arrow function
@@ -278,11 +341,20 @@ export class Quiz extends Component {
         { prev_button }
         { next_button }
       </div>
-      : <div className="quiz-prev-next-buttons"></div>;
+      : <div></div>;
+    let questionStyle = { padding: '6px', border: '1px solid white' };
+    if (this.state.reviewMode === true &&
+        ! this.questionStatusGreen(question.id)) {
+      Object.assign(questionStyle, { border: '1px solid red' });
+    };
     return (
       <div key={question.id}>
         { buttons }
-        <Question question={question} />
+        <div style={questionStyle}>
+          <Question question={question}
+                    quizMethods={this}
+          />
+        </div>
         { buttons }
       </div>
     );
@@ -415,14 +487,18 @@ export class Quiz extends Component {
 
   handleMouseUp(blockMaker) {
     let articleHighlight = handleMakeHighlight();
-    let question_id = this.props.question_id;
-    let question = this.props.db.entities.question[question_id];
-    let question_number = question.question_number;
-    // Don't make highlights if no answer selected
     let answer_id = this.props.answer_id;
+    // Don't make highlights if no answer selected
     if (answer_id < 0) {
       return;
     };
+    // Don't make highlights if answer doesn't allow
+    if ( ! this.answerAllowsHighlights(answer_id) ) {
+      return;
+    };
+    let question_id = this.props.question_id;
+    let question = this.props.db.entities.question[question_id];
+    let question_number = question.question_number;
     articleHighlight = moveToTokenBoundaries(blockMaker, articleHighlight);
     if (articleHighlight !== null) {
       let {start, end} = articleHighlight;
@@ -549,9 +625,8 @@ export class Quiz extends Component {
             </button>
             <Progress />
             <QuizProgress
+               quizMethods={this}
                style={{clear: 'right', marginBottom: '6px'}}
-               setActiveFn={this.props.activeQuestion}
-               answerState={this.state.answerState}
             />
             <div className="look-in-bold-text">
               Look for answers in the <b>bolded</b> text in the article at left.
