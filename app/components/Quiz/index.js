@@ -408,9 +408,9 @@ export class Quiz extends Component {
   dispReview() {
     return this.props.currTask.topictree.map((topic, i) => {
         return (<div key={topic.id} style={{
-          "border": "2px solid black",
+          "border": "2px solid slategray",
           "padding": "15px",
-          "margin": "15px"
+          "margin": "15px 15px 15px 0px"
         }}>
           <div> {topic.name} </div>
           { this.mapQuestions(topic.questions) }
@@ -513,8 +513,8 @@ export class Quiz extends Component {
 
   handleSelect(evt, annotation) {
     // Activate the question for this highlight
-    const question_id = annotation.source.question_id;
-    this.props.activeQuestion(question_id);
+    const answer_id = annotation.source.answer_id;
+    this.props.activeAnswer(answer_id);
     let answerState = this.state.answerState;
     answerState.selectHighlight(annotation);
     this.setState({answerState});

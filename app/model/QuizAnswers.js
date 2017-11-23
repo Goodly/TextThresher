@@ -24,6 +24,7 @@ export class QuizAnswers {
     this.hasAnswer = this.hasAnswer.bind(this);
     this.getAnswerAnnotations = this.getAnswerAnnotations.bind(this);
     this.selectHighlight = this.selectHighlight.bind(this);
+    this.deselectHighlight = this.deselectHighlight.bind(this);
     this.highlightSelected = this.highlightSelected.bind(this);
     this.deleteSelection = this.deleteSelection.bind(this);
   }
@@ -67,6 +68,10 @@ export class QuizAnswers {
   selectHighlight(annotation) {
     this._selectedAnnotations.clear();
     this._selectedAnnotations.set(annotation.key, annotation);
+  }
+
+  deselectHighlight(annotation) {
+    this._selectedAnnotations.clear();
   }
 
   highlightSelected(annotation_key) {
