@@ -91,11 +91,6 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ('id', 'article_number', 'batch_name', 'text', 'metadata')
 
 class AnswerSerializer(serializers.ModelSerializer):
-    question_id = serializers.SerializerMethodField()
-
-    def get_question_id(self, obj):
-        return obj.question.id
-
     class Meta:
         model = Answer
         fields = ('id', 'answer_number', 'answer_content', 'next_questions',
