@@ -408,9 +408,9 @@ export class Quiz extends Component {
   dispReview() {
     return this.props.currTask.topictree.map((topic, i) => {
         return (<div key={topic.id} style={{
-          "border": "2px solid black",
+          "border": "2px solid slategray",
           "padding": "15px",
-          "margin": "15px"
+          "margin": "15px 15px 15px 0px"
         }}>
           <div> {topic.name} </div>
           { this.mapQuestions(topic.questions) }
