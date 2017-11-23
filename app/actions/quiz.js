@@ -11,6 +11,13 @@ export function activeQuestion(q_id) {
   };
 }
 
+export function activeAnswer(answer_id) {
+  return {
+    type: 'UPDATE_ACTIVE_ANSWER',
+    answer_id
+  };
+}
+
 export function storeQuizTask(task) {
   return (dispatch, getState) => {
     dispatch({

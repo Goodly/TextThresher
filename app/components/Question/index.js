@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { Map as ImmutableMap } from 'immutable';
 
 import { SingleDatePicker } from 'react-dates';
 import moment from 'moment';
-import { selectAnswer, removeAnswer } from 'actions/quiz';
+import * as quizActions from 'actions/quiz';
 
 import { styles } from './styles.scss';
 import 'react-dates/lib/css/_datepicker.css';
@@ -24,17 +26,6 @@ const mapStateToProps = state => {
     answer_id: state.quiz.curr_answer_id,
     answers: state.quiz.answer_selected,
     answer_colors: state.quiz.answer_colors,
-  };
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    selectAnswer: (type, q_id, a_id, text) => {
-      dispatch(selectAnswer(type, q_id, a_id, text))
-    },
-    removeAnswer: (type, q_id, a_id) => {
-      dispatch(removeAnswer(type, q_id, a_id))
-    },
   };
 }
 
@@ -73,10 +64,12 @@ class Question extends Component {
   }
 
   static propTypes = {
-    question: React.PropTypes.object.isRequired,
-    answer_id: React.PropTypes.number.isRequired,
-    answers: React.PropTypes.instanceOf(ImmutableMap).isRequired,
-    answer_colors: React.PropTypes.instanceOf(ImmutableMap).isRequired,
+    answer_id: PropTypes.number.isRequired,
+    answers: PropTypes.instanceOf(ImmutableMap).isRequired,
+    answer_colors: PropTypes.instanceOf(ImmutableMap).isRequired,
+
+    question: PropTypes.object.isRequired,
+    quizMethods: PropTypes.object.isRequired,
   }
 
   activeAnswer(answer_id) {
@@ -100,12 +93,14 @@ class Question extends Component {
   getAnswerColorState(answer_id) {
     let answerColor = '';
     let selected = false;
-    // answer_colors is a Map
-    if (this.props.answer_colors.has(answer_id)) {
-      answerColor = this.props.answer_colors.get(answer_id);
-    };
-    if (this.props.answer_id === answer_id) {
-      selected = true;
+    if (this.props.quizMethods.answerAllowsHighlights(answer_id)) {
+      // answer_colors is a Map
+      if (this.props.answer_colors.has(answer_id)) {
+        answerColor = this.props.answer_colors.get(answer_id);
+      };
+      if (this.props.answer_id === answer_id) {
+        selected = true;
+      };
     };
     return { answerColor, selected };
   }
@@ -119,6 +114,9 @@ class Question extends Component {
             var clickHandler = () => {
               this.props.selectAnswer(TYPES.RADIO, this.props.question.id,
                                       answer.id, answer.answer_content);
+            };
+            var hoverHandler = () => {
+              this.props.activeAnswer(answer.id);
             };
             return (
               <div key={answer.id}
@@ -271,5 +269,5 @@ class Question extends Component {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  dispatch => bindActionCreators(quizActions, dispatch)
 )(Question);
