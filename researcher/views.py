@@ -27,7 +27,7 @@ from data.pybossa_api import delete_remote_project
 from data.pybossa_api import generate_tasks_worker
 from data.pybossa_api import generate_get_taskruns_worker
 from data.nlp_exporter import generate_nlp_tasks_worker
-from thresher.models import Article, Topic, UserProfile, Project
+from thresher.models import Article, Topic, UserProfile, Project, Contributor
 from thresher.models import ParserError
 
 def showParserErrorMessages(request):
@@ -201,6 +201,9 @@ class CreateProjectView(PermissionRequiredMixin, View):
     def get(self, request):
         agg = Article.objects.aggregate(Min('id'), Max('id'))
         profile = request.user.userprofile
+        contributor = None
+        if Contributor.objects.count() > 0:
+            contributor = Contributor.objects.order_by("id").first()
         # Developers can add "?debugPresenter=true" to the URL to
         # have the task presenter set to a script tag pointed at
         # the developer's localhost running 'npm run dev' for
@@ -208,6 +211,7 @@ class CreateProjectView(PermissionRequiredMixin, View):
         debug_presenter = request.GET.get("debugPresenter", False)
         initial = { 'starting_article_id': agg['id__min'],
                     'ending_article_id': agg['id__max'],
+                    'contributor_id': contributor,
                     'min_tokens_per_highlight': 1,
                     'max_tokens_per_highlight': 10000,
                     'pybossa_url': profile.pybossa_url,

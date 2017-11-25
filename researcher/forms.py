@@ -78,10 +78,11 @@ class CreateProjectForm(forms.Form):
     starting_article_id = forms.IntegerField(min_value=0)
     ending_article_id = forms.IntegerField(min_value=0)
 
-    contributor_id = SelectContributorId(Contributor.objects.all(),
+    contributor_id = SelectContributorId(
+                                Contributor.objects.order_by("id").all(),
                                 label="Contributor",
-                                empty_label=None,
-                                help_text=help_select_contributors)
+                                help_text=help_select_contributors
+    )
 
     # TODO: show min tokens only after Quiz is selected
     min_tokens_per_highlight = forms.IntegerField(min_value=0)
