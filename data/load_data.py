@@ -164,7 +164,7 @@ def find_noncontingent_questions(schema, lookup_question_id):
                 contingent.add(question_id)
             except KeyError:
                 raise SchemaLoadError("Line {}: Didn't find id for question number {}.{}"
-                                      .format(dep.linnum, dep.next_topic, dep.next_question))
+                                      .format(dep.linenum, dep.next_topic, dep.next_question))
 
     # compute set difference
     noncontingent = all_questions - contingent
