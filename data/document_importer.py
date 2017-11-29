@@ -7,9 +7,8 @@ import django_rq
 from django.db import transaction
 
 from thresher.models import UserProfile
-from data.load_data import (load_article, parse_batch_name,
-                            load_annotations, highlight_all)
-from data.parse_document import parse_article
+from data.load_data import load_article_atomic, parse_batch_name
+
 
 def import_archive(orig_filename, filename, owner_profile_id, with_annotations=False):
     try:
@@ -29,12 +28,4 @@ def import_archive(orig_filename, filename, owner_profile_id, with_annotations=F
 @django_rq.job('file_importer', timeout=60, result_ttl=24*3600)
 def import_article(batch_name, raw_bytes, filename, owner_profile_id, with_annotations):
     owner_profile = UserProfile.objects.get(pk=owner_profile_id)
-    with transaction.atomic():
-        # n.b. conversion to UTF-8 happens in parse_article
-        annotated_article = parse_article(raw_bytes, filename)
-        article_obj = load_article(batch_name, annotated_article)
-        if article_obj and with_annotations:
-            if annotated_article['parser'] == 'generic':
-                highlight_all(annotated_article)
-            load_annotations(annotated_article, article_obj)
-    return article_obj.id
+    load_article_atomic(batch_name, raw_bytes, filename, with_annotations)

@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 import codecs
 import json
 import os
@@ -112,27 +115,30 @@ def parse_nickML(raw_text, filename):
         if tua_id not in tuas[tua_type]:
             tuas[tua_type][tua_id] = []
 
-        tua_text = clean_text[tua_span[0]:tua_span[1]].strip()
-        if (tua_text.lower() != tua_body.strip().lower()):
-            raise ArticleParseError(
-                "Reconstructed clean text didn't match TUA body!",
-                ArticleParseError.TEXT_ERROR)
+        tua_text = clean_text[tua_span[0]:tua_span[1]]
+        if (tua_text.lower().strip() != tua_body.lower().strip()):
+            message = (u"{} Offset error! '{}' <> '{}'"
+                      .format(article_number, tua_text, tua_body))
+            raise ArticleParseError(message, ArticleParseError.TEXT_ERROR)
 
         tua_content = list(tua_span)
         tua_content.append(tua_text)
         tuas[tua_type][tua_id].append(tua_content)
 
-    # If the only tua_type is 'Useless', this document is likely a duplicate.
+    # If the only tua_type is 'Useless', we don't need to load it.
     if len(tuas.keys()) == 1 and 'Useless' in tuas.keys():
-        print "Possibly useless:", article_number
-        raise ArticleParseError("Only found Useless tuas!",
-                                ArticleParseError.DUPLICATE_ERROR)
+        message = u"{} Only found Useless tuas!".format(article_number)
+        raise ArticleParseError(message, ArticleParseError.DUPLICATE_ERROR)
+
+    # Is it bad if angle brackets are left? Probably?
+    if '<' in clean_text or '>' in clean_text:
+        message = u"{} <> Brackets remain in clean text!".format(article_number)
+        # raise ArticleParseError(message, ArticleParseError.BRACKET_WARNING)
 
     # Warning: brackets left over are usually bad news.
     if '[' in clean_text or ']' in clean_text:
-        print "Unparsed brackets left in article:", article_number
-#        raise ArticleParseError("Brackets remain in clean text!",
-#                                ArticleParseError.BRACKET_WARNING)
+        message = u"{} [] Brackets remain in clean text!".format(article_number)
+        raise ArticleParseError(message, ArticleParseError.BRACKET_WARNING)
 
     # print out our data.
     metadata = {
@@ -153,18 +159,6 @@ def parse_nickML(raw_text, filename):
         'contributor': u"Gold Standard DF",
         'parser': 'nickML',
     }
-
-#    print "final clean text:", clean_text
-#    import pprint; pprint.pprint(tuas)
-#    print "annotators:", annotators
-#    print "version:", version
-#    print "date published:", date_published
-#    print "article number:", article_number
-#    print "city:", city
-#    print "state:", state
-#    print "periodical:", periodical
-#    print "periodical code:", periodical_code
-#    print "\n\n\n"
 
 def parse_header(raw_text):
     # expected header format:
@@ -193,8 +187,8 @@ def parse_header(raw_text):
         elif header_rownum == 3:
             annotators, version = parse_annotator_line(line)
             if not annotators and not version:
-                raise ArticleParseError("Unexpected header line 3: " + line,
-                                        ArticleParseError.HEADER_ERROR)
+                message = "Unexpected header line 3 has {}: ".format(line)
+                raise ArticleParseError(message, ArticleParseError.HEADER_ERROR)
             break
 
     if header_rownum != 3:
@@ -401,7 +395,7 @@ def parse_filename(filename):
         return match.group('article_number', 'city', 'state', 'periodical',
                            'periodical_code')
     else:
-        raise ArticleParseError('Bad File Name: ' + raw_name,
+        raise ArticleParseError(raw_name + 'Bad File Name',
                                 ArticleParseError.FILENAME_ERROR)
 
 def parse_documents(directory_path, error_directory_paths):

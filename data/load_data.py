@@ -22,7 +22,7 @@ from django.db.models import Max
 from django.db import transaction
 
 from data import init_defaults
-from data.parse_document import parse_document
+from data.parse_document import parse_article, ArticleParseError
 from data.parse_schema import parse_schema, ParseSchemaException, OPTION_TYPES
 
 from thresher.models import (Article, Topic, Question, Answer,
@@ -325,8 +325,8 @@ def load_article(batch_name, article):
         metadata=article['metadata']
     )
     article_obj.save()
-    print "article id %d numbered %s" % (article_obj.id,
-          article_obj.article_number)
+    print ("{} article number db id {}"
+          .format(article_obj.article_number, article_obj.id))
     return article_obj
 
 def load_annotations(article, article_obj):
@@ -436,19 +436,34 @@ def highlight_all(parsed_article):
         tuas[topic_name] = tua
     parsed_article['tuas'] = tuas
 
-def load_article_dir(dirpath, with_annotations=False):
-    batch_name = parse_batch_name(dirpath)
-    for article_filename in os.listdir(dirpath):
-        if os.path.splitext(article_filename)[1] != '.txt':
-            continue
-        fullpath = os.path.join(dirpath, article_filename)
+def load_article_atomic(batch_name, raw_bytes, orig_filename, with_annotations):
+    try:
         with transaction.atomic():
-            annotated_article = parse_document(fullpath, article_filename)
+            # n.b. conversion to UTF-8 happens in parse_article
+            annotated_article = parse_article(raw_bytes, orig_filename)
             article_obj = load_article(batch_name, annotated_article)
             if article_obj and with_annotations:
                 if annotated_article['parser'] == 'generic':
                     highlight_all(annotated_article)
                 load_annotations(annotated_article, article_obj)
+            if article_obj:
+                return article_obj.id
+    except ArticleParseError as e:
+        if e.error_type == ArticleParseError.HEADER_ERROR:
+            logger.warn(orig_filename + " " + e.message)
+        else:
+            logger.warn(e.message)
+    return None
+
+def load_article_dir(dirpath, with_annotations=False):
+    batch_name = parse_batch_name(dirpath)
+    for article_filename in sorted(os.listdir(dirpath)):
+        if os.path.splitext(article_filename)[1] != '.txt':
+            continue
+        fullpath = os.path.join(dirpath, article_filename)
+        with open(fullpath) as f:
+            raw_bytes = f.read()
+            load_article_atomic(batch_name, raw_bytes, article_filename, with_annotations)
 
 def load_args():
     parser = argparse.ArgumentParser()
